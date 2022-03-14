@@ -31,7 +31,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "nile",
+  "name": "@nile/js",
   "author": "jrea",
   "module": "dist/nile.esm.js",
   "size-limit": [

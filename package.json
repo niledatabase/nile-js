@@ -1,6 +1,11 @@
 {
   "name": "nile-js",
   "packageManager": "yarn@3.2.0",
+  "private": true,
+  "workspaces": [
+    "lib/nile-js",
+    "packages/*"
+  ],
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
