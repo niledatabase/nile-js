@@ -1001,9 +1001,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dashbaord@workspace:packages/dashbaord":
+"dashboard@workspace:packages/dashboard":
   version: 0.0.0-use.local
-  resolution: "dashbaord@workspace:packages/dashbaord"
+  resolution: "dashboard@workspace:packages/dashboard"
   dependencies:
     "@types/node": 17.0.21
     "@types/react": 17.0.40

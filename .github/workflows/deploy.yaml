@@ -3,7 +3,7 @@ name: Deploy to Github Pages
 on:
   push:
     branches:
-      - master
+      - "*"
   pull_request:
     branches:
       - master
@@ -23,18 +23,12 @@ jobs:
           node-version: "lts/*"
           cache: "npm"
 
-      - name: Show Contents
-        working-directory: ${{ github.workspace }}
-        run: |
-          pwd
-          ls -la
-
       - name: Build
-        working-directory: /${{ github.workspace }}/packages/dashboard
+        working-directory: packages/dashboard
         run: |
           npm i
           npm run build
-          npm run start
+          npm run export
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
