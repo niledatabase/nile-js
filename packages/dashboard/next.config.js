@@ -3,7 +3,7 @@ const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig = {
   reactStrictMode: true,
-  assetPrefix: isProd ? "/nile-js/" : "",
+  assetPrefix: isProd ? "/nile-js/" : null,
 };
 
 module.exports = nextConfig;
