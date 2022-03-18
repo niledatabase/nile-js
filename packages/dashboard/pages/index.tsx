@@ -1,8 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import styles from '../styles/Home.module.css';
-import { Button } from '../components/Button';
+import { ComponentList } from '../components/ComponentList';
 
 const Home: NextPage = () => {
   return (
@@ -18,9 +17,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Components</h1>
-        <Link href="/signin" passHref>
-          <Button>Sign In</Button>
-        </Link>
+        <ComponentList />
       </main>
 
       <footer className={styles.footer}>

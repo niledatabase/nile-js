@@ -3,7 +3,7 @@ import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
 const nile = new Nile({ apiUrl: 'http://localhost:8080' });
 
-function SignIn() {
+function Signup() {
   async function handleSubmit() {
     const email = document.querySelector('#email') as HTMLInputElement;
     const password = document.querySelector('#password') as HTMLInputElement;
@@ -12,12 +12,13 @@ function SignIn() {
       email: email.value,
       password: password.value,
     };
-    const success = await nile
-      .signIn(payload)
+    const user = await nile
+      .create('users', payload)
       .catch(() => alert('things went bad'));
 
-    if (success) {
-      alert('login worked!');
+    if (user) {
+      console.log(user);
+      alert('user created!');
     }
   }
 
@@ -25,21 +26,21 @@ function SignIn() {
     <>
       <form>
         <h1>🤩 InstaExpense 🤩</h1>
-        <h2>Sign in</h2>
+        <h2>Sign up</h2>
         <label htmlFor="email">Email</label>
         <br />
         <input type="text" placeholder="email" id="email"></input>
         <br />
-        <label htmlFor="password">Password</label>
+        <label htmlFor="email">Password</label>
         <br />
         <input type="password" placeholder="password" id="password"></input>
         <br />
         <br />
-        <Button onClick={handleSubmit}>Sign in</Button>
+        <Button onClick={handleSubmit}>Sign up</Button>
       </form>
       <ComponentList />
     </>
   );
 }
 
-export default SignIn;
+export default Signup;

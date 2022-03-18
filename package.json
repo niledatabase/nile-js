@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "yarn workspace @nile/js build && yarn workspace dashboard build",
-    "lint": "yarn eslint .",
+    "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "yarn husky install",
     "buildDocs": "yarn workspace @nile/js typedoc src/index.ts"
   },
