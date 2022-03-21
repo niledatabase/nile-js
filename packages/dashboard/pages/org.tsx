@@ -1,9 +1,11 @@
 import Nile from '@nile/js';
+import { useState } from 'react';
 import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
 const nile = new Nile({ apiUrl: 'http://localhost:8080' });
 
-function SignIn() {
+function Org() {
+  const [users, setUsers] = useState<unknown>(null);
   async function handleSubmit() {
     const email = document.querySelector('#email') as HTMLInputElement;
     const password = document.querySelector('#password') as HTMLInputElement;
@@ -17,10 +19,22 @@ function SignIn() {
       .catch(() => alert('things went bad'));
 
     if (success) {
-      alert('login worked!');
+      const users = await nile.read('orgs');
+      setUsers(users);
     }
   }
 
+  if (users) {
+    return (
+      <>
+        <form>
+          <h1>🤩 InstaExpense 🤩</h1>
+          <pre>{JSON.stringify(users, null, 2)}</pre>
+        </form>
+        <ComponentList />
+      </>
+    );
+  }
   return (
     <>
       <form>
@@ -35,11 +49,11 @@ function SignIn() {
         <input type="password" placeholder="password" id="password"></input>
         <br />
         <br />
-        <Button onClick={handleSubmit}>Sign in</Button>
+        <Button onClick={handleSubmit}>show me orgs</Button>
       </form>
       <ComponentList />
     </>
   );
 }
 
-export default SignIn;
+export default Org;
