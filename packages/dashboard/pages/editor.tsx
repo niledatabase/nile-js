@@ -1,9 +1,9 @@
-import { useCallback, useRef } from "react";
-import { Editor } from "../components/Editor";
-import { Button } from "../components/Button";
+import { useCallback, useRef } from 'react';
+import { Editor } from '../components/Editor';
+import { Button } from '../components/Button';
 
 const Edit = () => {
-  const textRef = useRef("");
+  const textRef = useRef('');
   const handleSubmit = useCallback(() => {
     // get values
     console.log(textRef.current);

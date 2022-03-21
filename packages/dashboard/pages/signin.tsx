@@ -1,7 +1,7 @@
-import { Nile } from "@nile/js";
-import { Button } from "../components/Button";
+import { Nile } from '@nile/js';
+import { Button } from '../components/Button';
 function SignIn() {
-  const signin = Nile.signIn({ userInput: "user" });
+  const signin = Nile.signIn({ userInput: 'user' });
   const { handleSignInSubmit } = signin;
   return (
     <form name="signin">

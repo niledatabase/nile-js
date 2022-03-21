@@ -1,8 +1,8 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import styles from "../styles/Home.module.css";
-import { Button } from "../components/Button";
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import styles from '../styles/Home.module.css';
+import { Button } from '../components/Button';
 
 const Home: NextPage = () => {
   return (
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{" "}
+          Powered by{' '}
           <span className={styles.logo}>
             <img src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>

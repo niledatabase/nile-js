@@ -1,6 +1,6 @@
-import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-import { useCallback, type MutableRefObject } from "react";
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { useCallback, type MutableRefObject } from 'react';
 
 type EditorProps = {
   textRef: MutableRefObject<string>;
@@ -23,6 +23,6 @@ export const Editor = ({ textRef, height }: EditorProps)=>{
   );
 }
 Editor.defaultProps = {
-    height:"200px"
+    height:'200px'
 }
 

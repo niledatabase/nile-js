@@ -1,3 +1,6 @@
 {
-  "extends": ["prettier", "plugin:@typescript-eslint/recommended"]
+  "extends": ["prettier", "plugin:@typescript-eslint/recommended"],
+  "rules": {
+    "quotes": ["error", "single", { "avoidEscape": true }]
+  }
 }
