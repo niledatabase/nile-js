@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
-const isProd = process.env.NODE_ENV === "production";
+// const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig = {
-  reactStrictMode: true
+  reactStrictMode: true,
   // TODO remove - for use with github pages, using vercel for now
   // assetPrefix: isProd ? "/nile-js/" : "",
 };

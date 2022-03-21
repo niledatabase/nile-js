@@ -1,4 +1,6 @@
 node_modules
+.eslintcache
+
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
