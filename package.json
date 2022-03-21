@@ -9,7 +9,8 @@
   "scripts": {
     "build": "yarn workspace @nile/js build && yarn workspace dashboard build",
     "lint": "yarn eslint .",
-    "postinstall": "yarn husky install"
+    "postinstall": "yarn husky install",
+    "buildDocs": "yarn workspace @nile/js typedoc src/index.ts"
   },
   "prettier": {
     "printWidth": 80,
@@ -32,6 +33,6 @@
   },
   "lint-staged": {
     "packages/**/**/*.{js,ts,jsx,tsx}": "yarn lint --cache --fix",
-    "lib/nile/**/*.{js,ts,jsx,tsx}": "yarn lint --cache --fix"
+    "lib/nile/src/*.{js,ts,jsx,tsx}": "yarn lint --cache --fix"
   }
 }
