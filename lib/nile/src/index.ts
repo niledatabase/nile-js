@@ -1,4 +1,6 @@
-const Nile = () => {};
+function Nile() {
+  // nothing
+}
 type NileSignIn = { userInput: string };
 type NileSignInMethods = { handleSignInSubmit: () => void };
 
