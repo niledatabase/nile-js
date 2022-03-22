@@ -103,6 +103,20 @@ class Nile {
       .fetch('POST', `${entity}/${String(id)}`, payload)
       .then(convertToJSON);
   }
+
+  /**
+   *
+   * @param entity @type {UpdatableEntities} maps to the urls in the api
+   * @param payload @type {unknown} the maps to the payload types TODO
+   * @returns {Promise<EntityType>} the deleted entity
+   */
+  delete(entity: UpdatableEntities, payload: unknown): Promise<APIResponse> {
+    this.setRequesterAuth();
+    const { id } = payload as { id: string };
+    return this.requester
+      .fetch('DELETE', `${entity}/${String(id)}`)
+      .then(convertToJSON);
+  }
 }
 
 export default Nile;

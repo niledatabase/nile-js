@@ -41,7 +41,7 @@ export class Requester {
    * @returns @type {Promise<Response>}
    */
   fetch(
-    method: 'POST' | 'GET',
+    method: 'POST' | 'GET' | 'DELETE',
     entity: CreateableEntities | UpdatableEntityUrls | UpdatableEntities,
     payload?: unknown
   ): Promise<Response> {
