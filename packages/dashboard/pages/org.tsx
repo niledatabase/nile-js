@@ -1,4 +1,4 @@
-import Nile from '@nile/js';
+import Nile from '@theniledev/nile-js';
 import { useState } from 'react';
 import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
