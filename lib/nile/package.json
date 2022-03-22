@@ -1,10 +1,9 @@
 {
-  "version": "0.1.0",
+  "version": "0.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "packageManager": "yarn@3.2.0",
-  "private": true,
   "files": [
     "dist",
     "src"
@@ -33,6 +32,9 @@
       "limit": "10 KB"
     }
   ],
+  "publishConfig": {
+    "@nile/js": "https://npm.pkg.github.com/nile-js"
+  },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^7.0.8",
     "@types/jest": "^27.4.1",
