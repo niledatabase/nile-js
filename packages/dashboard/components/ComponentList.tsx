@@ -15,14 +15,21 @@ export function ComponentList() {
       <div className={styles.card}>
         <Link href="/signup" passHref>
           <span>
-            <Button>Sign Up</Button>
+            <Button>Sign up</Button>
           </span>
         </Link>
       </div>
       <div className={styles.card}>
         <Link href="/signin" passHref>
           <span>
-            <Button>Sign In</Button>
+            <Button>Sign in</Button>
+          </span>
+        </Link>
+      </div>
+      <div className={styles.card}>
+        <Link href="/editor" passHref>
+          <span>
+            <Button>Editor</Button>
           </span>
         </Link>
       </div>

@@ -12,4 +12,12 @@ export interface AuthResponse {
   token: string;
 }
 
-export type EntityType = 'login' | 'users' | 'orgs';
+export type CreateableEntities = 'login' | 'users' | 'orgs';
+
+export type UpdatableEntities = 'user';
+
+export type UpdatableEntityUrls = `${UpdatableEntities}/${string}`
+
+export interface APIResponse extends Response{
+  [key: string]: unknown
+}

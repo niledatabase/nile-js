@@ -1,8 +1,7 @@
-import Nile from '@theniledev/nile-js';
 import { useState } from 'react';
 import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
-const nile = new Nile({ apiUrl: 'http://localhost:8080' });
+import nile from '../utilities/nile';
 
 function Org() {
   const [users, setUsers] = useState<unknown>(null);
