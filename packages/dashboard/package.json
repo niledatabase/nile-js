@@ -1,7 +1,6 @@
 {
   "name": "dashboard",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.0.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +9,7 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^0.19.7",
-    "@nile/js": "0.1.0",
+    "@nile/js": "0.0.0",
     "@uiw/react-codemirror": "^4.5.1",
     "next": "12.1.0",
     "react": "17.0.2",
