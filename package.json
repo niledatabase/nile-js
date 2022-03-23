@@ -9,7 +9,6 @@
   "scripts": {
     "build": "yarn workspace @theniledev/nile-js build && yarn workspace @theniledev/dashboard build",
     "lint": "yarn eslint . --max-warnings=0",
-    "postinstall": "yarn husky install",
     "buildDocs": "yarn workspace @theniledev/nile-js typedoc src/index.ts",
     "publish": "yarn lerna publish --registry=https://npm.pkg.github.com/"
   },
