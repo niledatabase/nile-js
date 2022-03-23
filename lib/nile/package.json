@@ -19,7 +19,7 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "name": "@nile/js",
+  "name": "@theniledev/nile-js",
   "author": "jrea",
   "module": "dist/nile.esm.js",
   "size-limit": [
@@ -32,9 +32,6 @@
       "limit": "10 KB"
     }
   ],
-  "publishConfig": {
-    "@nile/js": "https://npm.pkg.github.com/nile-js"
-  },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^7.0.8",
     "@types/jest": "^27.4.1",

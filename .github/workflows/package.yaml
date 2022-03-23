@@ -1,4 +1,5 @@
-name: Publish @nile/js to GitHub Packages
+name: Publish @theniledev/nile-js to GitHub Packages
+
 on:
   push:
     branches:
@@ -7,21 +8,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+
       # Setup .npmrc file to publish to GitHub Packages
       - name: Setup Node
-      - uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: 'lts/*'
           registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
-          scope: '@nile'
-      - name: Update version
+          scope: '@theniledev'
+
+      - name: Install @theniledev/nile-js
+        working-directory: lib/nile
+        run: yarn install --no-lockfile
+
+      - name: Version
         run: |
-          yarn
-          yarn publish
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor}}@users.noreply.github.com"
+
+          npx lerna version --conventional-commits --yes
+
+      - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx lerna publish from-git --yes --no-verify-access --registry=https://npm.pkg.github.com/

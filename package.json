@@ -1,5 +1,5 @@
 {
-  "name": "nile-js",
+  "name": "@theniledev/packages",
   "packageManager": "yarn@3.2.0",
   "private": true,
   "workspaces": [
@@ -7,11 +7,11 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspace @nile/js build && yarn workspace dashboard build",
+    "build": "yarn workspace @theniledev/nile-js build && yarn workspace @theniledev/dashboard build",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "yarn husky install",
-    "buildDocs": "yarn workspace @nile/js typedoc src/index.ts",
-    "publish": "yarn workspace @nile/js install && yarn lerna publish --registry=https://npm.pkg.github.com/"
+    "buildDocs": "yarn workspace @theniledev/nile-js typedoc src/index.ts",
+    "publish": "yarn lerna publish --registry=https://npm.pkg.github.com/"
   },
   "prettier": {
     "printWidth": 80,

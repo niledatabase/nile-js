@@ -1,4 +1,4 @@
-import Nile from '@nile/js';
+import Nile from '@theniledev/nile-js';
 import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
 const nile = new Nile({ apiUrl: 'http://localhost:8080' });

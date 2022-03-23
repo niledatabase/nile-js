@@ -1,4 +1,4 @@
-# @nile/js
+# @theniledev/nile-js
 
 ## Prereq
 
