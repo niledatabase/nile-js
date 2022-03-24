@@ -1,4 +1,4 @@
-name: Publish @theniledev/nile-js to GitHub Packages
+name: Publish @theniledev packages to GitHub Packages
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@theniledev'
 
-      - name: Install @theniledev/nile-js
+      - name: Install @theniledev/js
         working-directory: lib/nile
         run: yarn install --no-lockfile
 

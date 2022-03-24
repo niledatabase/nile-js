@@ -1729,9 +1729,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@theniledev/nile-js@workspace:.":
+"@theniledev/js@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@theniledev/nile-js@workspace:."
+  resolution: "@theniledev/js@workspace:."
   dependencies:
     "@size-limit/preset-small-lib": ^7.0.8
     "@types/jest": ^27.4.1
