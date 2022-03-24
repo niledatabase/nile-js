@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>nile-js testing</title>
+        <title>nile js testing</title>
         <meta
           name="description"
           content="amalgamation of code for lib testing"
