@@ -9,7 +9,7 @@
   "scripts": {
     "build": "yarn workspace @theniledev/nile-js build && yarn workspace @theniledev/dashboard build",
     "lint": "yarn eslint . --max-warnings=0",
-    "buildDocs": "yarn workspace @theniledev/nile-js typedoc --plugin typedoc-plugin-markdown src/index.ts",
+    "buildDocs": "yarn workspace @theniledev/nile-js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
     "publish": "yarn lerna publish --registry=https://npm.pkg.github.com/"
   },
   "prettier": {
