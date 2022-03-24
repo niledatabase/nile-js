@@ -3,7 +3,7 @@ name: Publish @theniledev/nile-js to GitHub Packages
 on:
   push:
     branches:
-      - master
+      - stable
 jobs:
   build:
     runs-on: ubuntu-latest

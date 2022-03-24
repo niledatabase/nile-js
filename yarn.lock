@@ -3376,7 +3376,7 @@ __metadata:
   resolution: "@theniledev/dashboard@workspace:packages/dashboard"
   dependencies:
     "@codemirror/lang-javascript": ^0.19.7
-    "@theniledev/nile-js": 0.0.0
+    "@theniledev/nile-js": ^0.0.1
     "@types/node": 17.0.21
     "@types/react": 17.0.40
     "@uiw/react-codemirror": ^4.5.1
@@ -3387,7 +3387,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@theniledev/nile-js@0.0.0, @theniledev/nile-js@workspace:lib/nile":
+"@theniledev/nile-js@^0.0.1, @theniledev/nile-js@workspace:lib/nile":
   version: 0.0.0-use.local
   resolution: "@theniledev/nile-js@workspace:lib/nile"
   dependencies:
@@ -3398,6 +3398,7 @@ __metadata:
     tsdx: ^0.14.1
     tslib: ^2.3.1
     typedoc: ^0.22.13
+    typedoc-plugin-markdown: ^3.11.14
     typescript: ^4.6.2
   languageName: unknown
   linkType: soft
@@ -13676,6 +13677,17 @@ __metadata:
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
   checksum: 33b39f3d0e8463985eeaeeacc3cb2e28bc3dfaf2a5ed219628c0b629d5d7b810b0eb2165f9f607c34871d5daa92ba1dc69f49051cf7d578b4cbd26c340b9d1b1
+  languageName: node
+  linkType: hard
+
+"typedoc-plugin-markdown@npm:^3.11.14":
+  version: 3.11.14
+  resolution: "typedoc-plugin-markdown@npm:3.11.14"
+  dependencies:
+    handlebars: ^4.7.7
+  peerDependencies:
+    typedoc: ">=0.22.0"
+  checksum: 7eff9e5b8b6b2457b484ea16bbae453c23313c838b4ac8826bd166c5d37a18010242dd43a21010b759965d860106951ddd321f85bd0ff39b78dcb172daa60e6e
   languageName: node
   linkType: hard
 
