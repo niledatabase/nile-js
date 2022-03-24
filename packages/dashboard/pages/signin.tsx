@@ -1,9 +1,11 @@
-import Nile from '@theniledev/nile-js';
+import { useRouter } from 'next/router';
 import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
-const nile = new Nile({ apiUrl: 'http://localhost:8080' });
+import nile from '../utilities/nile';
 
 function SignIn() {
+  const router = useRouter();
+
   async function handleSubmit() {
     const email = document.querySelector('#email') as HTMLInputElement;
     const password = document.querySelector('#password') as HTMLInputElement;
@@ -17,7 +19,13 @@ function SignIn() {
       .catch(() => alert('things went bad'));
 
     if (success) {
-      alert('login worked!');
+      const { redirect } = router.query;
+      if (redirect && typeof window !== 'undefined') {
+        router.push(`/${redirect}`);
+        return;
+      } else {
+        alert('login worked!');
+      }
     }
   }
 

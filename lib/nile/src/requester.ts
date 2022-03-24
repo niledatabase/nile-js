@@ -1,4 +1,9 @@
-import { EntityType } from './NileConfig';
+import {
+  CreateableEntities,
+  UpdatableEntityUrls,
+  UpdatableEntities,
+} from './NileConfig';
+
 const requestHeaders = (authToken: string | null) => {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
@@ -36,8 +41,8 @@ export class Requester {
    * @returns @type {Promise<Response>}
    */
   fetch(
-    method: 'POST' | 'GET',
-    entity: EntityType,
+    method: 'POST' | 'GET' | 'DELETE',
+    entity: CreateableEntities | UpdatableEntityUrls | UpdatableEntities,
     payload?: unknown
   ): Promise<Response> {
     const headers = requestHeaders(this.authToken);
