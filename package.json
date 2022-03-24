@@ -1,6 +1,7 @@
 {
   "name": "@theniledev/packages",
   "packageManager": "yarn@3.2.0",
+  "version": "0.0.2",
   "private": true,
   "workspaces": [
     "lib/nile",
