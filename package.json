@@ -8,9 +8,9 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspace @theniledev/nile-js build && yarn workspace @theniledev/dashboard build",
+    "build": "yarn workspace @theniledev/js build && yarn workspace @theniledev/react build",
     "lint": "yarn eslint . --max-warnings=0",
-    "buildDocs": "yarn workspace @theniledev/nile-js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
+    "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
     "publish": "yarn lerna publish --registry=https://npm.pkg.github.com/"
   },
   "prettier": {
