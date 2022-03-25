@@ -1,0 +1,31 @@
+{
+  "name": "@theniledev/examples",
+  "version": "0.1.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export"
+  },
+  "dependencies": {
+    "@codemirror/lang-javascript": "^0.19.7",
+    "@theniledev/js": "^0.1.1",
+    "@uiw/react-codemirror": "^4.5.1",
+    "next": "12.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.21",
+    "@types/react": "17.0.40",
+    "typescript": "4.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheNileDev/nile-js.git",
+    "directory": "packages/examples"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
+}
