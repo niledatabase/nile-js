@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/TheNileDev/nile-js/compare/v0.1.1...v0.2.0) (2022-03-28)
+
+
+### Features
+
+* **react:** add SignUpForm and LoginForm ([04f730d](https://github.com/TheNileDev/nile-js/commit/04f730daa35909296cfc6a470237b5d1c1ab2f80))
+
+
+
+
+
 ## [0.1.1](https://github.com/TheNileDev/nile-js/compare/v0.1.0...v0.1.1) (2022-03-24)
 
 
