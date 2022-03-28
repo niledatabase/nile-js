@@ -8,7 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspace @theniledev/js build && yarn workspace @theniledev/react build",
+    "build": "yarn build:lib && yarn build:react && yarn build:examples",
+    "build:lib": "yarn workspace @theniledev/js build",
+    "build:react": "yarn workspace @theniledev/react build",
+    "build:examples": "yarn workspace @theniledev/examples build",
     "lint": "yarn eslint . --max-warnings=0",
     "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
     "publish": "yarn lerna publish --registry=https://npm.pkg.github.com/"

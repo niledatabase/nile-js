@@ -1,8 +1,11 @@
-import { Button } from '../components/Button';
-import { ComponentList } from '../components/ComponentList';
-import nile from '../utilities/nile';
+import React from 'react';
+import Button from '../_Button';
+import { Props } from './types';
+import { useNile } from '../../context';
 
-function Signup() {
+export default function LoginForm({ handleSuccess }: Props) {
+  const nile = useNile();
+
   async function handleSubmit() {
     const email = document.querySelector('#email') as HTMLInputElement;
     const password = document.querySelector('#password') as HTMLInputElement;
@@ -11,35 +14,29 @@ function Signup() {
       email: email.value,
       password: password.value,
     };
-    const user = await nile
-      .create('users', payload)
+    const success = await nile
+      .signIn(payload)
       .catch(() => alert('things went bad'));
 
-    if (user) {
-      console.log(user);
-      alert('user created!');
+    if (success) {
+      handleSuccess && handleSuccess();
     }
   }
 
   return (
     <>
       <form>
-        <h1>🤩 InstaExpense 🤩</h1>
-        <h2>Sign up</h2>
         <label htmlFor="email">Email</label>
         <br />
         <input type="text" placeholder="email" id="email"></input>
         <br />
-        <label htmlFor="email">Password</label>
+        <label htmlFor="password">Password</label>
         <br />
         <input type="password" placeholder="password" id="password"></input>
         <br />
         <br />
-        <Button onClick={handleSubmit}>Sign up</Button>
+        <Button onClick={handleSubmit}>Sign in</Button>
       </form>
-      <ComponentList />
     </>
   );
 }
-
-export default Signup;
