@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/TheNileDev/nile-js/compare/v0.2.1...v0.2.2) (2022-03-29)
+
+
+### Bug Fixes
+
+* add force version to lerna ([b823e11](https://github.com/TheNileDev/nile-js/commit/b823e113952767c07b1802e1acc926c4cfe0171d))
+* auto-release ([fb9e86a](https://github.com/TheNileDev/nile-js/commit/fb9e86aab898300f6b240c74290ea164776ac131))
+* auto-release ([2d3eeda](https://github.com/TheNileDev/nile-js/commit/2d3eeda31883f9e6404be7d9ae7f2eda68911a5c))
+
+
+
+
+
 ## [0.2.1](https://github.com/TheNileDev/nile-js/compare/v0.2.0...v0.2.1) (2022-03-29)
 
 
