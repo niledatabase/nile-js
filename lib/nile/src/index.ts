@@ -5,7 +5,7 @@ import {
   AuthResponse,
   UpdatableEntities,
   APIResponse,
-} from './NileConfig';
+} from './types';
 import { Requester } from './requester';
 
 const convertToJSON = (res: Response) => {
@@ -19,25 +19,41 @@ const convertToJSON = (res: Response) => {
   // error of some kind
   return res;
 };
+
 class Nile {
   /**
-   * @type {string} URI to use for requests
+   * URL for the client to request against.
+
+   * @remarks
+   * The value should be passed in the constructor
+   * 
+   * @type {string} a FQDN for https requests 
+   * @defaultValue '/'
+   * @readonly 
    */
   apiUrl: string;
 
   /**
+   * auth token saved after login and re-used for requests aginst the backend
    * @type {string} token for authorization
+   * @defaultValue null
+   * @readonly
    */
   authToken: string | null;
 
   /**
+   * A class wrapping `fetch` for making requests
    * @type {Requester} class to make requests
    */
   requester: Requester;
 
   /**
-   * Creates a new instance of Nile
-   * @param [config] @type {NileConfig}
+   * Creates a new instance of nile
+   *
+   * @remarks
+   * The main nile client for API integration. One instance should be present for a given application.
+   *
+   * @param config - configuration for the nile client
    */
   constructor(config?: NileConfig) {
     this.apiUrl = config?.apiUrl ?? '/';
@@ -46,7 +62,8 @@ class Nile {
   }
 
   /**
-   * TODO this will go away when we have cookies
+   * this will go away when we have cookies
+   * possibly necessary for node
    */
   setRequesterAuth() {
     if (!this.requester.authToken) {
@@ -55,9 +72,9 @@ class Nile {
   }
 
   /**
-   *
-   * @param payload @type {NileSignIn} sign in payload for a user
-   * @returns {Promise<boolean>} auth token for use later
+   * A function to be called for signing in
+   * @param payload the email and password for a user
+   * @returns {Promise<boolean>} was login successful
    */
   signIn(payload: NileSignIn): Promise<boolean> {
     return this.create('login', payload).then(res => {
@@ -71,19 +88,20 @@ class Nile {
   }
 
   /**
+   * Sends a POST to the be with a payload
    *
-   * @param entity @type {CreateableEntities} maps to urls in the api
-   * @param payload @type {unknown} the maps to the payload types TODO
-   * @returns {Promise<EntityType>} the created entity
+   * @param entity maps to urls in the api
+   * @param payload the maps to the payload types TODO
+   * @returns a promise for the created entity
    */
   create(entity: CreateableEntities, payload: unknown): Promise<APIResponse> {
     return this.requester.fetch('POST', entity, payload).then(convertToJSON);
   }
 
   /**
-   *
-   * @param entity @type {CreateableEntities | UpdatableEntities} maps to the urls in the api
-   * @returns {Promise<EntityType>} the created entity
+   * sends a GET request
+   * @param entity strings mapped to the urls in the api
+   * @returns {Promise<APIResponse>} the created entity
    */
   read(entity: CreateableEntities | UpdatableEntities): Promise<APIResponse> {
     this.setRequesterAuth();
@@ -91,28 +109,40 @@ class Nile {
   }
 
   /**
-   *
-   * @param entity @type {UpdatableEntities} maps to the urls in the api
-   * @param payload @type {unknown} the maps to the payload types TODO
-   * @returns {Promise<EntityType>} the updated entity
+   * sends a POST request, with a payload.
+   * @param entity strings mapped to the urls in the api
+   * @param payload the id to update, or the maps to the payload types TODO
+   * @returns {Promise<APIResponse>} the updated entity
    */
-  update(entity: UpdatableEntities, payload: unknown): Promise<APIResponse> {
+  update(
+    entity: UpdatableEntities,
+    payload: string | { [key: string]: unknown }
+  ): Promise<APIResponse> {
     this.setRequesterAuth();
-    const { id } = payload as { id: string };
+    let id = payload;
+    if (typeof id !== 'string') {
+      id = payload as { id: string };
+    }
     return this.requester
       .fetch('POST', `${entity}/${String(id)}`, payload)
       .then(convertToJSON);
   }
 
   /**
-   *
-   * @param entity @type {UpdatableEntities} maps to the urls in the api
-   * @param payload @type {unknown} the maps to the payload types TODO
-   * @returns {Promise<EntityType>} the deleted entity
+   * sends a DELETE request
+   * @param entity maps to the urls in the api
+   * @param payload the maps to the payload types TODO
+   * @returns {Promise<APIResponse>} the deleted entity
    */
-  delete(entity: UpdatableEntities, payload: unknown): Promise<APIResponse> {
+  delete(
+    entity: UpdatableEntities,
+    payload: string | { [key: string]: unknown }
+  ): Promise<APIResponse> {
     this.setRequesterAuth();
-    const { id } = payload as { id: string };
+    let id = payload;
+    if (typeof id !== 'string') {
+      id = payload as { id: string };
+    }
     return this.requester
       .fetch('DELETE', `${entity}/${String(id)}`)
       .then(convertToJSON);
