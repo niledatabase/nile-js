@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/TheNileDev/nile-js/compare/v0.3.0...v0.3.1) (2022-03-29)
+
+
+### Bug Fixes
+
+* update prepare for building types ([1f0b814](https://github.com/TheNileDev/nile-js/commit/1f0b814801a382b14e06f0432b15d987daa1a073))
+
+
+
+## [0.2.2](https://github.com/TheNileDev/nile-js/compare/v0.2.1...v0.2.2) (2022-03-29)
+
+
+
+## [0.2.1](https://github.com/TheNileDev/nile-js/compare/v0.2.0...v0.2.1) (2022-03-29)
+
+
+
+# [0.2.0](https://github.com/TheNileDev/nile-js/compare/v0.1.1...v0.2.0) (2022-03-28)
+
+
+
+## [0.1.1](https://github.com/TheNileDev/nile-js/compare/v0.1.0...v0.1.1) (2022-03-24)
+
+
+
+# 0.1.0 (2022-03-24)
+
+
+
+
+
 # 0.3.0 (2022-03-29)
 
 ### Bug Fixes
