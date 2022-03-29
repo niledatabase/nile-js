@@ -13,7 +13,8 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
+    "build": "tsdx build && yarn build:types",
+    "build:types": "tsc -d --declarationDir dist --emitDeclarationOnly",
     "test": "tsdx test",
     "prepare": "tsdx build",
     "size": "size-limit",

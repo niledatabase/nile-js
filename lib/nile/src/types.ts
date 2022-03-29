@@ -1,6 +1,9 @@
+/** Options for {@link Nile.constructor} */
 export interface NileConfig {
   apiUrl: string;
 }
+
+/** Payload for {@link Nile.signIn} */
 export interface NileSignIn {
   email: string;
   password: string;

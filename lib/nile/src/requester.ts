@@ -2,7 +2,7 @@ import {
   CreateableEntities,
   UpdatableEntityUrls,
   UpdatableEntities,
-} from './NileConfig';
+} from './types';
 
 const requestHeaders = (authToken: string | null) => {
   const headers: HeadersInit = {
