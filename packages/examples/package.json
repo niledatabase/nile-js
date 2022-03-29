@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/examples",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^0.19.7",
-    "@theniledev/js": "^0.2.2",
+    "@theniledev/js": "^0.3.0",
     "@uiw/react-codemirror": "^4.5.1",
     "next": "12.1.2",
     "react": "17.0.2",
