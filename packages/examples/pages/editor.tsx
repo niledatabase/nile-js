@@ -9,7 +9,7 @@ const Edit = () => {
   const router = useRouter();
   const textRef = useRef('');
   const [error, setError] = useState<null | string>(null);
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState<unknown>();
   const handleSubmit = useCallback(async () => {
     setError(null);
     try {
