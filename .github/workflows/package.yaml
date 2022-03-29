@@ -30,11 +30,17 @@ jobs:
         working-directory: lib/nile
         run: yarn install --no-lockfile
 
+      - name: Install @theniledev/react
+        working-directory: packages/react
+        run: yarn install --no-lockfile
+
+      - name: Build @theniledev/packages
+        run: yarn build
+
       - name: Version
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor}}@users.noreply.github.com"
-
           npx lerna version --conventional-commits --yes
 
       - name: Publish
