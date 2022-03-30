@@ -1,6 +1,6 @@
 import {
   CreateableEntities,
-  UpdatableEntityUrls,
+  ReadableEntities,
   UpdatableEntities,
 } from './types';
 
@@ -17,12 +17,22 @@ const requestHeaders = (authToken: string | null) => {
 
 export class Requester {
   /**
-   * @type string
+   * URL for the client to request against.
+
+   * @remarks
+   * The value should be passed in the constructor
+   * 
+   * @type {string} a FQDN for https requests 
+   * @defaultValue '/'
+   * @readonly 
    */
   apiUrl: string;
 
   /**
+   * auth token saved after login and re-used for requests aginst the backend
    * @type {string} token for authorization
+   * @defaultValue null
+   * @readonly
    */
   authToken: string | null;
 
@@ -38,11 +48,11 @@ export class Requester {
    * @param method method to call
    * @param entity entity to affect
    * @param payload json object to use
-   * @returns @type {Promise<Response>}
+   * @returns {Promise<Response>}
    */
   fetch(
     method: 'POST' | 'GET' | 'DELETE',
-    entity: CreateableEntities | UpdatableEntityUrls | UpdatableEntities,
+    entity: CreateableEntities | ReadableEntities | UpdatableEntities,
     payload?: unknown
   ): Promise<Response> {
     const headers = requestHeaders(this.authToken);

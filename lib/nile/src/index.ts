@@ -3,6 +3,7 @@ import {
   NileSignIn,
   CreateableEntities,
   AuthResponse,
+  ReadableEntities,
   UpdatableEntities,
   APIResponse,
 } from './types';
@@ -103,9 +104,13 @@ class Nile {
    * @param entity strings mapped to the urls in the api
    * @returns {Promise<APIResponse>} the created entity
    */
-  read(entity: CreateableEntities | UpdatableEntities): Promise<APIResponse> {
+  read(entity: ReadableEntities, id?: string | number): Promise<APIResponse> {
+    let payload = entity;
+    if (id) {
+      payload = `${entity}/${id}` as ReadableEntities;
+    }
     this.setRequesterAuth();
-    return this.requester.fetch('GET', entity).then(convertToJSON);
+    return this.requester.fetch('GET', payload).then(convertToJSON);
   }
 
   /**
@@ -116,13 +121,10 @@ class Nile {
    */
   update(
     entity: UpdatableEntities,
-    payload: string | { [key: string]: unknown }
+    payload: { id: string | number; [key: string]: unknown }
   ): Promise<APIResponse> {
     this.setRequesterAuth();
-    let id = payload;
-    if (typeof id !== 'string') {
-      id = payload as { id: string };
-    }
+    const id = payload as { id: string };
     return this.requester
       .fetch('POST', `${entity}/${String(id)}`, payload)
       .then(convertToJSON);
@@ -134,9 +136,9 @@ class Nile {
    * @param payload the maps to the payload types TODO
    * @returns {Promise<APIResponse>} the deleted entity
    */
-  delete(
+  remove(
     entity: UpdatableEntities,
-    payload: string | { [key: string]: unknown }
+    payload: string | number | { [key: string]: unknown }
   ): Promise<APIResponse> {
     this.setRequesterAuth();
     let id = payload;
