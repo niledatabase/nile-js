@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/TheNileDev/nile-js/compare/v0.3.1...v0.4.0) (2022-03-30)
+
+
+### Features
+
+* update interface types, add tests ([31e860e](https://github.com/TheNileDev/nile-js/commit/31e860e95b1bcd49da6b06ab05a50cdcf11cd1e0))
+
+
+
+
+
 ## [0.3.1](https://github.com/TheNileDev/nile-js/compare/v0.3.0...v0.3.1) (2022-03-29)
 
 
