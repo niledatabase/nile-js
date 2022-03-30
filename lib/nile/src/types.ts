@@ -15,12 +15,15 @@ export interface AuthResponse {
   token: string;
 }
 
-export type CreateableEntities = 'login' | 'users' | 'orgs';
+// eslint-disable-next-line @typescript-eslint/ban-types
+type LiteralUnion<T extends U, U = string> = T | (U & {});
 
-export type UpdatableEntities = 'user';
+export declare type CreateableEntities = LiteralUnion<
+  'login' | 'users' | 'orgs'
+>;
+export declare type UpdatableEntities = LiteralUnion<'user'>;
+export declare type ReadableEntities = LiteralUnion<'user' | 'users' | 'orgs'>;
 
-export type UpdatableEntityUrls = `${UpdatableEntities}/${string}`
-
-export interface APIResponse extends Response{
-  [key: string]: unknown
+export interface APIResponse extends Response {
+  [key: string]: unknown;
 }

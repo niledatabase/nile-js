@@ -10,6 +10,7 @@
   "scripts": {
     "build": "yarn build:lib && yarn build:react && yarn build:examples",
     "build:lib": "yarn workspace @theniledev/js build",
+    "test:lib": "yarn workspace @theniledev/js test",
     "build:react": "yarn workspace @theniledev/react build",
     "build:examples": "yarn workspace @theniledev/examples build",
     "lint": "yarn eslint . --max-warnings=0",
