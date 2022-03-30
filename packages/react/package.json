@@ -9,7 +9,7 @@
     "build": "tsdx build"
   },
   "dependencies": {
-    "react": "17.0.2"
+    "react": "18.0.0"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.16.7",
