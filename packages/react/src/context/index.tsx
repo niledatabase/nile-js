@@ -1,9 +1,9 @@
 import React, { useRef, useMemo, createContext, useContext } from 'react';
 import { NileContext, NileProviderProps } from './types';
-import Nile from '@theniledev/js';
+import Nile, {NileService} from '@theniledev/js';
 
 const defaultContext: NileContext = {
-  instance: new Nile({ apiUrl: '' }),
+  instance: Nile({ apiUrl: '' }),
 };
 const context = createContext<NileContext>(defaultContext);
 const { Provider } = context;
@@ -19,7 +19,7 @@ export const NileProvider = (props: NileProviderProps) => {
     }
     initalized.current = true;
     return {
-      instance: new Nile({ apiUrl: props.apiUrl }),
+      instance: Nile({ apiUrl: props.apiUrl }),
     };
   }, [props.apiUrl]);
 
@@ -30,6 +30,6 @@ const useNileContext = (): NileContext => {
   return useContext(context);
 };
 
-export const useNile = (): Nile => {
+export const useNile = (): NileService => {
   return useNileContext().instance;
 };

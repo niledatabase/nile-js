@@ -1,0 +1,39 @@
+openapi: 3.0.2
+info:
+  title: nile
+  version: '0.1'
+servers:
+  - url: 'https://admin.api.thenile.dev/v0'
+paths:
+  /:
+    post:
+      operationId: login
+      summary: Log in to service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInfo'
+      responses:
+        '200':
+          description: Authenticated token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+components:
+  schemas:
+    LoginInfo:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string

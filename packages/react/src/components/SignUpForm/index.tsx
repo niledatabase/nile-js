@@ -15,7 +15,7 @@ export default function SignUpForm(props: Props) {
       password: password.value,
     };
     const user = await nile
-      .create('users', payload)
+      .createUser(payload)
       .catch(() => alert('things went bad'));
 
     if (user) {
@@ -25,7 +25,6 @@ export default function SignUpForm(props: Props) {
 
   return (
     <form>
-      <label htmlFor="email">Email</label>
       <br />
       <input type="text" placeholder="email" id="email"></input>
       <br />

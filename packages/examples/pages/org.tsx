@@ -18,7 +18,7 @@ function Org() {
       .catch(() => alert('things went bad'));
 
     if (success) {
-      const users = await nile.read('orgs');
+      const users = await nile.listOrganizations();
       setUsers(users);
     }
   }

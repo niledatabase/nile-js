@@ -1,87 +1,43 @@
 import {
-  NileConfig,
   NileSignIn,
   CreateableEntities,
   AuthResponse,
   ReadableEntities,
   UpdatableEntities,
-  APIResponse,
 } from './types';
-import { Requester } from './requester';
+/**
+ * the below files need generated with `yarn build:exp`
+ */
+import { DefaultApiRequestFactory } from './generated/openapi/apis/DefaultApi';
+import { HttpMethod, RequestContext } from './generated/openapi/http/http';
+import { Configuration, createConfiguration, ConfigurationParameters } from './generated/openapi/configuration';
+import { ObjectSerializer } from './generated/openapi/models/ObjectSerializer';
+import { ServerConfiguration } from './generated/openapi/servers';
+import { SecurityAuthentication, AuthMethods } from './generated/openapi/auth/auth';
+let authToken = '';
 
-const convertToJSON = (res: Response) => {
-  if (res.ok === true) {
-    try {
-      return res.json();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  // error of some kind
-  return res;
-};
-
-class Nile {
-  /**
-   * URL for the client to request against.
-
-   * @remarks
-   * The value should be passed in the constructor
-   * 
-   * @type {string} a FQDN for https requests 
-   * @defaultValue '/'
-   * @readonly 
-   */
-  apiUrl: string;
-
-  /**
-   * auth token saved after login and re-used for requests aginst the backend
-   * @type {string} token for authorization
-   * @defaultValue null
-   * @readonly
-   */
-  authToken: string | null;
-
-  /**
-   * A class wrapping `fetch` for making requests
-   * @type {Requester} class to make requests
-   */
-  requester: Requester;
-
+export class NileService extends DefaultApiRequestFactory {
   /**
    * Creates a new instance of nile
-   *
-   * @remarks
    * The main nile client for API integration. One instance should be present for a given application.
    *
    * @param config - configuration for the nile client
    */
-  constructor(config?: NileConfig) {
-    this.apiUrl = config?.apiUrl ?? '/';
-    this.authToken = null;
-    this.requester = new Requester(this.apiUrl);
-  }
-
-  /**
-   * this will go away when we have cookies
-   * possibly necessary for node
-   */
-  setRequesterAuth() {
-    if (!this.requester.authToken) {
-      this.requester.setToken(this.authToken);
-    }
+  constructor(config: Configuration) {
+    super(config);
   }
 
   /**
    * A function to be called for signing in
    * @param payload the email and password for a user
-   * @returns {Promise<boolean>} was login successful
+   * @returns a promise indicating if login was successful
    */
-  signIn(payload: NileSignIn): Promise<boolean> {
+  public async signIn(payload: NileSignIn): Promise<boolean> {
     return this.create('login', payload).then(res => {
       const { token } = ((res as unknown) as AuthResponse) ?? {};
       if (token) {
-        this.authToken = token;
+        // this creates a new instance internally
+        authToken = token;
         return true;
       }
       return false;
@@ -95,60 +51,93 @@ class Nile {
    * @param payload the maps to the payload types TODO
    * @returns a promise for the created entity
    */
-  create(entity: CreateableEntities, payload: unknown): Promise<APIResponse> {
-    return this.requester.fetch('POST', entity, payload).then(convertToJSON);
+  public async create(entity: CreateableEntities, payload: unknown): Promise<RequestContext> {
+    return this.buildOpenApiRequest(`/${entity}`, HttpMethod.POST, payload);
   }
 
+  async buildOpenApiRequest(entity: CreateableEntities, method: HttpMethod, payload?: unknown): Promise<RequestContext> {
+    const requestContext = this.configuration.baseServer.makeRequestContext(`/${entity}`, method);
+    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8')
+
+    // if we are a POST
+    if (payload) {
+      const serializedBody = ObjectSerializer.stringify(payload, 'application/json');
+      requestContext.setBody(serializedBody);
+    }
+
+    // if we are authenticated
+    const defaultAuth: SecurityAuthentication | undefined = this.configuration?.authMethods?.default
+    if (defaultAuth?.applySecurityAuthentication) {
+      await defaultAuth?.applySecurityAuthentication(requestContext);
+    }
+
+    return requestContext;
+
+  }
   /**
    * sends a GET request
    * @param entity strings mapped to the urls in the api
-   * @returns {Promise<APIResponse>} the created entity
+   * @returns {Promise<RequestContext>} the created entity
    */
-  read(entity: ReadableEntities, id?: string | number): Promise<APIResponse> {
-    let payload = entity;
+  public async read(entity: ReadableEntities, id?: string | number): Promise<RequestContext> {
+    let url = entity;
     if (id) {
-      payload = `${entity}/${id}` as ReadableEntities;
+      url = `/${entity}/${id}` as ReadableEntities;
     }
-    this.setRequesterAuth();
-    return this.requester.fetch('GET', payload).then(convertToJSON);
+    return this.buildOpenApiRequest(url, HttpMethod.GET);
   }
 
   /**
    * sends a POST request, with a payload.
    * @param entity strings mapped to the urls in the api
    * @param payload the id to update, or the maps to the payload types TODO
-   * @returns {Promise<APIResponse>} the updated entity
+   * @returns {Promise<RequestContext>} the updated entity
    */
-  update(
+  public async update(
     entity: UpdatableEntities,
-    payload: { id: string | number; [key: string]: unknown }
-  ): Promise<APIResponse> {
-    this.setRequesterAuth();
+    payload: { id: string | number;[key: string]: unknown }
+  ): Promise<RequestContext> {
     const id = payload as { id: string };
-    return this.requester
-      .fetch('POST', `${entity}/${String(id)}`, payload)
-      .then(convertToJSON);
+    const url = `/${entity}/${String(id)}`;
+    return this.buildOpenApiRequest(url, HttpMethod.POST, payload);
   }
 
   /**
    * sends a DELETE request
    * @param entity maps to the urls in the api
    * @param payload the maps to the payload types TODO
-   * @returns {Promise<APIResponse>} the deleted entity
+   * @returns {Promise<RequestContext>} the deleted entity
    */
-  remove(
+  public async remove(
     entity: UpdatableEntities,
     payload: string | number | { [key: string]: unknown }
-  ): Promise<APIResponse> {
-    this.setRequesterAuth();
+  ): Promise<RequestContext> {
     let id = payload;
     if (typeof id !== 'string') {
       id = payload as { id: string };
     }
-    return this.requester
-      .fetch('DELETE', `${entity}/${String(id)}`)
-      .then(convertToJSON);
+    const url = `/${entity}/${String(id)}`;
+    return this.buildOpenApiRequest(url, HttpMethod.DELETE);
   }
 }
 
-export default Nile;
+function ApiImpl(config?: ConfigurationParameters & { apiUrl: string }): NileService {
+  const authentication: AuthMethods = {
+    default: {
+      getName: (): string => 'Bearer Authentication',
+      applySecurityAuthentication: (requestContext): void => {
+        requestContext.setHeaderParam('Authorization', `Bearer ${authToken}`);
+      }
+    }
+  }
+  const server = new ServerConfiguration<{ [key: string]: string }>(config?.apiUrl ?? '/', {})
+  const _config = {
+    baseServer: server,
+    authMethods: authentication,
+    ...config,
+  };
+  const cfg = createConfiguration(_config);
+  const nile = new NileService(cfg);
+  return nile;
+}
+export default ApiImpl;
