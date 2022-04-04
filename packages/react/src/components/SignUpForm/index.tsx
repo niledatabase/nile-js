@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNile } from '../../context';
 import Button from '../_Button';
+import { Label, Input } from '../_Themeable';
+
 import { Props } from './types';
 
 export default function SignUpForm(props: Props) {
@@ -25,15 +27,11 @@ export default function SignUpForm(props: Props) {
 
   return (
     <form>
-      <br />
-      <input type="text" placeholder="email" id="email"></input>
-      <br />
-      <label htmlFor="email">Password</label>
-      <br />
-      <input type="password" placeholder="password" id="password"></input>
-      <br />
-      <br />
-      <Button onClick={handleSubmit}>Sign up</Button>
+      <Label htmlFor="email" text="Email"></Label>
+      <Input name="email" />
+      <Label htmlFor="password" text="Password" />
+      <Input name="password" />
+      <Button onClick={handleSubmit} name="signupButton" text="Sign up" />
     </form>
   );
 }
