@@ -3,6 +3,8 @@
 node_modules
 dist
 docs
+src/generated
+spec/output.swagger.json
 
 .yarn/*
 !.yarn/patches

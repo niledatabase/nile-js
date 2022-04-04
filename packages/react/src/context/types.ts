@@ -1,8 +1,8 @@
-import Nile from '@theniledev/js';
+import {NileService} from '@theniledev/js';
 import React from 'react';
 
 export interface NileContext {
-  instance: Nile;
+  instance: NileService;
 }
 
 export interface NileProviderProps {

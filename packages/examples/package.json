@@ -1,5 +1,6 @@
 {
   "name": "@theniledev/examples",
+  "license": "MIT",
   "version": "0.4.0",
   "scripts": {
     "dev": "next dev",
@@ -13,7 +14,8 @@
     "@uiw/react-codemirror": "^4.5.1",
     "next": "12.1.2",
     "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "react-dom": "18.0.0",
+    "url-parse": "^1.5.10"
   },
   "devDependencies": {
     "@types/node": "17.0.23",

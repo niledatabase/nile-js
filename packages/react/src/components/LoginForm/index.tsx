@@ -16,7 +16,10 @@ export default function LoginForm({ handleSuccess }: Props) {
     };
     const success = await nile
       .signIn(payload)
-      .catch(() => alert('things went bad'));
+      .catch((e) => {
+        console.log(e);
+        alert('things went bad')
+      });
 
     if (success) {
       handleSuccess && handleSuccess();

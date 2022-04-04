@@ -3,10 +3,12 @@
   "version": "0.4.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "license": "MIT",
   "module": "dist/nile.esm.js",
   "packageManager": "yarn@3.2.0",
   "scripts": {
-    "build": "tsdx build"
+    "build": "tsdx build",
+    "dev": "tsdx watch"
   },
   "dependencies": {
     "react": "18.0.0"
