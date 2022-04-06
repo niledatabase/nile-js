@@ -3,22 +3,24 @@ import React from 'react';
 
 import { useTheme, InputThemeName } from '../../theme';
 
-export function Input({ name }: { name: InputThemeName }) {
+export function Input({ name, node }: { name: InputThemeName, node: React.ReactNode }) {
     const theme = useTheme(name);
-    if (typeof theme === 'function') {
-        return <>{theme}</>
+    if (React.isValidElement(node)) {
+        const props = { id: name };
+        return React.cloneElement(node, props);
     }
 
-    return <input className={theme} type="text" placeholder={name} id={name} > </input>
+    return <input className={String(theme)} type="text" placeholder={name} id={name}></input>
 
 }
 
-export function Label({ htmlFor, text }: { text: string, htmlFor: InputThemeName}) {
+export function Label({ htmlFor, text, node }: { text: string, htmlFor: InputThemeName, node: React.ReactNode }) {
 
     const theme = useTheme(htmlFor);
-    if (typeof theme === 'function') {
-        return <>{theme}</>
+    if (React.isValidElement(node)) {
+        const props = { htmlFor };
+        return React.cloneElement(node, props);
     }
 
-    return <label className={theme} htmlFor={htmlFor}>{text}</label>
+    return <label className={String(theme)} htmlFor={htmlFor}>{text}</label>
 }

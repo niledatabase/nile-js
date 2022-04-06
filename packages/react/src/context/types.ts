@@ -1,14 +1,13 @@
-import { NileService } from '@theniledev/js';
+import {NileApi} from '@theniledev/js';
 import React from 'react';
-import { Theme } from '../global-types'
 
 export interface NileContext {
-  instance: NileService;
-  theme: Theme | string
+  instance: NileApi;
+  theme?: string
 }
 
 export interface NileProviderProps {
   children: React.ReactNode;
   apiUrl: string;
-  theme: Theme | string,
+  theme?: string;
 }

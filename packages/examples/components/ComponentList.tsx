@@ -8,28 +8,28 @@ export function ComponentList() {
       <div className={styles.card}>
         <Link href="/org" passHref>
           <span>
-            <Button>org</Button>
+            <Button node={null}>org</Button>
           </span>
         </Link>
       </div>
       <div className={styles.card}>
         <Link href="/signup" passHref>
           <span>
-            <Button>Sign up</Button>
+            <Button node={null}>Sign up</Button>
           </span>
         </Link>
       </div>
       <div className={styles.card}>
         <Link href="/signin" passHref>
           <span>
-            <Button>Sign in</Button>
+            <Button node={null}>Sign in</Button>
           </span>
         </Link>
       </div>
       <div className={styles.card}>
         <Link href="/editor" passHref>
           <span>
-            <Button>Editor</Button>
+            <Button node={null}>Editor</Button>
           </span>
         </Link>
       </div>

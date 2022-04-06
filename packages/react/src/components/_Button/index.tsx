@@ -1,23 +1,34 @@
 import React from 'react';
-import { useTheme } from '../../theme';
+import { useTheme, ButtonThemeName } from '../../theme';
 
 type ButtonProps = {
   type?: 'button' | 'submit' | 'reset';
   onClick?: () => void;
-  name: 'signupButton';
+  name: ButtonThemeName,
   text: string;
+  node: React.ReactNode;
 };
 
 export default function Button(props: ButtonProps) {
-  const { type, text, onClick, name } = props;
+  const { type, text, onClick, name, node } = props;
   const theme = useTheme(name);
-  if (typeof theme === 'function') {
-    return <>{theme}</>
+
+  const buttonType = type ?? 'button'
+  if (React.isValidElement(node)) {
+    console.log(node);
+
+    const combineOnClick = (e: MouseEvent) => {
+      const submit = node.props.onClick && node.props.onClick(e);
+      if (submit) {
+        onClick && onClick();
+      }
+    }
+    const props = { onClick: combineOnClick, type: buttonType };
+    return React.cloneElement(node, props);
   }
 
-
   return (
-    <button className={theme} type={type ?? 'button'} onClick={onClick} role="button">
+    <button className={String(theme)} type={buttonType} onClick={onClick}>
       {text}
     </button>
   );

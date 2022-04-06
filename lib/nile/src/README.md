@@ -1,5 +1,8 @@
 # Nile
 
+
+All calls, except `login`, should be authenticated. The authentication headers is stored in memory, provided `login` has been called, and the token can be accessed via `nile.authToken`.
+
 All URIs are relative to *https://admin.api.thenile.dev/v0*
 
 Method | HTTP request | Description
@@ -30,10 +33,9 @@ Method | HTTP request | Description
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileAcceptInviteRequest = {
   // number | Invite code.
@@ -82,10 +84,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileCreateOrganizationRequest = {
   // CreateOrganizationRequest
@@ -136,10 +137,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileCreateUserRequest = {
   // CreateUserRequest
@@ -191,10 +191,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileDeleteOrganizationRequest = {
   // number | Unique identifier.
@@ -243,10 +242,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileDeleteUserRequest = {
   // number | Unique identifier.
@@ -295,10 +293,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileGetAcceptedInviteRequest = {
   // number | Unique identifier.
@@ -347,10 +344,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileGetInviteRequest = {
   // number | Invite code.
@@ -399,10 +395,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileGetOrganizationRequest = {
   // number | Unique identifier.
@@ -451,10 +446,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileGetUserRequest = {
   // number | Unique identifier.
@@ -503,10 +497,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:any = {};
 
@@ -549,10 +542,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileListInvitesRequest = {
   // number | Org ID. (optional)
@@ -601,10 +593,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:any = {};
 
@@ -647,10 +638,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileListUsersRequest = {
   // number | Org ID. (optional)
@@ -703,10 +693,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileLoginRequest = {
   // LoginInfo
@@ -758,10 +747,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileUpdateOrganizationRequest = {
   // number | Unique identifier.
@@ -815,10 +803,9 @@ No authorization required
 
 
 ```typescript
-import { Nile } from '@theniledev/js';
+import Nile from '@theniledev/js';
 
-const configuration = Nile.createConfiguration();
-const nile = new Nile(configuration);
+nile = Nile({apiUrl: 'http://localhost:8080'});
 
 let body:NileUpdateUserRequest = {
   // number | Unique identifier.

@@ -1,21 +1,22 @@
 import { useMemo } from 'react';
 import { useNileContextTheme } from '../context';
 
-
 const ThemeConfig = {
     'email': 'email',
     'password': 'password',
-    'signupButton': 'signupButton'
+    'signupButton': 'signupButton',
+    'loginButton': 'loginButon'
 }
-export type InputThemeName = 'email' | 'password' | 'signupButton';
 
-export const useTheme = (name: InputThemeName) => {
+export type InputThemeName = 'email' | 'password' ;
+export type ButtonThemeName =  'signupButton' | 'loginButton';
+
+export const useTheme = (name: InputThemeName | ButtonThemeName) => {
     const contextTheme = useNileContextTheme();
-    const override = typeof contextTheme === 'object' && contextTheme[name];
     return useMemo(() => {
-        if (typeof override === 'function') {
-            return override;
+        if (!contextTheme) {
+            return ThemeConfig[name];
         }
         return `${contextTheme}-${ThemeConfig[name]}`;
-    }, [name]);
+    }, [contextTheme, name])
 };

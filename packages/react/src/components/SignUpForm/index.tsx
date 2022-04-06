@@ -6,7 +6,7 @@ import { Label, Input } from '../_Themeable';
 import { Props } from './types';
 
 export default function SignUpForm(props: Props) {
-  const { handleSuccess } = props;
+  const { button, emailInput, emailLabel, passwordLabel, passwordInput, handleSuccess } = props;
   const nile = useNile();
   async function handleSubmit() {
     const email = document.querySelector('#email') as HTMLInputElement;
@@ -16,22 +16,21 @@ export default function SignUpForm(props: Props) {
       email: email.value,
       password: password.value,
     };
-    const user = await nile
+  
+    
+    await nile
       .createUser(payload)
       .catch(() => alert('things went bad'));
-
-    if (user) {
-      handleSuccess && handleSuccess(user);
-    }
+      handleSuccess && handleSuccess();
   }
 
   return (
-    <form>
-      <Label htmlFor="email" text="Email"></Label>
-      <Input name="email" />
-      <Label htmlFor="password" text="Password" />
-      <Input name="password" />
-      <Button onClick={handleSubmit} name="signupButton" text="Sign up" />
+    <form id="signup">
+      <Label node={emailLabel} htmlFor={'email'} text="Email" />
+      <Input node={emailInput} name="email" />
+      <Label node={passwordLabel} htmlFor="password" text="Password" />
+      <Input node={passwordInput} name="password" />
+      <Button node={button} onClick={handleSubmit} text="Sign up" name="signupButton" />
     </form>
   );
 }
