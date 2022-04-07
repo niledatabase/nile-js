@@ -14,19 +14,43 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginInfo'
+              $ref: "#/components/schemas/LoginInfo"
       responses:
         '200':
           description: Authenticated token
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
+                $ref: "#/components/schemas/Token"
+  /validate:
+    post:
+      operationId: validate
+      summary: Validate a token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Token"
+      responses:
+        '204':
+          description: The token is valid
+        '400':
+          description: The token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas/Error.yaml"
+
 components:
   schemas:
+    Token:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
     LoginInfo:
       type: object
       required:

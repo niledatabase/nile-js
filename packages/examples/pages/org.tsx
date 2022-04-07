@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { useNile } from '@theniledev/react';
 import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
-import nile from '../utilities/nile';
 
 function Org() {
   const [users, setUsers] = useState<unknown>(null);
+  const nile = useNile();
   async function handleSubmit() {
     const email = document.querySelector('#email') as HTMLInputElement;
     const password = document.querySelector('#password') as HTMLInputElement;
