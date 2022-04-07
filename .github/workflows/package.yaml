@@ -45,6 +45,6 @@ jobs:
 
       - name: Publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npx lerna publish from-git --yes --no-verify-access --registry=https://npm.pkg.github.com/
+          npx lerna publish from-git --yes --no-verify-access
