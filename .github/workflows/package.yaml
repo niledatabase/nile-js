@@ -47,4 +47,4 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npx lerna publish from-git --yes --no-verify-access
+          npx lerna publish from-git --yes
