@@ -13,7 +13,9 @@ function SignIn() {
       <h2>Sign in</h2>
       <LoginForm
         handleSuccess={() => {
-          router.push(`/${redirect}`);
+          if (redirect) {
+            router.push(`/${redirect}`);
+          }
         }}
       />
       <ComponentList />

@@ -1,12 +1,10 @@
 import type { NextPage } from 'next';
-import { NileProvider } from '@theniledev/react';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { ComponentList } from '../components/ComponentList';
 
 const Home: NextPage = () => {
   return (
-    <NileProvider apiUrl='http://localhost:8080'>
       <div className={styles.container}>
         <Head>
           <title>nile js testing</title>
@@ -35,7 +33,6 @@ const Home: NextPage = () => {
           </a>
         </footer>
       </div>
-    </NileProvider>
   );
 };
 

@@ -1,0 +1,348 @@
+openapi: 3.0.2
+info:
+  title: nile
+  version: '0.1'
+servers:
+  - url: 'https://admin.api.thenile.dev/v0'
+paths:
+  /orgs:
+    get:
+      operationId: listOrganizations
+      summary: List all Organizations.
+      responses:
+        '200':
+          description: List of all Organizations.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+    post:
+      operationId: createOrganization
+      summary: Create a new Organization.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrganizationRequest"
+      responses:
+        '200':
+          description: Created a new Organization.
+
+  /orgs/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idInPath'
+    get:
+      operationId: getOrganization
+      summary: Get information for this Organization.
+      responses:
+        '200':
+          description: The Organization with the requested ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+    patch:
+      operationId: updateOrganization
+      summary: Update this Organization.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchOrganizationRequest'
+      responses:
+        '200':
+          description: The updated Organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+    delete:
+      operationId: deleteOrganization
+      summary: Delete this Organization.
+      responses:
+        204:
+          description: Successful deletion of Organization.
+
+  /users:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/orgIdInQuery'
+        - name: email
+          in: query
+          description: User email.
+          schema:
+            type: string
+      operationId: listUsers
+      summary: List all Users.
+      responses:
+        '204':
+          description: Returns if called unauthenticated, to check for the availability of an email.
+        '200':
+          description: List of all Users in Organization.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      operationId: createUser
+      summary: Create a new User.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        '200':
+          description: Created a new User.
+
+  /users/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idInPath'
+    get:
+      operationId: getUser
+      summary: Get information for this User.
+      responses:
+        '200':
+          description: The User with the requested ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    patch:
+      operationId: updateUser
+      summary: Update this User.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchUserRequest'
+      responses:
+        '200':
+          description: The updated User.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      operationId: deleteUser
+      summary: Delete this User.
+      responses:
+        204:
+          description: Successful deletion of User.
+
+  /invites:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/orgIdInQuery"
+      operationId: listInvites
+      summary: List all Invites.
+      responses:
+        '200':
+          description: List of all Invites.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invite'
+
+  /invites/{code}:
+    parameters:
+      - $ref: "#/components/parameters/codeInPath"
+    get:
+      operationId: getInvite
+      summary: Get an invite.
+      responses:
+        '200':
+          description: The Invite with the requested invite code.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invite'
+
+  /invites/{code}/accept:
+    parameters:
+      - $ref: "#/components/parameters/codeInPath"
+    post:
+      operationId: acceptInvite
+      summary: Accept an invite.
+      responses:
+        '204':
+          description: The accepted invite.
+
+  /accepted_invites:
+    get:
+      # TODO: Filter by inviter, accepter, code.
+      operationId: listAcceptedInvites
+      summary: List all accepted invites.
+      responses:
+        '200':
+          description: List of accepted invites.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AcceptedInvite'
+
+  /accepted_invites/{id}:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/idInPath"
+      # TODO: Filter by accepter.
+      operationId: getAcceptedInvite
+      summary: Get an accepted invite.
+      responses:
+        '200':
+          description: The accepted invite with the specified code.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedInvite'
+
+
+components:
+  parameters:
+    orgIdInQuery:
+      in: query
+      name: org_id
+      schema:
+        type: integer
+      description: Org ID.
+    codeInPath:
+      in: path
+      name: code
+      schema:
+        type: integer
+      required: true
+      description: Invite code.
+    idInPath:
+      in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Unique identifier.
+
+  schemas:
+    Organization:
+      allOf:
+        - $ref: './schemas/Instance.yaml'
+        - type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+    User:
+      allOf:
+        - $ref: './schemas/Instance.yaml'
+        - type: object
+          properties:
+            email:
+              type: string
+            password:
+              type: string
+              writeOnly: true
+            # TODO: Add orgs?
+    CreateOrganizationRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    PatchOrganizationRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    PatchUserRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+    CreateInviteRequest:
+      type: object
+      required:
+        - org_id
+      properties:
+        org_id:
+          type: integer
+    AcceptedInvite:
+      type: object
+      # TODO: Inherit from instance?
+      properties:
+        id:
+          type: integer
+        invite:
+          description: The invite code.
+          type: integer
+        accepted_by:
+          description: The user ID of the user that accepted the invite.
+          type: integer
+    Invite:
+      type: object
+      properties:
+        code:
+          type: integer
+        org:
+          type: integer
+        inviter:
+          type: integer
+        status:
+          type: string
+          enum:
+            - active
+            # TODO - revoked
+            # TODO - expired
+    Error:
+      type: object
+      required:
+        - message
+        - error_code
+        - status_code
+      properties:
+        message:
+          type: string
+          description: A user-readable error message.
+        error_code:
+          type: string
+          # Figure out what good error codes look like.
+          enum:
+            # TODO: Change to internal_server_error
+            - internal_error
+            - bad_request
+            - unauthorized_credentials
+            - user_not_found
+            - org_not_found
+            - invite_not_found
+            - duplicate_org_name
+            - duplicate_user_email
+            - user_already_in_org
+          description: A machine-readable error code.
+        status_code:
+          type: integer
+          description: The HTTP status code.

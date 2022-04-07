@@ -4,7 +4,7 @@ import { javascript } from '@codemirror/lang-javascript';
 
 type EditorProps = {
   textRef: MutableRefObject<string>;
-  height: string,
+  height: string
 };
 export const Editor = ({ textRef, height }: EditorProps)=>{
   const handleChange = useCallback(

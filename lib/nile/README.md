@@ -15,6 +15,7 @@ yarn set version berry
 To run:
 
 ```bash
+yarn build
 yarn start
 ```
 
