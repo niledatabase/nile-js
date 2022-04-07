@@ -15,7 +15,7 @@
     "build:examples": "yarn workspace @theniledev/examples build",
     "lint": "yarn eslint . --max-warnings=0",
     "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
-    "publish": "yarn lerna publish --registry=https://npm.pkg.github.com/"
+    "publish": "yarn lerna publish"
   },
   "prettier": {
     "printWidth": 80,
