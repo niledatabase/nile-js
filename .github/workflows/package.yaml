@@ -22,9 +22,17 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 'lts/*'
-          registry-url: 'https://npm.pkg.github.com'
+          # registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
-          scope: '@theniledev'
+          # scope: '@theniledev'
+      - name: Authenticate to npm
+        run: |
+          echo "@theniledev:wq:registry=https://registry.npmjs.org/" 
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install @theniledev/js
         working-directory: lib/nile
@@ -45,6 +53,6 @@ jobs:
 
       - name: Publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npx lerna publish from-git --yes --no-verify-access --registry=https://npm.pkg.github.com/
+          npx lerna publish from-git --yes

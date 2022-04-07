@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.5.5",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -56,6 +56,6 @@
     "directory": "lib/nile"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "access": "public"
   }
 }

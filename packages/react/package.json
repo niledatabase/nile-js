@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/react",
-  "version": "0.5.0",
+  "version": "0.5.5",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -44,7 +44,7 @@
     "directory": "packages/react"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "access": "public"
   },
   "size-limit": [
     {
