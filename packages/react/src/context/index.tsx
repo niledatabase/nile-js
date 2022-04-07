@@ -1,10 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import React, { useRef, useMemo, createContext, useContext } from 'react';
 import { NileContext, NileProviderProps } from './types';
-import Nile, {NileService} from '@theniledev/js';
+import Nile, { NileApi } from '@theniledev/js';
 
 const defaultContext: NileContext = {
   instance: Nile({ apiUrl: '' }),
+  theme: ''
 };
+
 const context = createContext<NileContext>(defaultContext);
 const { Provider } = context;
 
@@ -20,8 +24,9 @@ export const NileProvider = (props: NileProviderProps) => {
     initalized.current = true;
     return {
       instance: Nile({ apiUrl: props.apiUrl }),
+      theme: props.theme,
     };
-  }, [props.apiUrl]);
+  }, [props.apiUrl, props.theme]);
 
   return <Provider value={values}>{children}</Provider>;
 };
@@ -30,6 +35,10 @@ const useNileContext = (): NileContext => {
   return useContext(context);
 };
 
-export const useNile = (): NileService => {
+export const useNile = (): NileApi => {
   return useNileContext().instance;
 };
+
+export const useNileContextTheme = (): void | string => {
+  return useNileContext().theme;
+}

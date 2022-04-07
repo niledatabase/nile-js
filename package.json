@@ -38,7 +38,7 @@
     "typescript": "^4.6.2"
   },
   "lint-staged": {
-    "packages/**/**/*.{js,ts,jsx,tsx}": "yarn lint --cache --fix",
+    "packages/**/**/*.{js,ts,jsx,tsx}": "yarn lint --cache --fix --ignore-pattern '!packages/react/.storybook'",
     "lib/nile/src/*.{js,ts,jsx,tsx}": "yarn lint --cache --fix"
   }
 }

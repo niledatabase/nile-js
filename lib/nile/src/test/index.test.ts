@@ -1,301 +1,103 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import Nile from '../index';
-import { Requester } from '../requester';
-import { NileSignIn } from '../types';
+import Nile from '..';
+import { LoginInfo } from '../generated/openapi/models/LoginInfo';
+import { IsomorphicFetchHttpLibrary } from '../generated/openapi/http/isomorphic-fetch';
 
 const userPayload = {
   id: 4,
   email: 'bob@squarepants.com',
 };
-// const strUserPayload = JSON.stringify(userPayload);
+jest.mock('../generated/openapi/http/isomorphic-fetch');
+jest.mock('../generated/openapi/http/http', () => {
+  return {
+    RequestContext: class RequestContext {
+      private body: unknown
+      private headers: { [key: string]: string } = {};
+      constructor() {
+        // do nothing
+      }
 
-jest.mock('../requester');
+      public setHeaderParam(key: string, value: string): void {
+        this.headers[key] = value;
+      }
+      public setBody(body: unknown) { return this.body = body }
+      public getBody() { return this.body }
+      public getUrl() { return null }
+      public getHeaders() { return {} }
+      public getHttpMethod() { return 'GET' }
+    },
+    HttpMethod: {
+      GET: 'GET',
+      HEAD: 'HEAD',
+      POST: 'POST',
+      PUT: 'PUT',
+      DELETE: 'DELETE',
+      CONNECT: 'CONNECT',
+      OPTIONS: 'OPTIONS',
+      TRACE: 'TRACE',
+      PATCH: 'PATCH'
+    }
+  }
+});
 
 describe('index', () => {
-  it('has the correct number of properties', () => {
-    expect(Object.getOwnPropertyNames(Nile.prototype)).toEqual([
-      'constructor',
-      'setRequesterAuth',
-      'signIn',
-      'create',
-      'read',
-      'update',
-      'remove',
-    ]);
-  });
-
-  describe('sign in ', () => {
-    let payload: NileSignIn;
+  describe('login', () => {
+    let payload:LoginInfo;
     beforeEach(() => {
       payload = { email: userPayload.email, password: 'super secret' };
+      // @ts-expect-error
+      IsomorphicFetchHttpLibrary.mockReset();
     });
 
     it('works', async () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            fetch: () => {
-              return {
-                then: () => {
-                  return {
-                    then: (cb: (args: unknown) => void) => {
-                      return cb({ token: 'password123' });
-                    },
-                  };
-                },
-              };
-            },
-          };
-        });
+      // @ts-expect-error
+      IsomorphicFetchHttpLibrary.mockImplementation(() => {
+        return {
+          send: () => {
+            return {
+              toPromise: () => {
+                return {
+                  httpStatusCode: 200, headers: { 'content-type': 'application/json' }, body: {
+                    text: () => {
+                      return JSON.stringify({ token: 'password123' });
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
       const nile = Nile();
-      const worked = await nile.signIn(payload);
-      // expect(nile.authToken).not.toBeNull();
-      expect(worked).toEqual(true);
+      await nile.login(payload);
+      expect(nile.authToken).not.toBeNull();
     });
 
     it('does not work', async () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            fetch: () => {
-              return {
-                then: () => {
-                  return {
-                    then: (cb: () => void) => {
-                      return cb();
-                    },
-                  };
-                },
-              };
-            },
-          };
-        });
+      // @ts-expect-error
+      IsomorphicFetchHttpLibrary.mockImplementation(() => {
+        return {
+          send: () => {
+            return {
+              toPromise: () => {
+                return {
+                  httpStatusCode: 200, headers: { 'content-type': 'application/json' }, body: {
+                    text: () => {
+                      return JSON.stringify({});
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+
       const nile = Nile();
 
-      const worked = await nile.signIn(payload);
-      expect(worked).toEqual(false);
+      await nile.login(payload);
+      expect(nile.authToken).toBeFalsy();
     });
 
-    it('throws an error', async () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            fetch: () => {
-              throw new Error('No, this is patrick');
-            },
-          };
-        });
-      const nile = Nile();
-      expect(() => nile.signIn(payload)).toThrow();
-    });
-  });
-
-  describe('create', () => {
-    it('works', async () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            fetch: () => {
-              return {
-                then: () => {
-                  return {
-                    then: (cb: (args: unknown) => void) => {
-                      return cb(userPayload);
-                    },
-                  };
-                },
-              };
-            },
-          };
-        });
-      const nile = Nile();
-
-      expect(await nile.create('users', userPayload)).toEqual(userPayload);
-    });
-
-    it('throws an error', () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            fetch: () => {
-              throw new Error('No, this is patrick');
-            },
-          };
-        });
-      const nile = Nile();
-      expect(() => nile.create('users', userPayload)).toThrow();
-    });
-  });
-
-  describe('read', () => {
-    it('works with a string', async () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            setToken: jest.fn(),
-            fetch: () => {
-              return {
-                then: () => {
-                  return {
-                    then: (cb: (args: unknown) => void) => {
-                      return cb(userPayload);
-                    },
-                  };
-                },
-              };
-            },
-          };
-        });
-      const nile = Nile();
-      expect(await nile.read('user/4')).toEqual(userPayload);
-    });
-
-    it('works with params', async () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            setToken: jest.fn(),
-            fetch: () => {
-              return {
-                then: () => {
-                  return {
-                    then: (cb: (args: unknown) => void) => {
-                      return cb(userPayload);
-                    },
-                  };
-                },
-              };
-            },
-          };
-        });
-      const nile = Nile();
-      expect(await nile.read('user', 4)).toEqual(userPayload);
-    });
-
-    it('throws an error', () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            fetch: () => {
-              throw new Error('No, this is patrick');
-            },
-          };
-        });
-      const nile = Nile();
-      expect(() => nile.read('users')).toThrow();
-    });
-  });
-
-  describe('update', () => {
-    it('works with an object', async () => {
-      const updatedPayload = {
-        ...userPayload,
-        email: 'squidward@geocities.com',
-      };
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            setToken: jest.fn(),
-            fetch: () => {
-              return {
-                then: () => {
-                  return {
-                    then: (cb: (args: unknown) => void) => {
-                      return cb(updatedPayload);
-                    },
-                  };
-                },
-              };
-            },
-          };
-        });
-      const nile = Nile();
-      expect(await nile.update('user', updatedPayload)).toEqual(updatedPayload);
-    });
-
-    it('throws an error', () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            fetch: () => {
-              throw new Error('No, this is patrick');
-            },
-          };
-        });
-      const nile = Nile();
-      expect(() => nile.update('user', userPayload)).toThrow();
-    });
-  });
-
-  describe('delete', () => {
-    it('works with an object', async () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            setToken: jest.fn(),
-            fetch: () => {
-              return {
-                then: () => {
-                  return {
-                    then: (cb: (args: unknown) => void) => {
-                      return cb(userPayload);
-                    },
-                  };
-                },
-              };
-            },
-          };
-        });
-      const nile = Nile();
-      expect(await nile.remove('user', userPayload)).toEqual(userPayload);
-    });
-
-    it('works with a string', async () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            setToken: jest.fn(),
-            fetch: () => {
-              return {
-                then: () => {
-                  return {
-                    then: (cb: (args: unknown) => void) => {
-                      return cb(userPayload);
-                    },
-                  };
-                },
-              };
-            },
-          };
-        });
-      const nile = Nile();
-      expect(await nile.remove('user', 4)).toEqual(userPayload);
-    });
-
-    it('throws an error', () => {
-      Requester
-        // @ts-expect-error
-        .mockImplementation(() => {
-          return {
-            fetch: () => {
-              throw new Error('No, this is patrick');
-            },
-          };
-        });
-      const nile = Nile();
-      expect(() => nile.remove('user', 4)).toThrow();
-    });
   });
 });

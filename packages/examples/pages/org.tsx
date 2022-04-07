@@ -14,7 +14,7 @@ function Org() {
       password: password.value,
     };
     const success = await nile
-      .signIn(payload)
+      .login(payload)
       .catch(() => alert('things went bad'));
 
     if (success) {
@@ -34,6 +34,7 @@ function Org() {
       </>
     );
   }
+  
   return (
     <>
       <form>
@@ -48,10 +49,11 @@ function Org() {
         <input type="password" placeholder="password" id="password"></input>
         <br />
         <br />
-        <Button onClick={handleSubmit}>show me orgs</Button>
+        <Button node={null} onClick={handleSubmit}>show me orgs</Button>
       </form>
       <ComponentList />
     </>
+
   );
 }
 

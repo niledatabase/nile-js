@@ -5,7 +5,7 @@ info:
 servers:
   - url: 'https://admin.api.thenile.dev/v0'
 paths:
-  /:
+  /login:
     post:
       operationId: login
       summary: Log in to service

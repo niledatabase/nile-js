@@ -2,9 +2,11 @@ import React from 'react';
 import Button from '../_Button';
 import { Props } from './types';
 import { useNile } from '../../context';
+import { Label, Input } from '../_Themeable';
 
-export default function LoginForm({ handleSuccess }: Props) {
+export default function LoginForm(props: Props) {
   const nile = useNile();
+  const { button, emailInput, emailLabel, passwordLabel, passwordInput, handleSuccess } = props;
 
   async function handleSubmit() {
     const email = document.querySelector('#email') as HTMLInputElement;
@@ -15,31 +17,23 @@ export default function LoginForm({ handleSuccess }: Props) {
       password: password.value,
     };
     const success = await nile
-      .signIn(payload)
-      .catch((e) => {
+      .login(payload)
+      .catch((e: unknown) => {
         console.log(e);
         alert('things went bad')
       });
-
     if (success) {
       handleSuccess && handleSuccess();
     }
   }
 
   return (
-    <>
-      <form>
-        <label htmlFor="email">Email</label>
-        <br />
-        <input type="text" placeholder="email" id="email"></input>
-        <br />
-        <label htmlFor="password">Password</label>
-        <br />
-        <input type="password" placeholder="password" id="password"></input>
-        <br />
-        <br />
-        <Button onClick={handleSubmit}>Sign in</Button>
-      </form>
-    </>
+    <form id="login">
+      <Label node={emailLabel} htmlFor={'email'} text="Email" />
+      <Input node={emailInput} name="email" />
+      <Label node={passwordLabel} htmlFor="password" text="Password" />
+      <Input node={passwordInput} name="password" />
+      <Button node={button} onClick={handleSubmit} text="Log in" name="loginButton" />
+    </form>
   );
 }
