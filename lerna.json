@@ -1,6 +1,6 @@
 {
   "packages": [
-    "packages/*",
+    "packages/react",
     "lib/nile"
   ],
   "version": "0.5.0",
