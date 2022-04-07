@@ -1,8 +1,6 @@
 import { Configuration } from './generated/openapi/configuration';
-import { AcceptedInvite } from './generated/openapi/models/AcceptedInvite';
 import { CreateOrganizationRequest } from './generated/openapi/models/CreateOrganizationRequest';
 import { CreateUserRequest } from './generated/openapi/models/CreateUserRequest';
-import { InlineResponse200 } from './generated/openapi/models/InlineResponse200';
 import { Invite } from './generated/openapi/models/Invite';
 import { LoginInfo } from './generated/openapi/models/LoginInfo';
 import { Organization } from './generated/openapi/models/Organization';
@@ -15,6 +13,7 @@ import { DefaultApiRequestFactory, DefaultApiResponseProcessor } from './generat
 import { RequestContext } from './generated/openapi/http/http';
 
 import { AuthMethods } from './generated/openapi/auth/auth';
+import { Token } from './generated/openapi/models/Token';
 export default class NileApi extends PromiseDefaultApi implements PromiseDefaultApi {
     private _api: ObservableDefaultApi
     private _config: Configuration;
@@ -81,22 +80,6 @@ export default class NileApi extends PromiseDefaultApi implements PromiseDefault
         return result.toPromise();
     }
     /**
-    * Get an accepted invite.
-    * @param id Unique identifier.
-    */
-    public getAcceptedInvite(id: number, _options?: Configuration): Promise<AcceptedInvite> {
-        const result = this._api.getAcceptedInvite(id, this.applyOptions(_options));
-        return result.toPromise();
-    }
-    /**
-    * Get an invite.
-    * @param code Invite code.
-    */
-    public getInvite(code: number, _options?: Configuration): Promise<Invite> {
-        const result = this._api.getInvite(code, this.applyOptions(_options));
-        return result.toPromise();
-    }
-    /**
    * Get information for this Organization.
    * @param id Unique identifier.
    */
@@ -110,13 +93,6 @@ export default class NileApi extends PromiseDefaultApi implements PromiseDefault
    */
     public getUser(id: number, _options?: Configuration): Promise<User> {
         const result = this._api.getUser(id, this.applyOptions(_options));
-        return result.toPromise();
-    }
-    /**
-     * List all accepted invites.
-     */
-    public listAcceptedInvites(_options?: Configuration): Promise<AcceptedInvite[]> {
-        const result = this._api.listAcceptedInvites(this.applyOptions(_options));
         return result.toPromise();
     }
     /**
@@ -149,7 +125,7 @@ export default class NileApi extends PromiseDefaultApi implements PromiseDefault
     * Saves an auth token for later calls
     * @param loginInfo 
     */
-    public async login(loginInfo: LoginInfo, _options?: Configuration): Promise<InlineResponse200> {
+    public async login(loginInfo: LoginInfo, _options?: Configuration): Promise<Token> {
         const result = this._api.login(loginInfo, this.applyOptions(_options));
         const res = await result.toPromise();
         const { token } = ((res as unknown) as { token: string }) ?? {};
@@ -174,6 +150,15 @@ export default class NileApi extends PromiseDefaultApi implements PromiseDefault
      */
     public updateUser(id: number, patchUserRequest: PatchUserRequest, _options?: Configuration): Promise<User> {
         const result = this._api.updateUser(id, patchUserRequest, this.applyOptions(_options));
+        return result.toPromise();
+    }
+
+    /**
+     * Validate a token
+     * @param token 
+     */
+     public validate(token: Token, _options?: Configuration): Promise<void> {
+        const result = this._api.validate(token, this.applyOptions(_options));
         return result.toPromise();
     }
 

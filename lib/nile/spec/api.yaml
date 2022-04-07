@@ -154,20 +154,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/Invite'
 
-  /invites/{code}:
-    parameters:
-      - $ref: "#/components/parameters/codeInPath"
-    get:
-      operationId: getInvite
-      summary: Get an invite.
-      responses:
-        '200':
-          description: The Invite with the requested invite code.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Invite'
-
   /invites/{code}/accept:
     parameters:
       - $ref: "#/components/parameters/codeInPath"
@@ -177,37 +163,6 @@ paths:
       responses:
         '204':
           description: The accepted invite.
-
-  /accepted_invites:
-    get:
-      # TODO: Filter by inviter, accepter, code.
-      operationId: listAcceptedInvites
-      summary: List all accepted invites.
-      responses:
-        '200':
-          description: List of accepted invites.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AcceptedInvite'
-
-  /accepted_invites/{id}:
-    get:
-      parameters:
-        - $ref: "#/components/parameters/idInPath"
-      # TODO: Filter by accepter.
-      operationId: getAcceptedInvite
-      summary: Get an accepted invite.
-      responses:
-        '200':
-          description: The accepted invite with the specified code.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AcceptedInvite'
-
 
 components:
   parameters:
@@ -318,31 +273,3 @@ components:
             - active
             # TODO - revoked
             # TODO - expired
-    Error:
-      type: object
-      required:
-        - message
-        - error_code
-        - status_code
-      properties:
-        message:
-          type: string
-          description: A user-readable error message.
-        error_code:
-          type: string
-          # Figure out what good error codes look like.
-          enum:
-            # TODO: Change to internal_server_error
-            - internal_error
-            - bad_request
-            - unauthorized_credentials
-            - user_not_found
-            - org_not_found
-            - invite_not_found
-            - duplicate_org_name
-            - duplicate_user_email
-            - user_already_in_org
-          description: A machine-readable error code.
-        status_code:
-          type: integer
-          description: The HTTP status code.

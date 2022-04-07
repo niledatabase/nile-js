@@ -15,6 +15,8 @@ function SignIn() {
         handleSuccess={() => {
           if (redirect) {
             router.push(`/${redirect}`);
+          } else {
+            router.push('/users');
           }
         }}
       />
