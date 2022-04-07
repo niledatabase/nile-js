@@ -27,8 +27,8 @@ jobs:
           # scope: '@theniledev'
       - name: Authenticate to npm
         run: |
-          echo "@theniledev:wq:registry=http://registry.npmjs.org/" 
-          echo "registry=http://registry.npmjs.org/" >> .npmrc
+          echo "@theniledev:wq:registry=https://registry.npmjs.org/" 
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           npm whoami
         env:
