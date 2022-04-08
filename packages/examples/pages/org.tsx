@@ -1,5 +1,7 @@
+import React from 'react';
 import { useState } from 'react';
 import { useNile } from '@theniledev/react';
+
 import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
 
@@ -35,7 +37,7 @@ function Org() {
       </>
     );
   }
-  
+
   return (
     <>
       <form>
@@ -43,18 +45,19 @@ function Org() {
         <h2>Sign in</h2>
         <label htmlFor="email">Email</label>
         <br />
-        <input type="text" placeholder="email" id="email"></input>
+        <input type="text" placeholder="email" id="email" />
         <br />
         <label htmlFor="password">Password</label>
         <br />
-        <input type="password" placeholder="password" id="password"></input>
+        <input type="password" placeholder="password" id="password" />
         <br />
         <br />
-        <Button node={null} onClick={handleSubmit}>show me orgs</Button>
+        <Button node={null} onClick={handleSubmit}>
+          show me orgs
+        </Button>
       </form>
       <ComponentList />
     </>
-
   );
 }
 

@@ -4,9 +4,9 @@ import { javascript } from '@codemirror/lang-javascript';
 
 type EditorProps = {
   textRef: MutableRefObject<string>;
-  height: string
+  height: string;
 };
-export const Editor = ({ textRef, height }: EditorProps)=>{
+export const Editor = ({ textRef, height }: EditorProps) => {
   const handleChange = useCallback(
     (value) => {
       // don't re-render... for now
@@ -15,14 +15,13 @@ export const Editor = ({ textRef, height }: EditorProps)=>{
     [textRef]
   );
   return (
-    <CodeMirror 
-        height={height} 
-        extensions={[javascript({ jsx: true })]} 
-        onChange={handleChange}
+    <CodeMirror
+      height={height}
+      extensions={[javascript({ jsx: true })]}
+      onChange={handleChange}
     />
   );
-}
+};
 Editor.defaultProps = {
-    height:'200px'
-}
-
+  height: '200px',
+};

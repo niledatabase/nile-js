@@ -2,8 +2,8 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
 const Placeholder = () => {
-  return <div>placeholder</div>
-}
+  return <div>placeholder</div>;
+};
 const meta: Meta = {
   title: 'Welcome',
   component: Placeholder,
@@ -21,7 +21,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<null> = args => <Placeholder {...args}/>
+const Template: Story<null> = (args) => <Placeholder {...args} />;
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
 // https://storybook.js.org/docs/react/workflows/unit-testing

@@ -14,14 +14,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginInfo"
+              $ref: '#/components/schemas/LoginInfo'
       responses:
         '200':
           description: Authenticated token
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Token"
+                $ref: '#/components/schemas/Token'
   /validate:
     post:
       operationId: validate
@@ -31,7 +31,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Token"
+              $ref: '#/components/schemas/Token'
       responses:
         '204':
           description: The token is valid
@@ -40,7 +40,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas/Error.yaml"
+                $ref: './schemas/Error.yaml'
 
 components:
   schemas:

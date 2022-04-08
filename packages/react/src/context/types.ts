@@ -1,9 +1,9 @@
-import {NileApi} from '@theniledev/js';
+import { NileApi } from '@theniledev/js';
 import React from 'react';
 
 export interface NileContext {
   instance: NileApi;
-  theme?: string
+  theme?: string;
 }
 
 export interface NileProviderProps {

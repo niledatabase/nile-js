@@ -1,6 +1,9 @@
+import React from 'react';
 import Link from 'next/link';
-import { Button } from './Button';
+
 import styles from '../styles/Home.module.css';
+
+import { Button } from './Button';
 
 export function ComponentList() {
   return (
