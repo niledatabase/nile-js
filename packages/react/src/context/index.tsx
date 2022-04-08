@@ -1,12 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
+// @ts-nocheck
 import React, { useRef, useMemo, createContext, useContext } from 'react';
-import { NileContext, NileProviderProps } from './types';
 import Nile, { NileApi } from '@theniledev/js';
+
+import { NileContext, NileProviderProps } from './types';
 
 const defaultContext: NileContext = {
   instance: Nile({ apiUrl: '' }),
-  theme: ''
+  theme: '',
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -17,6 +18,7 @@ export const NileProvider = (props: NileProviderProps) => {
   const initalized = useRef(false);
   const values = useMemo<NileContext>(() => {
     if (initalized.current === true) {
+      // eslint-disable-next-line no-console
       console.warn(
         'Another instance of nile was created. Reauthentication is required. Move the `<NileProvider />` to a component higher in the render tree.'
       );
@@ -41,4 +43,4 @@ export const useNile = (): NileApi => {
 
 export const useNileContextTheme = (): void | string => {
   return useNileContext().theme;
-}
+};

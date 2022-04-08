@@ -11,7 +11,7 @@ jest.mock('../generated/openapi/http/isomorphic-fetch');
 jest.mock('../generated/openapi/http/http', () => {
   return {
     RequestContext: class RequestContext {
-      private body: unknown
+      private body: unknown;
       private headers: { [key: string]: string } = {};
       constructor() {
         // do nothing
@@ -20,11 +20,26 @@ jest.mock('../generated/openapi/http/http', () => {
       public setHeaderParam(key: string, value: string): void {
         this.headers[key] = value;
       }
-      public setBody(body: unknown) { return this.body = body }
-      public getBody() { return this.body }
-      public getUrl() { return null }
-      public getHeaders() { return {} }
-      public getHttpMethod() { return 'GET' }
+
+      public setBody(body: unknown) {
+        return (this.body = body);
+      }
+
+      public getBody() {
+        return this.body;
+      }
+
+      public getUrl() {
+        return null;
+      }
+
+      public getHeaders() {
+        return {};
+      }
+
+      public getHttpMethod() {
+        return 'GET';
+      }
     },
     HttpMethod: {
       GET: 'GET',
@@ -35,14 +50,14 @@ jest.mock('../generated/openapi/http/http', () => {
       CONNECT: 'CONNECT',
       OPTIONS: 'OPTIONS',
       TRACE: 'TRACE',
-      PATCH: 'PATCH'
-    }
-  }
+      PATCH: 'PATCH',
+    },
+  };
 });
 
 describe('index', () => {
   describe('login', () => {
-    let payload:LoginInfo;
+    let payload: LoginInfo;
     beforeEach(() => {
       payload = { email: userPayload.email, password: 'super secret' };
       // @ts-expect-error
@@ -57,16 +72,18 @@ describe('index', () => {
             return {
               toPromise: () => {
                 return {
-                  httpStatusCode: 200, headers: { 'content-type': 'application/json' }, body: {
+                  httpStatusCode: 200,
+                  headers: { 'content-type': 'application/json' },
+                  body: {
                     text: () => {
                       return JSON.stringify({ token: 'password123' });
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                    },
+                  },
+                };
+              },
+            };
+          },
+        };
       });
       const nile = Nile();
       await nile.login(payload);
@@ -81,16 +98,18 @@ describe('index', () => {
             return {
               toPromise: () => {
                 return {
-                  httpStatusCode: 200, headers: { 'content-type': 'application/json' }, body: {
+                  httpStatusCode: 200,
+                  headers: { 'content-type': 'application/json' },
+                  body: {
                     text: () => {
                       return JSON.stringify({});
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                    },
+                  },
+                };
+              },
+            };
+          },
+        };
       });
 
       const nile = Nile();
@@ -98,6 +117,5 @@ describe('index', () => {
       await nile.login(payload);
       expect(nile.authToken).toBeFalsy();
     });
-
   });
 });

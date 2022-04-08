@@ -26,7 +26,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateOrganizationRequest"
+              $ref: '#/components/schemas/CreateOrganizationRequest'
       responses:
         '200':
           description: Created a new Organization.
@@ -97,7 +97,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateUserRequest"
+              $ref: '#/components/schemas/CreateUserRequest'
       responses:
         '200':
           description: Created a new User.
@@ -141,7 +141,7 @@ paths:
   /invites:
     get:
       parameters:
-        - $ref: "#/components/parameters/orgIdInQuery"
+        - $ref: '#/components/parameters/orgIdInQuery'
       operationId: listInvites
       summary: List all Invites.
       responses:
@@ -156,7 +156,7 @@ paths:
 
   /invites/{code}/accept:
     parameters:
-      - $ref: "#/components/parameters/codeInPath"
+      - $ref: '#/components/parameters/codeInPath'
     post:
       operationId: acceptInvite
       summary: Accept an invite.

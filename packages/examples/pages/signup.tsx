@@ -1,6 +1,8 @@
 import React from 'react';
-import { ComponentList } from '../components/ComponentList';
 import { SignUpForm } from '@theniledev/react';
+
+import { ComponentList } from '../components/ComponentList';
+
 function Signup() {
   return (
     <>
@@ -15,6 +17,5 @@ function Signup() {
     </>
   );
 }
-
 
 export default Signup;

@@ -1,10 +1,8 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "react-hooks",
-    "@typescript-eslint"
-  ],
+  "plugins": ["react-hooks", "@typescript-eslint", "prettier", "import"],
   "extends": [
+    "plugin:react/recommended",
     "eslint:recommended",
     "prettier",
     "plugin:@typescript-eslint/recommended",
@@ -15,6 +13,21 @@
     "node": true
   },
   "rules": {
+    "prettier/prettier": [
+      2,
+      {
+        "bracketSpacing": true,
+        "jsxBracketSameLine": false,
+        "printWidth": 80,
+        "semi": true,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "trailingComma": "es5"
+      }
+    ],
+    "indent": ["error", 2],
+    "semi": "error",
+    "import/namespace": 2,
     "quotes": [
       "error",
       "single",
@@ -23,6 +36,28 @@
       }
     ],
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "error"
+    "no-console": 2,
+    "object-curly-newline": [
+      0,
+      {
+        "multiline": true,
+        "minProperties": 4
+      }
+    ],
+    "react/jsx-key": 2,
+    "react-hooks/exhaustive-deps": "error",
+    "react/jsx-curly-brace-presence": [2, "never"],
+    "react/self-closing-comp": 2,
+    "import/order": [
+      2,
+      {
+        "newlines-between": "always",
+        "groups": ["builtin", "external", "parent", "sibling", "index"]
+      }
+    ],
+    "import/newline-after-import": 2,
+    "import/prefer-default-export": 0,
+    "linebreak-style": [2, "unix"],
+    "sort-imports": 0
   }
 }
