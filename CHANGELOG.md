@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/TheNileDev/nile-js/compare/v0.6.0...v0.6.1) (2022-04-08)
+
+
+### Bug Fixes
+
+* only add bearer when auth token is set ([55a03ed](https://github.com/TheNileDev/nile-js/commit/55a03ed73c10608cdbad2af1a1171cd7d59e1867))
+
+
+
+
+
 # [0.6.0](https://github.com/TheNileDev/nile-js/compare/v0.5.5...v0.6.0) (2022-04-07)
 
 ### Bug Fixes
