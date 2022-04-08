@@ -44,10 +44,12 @@ export default class NileApi
       default: {
         getName: (): string => 'Bearer Authentication',
         applySecurityAuthentication: (requestContext: RequestContext): void => {
-          requestContext.setHeaderParam(
-            'Authorization',
-            `Bearer ${this.authToken}`
-          );
+          if (this.authToken) {
+            requestContext.setHeaderParam(
+              'Authorization',
+              `Bearer ${this.authToken}`
+            );
+          }
         },
       },
     };
