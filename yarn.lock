@@ -3457,7 +3457,7 @@
     global "^4.4.0"
     regenerator-runtime "^0.13.7"
 
-"@storybook/addons@^6.4.20":
+"@storybook/addons@^6.4.21":
   version "6.4.21"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-6.4.21.tgz#a0081d167eda8a30b2206ccabfe75abae0bb6b58"
   integrity sha512-TFLv4FyqP5SBOHEqE6tiW+2++HngkyQ2KRbHICC7khQgRqDkrwvrdKZwzF29igseglhSmftpZrBLXyWbA7q1vg==
@@ -16610,10 +16610,10 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typedoc-plugin-markdown@^3.11.14:
-  version "3.11.14"
-  resolved "https://registry.npmjs.org/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.11.14.tgz"
-  integrity sha512-lh47OQvl0079nB18YL9wuTRRhMpjo300SZKfx/xpQY8qG+GINeSxTod95QBELeI0NP81sNtUbemRDrn5nyef4Q==
+typedoc-plugin-markdown@^3.12.0:
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.12.0.tgz#d801c88b437435041f09e88f3bb300c76f46d7ed"
+  integrity sha512-yKl7/KWD8nP6Ot6OzMLLc8wBzN3CmkBoI/YQzxT62a9xmDgxyeTxGbHbkUoSzhKFqMI3SR0AqV6prAhVKbYnxw==
   dependencies:
     handlebars "^4.7.7"
 
