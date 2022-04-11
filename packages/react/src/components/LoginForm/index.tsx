@@ -29,7 +29,7 @@ export default function LoginForm(props: Props) {
       alert('things went bad');
     });
     if (success) {
-      handleSuccess && handleSuccess();
+      handleSuccess && handleSuccess(payload);
     }
   }
 

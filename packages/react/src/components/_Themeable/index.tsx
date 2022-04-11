@@ -10,8 +10,17 @@ export function Input({
   node: React.ReactNode;
 }) {
   const theme = useTheme(name);
+  if (node === null) {
+    return null;
+  }
+
+  const props = { id: name };
+
+  if (typeof node === 'function') {
+    return node(props);
+  }
+
   if (React.isValidElement(node)) {
-    const props = { id: name };
     return React.cloneElement(node, props);
   }
 
@@ -30,8 +39,17 @@ export function Label({
   node: React.ReactNode;
 }) {
   const theme = useTheme(htmlFor);
+  if (node === null) {
+    return null;
+  }
+
+  const props = { htmlFor };
+
+  if (typeof node === 'function') {
+    return node(props);
+  }
+
   if (React.isValidElement(node)) {
-    const props = { htmlFor };
     return React.cloneElement(node, props);
   }
 
