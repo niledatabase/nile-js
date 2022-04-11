@@ -1,11 +1,11 @@
 openapi: 3.0.2
 info:
   title: nile
-  version: '0.1'
+  version: "0.1"
 servers:
-  - url: 'https://admin.api.thenile.dev/v0'
+  - url: "https://admin.api.thenile.dev/v0"
 paths:
-  /login:
+  /auth/login:
     post:
       operationId: login
       summary: Log in to service
@@ -14,15 +14,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginInfo'
+              $ref: "#/components/schemas/LoginInfo"
       responses:
-        '200':
+        "200":
           description: Authenticated token
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token'
-  /validate:
+                $ref: "#/components/schemas/Token"
+  /auth/validate:
     post:
       operationId: validate
       summary: Validate a token
@@ -31,16 +31,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Token'
+              $ref: "#/components/schemas/Token"
       responses:
-        '204':
+        "204":
           description: The token is valid
-        '400':
+        "400":
           description: The token is invalid
           content:
             application/json:
               schema:
-                $ref: './schemas/Error.yaml'
+                $ref: "./schemas/Error.yaml"
 
 components:
   schemas:

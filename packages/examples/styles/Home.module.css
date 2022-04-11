@@ -3,7 +3,7 @@
 }
 
 .main {
-  min-height: 100vh;
+  min-height: calc(100vh - 97px);
   padding: 4rem 0;
   flex: 1;
   display: flex;
@@ -73,7 +73,6 @@
 }
 
 .card {
-  margin: 1rem;
   padding: 1.5rem;
   text-align: left;
   color: inherit;
@@ -112,4 +111,54 @@
     width: 100%;
     flex-direction: column;
   }
+}
+
+.header {
+  background-color: black;
+  color: white;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  justify-content: space-between;
+}
+.header h1 {
+  flex: 1;
+}
+
+.signIn {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+}
+
+.inviteLink {
+  flex: 1;
+  align-items: center;
+  text-align: center;
+  padding: 4px 12px;
+  background:rgba(209, 255, 101, 0.65);
+  color:darkgoldenrod;
+  cursor: default;
+}
+.inviteLink:hover {
+  background:rgba(102, 143, 5, 0.65);
+  color: rgb(255, 249, 140);
+}
+.odd {
+  background:rgb(240, 240, 240);
+}
+.even{
+  background:rgb(255, 255, 255);
+}
+
+.tableHeader {
+  width: 140px;
+  text-align: left;
+}
+.dashboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

@@ -5,7 +5,7 @@ import { NileProvider } from '@theniledev/react';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <NileProvider apiUrl="http://localhost:8080">
+    <NileProvider apiUrl="http://localhost:8080" theme="fancy">
       <Component {...pageProps} />
     </NileProvider>
   );

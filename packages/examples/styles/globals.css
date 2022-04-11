@@ -42,14 +42,64 @@ button:hover {
 
 form {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  max-width: 520px;
-  margin: 0 auto;
-  margin: 100px auto;
   padding: 50px 100px 100px 100px;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
 }
 
+input {
+  margin-bottom: 16px;
+}
+label {
+  margin-bottom: 8px;
+}
+.loginButton {
+  width: 200px;
+  font-size: 18px;
+  align-self: center;
+}
 label {
   min-width: 176px;
+}
+
+
+
+table {
+border-spacing: 0;
+}
+tr, td {
+  margin: 0;
+}
+tr {
+  background-color: #eee;
+}
+td, th {
+  border-right: 1px solid rgb(145, 145, 145);
+  padding: 1em;
+}
+td:last-child, th:last-child {
+  border: none;
+}
+
+select {
+  padding: 6px;
+  border-radius: 4px;
+  min-width:200px;
+  height:30px;
+}
+
+/** start fancy classes*/
+button.fancy-signupButton, button.fancy-loginButton {
+  background-image: linear-gradient(to right bottom, #ffba6a, #ffb28d, #ffb1b4, #ffb7d7, #f9c3f1, #e5cafc, #d2d1ff, #c2d6ff, #b1d9ff, #9cdcff, #86dfff, #6fe2ff);
+  color:#0f0f0e;
+  border-color: transparent;
+}
+
+label.fancy-email, label.fancy-password{
+  font-weight: bold;
+  color:#0f0f0e;
+}
+input.fancy-email, input.fancy-password{
+  font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  letter-spacing: 4px;
 }
