@@ -26,7 +26,7 @@ export default function SignUpForm(props: Props) {
     };
 
     await nile.createUser(payload).catch(() => alert('things went bad'));
-    handleSuccess && handleSuccess();
+    handleSuccess && handleSuccess(payload);
   }
 
   return (
