@@ -58,7 +58,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "peer-dependencies": {
+  "dependencies": {
     "url-parse": "^1.5.10"
   }
 }
