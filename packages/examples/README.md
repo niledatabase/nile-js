@@ -1,6 +1,27 @@
 # @theniledev/examples
 
+# @theniledev/examples
+
+A sandbox app for testing out the react sdk and client libraries. Feel free to use this as a starting point for your own projects.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## pages/signin
+
+Renders `import { LoginForm } from @theniledev/react` and redirects to the `/users` endpoint, or a `redirect` query parameter, if provided.
+
+## pages/signup
+
+Renders `import { SignUpForm } from @theniledev/react` and alerts that a user has signed up.
+
+## pages/org
+
+Shows all orgs.
+Renders a bespoke sign in form that submits directly to the nile api, then requests a list of users and displays them once returned.
+
+## pages/users
+
+Renders invite logic. Requests a list of users, and shows the current user's invite code. Allows the current user to submit an invite code so they can be added to a different users organization. Displays a list of users that have been invited to the current user's organization. Also has a convinience method for signin out for easy testing.
 
 ## Getting Started
 
