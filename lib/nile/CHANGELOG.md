@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/TheNileDev/nile-js/compare/v0.7.1...v0.7.2) (2022-04-12)
+
+
+### Bug Fixes
+
+* add url-parse as dep, not peer-dep ([f6aecaa](https://github.com/TheNileDev/nile-js/commit/f6aecaa9654572ceff41d7926f069cb0e293b1bc))
+
+
+
+
+
 ## [0.7.1](https://github.com/TheNileDev/nile-js/compare/v0.7.0...v0.7.1) (2022-04-12)
 
 
