@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/TheNileDev/nile-js/compare/v0.7.2...v0.7.3) (2022-04-12)
+
+
+### Bug Fixes
+
+* add more deps to js lib ([82e4269](https://github.com/TheNileDev/nile-js/commit/82e4269d5640816be3eac293592ef01c0ebfa8fb))
+
+
+
+
+
 ## [0.7.2](https://github.com/TheNileDev/nile-js/compare/v0.7.1...v0.7.2) (2022-04-12)
 
 
