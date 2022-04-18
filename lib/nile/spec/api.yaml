@@ -1,23 +1,59 @@
 openapi: 3.0.2
 info:
   title: nile
-  version: '0.1'
+  version: "0.1"
 servers:
-  - url: 'https://admin.api.thenile.dev/v0'
+  - url: "https://admin.api.thenile.dev/v0"
 paths:
+  /auth/login:
+    post:
+      operationId: login
+      summary: Log in to service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInfo"
+      responses:
+        "200":
+          description: Authenticated token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+  /auth/validate:
+    post:
+      operationId: validate
+      summary: Validate a token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Token"
+      responses:
+        "204":
+          description: The token is valid
+        "400":
+          description: The token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas/Error.yaml"
   /orgs:
     get:
       operationId: listOrganizations
       summary: List all Organizations.
       responses:
-        '200':
+        "200":
           description: List of all Organizations.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: "#/components/schemas/Organization"
     post:
       operationId: createOrganization
       summary: Create a new Organization.
@@ -26,24 +62,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateOrganizationRequest'
+              $ref: "#/components/schemas/CreateOrganizationRequest"
       responses:
-        '200':
+        "200":
           description: Created a new Organization.
 
   /orgs/{id}:
     parameters:
-      - $ref: '#/components/parameters/idInPath'
+      - $ref: "#/components/parameters/idInPath"
     get:
       operationId: getOrganization
       summary: Get information for this Organization.
       responses:
-        '200':
+        "200":
           description: The Organization with the requested ID.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: "#/components/schemas/Organization"
     patch:
       operationId: updateOrganization
       summary: Update this Organization.
@@ -52,14 +88,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchOrganizationRequest'
+              $ref: "#/components/schemas/PatchOrganizationRequest"
       responses:
-        '200':
+        "200":
           description: The updated Organization.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: "#/components/schemas/Organization"
     delete:
       operationId: deleteOrganization
       summary: Delete this Organization.
@@ -70,7 +106,7 @@ paths:
   /users:
     get:
       parameters:
-        - $ref: '#/components/parameters/orgIdInQuery'
+        - $ref: "#/components/parameters/orgIdInQuery"
         - name: email
           in: query
           description: User email.
@@ -79,16 +115,16 @@ paths:
       operationId: listUsers
       summary: List all Users.
       responses:
-        '204':
+        "204":
           description: Returns if called unauthenticated, to check for the availability of an email.
-        '200':
+        "200":
           description: List of all Users in Organization.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: "#/components/schemas/User"
     post:
       operationId: createUser
       summary: Create a new User.
@@ -97,24 +133,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUserRequest'
+              $ref: "#/components/schemas/CreateUserRequest"
       responses:
-        '200':
+        "200":
           description: Created a new User.
 
   /users/{id}:
     parameters:
-      - $ref: '#/components/parameters/idInPath'
+      - $ref: "#/components/parameters/idInPath"
     get:
       operationId: getUser
       summary: Get information for this User.
       responses:
-        '200':
+        "200":
           description: The User with the requested ID.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
     patch:
       operationId: updateUser
       summary: Update this User.
@@ -123,14 +159,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchUserRequest'
+              $ref: "#/components/schemas/PatchUserRequest"
       responses:
-        '200':
+        "200":
           description: The updated User.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
     delete:
       operationId: deleteUser
       summary: Delete this User.
@@ -141,28 +177,167 @@ paths:
   /invites:
     get:
       parameters:
-        - $ref: '#/components/parameters/orgIdInQuery'
+        - $ref: "#/components/parameters/orgIdInQuery"
       operationId: listInvites
       summary: List all Invites.
       responses:
-        '200':
+        "200":
           description: List of all Invites.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Invite'
+                  $ref: "#/components/schemas/Invite"
 
   /invites/{code}/accept:
     parameters:
-      - $ref: '#/components/parameters/codeInPath'
+      - $ref: "#/components/parameters/codeInPath"
     post:
       operationId: acceptInvite
       summary: Accept an invite.
       responses:
-        '204':
+        "204":
           description: The accepted invite.
+
+  /custom-data/{type}:
+    parameters:
+      - $ref: "./parameters/entityTypeInPath.yaml"
+    get:
+      operationId: listInstances
+      summary: List all instances
+      responses:
+        "200":
+          description: List of all instances
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./schemas/Instance.yaml"
+    post:
+      operationId: createInstance
+      summary: Create a new instance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Created a new instance
+
+  /custom-data/{type}/{id}:
+    parameters:
+      - $ref: "./parameters/entityTypeInPath.yaml"
+      - $ref: "#/components/parameters/idInPath"
+      - $ref: "#/components/parameters/orgIdInQuery"
+    get:
+      operationId: getInstance
+      summary: Get an instance
+      responses:
+        "200":
+          description: Get an instance
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas/Instance.yaml"
+    put:
+      operationId: updateInstance
+      summary: Update an instance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas/Instance.yaml"
+      responses:
+        "200":
+          description: The updated instance
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas/Instance.yaml"
+    delete:
+      operationId: deleteInstance
+      summary: Delete an instance.
+      responses:
+        204:
+          description: Successful deletion of the instance.
+
+  /admin/entities:
+    parameters:
+      - $ref: "#/components/parameters/orgIdInQuery"
+    get:
+      operationId: listEntities
+      summary: List all entities
+      responses:
+        "200":
+          description: List of all entities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Entity"
+    post:
+      operationId: createEntity
+      summary: Create a new entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Entity"
+      responses:
+        "200":
+          description: Created a new entity
+
+  /admin/entities/{type}:
+    parameters:
+      - $ref: "./parameters/entityTypeInPath.yaml"
+    get:
+      operationId: getEntity
+      summary: Get information for this entity
+      responses:
+        "200":
+          description: The entity with the requested ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entity"
+    patch:
+      operationId: updateEntity
+      summary: Update an entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchEntityRequest"
+      responses:
+        "200":
+          description: The updated entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entity"
+
+  /admin/entities/{type}/openapi:
+    parameters:
+      - $ref: "#/components/parameters/orgIdInQuery"
+      - $ref: "./parameters/entityTypeInPath.yaml"
+    get:
+      operationId: getEntityOpenAPI
+      summary: Gets openapi description for this entity
+      responses:
+        "200":
+          description: The openapi for this entity
+          content:
+            application/yaml:
+              schema:
+                type: object
 
 components:
   parameters:
@@ -188,9 +363,45 @@ components:
       description: Unique identifier.
 
   schemas:
+    PatchEntityRequest:
+      type: object
+      # Requiring this since it's the only property.
+      required:
+        - schema
+      properties:
+        schema:
+          type: object
+    Entity:
+      type: object
+      required:
+        - name
+        - schema
+      properties:
+        name:
+          type: string
+          readOnly: true
+        schema:
+          type: object
+    Token:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+    LoginInfo:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
     Organization:
       allOf:
-        - $ref: './schemas/Instance.yaml'
+        - $ref: "./schemas/Instance.yaml"
         - type: object
           required:
             - name
@@ -199,7 +410,7 @@ components:
               type: string
     User:
       allOf:
-        - $ref: './schemas/Instance.yaml'
+        - $ref: "./schemas/Instance.yaml"
         - type: object
           properties:
             email:
