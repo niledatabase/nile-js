@@ -1,6 +1,17 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react-hooks", "@typescript-eslint", "prettier", "import"],
+  "plugins": [
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier",
+    "import",
+    "react"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "extends": [
     "plugin:react/recommended",
     "eslint:recommended",
@@ -8,6 +19,9 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended"
   ],
+  "parserOptions": {
+    "extraFileExtensions": [".mjs"]
+  },
   "env": {
     "browser": true,
     "node": true
@@ -25,7 +39,7 @@
         "trailingComma": "es5"
       }
     ],
-    "indent": ["error", 2],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "semi": "error",
     "import/namespace": 2,
     "quotes": [

@@ -1,0 +1,104 @@
+import { ResponseContext, RequestContext, HttpFile } from '../http/http{{extensionForDeno}}';
+import * as models from '../models/all{{extensionForDeno}}';
+import { Configuration} from '../configuration{{extensionForDeno}}'
+import { AuthMethods } from '../auth/auth';
+{{#useInversify}}
+import { injectable, inject, optional } from "inversify";
+import { AbstractConfiguration } from "../services/configuration";
+{{/useInversify}}
+
+{{#models}}
+{{#model}}
+import { {{{ classname }}} } from '../models/{{{ classFilename }}}{{extensionForDeno}}';
+{{/model}}
+{{/models}}
+{{#apiInfo}}
+{{#apis}}
+import { Observable{{classname}} } from './ObservableAPI{{extensionForDeno}}';
+
+{{#operations}}
+import { {{classname}}RequestFactory, {{classname}}ResponseProcessor} from "../apis/{{classname}}{{extensionForDeno}}";
+{{#useInversify}}
+import { Abstract{{classname}}RequestFactory, Abstract{{classname}}ResponseProcessor } from "../apis/{{classname}}.service";
+
+@injectable()
+{{/useInversify}}
+export default class Promise{{classname}} {
+    private api: Observable{{classname}};
+    private config: Configuration;
+    public authToken: string;
+    public constructor(
+        {{#useInversify}}
+        @inject(AbstractConfiguration) configuration: Configuration,
+        @inject(Abstract{{classname}}RequestFactory) @optional() requestFactory?: Abstract{{classname}}RequestFactory,
+        @inject(Abstract{{classname}}ResponseProcessor) @optional() responseProcessor?: Abstract{{classname}}ResponseProcessor
+        {{/useInversify}}
+        {{^useInversify}}
+        configuration: Configuration,
+        requestFactory?: {{classname}}RequestFactory,
+        responseProcessor?: {{classname}}ResponseProcessor
+        {{/useInversify}}
+    ) {
+        this.api = new Observable{{classname}}(configuration, requestFactory, responseProcessor);
+        this.config = configuration;
+        this.authToken = '';
+    }
+    private applyOptions(_options?: Configuration) {
+        const authentication: AuthMethods = {
+          default: {
+            getName: (): string => 'Bearer Authentication',
+            applySecurityAuthentication: (requestContext: RequestContext): void => {
+              if (this.authToken) {
+                requestContext.setHeaderParam(
+                  'Authorization',
+                  `Bearer ${this.authToken}`
+                );
+              }
+            },
+          },
+        };
+        return { ..._options, ...this.config, authMethods: authentication };
+      }
+  
+{{#operation}}
+    /**
+     {{#notes}}
+     * {{&notes}}
+     {{/notes}}
+     {{#summary}}
+     * {{&summary}}
+     {{/summary}}
+     {{#allParams}}
+     * @param {{paramName}} {{description}}
+     {{/allParams}}
+     */
+    public {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}, {{/allParams}}_options?: Configuration): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}> {
+        const result = this.api.{{nickname}}({{#allParams}}{{paramName}}, {{/allParams}}this.applyOptions(_options));
+        return result.toPromise();
+    }
+
+{{/operation}}
+    /**
+     * Log in to service
+     * Saves an auth token for later calls
+     * @param loginInfo
+     */
+    public async login(
+        loginInfo: LoginInfo,
+        _options?: Configuration
+    ): Promise<Token> {
+        const result = this.api.login(loginInfo, this.applyOptions(_options));
+        const res = await result.toPromise();
+        const { token } = (res as unknown as { token: string }) ?? {};
+        if (token) {
+        this.authToken = token;
+        }
+        return res;
+    }
+}
+
+{{/operations}}
+
+
+{{/apis}}
+{{/apiInfo}}

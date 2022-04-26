@@ -1,7 +1,7 @@
-import NileApi from './NileApi';
 /**
  * the below files need generated with `yarn build:exp`
  */
+import NileApi from './generated/openapi/types/PromiseAPI';
 import {
   createConfiguration,
   ConfigurationParameters,
