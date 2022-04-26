@@ -1,0 +1,6 @@
+in: path
+name: type
+schema:
+  type: string
+required: true
+description: Entity name

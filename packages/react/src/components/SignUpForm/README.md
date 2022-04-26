@@ -1,24 +1,25 @@
-# Login Form
+# Sign up form
 
-A basic email and password signup form.
+A basic email and password form, which is the first step on a user's journey in a nile application. This registers them so they will be able to [login](../LoginForm/README.md) in the future.
 
 ## Usage
 
-Assumes a `<NileProvider />` in a higher order component
-
 ```typescript
-import { SignUpForm } from '@theniledev/react';
+import { SignUpForm, NileProvider } from '@theniledev/react';
+
+const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
+
 function SignUp() {
   return (
-    <>
+    <NileProvider apiUrl={API_URL}>
       <h1>🤩 My Great App🤩</h1>
       <h2>Sign in</h2>
       <SignUpForm
         handleSuccess={() => {
-          // redirect to log in page
+          console.log('a new user has signed up');
         }}
       />
-    </>
+    </NileProvider>
   );
 }
 ```
@@ -31,7 +32,7 @@ function SignUp() {
 
 ### Advanced theming
 
-The labels and inputs of this form are customizable via props. You can pass any `React.Node` to it, but at a minimum you must use the passed `id` prop to ensure submission works properly. For completeness, spread all provided props input `<input />` or `<label />`and override as necessary.
+The labels and inputs of this form are customizable via props. You can pass any `React.Node` to it, but at a minimum an `id` must use the passed into the customized `<input />` to ensure submission works properly. For completeness, spread all provided props input `<input />` or `<label />`and override as necessary.
 
 ```typescript
 import { SignUpForm, LabelOverride, InputOverride } from '@theniledev/react';
