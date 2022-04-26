@@ -1,5 +1,5 @@
 {
-  "version": "0.7.3",
+  "version": "0.8.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -62,8 +62,8 @@
     "access": "public"
   },
   "dependencies": {
-    "es6-promise": "^4.2.8",
     "@openapitools/openapi-generator-cli": "^2.4.26",
+    "es6-promise": "^4.2.8",
     "node-fetch": "^3.2.3",
     "sade": "^1.8.1",
     "url-parse": "^1.5.10",
