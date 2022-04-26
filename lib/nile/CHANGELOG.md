@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/TheNileDev/nile-js/compare/v0.7.3...v0.8.0) (2022-04-26)
+
+
+### Features
+
+* fetch latest spec, add cli ([8b03527](https://github.com/TheNileDev/nile-js/commit/8b03527468b76acf8a8f4579d94606c949c9b87f))
+
+
+
+
+
 ## [0.7.3](https://github.com/TheNileDev/nile-js/compare/v0.7.2...v0.7.3) (2022-04-12)
 
 
