@@ -64,7 +64,7 @@
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.4.26",
     "es6-promise": "^4.2.8",
-    "node-fetch": "^3.2.3",
+    "node-fetch": "^3.2.4",
     "sade": "^1.8.1",
     "url-parse": "^1.5.10",
     "whatwg-fetch": "^3.6.2"
