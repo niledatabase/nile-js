@@ -8,7 +8,7 @@ type EditorProps = {
 };
 export const Editor = ({ textRef, height }: EditorProps) => {
   const handleChange = useCallback(
-    (value) => {
+    (value: string) => {
       // don't re-render... for now
       textRef.current = value;
     },
