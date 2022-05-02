@@ -41,6 +41,7 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas/Error.yaml"
+
   /orgs:
     get:
       operationId: listOrganizations
@@ -64,8 +65,12 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateOrganizationRequest"
       responses:
-        "200":
+        "201":
           description: Created a new Organization.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
 
   /orgs/{id}:
     parameters:
@@ -124,7 +129,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: "./schemas/User.yaml"
     post:
       operationId: createUser
       summary: Create a new User.
@@ -135,8 +140,12 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateUserRequest"
       responses:
-        "200":
+        "201":
           description: Created a new User.
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas/User.yaml"
 
   /users/{id}:
     parameters:
@@ -150,7 +159,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "./schemas/User.yaml"
     patch:
       operationId: updateUser
       summary: Update this User.
@@ -166,7 +175,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "./schemas/User.yaml"
     delete:
       operationId: deleteUser
       summary: Delete this User.
@@ -199,10 +208,22 @@ paths:
       responses:
         "204":
           description: The accepted invite.
+  /me:
+    get:
+      operationId: getMe
+      summary: Get information about current authenticated user
+      responses:
+        "200":
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas/User.yaml"
 
   /custom-data/{type}:
     parameters:
       - $ref: "./parameters/entityTypeInPath.yaml"
+      - $ref: "#/components/parameters/orgIdInQuery"
     get:
       operationId: listInstances
       summary: List all instances
@@ -297,6 +318,7 @@ paths:
   /admin/entities/{type}:
     parameters:
       - $ref: "./parameters/entityTypeInPath.yaml"
+      - $ref: "#/components/parameters/orgIdInQuery"
     get:
       operationId: getEntity
       summary: Get information for this entity
@@ -404,34 +426,23 @@ components:
         - $ref: "./schemas/Instance.yaml"
         - type: object
           required:
-            - name
+            - org_name
           properties:
-            name:
+            org_name:
               type: string
-    User:
-      allOf:
-        - $ref: "./schemas/Instance.yaml"
-        - type: object
-          properties:
-            email:
-              type: string
-            password:
-              type: string
-              writeOnly: true
-            # TODO: Add orgs?
     CreateOrganizationRequest:
       type: object
       required:
         - name
       properties:
-        name:
+        org_name:
           type: string
     PatchOrganizationRequest:
       type: object
       required:
         - name
       properties:
-        name:
+        org_name:
           type: string
     CreateUserRequest:
       type: object

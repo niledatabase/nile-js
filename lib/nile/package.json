@@ -8,7 +8,10 @@
     "dist",
     "src",
     "spec",
-    "bin/*.mjs"
+    "bin/*.mjs",
+    "templates",
+    "scripts/api-cleaner.sh",
+    "tsconfig.json"
   ],
   "engines": {
     "node": ">=10"
