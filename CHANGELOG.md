@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/TheNileDev/nile-js/compare/v0.8.0...v0.9.0) (2022-05-02)
+
+
+### Bug Fixes
+
+* **examples:** add typescript defs ([de1e89f](https://github.com/TheNileDev/nile-js/commit/de1e89fe0ebda5ddb41e9d5d5e2cfe2b0837f43b))
+* types in example, remove unused lint ([9f082f7](https://github.com/TheNileDev/nile-js/commit/9f082f728690eb4693437c5045d77d7eb2b7631e))
+
+
+### Features
+
+* update cli and api spec ([b8afbd5](https://github.com/TheNileDev/nile-js/commit/b8afbd534c22cb651000f2f06c472fc7f3ba078e))
+
+
+
+
+
 # [0.8.0](https://github.com/TheNileDev/nile-js/compare/v0.7.3...v0.8.0) (2022-04-26)
 
 
@@ -70,6 +87,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [0.6.0](https://github.com/TheNileDev/nile-js/compare/v0.5.5...v0.6.0) (2022-04-07)
+
+### Bug Fixes
+
+- cleanup examples from old api ([4ba0d0d](https://github.com/TheNileDev/nile-js/commit/4ba0d0d7f46e60c3fad8c85bc4031a570b0b7d41))
+
+### Features
+
+- add invites ([c948a3e](https://github.com/TheNileDev/nile-js/commit/c948a3eacbdb9b4d30d43726282680f7767b7663))
+
+## [0.5.5](https://github.com/TheNileDev/nile-js/compare/v0.5.4...v0.5.5) (2022-04-07)
+
+**Note:** Version bump only for package @theniledev/packages
 
 ### Bug Fixes
 
