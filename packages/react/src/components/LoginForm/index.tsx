@@ -18,8 +18,10 @@ export default function LoginForm(props: Props) {
   } = props;
 
   async function handleSubmit() {
-    const email = document.querySelector('#email') as HTMLInputElement;
-    const password = document.querySelector('#password') as HTMLInputElement;
+    const email = document.querySelector('#login #email') as HTMLInputElement;
+    const password = document.querySelector(
+      '#login #password'
+    ) as HTMLInputElement;
 
     const payload = {
       email: email.value,
