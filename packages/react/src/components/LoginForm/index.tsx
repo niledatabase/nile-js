@@ -18,23 +18,23 @@ export default function LoginForm(props: Props) {
     handleFailure,
   } = props;
 
-  const email =
-    typeof document !== 'undefined' &&
-    (document.querySelector('#login #email') as HTMLInputElement);
-  const password =
-    typeof document !== 'undefined' &&
-    (document.querySelector('#login #password') as HTMLInputElement);
-  const emailValue = email ? email.value : '';
-  const passwordValue = password ? password.value : '';
-
   const handleSubmit = React.useCallback(
     async function () {
+      const email =
+        typeof document !== 'undefined' &&
+        (document.querySelector('#login #email') as HTMLInputElement);
+      const password =
+        typeof document !== 'undefined' &&
+        (document.querySelector('#login #password') as HTMLInputElement);
+      const emailValue = email ? email.value : '';
+      const passwordValue = password ? password.value : '';
+
       const loginInfo = {
         email: emailValue,
         password: passwordValue,
       };
 
-      const success = await nile.login({ loginInfo }).catch((e) => {
+      const success = await nile.login({ loginInfo }).catch((e: Error) => {
         handleFailure && handleFailure(e);
       });
 
@@ -42,7 +42,7 @@ export default function LoginForm(props: Props) {
         handleSuccess && handleSuccess(loginInfo);
       }
     },
-    [emailValue, handleFailure, handleSuccess, nile, passwordValue]
+    [handleFailure, handleSuccess, nile]
   );
 
   return (

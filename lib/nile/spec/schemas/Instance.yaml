@@ -8,6 +8,5 @@ properties:
     readOnly: true
   entity_name:
     type: string
-    readOnly: true
   properties:
     type: object

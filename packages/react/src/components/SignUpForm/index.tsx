@@ -14,24 +14,31 @@ export default function SignUpForm(props: Props) {
     passwordLabel,
     passwordInput,
     handleSuccess,
+    handleFailure,
   } = props;
   const nile = useNile();
-  async function handleSubmit() {
-    const email = document.querySelector('#signup #email') as HTMLInputElement;
-    const password = document.querySelector(
-      '#signup #password'
-    ) as HTMLInputElement;
 
-    const createUserRequest = {
-      email: email.value,
-      password: password.value,
-    };
+  const handleSubmit = React.useCallback(
+    async function () {
+      const email = document.querySelector(
+        '#signup #email'
+      ) as HTMLInputElement;
+      const password = document.querySelector(
+        '#signup #password'
+      ) as HTMLInputElement;
 
-    await nile
-      .createUser({ createUserRequest })
-      .catch(() => alert('things went bad'));
-    handleSuccess && handleSuccess(createUserRequest);
-  }
+      const createUserRequest = {
+        email: email.value,
+        password: password.value,
+      };
+
+      await nile.createUser({ createUserRequest }).catch((e: Error) => {
+        handleFailure && handleFailure(e);
+      });
+      handleSuccess && handleSuccess(createUserRequest);
+    },
+    [handleFailure, handleSuccess, nile]
+  );
 
   return (
     <form id="signup">
