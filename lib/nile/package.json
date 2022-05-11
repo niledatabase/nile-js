@@ -23,7 +23,7 @@
     "build:readme": "./scripts/lib-readme-shim.sh",
     "build:types": "tsc -d --declarationDir dist --emitDeclarationOnly",
     "build:api:merge": "yarn openapi-merge-cli",
-    "build:api:gen": "yarn openapi-generator-cli generate -t templates -i spec/api.yaml -g typescript --package-name nile -o src/generated/openapi --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,withSeparateModelsAndApi=true,moduleName=Nile,projectName=@theniledev/js",
+    "build:api:gen": "yarn openapi-generator-cli generate -t templates -i spec/api.yaml -g typescript-fetch --package-name nile -o src/generated/openapi --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,withSeparateModelsAndApi=true,moduleName=Nile,typescriptThreePlus=true,projectName=@theniledev/js",
     "test": "tsdx test",
     "prepare": "yarn prebuild && tsdx build && yarn build:types",
     "size": "size-limit",
@@ -68,8 +68,6 @@
     "@openapitools/openapi-generator-cli": "^2.4.26",
     "es6-promise": "^4.2.8",
     "node-fetch": "^3.2.3",
-    "sade": "^1.8.1",
-    "url-parse": "^1.5.10",
-    "whatwg-fetch": "^3.6.2"
+    "sade": "^1.8.1"
   }
 }

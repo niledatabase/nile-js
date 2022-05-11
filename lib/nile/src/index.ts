@@ -1,7 +1,10 @@
 import Nile from './Nile';
 
-export { default as NileApi } from './generated/openapi/types/PromiseAPI';
+export {
+  DefaultApi as NileApi,
+  DefaultApiResults as NileApiResults,
+} from './generated/openapi/src/apis/DefaultApi';
 
 export default Nile;
 
-export * from './generated/openapi/models/all';
+export * from './generated/openapi/src/models';

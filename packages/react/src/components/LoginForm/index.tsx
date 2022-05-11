@@ -15,23 +15,35 @@ export default function LoginForm(props: Props) {
     passwordLabel,
     passwordInput,
     handleSuccess,
+    handleFailure,
   } = props;
 
-  async function handleSubmit() {
-    const email = document.querySelector('#email') as HTMLInputElement;
-    const password = document.querySelector('#password') as HTMLInputElement;
+  const email =
+    typeof document !== 'undefined' &&
+    (document.querySelector('#login #email') as HTMLInputElement);
+  const password =
+    typeof document !== 'undefined' &&
+    (document.querySelector('#login #password') as HTMLInputElement);
+  const emailValue = email ? email.value : '';
+  const passwordValue = password ? password.value : '';
 
-    const payload = {
-      email: email.value,
-      password: password.value,
-    };
-    const success = await nile.login(payload).catch(() => {
-      alert('things went bad');
-    });
-    if (success) {
-      handleSuccess && handleSuccess(payload);
-    }
-  }
+  const handleSubmit = React.useCallback(
+    async function () {
+      const loginInfo = {
+        email: emailValue,
+        password: passwordValue,
+      };
+
+      const success = await nile.login({ loginInfo }).catch((e) => {
+        handleFailure && handleFailure(e);
+      });
+
+      if (success) {
+        handleSuccess && handleSuccess(loginInfo);
+      }
+    },
+    [emailValue, handleFailure, handleSuccess, nile, passwordValue]
+  );
 
   return (
     <form id="login">

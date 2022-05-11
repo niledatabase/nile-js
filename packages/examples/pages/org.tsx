@@ -1,61 +1,45 @@
 import React from 'react';
-import { useState } from 'react';
-import { useNile } from '@theniledev/react';
+import { useNile, useNileFetch, LoginForm } from '@theniledev/react';
 
-import { Button } from '../components/Button';
 import { ComponentList } from '../components/ComponentList';
 
-function Org() {
-  const [users, setUsers] = useState<unknown>(null);
+const Orgs = React.memo(() => {
   const nile = useNile();
-  async function handleSubmit() {
-    const email = document.querySelector('#email') as HTMLInputElement;
-    const password = document.querySelector('#password') as HTMLInputElement;
+  const [isLoading, orgs] = useNileFetch(() => nile.listOrganizations());
+  return (
+    <>
+      <form>
+        {isLoading ? (
+          <span>Loading...</span>
+        ) : (
+          <>
+            <h1>🤩 InstaExpense 🤩</h1>
+            <pre>{JSON.stringify(orgs, null, 2)}</pre>
+          </>
+        )}
+      </form>
+      <ComponentList />
+    </>
+  );
+});
 
-    const payload = {
-      email: email.value,
-      password: password.value,
-    };
-    const success = await nile
-      .login(payload)
-      .catch(() => alert('things went bad'));
+Orgs.displayName = 'orgs';
 
-    if (success) {
-      const users = await nile.listOrganizations();
-      setUsers(users);
-    }
-  }
+function Org() {
+  const [success, setSuccess] = React.useState(false);
 
-  if (users) {
-    return (
-      <>
-        <form>
-          <h1>🤩 InstaExpense 🤩</h1>
-          <pre>{JSON.stringify(users, null, 2)}</pre>
-        </form>
-        <ComponentList />
-      </>
-    );
+  if (success) {
+    return <Orgs />;
   }
 
   return (
     <>
-      <form>
-        <h1>🤩 InstaExpense 🤩</h1>
-        <h2>Sign in</h2>
-        <label htmlFor="email">Email</label>
-        <br />
-        <input type="text" placeholder="email" id="email" />
-        <br />
-        <label htmlFor="password">Password</label>
-        <br />
-        <input type="password" placeholder="password" id="password" />
-        <br />
-        <br />
-        <Button node={null} onClick={handleSubmit}>
-          show me orgs
-        </Button>
-      </form>
+      <h1>🤩 InstaExpense 🤩</h1>
+      <LoginForm
+        handleSuccess={() => {
+          setSuccess(true);
+        }}
+      />
       <ComponentList />
     </>
   );

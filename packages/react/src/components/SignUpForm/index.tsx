@@ -17,16 +17,20 @@ export default function SignUpForm(props: Props) {
   } = props;
   const nile = useNile();
   async function handleSubmit() {
-    const email = document.querySelector('#email') as HTMLInputElement;
-    const password = document.querySelector('#password') as HTMLInputElement;
+    const email = document.querySelector('#signup #email') as HTMLInputElement;
+    const password = document.querySelector(
+      '#signup #password'
+    ) as HTMLInputElement;
 
-    const payload = {
+    const createUserRequest = {
       email: email.value,
       password: password.value,
     };
 
-    await nile.createUser(payload).catch(() => alert('things went bad'));
-    handleSuccess && handleSuccess(payload);
+    await nile
+      .createUser({ createUserRequest })
+      .catch(() => alert('things went bad'));
+    handleSuccess && handleSuccess(createUserRequest);
   }
 
   return (
