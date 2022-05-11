@@ -1,28 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useNile } from '@theniledev/react';
+import { useNile, useNileFetch } from '@theniledev/react';
 import { Invite, User } from '@theniledev/js';
 
 function SignIn() {
   const nile = useNile();
-  const [users, setUsers] = useState<Array<User>>();
-  const [invites, setInvites] = useState<Array<Invite>>();
   const [joinCode, setJoinCode] = useState<string>('');
   const router = useRouter();
 
-  useEffect(() => {
-    async function listUsers() {
-      const fetchedUsers = await nile.listUsers();
-      if (fetchedUsers) {
-        setUsers(fetchedUsers);
-      }
-    }
-    async function getInvites() {
-      setInvites(await nile.listInvites());
-    }
-    listUsers();
-    getInvites();
-  }, [nile]);
+  const [isLoading, [users, invites]] = useNileFetch<[User[], Invite[]]>(() => [
+    nile.listUsers({}),
+    nile.listInvites({}),
+  ]);
 
   const handleLogout = useCallback(() => {
     nile.authToken = '';
@@ -30,8 +19,13 @@ function SignIn() {
   }, [nile, router]);
 
   const submitInvite = useCallback(async () => {
-    await nile.acceptInvite(Number(joinCode));
+    await nile.acceptInvite({ code: Number(joinCode) });
   }, [joinCode, nile]);
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
   return (
     <>
       <h1>🤩 InstaExpense 🤩</h1>

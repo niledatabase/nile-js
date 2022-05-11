@@ -37,7 +37,7 @@
     "typescript": "^4.6.2"
   },
   "lint-staged": {
-    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix --ignore-pattern '!packages/react/.storybook'",
-    "lib/nile/src/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix"
+    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix --ignore-pattern '!packages/react/.storybook'  --resolve-plugins-relative-to .",
+    "lib/nile/src/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix  --resolve-plugins-relative-to ."
   }
 }

@@ -22,13 +22,15 @@ export default function SignUpForm(props: Props) {
       '#signup #password'
     ) as HTMLInputElement;
 
-    const payload = {
+    const createUserRequest = {
       email: email.value,
       password: password.value,
     };
 
-    await nile.createUser(payload).catch(() => alert('things went bad'));
-    handleSuccess && handleSuccess(payload);
+    await nile
+      .createUser({ createUserRequest })
+      .catch(() => alert('things went bad'));
+    handleSuccess && handleSuccess(createUserRequest);
   }
 
   return (
