@@ -401,7 +401,6 @@ components:
       properties:
         name:
           type: string
-          readOnly: true
         schema:
           type: object
     Token:
