@@ -8,4 +8,5 @@ export interface Props {
   emailInput?: React.ReactNode | InputOverride;
   passwordLabel?: React.ReactNode | LabelOverride;
   passwordInput?: React.ReactNode | InputOverride;
+  handleFailure: (e: Error) => void;
 }

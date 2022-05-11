@@ -109,10 +109,13 @@ export class {{classname}} extends runtime.BaseAPI {
     async {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}}{{^-last}}, {{/-last}}{{/allParams}}): Promise<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
         {{#returnType}}
         const response = await this.{{nickname}}Raw({{#allParams.0}}{ {{#allParams}}{{paramName}}: {{paramName}}{{^-last}}, {{/-last}}{{/allParams}} }{{/allParams.0}});
-        return await response.value();
+        const data = await response.request();
+        return await data.value();
         {{/returnType}}
         {{^returnType}}
-        await this.{{nickname}}Raw({{#allParams.0}}{ {{#allParams}}{{paramName}}: {{paramName}}{{^-last}}, {{/-last}}{{/allParams}} }{{/allParams.0}});
+        cosnt response = await this.{{nickname}}Raw({{#allParams.0}}{ {{#allParams}}{{paramName}}: {{paramName}}{{^-last}}, {{/-last}}{{/allParams}} }{{/allParams.0}});
+        const data = await response.request();
+        return await data.value();
         {{/returnType}}
     }
     {{/useSingleRequestParameter}}
@@ -124,7 +127,9 @@ export class {{classname}} extends runtime.BaseAPI {
         return await data.value();
         {{/returnType}}
         {{^returnType}}
-        await this.{{nickname}}Raw({{#allParams.0}}requestParameters{{/allParams.0}});
+        const response = this.{{nickname}}Raw({{#allParams.0}}requestParameters{{/allParams.0}});
+        const data = await response.request();
+        return await data.value();
         {{/returnType}}
     }
     {{/useSingleRequestParameter}}
