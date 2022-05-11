@@ -1,32 +1,17 @@
 /**
- * the below files need generated with `yarn build:exp`
+ * dependencies need generated with `yarn build:api:gen`
  */
-import NileApi from './generated/openapi/types/PromiseAPI';
-import {
-  createConfiguration,
-  ConfigurationParameters,
-} from './generated/openapi/configuration';
-import { ServerConfiguration } from './generated/openapi/servers';
-import {
-  DefaultApiRequestFactory,
-  DefaultApiResponseProcessor,
-} from './generated/openapi/apis/DefaultApi';
+import { DefaultApi } from './generated/openapi/src/';
+import { Configuration } from './generated/openapi/src/runtime';
 
-function ApiImpl(
-  config?: ConfigurationParameters & { apiUrl: string }
-): NileApi {
-  const server = new ServerConfiguration<{ [key: string]: string }>(
-    config?.apiUrl ?? '/',
-    {}
-  );
-  const _config = {
-    baseServer: server,
-    ...config,
-  };
-  const cfg = createConfiguration(_config);
-  const nileService = new DefaultApiRequestFactory(cfg);
-  const nileProcessor = new DefaultApiResponseProcessor();
-  const nile = new NileApi(cfg, nileService, nileProcessor);
+type NileConfig = Configuration & { apiUrl: string };
+function ApiImpl(config?: NileConfig): DefaultApi {
+  if (!config) {
+    return new DefaultApi();
+  }
+
+  const cfg = new Configuration({ ...config, basePath: config.apiUrl });
+  const nile = new DefaultApi(cfg);
   return nile;
 }
 export default ApiImpl;

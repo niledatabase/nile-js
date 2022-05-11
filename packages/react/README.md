@@ -25,26 +25,12 @@ A method exposing the `@theniledev/js` instance created in `<NileProvider />`. T
 
 ```typescript
 import React, { useEffect } from 'react';
-import { useNile } from '@theniledev/react';
+import { useNile, useNileFetch } from '@theniledev/react';
 
 export default function UserTable() {
   const nile = useNile();
   const [users, setUsers] = useState();
-
-  useEffect(() => {
-    if (!nile.authToken) {
-      console.error('Request not authenticated, please sign in.');
-    }
-    async function listUsers() {
-      const fetchedUsers = await nile
-        .listUsers()
-        .catch((error) => console.error(error));
-      if (fetchedUsers) {
-        setUsers(fetchedUsers);
-      }
-    }
-    listUsers();
-  }, []);
+  const [, users] = useNileFetch(() => nile.listUsers());
 
   return (
     users &&
