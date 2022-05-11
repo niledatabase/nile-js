@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/TheNileDev/nile-js/compare/v0.10.0...v0.10.1) (2022-05-11)
+
+
+### Bug Fixes
+
+* add missing promises, fix forms ([d802d54](https://github.com/TheNileDev/nile-js/commit/d802d5467e869068f45188e6de7ed9105fd38f3c))
+* fix type for handle failure ([d119cbd](https://github.com/TheNileDev/nile-js/commit/d119cbdf4be6e1cec43bf48ba8d546abd4a9b205))
+* remove readOnly from spec ([5a89baf](https://github.com/TheNileDev/nile-js/commit/5a89baf86bb20c4a0a16a0de055d62e16a69f787))
+
+
+
+
+
 # [0.10.0](https://github.com/TheNileDev/nile-js/compare/v0.9.0...v0.10.0) (2022-05-11)
 
 
