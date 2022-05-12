@@ -19,7 +19,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build && yarn build:types",
-    "prebuild": "yarn build:api:gen && ./scripts/api-cleaner.sh",
+    "prebuild": "yarn build:api:gen",
     "build:readme": "./scripts/lib-readme-shim.sh",
     "build:types": "tsc -d --declarationDir dist --emitDeclarationOnly",
     "build:api:merge": "yarn openapi-merge-cli",

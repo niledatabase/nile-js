@@ -1,16 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useNile, useNileFetch } from '@theniledev/react';
 import { Invite, User } from '@theniledev/js';
+import { useNile } from '@theniledev/react';
+import { useQueries } from 'react-query';
 
 function SignIn() {
   const nile = useNile();
   const [joinCode, setJoinCode] = useState<string>('');
   const router = useRouter();
 
-  const [isLoading, [users, invites]] = useNileFetch<[User[], Invite[]]>(() => [
-    nile.listUsers({}),
-    nile.listInvites({}),
+  const [{ data: users = [] }, { data: invites = [] }] = useQueries([
+    { queryKey: 'users', queryFn: () => nile.listUsers({}) },
+    { queryKey: 'invites', queryFn: () => nile.listInvites({}) },
   ]);
 
   const handleLogout = useCallback(() => {
@@ -22,6 +23,7 @@ function SignIn() {
     await nile.acceptInvite({ code: Number(joinCode) });
   }, [joinCode, nile]);
 
+  const isLoading = false;
   if (isLoading) {
     return <>Loading...</>;
   }
@@ -31,7 +33,7 @@ function SignIn() {
       <h1>🤩 InstaExpense 🤩</h1>
       <h2>Sign in</h2>
       {users &&
-        users.map((user) => {
+        users.map((user: User) => {
           return <pre key={user.id}>{JSON.stringify(user, null, 2)}</pre>;
         })}
       <button onClick={handleLogout}>Logout</button>
@@ -42,7 +44,7 @@ function SignIn() {
         onChange={(e) => setJoinCode(e.target.value)}
       />
       <button onClick={submitInvite}>Submit invite</button>
-      {invites?.map(({ inviter, status, code }, idx) => {
+      {invites?.map(({ inviter, status, code }: Invite, idx: number) => {
         return (
           <div key={idx}>
             {`Invite ${inviter} status ${status} code ${code}`}
