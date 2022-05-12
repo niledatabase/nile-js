@@ -2,12 +2,16 @@ import React from 'react';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { NileProvider } from '@theniledev/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
+const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <NileProvider apiUrl="http://localhost:8080">
-      <Component {...pageProps} />
-    </NileProvider>
+    <QueryClientProvider client={queryClient}>
+      <NileProvider apiUrl="http://localhost:8080">
+        <Component {...pageProps} />
+      </NileProvider>
+    </QueryClientProvider>
   );
 }
 

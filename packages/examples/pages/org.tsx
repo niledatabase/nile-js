@@ -1,11 +1,14 @@
 import React from 'react';
-import { useNile, useNileFetch, LoginForm } from '@theniledev/react';
+import { useQuery } from 'react-query';
+import { useNile, LoginForm } from '@theniledev/react';
 
 import { ComponentList } from '../components/ComponentList';
 
 const Orgs = React.memo(() => {
   const nile = useNile();
-  const [isLoading, orgs] = useNileFetch(() => nile.listOrganizations());
+  const { isLoading, data: orgs } = useQuery('organizations', () =>
+    nile.listOrganizations()
+  );
   return (
     <>
       <form>

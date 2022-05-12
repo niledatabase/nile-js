@@ -49,33 +49,11 @@ export interface {{classname}}Interface {
      * @throws {RequiredError}
      * @memberof {{classname}}Interface
      */
-    {{nickname}}Raw({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request{{/allParams.0}}): { controller: AbortController, request: () => Promise<runtime.ApiResponse<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>> };
+    {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{#returnType}}void | {{/returnType}}{{{returnType}}}{{^returnType}}void{{/returnType}}>;
 
-    /**
-     {{#notes}}
-     * {{&notes}}
-     {{/notes}}
-     {{#summary}}
-     * {{&summary}}
-     {{/summary}}
-     */
-    {{^useSingleRequestParameter}}
-    {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}}{{^-last}}, {{/-last}}{{/allParams}}): Promise<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>;
-    {{/useSingleRequestParameter}}
-    {{#useSingleRequestParameter}}
-    {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request{{/allParams.0}}): Promise<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>;
-    {{/useSingleRequestParameter}}
 
 {{/operation}}
 }
-export type {{classname}}Results =
-{{#operation}}
-    
-    | { controller: AbortController, request: () => Promise<runtime.ApiResponse<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>> }
-    | Promise<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>
-
-{{/operation}}
-
 {{/operations}}
 {{/withInterfaces}}
 {{#operations}}
@@ -105,45 +83,8 @@ export class {{classname}} extends runtime.BaseAPI {
      * {{&summary}}
      {{/summary}}
      */
-    {{^useSingleRequestParameter}}
-    async {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}}{{^-last}}, {{/-last}}{{/allParams}}): Promise<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
-        {{#returnType}}
-        const response = await this.{{nickname}}Raw({{#allParams.0}}{ {{#allParams}}{{paramName}}: {{paramName}}{{^-last}}, {{/-last}}{{/allParams}} }{{/allParams.0}});
-        const data = await response.request();
-        return await data.value();
-        {{/returnType}}
-        {{^returnType}}
-        cosnt response = await this.{{nickname}}Raw({{#allParams.0}}{ {{#allParams}}{{paramName}}: {{paramName}}{{^-last}}, {{/-last}}{{/allParams}} }{{/allParams.0}});
-        const data = await response.request();
-        return await data.value();
-        {{/returnType}}
-    }
-    {{/useSingleRequestParameter}}
-    {{#useSingleRequestParameter}}
-    async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request{{/allParams.0}}): Promise<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
-        {{#returnType}}
-        const response = await this.{{nickname}}Raw({{#allParams.0}}requestParameters{{/allParams.0}});
-        const data = await response.request();
-        return await data.value();
-        {{/returnType}}
-        {{^returnType}}
-        const response = this.{{nickname}}Raw({{#allParams.0}}requestParameters{{/allParams.0}});
-        const data = await response.request();
-        return await data.value();
-        {{/returnType}}
-    }
-    {{/useSingleRequestParameter}}
-
-    /**
-     {{#notes}}
-     * {{&notes}}
-     {{/notes}}
-     {{#summary}}
-     * {{&summary}}
-     {{/summary}}
-     */
-    {{nickname}}Raw({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request{{/allParams.0}}): { controller: AbortController, request: () => Promise<runtime.ApiResponse<{{#returnType}}void | {{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>> } {
-        const controller = new AbortController();
+    async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{#returnType}}void | {{/returnType}}{{{returnType}}}{{^returnType}}void{{/returnType}}> {
+      
         {{#allParams}}
         {{#required}}
         if (requestParameters.{{paramName}} === null || requestParameters.{{paramName}} === undefined) {
@@ -311,7 +252,7 @@ export class {{classname}} extends runtime.BaseAPI {
           headerParameters["Authorization"] = `Bearer ${this.authToken}`;
         }
         
-        const response = () => this.request({
+        const response = await this.request({
             path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(requestParameters.{{paramName}}))){{/pathParams}},
             method: '{{httpMethod}}',
             headers: headerParameters,
@@ -344,61 +285,55 @@ export class {{classname}} extends runtime.BaseAPI {
             {{#hasFormParams}}
             body: formParams,
             {{/hasFormParams}}
-        }, { signal: controller.signal });
+        }, initOverrides);
 
         {{#returnType}}
         {{#isResponseFile}}
-        const request = async () => new runtime.BlobApiResponse(await response());
+        const request = new runtime.BlobApiResponse(response);
+        return await request.value();
         {{/isResponseFile}}
         {{^isResponseFile}}
         {{#returnTypeIsPrimitive}}
         {{#isMap}}
-        const request = async () => new runtime.JSONApiResponse<any>(await response());
+        const request = new runtime.JSONApiResponse<any>(response);
+        return await request.value();
         {{/isMap}}
         {{#isArray}}
-        const request = async () => new runtime.JSONApiResponse<any>(await response());
+        const request = new runtime.JSONApiResponse<any>(response);
+        return await request.value();
         {{/isArray}}
         {{#returnSimpleType}}
-        const request = async () => new runtime.TextApiResponse(await response()) as any;
+        const request = new runtime.TextApiResponse(response) as any;
+        return await request.value();
         {{/returnSimpleType}}
         {{/returnTypeIsPrimitive}}
         {{^returnTypeIsPrimitive}}
         {{#isArray}}
-        const request = async () => new runtime.JSONApiResponse(await response(){{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}{{/uniqueItems}};
+        const request = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}{{/uniqueItems}};
+        return await request.value();
         {{/isArray}}
         {{^isArray}}
         {{#isMap}}
-        const request = async () => new runtime.JSONApiResponse(await response(){{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
+        const request = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
+        return await request.value();
         {{/isMap}}
         {{^isMap}}
-        const request = async () => new runtime.JSONApiResponse(await response(){{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
+        const request = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
+        const val = await request.value();
+        if ('{{{returnType}}}'.toLowerCase() === 'token' && val && 'token' in val) {
+            this.authToken = String(val['token']);
+        }
+        return val;
         {{/isMap}}
         {{/isArray}}
         {{/returnTypeIsPrimitive}}
         {{/isResponseFile}}
         {{/returnType}}
         {{^returnType}}
-        const request = async () => new runtime.VoidApiResponse(await response());
+        await new runtime.VoidApiResponse(response);
         {{/returnType}}
-        return {
-          controller, 
-          request
-        }
     }
     {{/operation}}
-  
-    /**
-    * Log in to service
-    */
-    async login(requestParameters: LoginRequest): Promise<Token | void> {
-        const response = await this.loginRaw(requestParameters);
-        const data = await response.request();
-        const token = await data.value();
-        if (token) {
-            this.authToken = token.token;
-        }
-        return token;
-    }
 }
 {{/operations}}
 
