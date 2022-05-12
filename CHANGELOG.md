@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/TheNileDev/nile-js/compare/v0.10.1...v0.11.0) (2022-05-12)
+
+
+### Features
+
+* remove useFetch, implement react-query ([26cc6d4](https://github.com/TheNileDev/nile-js/commit/26cc6d4014aa831bf5781bc281636986c1344bc3))
+
+
+
+
+
 ## [0.10.1](https://github.com/TheNileDev/nile-js/compare/v0.10.0...v0.10.1) (2022-05-11)
 
 
