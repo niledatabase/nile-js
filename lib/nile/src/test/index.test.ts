@@ -50,7 +50,7 @@ describe('index', () => {
       const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
       // eat the warning, we're gonna make it happen
       jest.spyOn(console, 'warn').mockImplementation(() => null);
-
+      const controller = new AbortController();
       const json = jest.fn();
 
       // @ts-expect-error
@@ -59,8 +59,8 @@ describe('index', () => {
         json,
       }));
       const nile = Nile();
-      const request = nile.loginRaw({ loginInfo: payload });
-      request.controller.abort();
+      await nile.login({ loginInfo: payload }, { signal: controller.signal });
+      controller.abort();
       expect(abortSpy).toBeCalled();
       expect(json).not.toBeCalled();
       expect(nile.authToken).toBeFalsy();
