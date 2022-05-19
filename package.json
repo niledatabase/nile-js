@@ -22,7 +22,7 @@
     "@commitlint/config-conventional": "17.0.0",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "^5.15.0",
-    "eslint": "8.12.0",
+    "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
