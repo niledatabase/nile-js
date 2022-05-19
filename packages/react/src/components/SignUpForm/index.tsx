@@ -1,4 +1,6 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { useMutation } from 'react-query';
 
 import { useNile } from '../../context';
 import Button from '../_Button';
@@ -14,31 +16,48 @@ export default function SignUpForm(props: Props) {
     passwordLabel,
     passwordInput,
     handleSuccess,
-    handleFailure,
   } = props;
   const nile = useNile();
 
+  const mutation = useMutation(
+    (createUserRequest: { email: string; password: string }) =>
+      nile.createUser({ createUserRequest })
+  );
+
+  const mutate = mutation.mutate;
+
+  const wrapSuccess = React.useCallback(
+    (payload) => handleSuccess && handleSuccess(payload),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const getEmailAndPassword = React.useCallback(() => {
+    const email = document.querySelector('#signup #email') as HTMLInputElement;
+    const password = document.querySelector(
+      '#signup #password'
+    ) as HTMLInputElement;
+    return [email.value, password.value];
+  }, []);
+
   const handleSubmit = React.useCallback(
     async function () {
-      const email = document.querySelector(
-        '#signup #email'
-      ) as HTMLInputElement;
-      const password = document.querySelector(
-        '#signup #password'
-      ) as HTMLInputElement;
-
+      const [email, password] = getEmailAndPassword();
       const createUserRequest = {
-        email: email.value,
-        password: password.value,
+        email,
+        password,
       };
-
-      await nile.createUser({ createUserRequest }).catch((e: Error) => {
-        handleFailure && handleFailure(e);
-      });
-      handleSuccess && handleSuccess(createUserRequest);
+      mutate(createUserRequest);
     },
-    [handleFailure, handleSuccess, nile]
+    [getEmailAndPassword, mutate]
   );
+
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      const [email, password] = getEmailAndPassword();
+      wrapSuccess({ email, password });
+    }
+  }, [getEmailAndPassword, wrapSuccess, mutation.isSuccess]);
 
   return (
     <form id="signup">

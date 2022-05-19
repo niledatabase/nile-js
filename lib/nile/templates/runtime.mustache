@@ -110,6 +110,18 @@ export class BaseAPI {
             if (response.status >= 200 && response.status < 300) {
                 return response;
             }
+
+            let res;
+            try {
+                res = await response.json();
+            } catch (e) {
+                /* do the default */
+            }
+            if ('message' in res) {
+                const { message } = res;
+                throw new ResponseError(response, message);
+            }
+            
             throw new ResponseError(response, 'Response returned an error code');
         }
         
