@@ -82,7 +82,35 @@ export class {{classname}} extends runtime.BaseAPI {
      {{#summary}}
      * {{&summary}}
      {{/summary}}
+     * @example
+     *```typescript
+     * import {{moduleName}} from '{{{projectName}}}';
+     * 
+     * const nile = new {{{moduleName}}}({ apiUrl: 'http://localhost:8080' });
+     * 
+      {{#hasParams}}
+     * const body = {
+      {{#allParams}}
+     *   // {{{dataType}}}{{#description}} | {{{description}}}{{/description}}{{^required}} (optional){{/required}}
+     *   {{paramName}}: {{#example}}{{{example}}}{{/example}}{{^example}}{}{{/example}},
+      {{/allParams}}
+     * };
+     * {{/hasParams}}
+      {{^hasParams}}
+     * let body:any = {};
+      {{/hasParams}}
+     * 
+     * nile.{{{operationId}}}(body).then(({{#returnType}}data{{/returnType}}) => {
+        {{#returnType}}
+     *   console.log('API called successfully. Returned data: ' + data);
+        {{/returnType}}
+        {{^returnType}}
+     *   console.log('API called successfully.');
+        {{/returnType}}
+     * }).catch((error:any) => console.error(error));
+    ```
      */
+     
     async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{#returnType}}void | {{/returnType}}{{{returnType}}}{{^returnType}}void{{/returnType}}> {
       
         {{#allParams}}

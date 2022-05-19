@@ -83,5 +83,8 @@
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
     "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "react-query": "^3.39.0"
   }
 }
