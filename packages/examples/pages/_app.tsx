@@ -8,7 +8,7 @@ const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <NileProvider apiUrl="http://localhost:8080">
+      <NileProvider basePath="http://localhost:8080" workspace="1">
         <Component {...pageProps} />
       </NileProvider>
     </QueryClientProvider>

@@ -7,7 +7,7 @@ import { ComponentList } from '../components/ComponentList';
 const Orgs = React.memo(() => {
   const nile = useNile();
   const { isLoading, data: orgs } = useQuery('organizations', () =>
-    nile.listOrganizations()
+    nile.organizations.listOrganizations()
   );
   return (
     <>

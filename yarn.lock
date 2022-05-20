@@ -2921,7 +2921,7 @@
   dependencies:
     "@octokit/openapi-types" "^11.2.0"
 
-"@openapitools/openapi-generator-cli@^2.4.26":
+"@openapitools/openapi-generator-cli@^2.5.1":
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/@openapitools/openapi-generator-cli/-/openapi-generator-cli-2.5.1.tgz#3825be4f7317199183fbd0d464dd8a7ba055fcf5"
   integrity sha512-WSRQBU0dCSVD+0Qv8iCsv0C4iMaZe/NpJ/CT4SmrEYLH3txoKTE8wEfbdj/kqShS8Or0YEGDPUzhSIKY151L0w==
@@ -14020,6 +14020,11 @@ react-helmet-async@^1.0.2, react-helmet-async@^1.0.7:
     prop-types "^15.7.2"
     react-fast-compare "^3.2.0"
     shallowequal "^1.1.0"
+
+react-hook-form@^7.31.1:
+  version "7.31.1"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.31.1.tgz#16c357dd366bc226172e6acbb5a1672873bbfb28"
+  integrity sha512-QjtjZ8r8KtEBWWpcXLyQordCraTFxILtyQpaz5KLLxN2YzcC+FZ9LLtOnNGuOnzZo9gCoB+viK3ZHV9Mb2htmQ==
 
 react-inspector@^5.1.0:
   version "5.1.1"

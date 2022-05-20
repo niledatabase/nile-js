@@ -11,7 +11,9 @@ export function UserTable() {
     isError,
     error,
     data: users = [],
-  } = useQuery<unknown, unknown, User[]>('nileUsers', () => nile.listUsers({}));
+  } = useQuery<unknown, unknown, User[]>('nileUsers', () =>
+    nile.users.listUsers()
+  );
 
   if (isLoading) {
     return <div>Loading...</div>;

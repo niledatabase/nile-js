@@ -6,7 +6,8 @@ import Nile, { NileApi } from '@theniledev/js';
 import { NileContext, NileProviderProps } from './types';
 
 const defaultContext: NileContext = {
-  instance: Nile({ apiUrl: '' }),
+  instance: Nile({ basePath: '', workspace: 'none' }),
+  workspace: '',
   theme: '',
 };
 
@@ -16,19 +17,20 @@ const { Provider } = context;
 export const NileProvider = (props: NileProviderProps) => {
   const { children } = props;
   const initalized = useRef(false);
+
   const values = useMemo<NileContext>(() => {
     if (initalized.current === true) {
       // eslint-disable-next-line no-console
       console.warn(
-        'Another instance of nile was created. Reauthentication is required. Move the `<NileProvider />` to a component higher in the render tree.'
+        'Another instance of nile was created. Reauthentication is required.'
       );
     }
     initalized.current = true;
     return {
-      instance: Nile({ apiUrl: props.apiUrl }),
+      instance: Nile({ basePath: props.basePath, workspace: props.workspace }),
       theme: props.theme,
     };
-  }, [props.apiUrl, props.theme]);
+  }, [props.basePath, props.theme, props.workspace]);
 
   return <Provider value={values}>{children}</Provider>;
 };
