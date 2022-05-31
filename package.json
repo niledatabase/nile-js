@@ -18,7 +18,7 @@
     "publish": "yarn lerna publish"
   },
   "devDependencies": {
-    "@commitlint/cli": "16.2.3",
+    "@commitlint/cli": "17.0.1",
     "@commitlint/config-conventional": "17.0.0",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "^5.15.0",
