@@ -49,7 +49,7 @@ export interface {{classname}}Interface {
      * @throws {RequiredError}
      * @memberof {{classname}}Interface
      */
-    {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{#returnType}}void | {{/returnType}}{{{returnType}}}{{^returnType}}void{{/returnType}}>;
+    {{nickname}}({{#allParams.0}}requestParameters{{^allParams.0.required}}?{{/allParams.0.required}}: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{#returnType}}void | {{/returnType}}{{{returnType}}}{{^returnType}}void{{/returnType}}>;
 
 
 {{/operation}}
@@ -67,10 +67,12 @@ export class {{classname}} extends runtime.BaseAPI implements {{classname}}Inter
 export class {{classname}} extends runtime.BaseAPI {
 {{/withInterfaces}}
     public authToken: string;
+    public workspace: string;
     
     constructor(protected configuration = new runtime.Configuration()) {
       super(configuration);
       this.authToken = '';
+      this.workspace = '';
     }
 
     {{#operation}}
@@ -86,7 +88,7 @@ export class {{classname}} extends runtime.BaseAPI {
      *```typescript
      * import {{moduleName}} from '{{{projectName}}}';
      * 
-     * const nile = new {{{moduleName}}}({ apiUrl: 'http://localhost:8080' });
+     * const nile = new {{{moduleName}}}({ apiUrl: 'http://localhost:8080', workspace: "myWorkspace" });
      * 
       {{#hasParams}}
      * const body = {
@@ -115,8 +117,10 @@ export class {{classname}} extends runtime.BaseAPI {
       
         {{#allParams}}
         {{#required}}
-        if (requestParameters.{{paramName}} === null || requestParameters.{{paramName}} === undefined) {
-            throw new runtime.RequiredError('{{paramName}}','Required parameter requestParameters.{{paramName}} was null or undefined when calling {{nickname}}.');
+        if ('{{paramName}}'.localeCompare('workspace') !== 0 && requestParameters) {
+            if (requestParameters.{{paramName}} === null || requestParameters.{{paramName}} === undefined) {
+                throw new runtime.RequiredError('{{paramName}}','Required parameter requestParameters.{{paramName}} was null or undefined when calling {{nickname}}.');
+            }
         }
 
         {{/required}}
@@ -280,8 +284,11 @@ export class {{classname}} extends runtime.BaseAPI {
           headerParameters["Authorization"] = `Bearer ${this.authToken}`;
         }
         
+        {{#hasPathParams}}
+        const requestParams: {{operationIdCamelCase}}Request = ({ ...(requestParameters ? requestParameters : {}), workspace: String(this.workspace) } as {{operationIdCamelCase}}Request);
+        {{/hasPathParams}}
         const response = await this.request({
-            path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(requestParameters.{{paramName}}))){{/pathParams}},
+            path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(requestParams.{{paramName}}))){{/pathParams}},
             method: '{{httpMethod}}',
             headers: headerParameters,
             query: queryParameters,
@@ -349,7 +356,9 @@ export class {{classname}} extends runtime.BaseAPI {
         const request = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
         const val = await request.value();
         if ('{{{returnType}}}'.toLowerCase() === 'token' && val && 'token' in val) {
-            this.authToken = String(val['token']);
+            if (typeof val['token'] === 'string'){
+                this.authToken = val['token'];
+            }
         }
         return val;
         {{/isMap}}

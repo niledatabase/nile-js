@@ -15,6 +15,7 @@ export interface ConfigurationParameters {
     accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string | Promise<string>); // parameter for oauth2 security
     headers?: HTTPHeaders; //header params we want to use on every request
     credentials?: RequestCredentials; //value for the credentials param we want to use on each request
+    workspace?: string; // the workspace for the application
 }
 
 export class Configuration {
@@ -22,6 +23,15 @@ export class Configuration {
 
     set config(configuration: Configuration) {
         this.configuration = configuration;
+    }
+
+    set workspace(val: string) {
+        this.workspace = val;
+    }
+    
+    get workspace(): string {
+        // It is rare to query without a workspace, but it is possible when initially starting
+        return this.configuration.workspace != null ? this.configuration.workspace : '';
     }
 
     get basePath(): string {
@@ -81,9 +91,12 @@ export const DefaultConfig = new Configuration();
 export class BaseAPI {
 
     private middleware: Middleware[];
-
+    
+    public workspace?: string;
+    
     constructor(protected configuration = DefaultConfig) {
         this.middleware = configuration.middleware;
+        this.workspace = configuration.workspace;
     }
 
     withMiddleware<T extends BaseAPI>(this: T, ...middlewares: Middleware[]) {
@@ -117,7 +130,7 @@ export class BaseAPI {
             } catch (e) {
                 /* do the default */
             }
-            if ('message' in res) {
+            if (res && 'message' in res) {
                 const { message } = res;
                 throw new ResponseError(response, message);
             }

@@ -1,6 +1,6 @@
 import Nile from './Nile';
 
-export { DefaultApi as NileApi } from './generated/openapi/src/apis/DefaultApi';
+export { NileApi } from './Nile';
 
 export default Nile;
 
