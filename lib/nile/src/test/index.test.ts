@@ -54,7 +54,7 @@ describe('index', () => {
             'listEntities',
             'listInstances',
             'updateEntity',
-            'updateInstances',
+            'updateInstance',
           ]);
         }
         if (k === 'developers') {
