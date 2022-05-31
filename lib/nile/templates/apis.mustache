@@ -102,7 +102,7 @@ export class {{classname}} extends runtime.BaseAPI {
      * let body:any = {};
       {{/hasParams}}
      * 
-     * nile.{{{operationId}}}(body).then(({{#returnType}}data{{/returnType}}) => {
+     * nile.{{tags.0.name}}.{{{operationId}}}(body).then(({{#returnType}}data{{/returnType}}) => {
         {{#returnType}}
      *   console.log('API called successfully. Returned data: ' + data);
         {{/returnType}}

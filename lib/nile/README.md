@@ -2,15 +2,26 @@
 
 ## Usage
 
-A full list of functions available to the Nile object can be found in the [source readme](./src/README.md)
+A full list of functions available to the Nile object can be found in the [docs](https://docs.thenile.dev/).
+
+## Basic example
 
 ```typescript
 import Nile from "@theniledev/js";
 
 const nile = Nile({ apiUrl: props.apiUrl });
+await nile.developer.loginDeveloper({
+  loginInfo: {
+    email: "dev@dev.dev",
+    password: "123",
+  },
+});
+
+// set the auth token for all sub classes
+nile.authToken = nile.developer.authToken;
 
 // create a user
-await nile
+await nile.user
   .createUser({ email: "anon@anon.com", password: "secret" })
   .catch((error) => console.error(error));
 
