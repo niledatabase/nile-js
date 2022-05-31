@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/TheNileDev/nile-js/compare/v0.11.1...v0.12.0) (2022-05-31)
+
+
+* feat!: add support for workspaces ([8818bab](https://github.com/TheNileDev/nile-js/commit/8818babcdbb58d0e52e826fdfbdebda002bb9e88))
+
+
+### BREAKING CHANGES
+
+* workspaces are a whole different structure and spec.
+
+
+
+
+
 ## [0.11.1](https://github.com/TheNileDev/nile-js/compare/v0.11.0...v0.11.1) (2022-05-19)
 
 
