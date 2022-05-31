@@ -8,6 +8,7 @@ export interface NileContext {
 
 export interface NileProviderProps {
   children: React.ReactNode;
-  apiUrl: string;
+  basePath: string;
+  workspace?: string;
   theme?: string;
 }

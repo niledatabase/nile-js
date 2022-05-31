@@ -7,6 +7,79 @@ const userPayload = {
   email: 'bob@squarepants.com',
 };
 describe('index', () => {
+  describe('methods', () => {
+    it('has the expected methods', () => {
+      const nile = Nile();
+      const keys = Object.keys(nile);
+      expect(keys).toEqual([
+        'users',
+        'developers',
+        'entities',
+        'workspaces',
+        'organizations',
+      ]);
+      keys.forEach((k) => {
+        const props = Object.getOwnPropertyNames(
+          // @ts-expect-error testing
+          Object.getPrototypeOf(nile[k])
+        );
+        if (k === 'workspaces') {
+          expect(props).toEqual([
+            'constructor',
+            'createWorkspace',
+            'listWorkspaces',
+          ]);
+        }
+        if (k === 'organizations') {
+          expect(props).toEqual([
+            'constructor',
+            'acceptInvite',
+            'createOrganization',
+            'deleteOrganization',
+            'getOrganization',
+            'listInvites',
+            'listOrganizations',
+            'updateOrganization',
+          ]);
+        }
+        if (k === 'entities') {
+          expect(props).toEqual([
+            'constructor',
+            'createEntity',
+            'createInstance',
+            'deleteInstance',
+            'getEntity',
+            'getInstance',
+            'getOpenAPI',
+            'listEntities',
+            'listInstances',
+            'updateEntity',
+            'updateInstances',
+          ]);
+        }
+        if (k === 'developers') {
+          expect(props).toEqual([
+            'constructor',
+            'createDeveloper',
+            'loginDeveloper',
+            'validateDeveloper',
+          ]);
+        }
+        if (k === 'users') {
+          expect(props).toEqual([
+            'constructor',
+            'createUser',
+            'deleteUser',
+            'getUser',
+            'listUsers',
+            'loginUser',
+            'me',
+            'validateUser',
+          ]);
+        }
+      });
+    });
+  });
   describe('login', () => {
     let payload: LoginInfo;
     beforeEach(() => {
@@ -14,7 +87,7 @@ describe('index', () => {
       // @ts-expect-error
       global.fetch = jest.fn(() =>
         Promise.resolve({
-          json: () => Promise.resolve({ rates: { CAD: 1.42 } }),
+          json: () => Promise.resolve({}),
         })
       );
     });
@@ -25,23 +98,31 @@ describe('index', () => {
 
     it('works', async () => {
       // @ts-expect-error
-      fetch.mockImplementation(() => ({
+      fetch.mockImplementation(async () => ({
         status: 200,
-        json: () => Promise.resolve({ token: 123 }),
+        json: () => Promise.resolve({ token: '123' }),
+        catch: () => null,
       }));
       const nile = Nile();
-      await nile.login({ loginInfo: payload });
+      await nile.developers.loginDeveloper({ loginInfo: payload });
       expect(nile.authToken).toBeTruthy();
+      nile.authToken = nile.developers.authToken;
+      expect(nile.users.authToken).toBeTruthy();
+      expect(nile.developers.authToken).toBeTruthy();
+      expect(nile.entities.authToken).toBeTruthy();
+      expect(nile.workspaces.authToken).toBeTruthy();
+      expect(nile.organizations.authToken).toBeTruthy();
     });
 
     it('does not work', async () => {
       // @ts-expect-error
-      fetch.mockImplementation(() => ({
+      fetch.mockImplementation(async () => ({
         status: 200,
         json: () => Promise.resolve({}),
+        catch: () => null,
       }));
       const nile = Nile();
-      await nile.login({ loginInfo: payload });
+      await nile.developers.loginDeveloper({ loginInfo: payload });
 
       expect(nile.authToken).toBeFalsy();
     });
@@ -57,13 +138,27 @@ describe('index', () => {
       fetch.mockImplementation(() => ({
         status: 200,
         json,
+        catch: () => null,
       }));
       const nile = Nile();
-      await nile.login({ loginInfo: payload }, { signal: controller.signal });
+      nile.developers.loginDeveloper(
+        { loginInfo: payload },
+        { signal: controller.signal }
+      );
       controller.abort();
       expect(abortSpy).toBeCalled();
       expect(json).not.toBeCalled();
       expect(nile.authToken).toBeFalsy();
     });
+  });
+  it('sets a workspace', () => {
+    const nile = Nile();
+    nile.workspace = '123';
+    expect(nile.workspace).toBe('123');
+    expect(nile.users.workspace).toBeTruthy();
+    expect(nile.developers.workspace).toBeTruthy();
+    expect(nile.entities.workspace).toBeTruthy();
+    expect(nile.workspaces.workspace).toBeTruthy();
+    expect(nile.organizations.workspace).toBeTruthy();
   });
 });

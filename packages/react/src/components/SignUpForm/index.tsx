@@ -21,7 +21,7 @@ export default function SignUpForm(props: Props) {
 
   const mutation = useMutation(
     (createUserRequest: { email: string; password: string }) =>
-      nile.createUser({ createUserRequest })
+      nile.users.createUser({ createUserRequest })
   );
 
   const mutate = mutation.mutate;

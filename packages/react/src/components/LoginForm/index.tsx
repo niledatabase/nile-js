@@ -34,11 +34,14 @@ export default function LoginForm(props: Props) {
         password: passwordValue,
       };
 
-      const success = await nile.login({ loginInfo }).catch((e: Error) => {
-        handleFailure && handleFailure(e);
-      });
+      const success = await nile.users
+        .loginUser({ loginInfo })
+        .catch((e: Error) => {
+          handleFailure && handleFailure(e);
+        });
 
       if (success) {
+        nile.authToken = nile.users.authToken;
         handleSuccess && handleSuccess(loginInfo);
       }
     },

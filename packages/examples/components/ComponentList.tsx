@@ -30,9 +30,9 @@ export function ComponentList() {
         </Link>
       </div>
       <div className={styles.card}>
-        <Link href="/editor" passHref>
+        <Link href="/workspaces" passHref>
           <span>
-            <Button node={null}>Editor</Button>
+            <Button node={null}>workspaces</Button>
           </span>
         </Link>
       </div>
