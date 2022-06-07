@@ -4,7 +4,6 @@
 
 declare -a arr=(
   "EntitiesApi"
-  "InstancesApi"
   "OrganizationsApi" 
   "UsersApi"
   "WorkspacesApi" 
