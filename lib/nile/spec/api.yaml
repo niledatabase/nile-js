@@ -628,6 +628,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+    post:
+      tags:
+        - users
+      summary: Update a user
+      operationId: updateUser
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          "*/*":
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+        required: true
+      responses:
+        "200":
+          description: the updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
     delete:
       tags:
         - users
@@ -845,6 +875,18 @@ components:
       type: object
       properties:
         name:
+          type: string
+    UpdateUserRequest:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          minLength: 1
           type: string
   parameters:
     workspace:
