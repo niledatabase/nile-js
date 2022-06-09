@@ -10,7 +10,7 @@
     "export": "next export"
   },
   "dependencies": {
-    "@codemirror/lang-javascript": "^0.20.0",
+    "@codemirror/lang-javascript": "^6.0.0",
     "@theniledev/js": "^0.12.2",
     "@uiw/react-codemirror": "^4.5.1",
     "next": "^12.1.4",
