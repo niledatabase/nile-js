@@ -74,6 +74,7 @@ describe('index', () => {
             'listUsers',
             'loginUser',
             'me',
+            'updateUser',
             'validateUser',
           ]);
         }
@@ -160,5 +161,14 @@ describe('index', () => {
     expect(nile.entities.workspace).toBeTruthy();
     expect(nile.workspaces.workspace).toBeTruthy();
     expect(nile.organizations.workspace).toBeTruthy();
+  });
+  it('sets the initial workspace', () => {
+    const nile = Nile({ workspace: '123' });
+    expect(nile.workspace).toBe('123');
+    expect(nile.users.workspace).toBe('123');
+    expect(nile.developers.workspace).toBe('123');
+    expect(nile.entities.workspace).toBe('123');
+    expect(nile.workspaces.workspace).toBe('123');
+    expect(nile.organizations.workspace).toBe('123');
   });
 });
