@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.4](https://github.com/TheNileDev/nile-js/compare/v0.12.3...v0.12.4) (2022-06-14)
+
+
+### Bug Fixes
+
+* use initial workspace ([824c039](https://github.com/TheNileDev/nile-js/commit/824c0399db2dcb360b0599375c5e613c99f051b3))
+
+
+
+
+
 ## [0.12.3](https://github.com/TheNileDev/nile-js/compare/v0.12.2...v0.12.3) (2022-06-14)
 
 
