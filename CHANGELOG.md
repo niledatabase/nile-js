@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.5](https://github.com/TheNileDev/nile-js/compare/v0.12.4...v0.12.5) (2022-06-14)
+
+
+### Bug Fixes
+
+* make types less voidable ([d3ba4d5](https://github.com/TheNileDev/nile-js/commit/d3ba4d5f4824183bc05dbb17449874158334417a))
+
+
+
+
+
 ## [0.12.4](https://github.com/TheNileDev/nile-js/compare/v0.12.3...v0.12.4) (2022-06-14)
 
 
