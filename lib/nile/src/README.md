@@ -1,852 +1,1052 @@
-# Nile
+# Client API
 
-All calls, except `login`, should be authenticated. The authentication headers is stored in memory, provided `login` has been called, and the token can be accessed via `nile.authToken`.
+## Methods
 
-All URIs are relative to *https://admin.api.thenile.dev/v0*
+### acceptInvite
 
-| Method                                                       | HTTP request                    | Description                            |
-| ------------------------------------------------------------ | ------------------------------- | -------------------------------------- |
-| [**acceptInvite**](DefaultApi.md#acceptInvite)               | **POST** /invites/{code}/accept | Accept an invite.                      |
-| [**createOrganization**](DefaultApi.md#createOrganization)   | **POST** /orgs                  | Create a new Organization.             |
-| [**createUser**](DefaultApi.md#createUser)                   | **POST** /users                 | Create a new User.                     |
-| [**deleteOrganization**](DefaultApi.md#deleteOrganization)   | **DELETE** /orgs/{id}           | Delete this Organization.              |
-| [**deleteUser**](DefaultApi.md#deleteUser)                   | **DELETE** /users/{id}          | Delete this User.                      |
-| [**getAcceptedInvite**](DefaultApi.md#getAcceptedInvite)     | **GET** /accepted_invites/{id}  | Get an accepted invite.                |
-| [**getInvite**](DefaultApi.md#getInvite)                     | **GET** /invites/{code}         | Get an invite.                         |
-| [**getOrganization**](DefaultApi.md#getOrganization)         | **GET** /orgs/{id}              | Get information for this Organization. |
-| [**getUser**](DefaultApi.md#getUser)                         | **GET** /users/{id}             | Get information for this User.         |
-| [**listAcceptedInvites**](DefaultApi.md#listAcceptedInvites) | **GET** /accepted_invites       | List all accepted invites.             |
-| [**listInvites**](DefaultApi.md#listInvites)                 | **GET** /invites                | List all Invites.                      |
-| [**listOrganizations**](DefaultApi.md#listOrganizations)     | **GET** /orgs                   | List all Organizations.                |
-| [**listUsers**](DefaultApi.md#listUsers)                     | **GET** /users                  | List all Users.                        |
-| [**login**](DefaultApi.md#login)                             | **POST** /                      | Log in to service                      |
-| [**updateOrganization**](DefaultApi.md#updateOrganization)   | **PATCH** /orgs/{id}            | Update this Organization.              |
-| [**updateUser**](DefaultApi.md#updateUser)                   | **PATCH** /users/{id}           | Update this User.                      |
+🏭 **organizations.acceptInvite**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
 
-# **acceptInvite**
+Accept an invite
 
-> void acceptInvite()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileAcceptInviteRequest = {
-  // number | Invite code.
-  code: 1,
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  org: 56,
+  // number
+  code: 56,
 };
 
-nile
+nile.organizations
   .acceptInvite(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name     | Type         | Description  | Notes                 |
-| -------- | ------------ | ------------ | --------------------- |
-| **code** | [**number**] | Invite code. | defaults to undefined |
+### createDeveloper
 
-### Return type
+💻 **developers.createDeveloper**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
 
-**void**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-### HTTP response details
-
-| Status code | Description          | Response headers |
-| ----------- | -------------------- | ---------------- |
-| **204**     | The accepted invite. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **createOrganization**
-
-> void createOrganization(createOrganizationRequest)
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileCreateOrganizationRequest = {
-  // CreateOrganizationRequest
-  createOrganizationRequest: {
-    name: 'name_example',
-  },
-};
-
-nile
-  .createOrganization(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
-  })
-  .catch((error: any) => console.error(error));
-```
-
-### Parameters
-
-| Name                          | Type                          | Description | Notes |
-| ----------------------------- | ----------------------------- | ----------- | ----- |
-| **createOrganizationRequest** | **CreateOrganizationRequest** |             |
-
-### Return type
-
-**void**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: Not defined
-
-### HTTP response details
-
-| Status code | Description                 | Response headers |
-| ----------- | --------------------------- | ---------------- |
-| **200**     | Created a new Organization. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **createUser**
-
-> void createUser(createUserRequest)
-
-### Example
-
-```typescript
-import Nile from '@theniledev/js';
-
-nile = Nile({ apiUrl: 'http://localhost:8080' });
-
-let body: NileCreateUserRequest = {
+const body = {
   // CreateUserRequest
   createUserRequest: {
-    email: 'email_example',
-    password: 'password_example',
+    email: "",
+    password: "",
+  },
+};
+
+nile.developers
+  .createDeveloper(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### createEntity
+
+✨ **entities.createEntity**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Entity`](#entity)\>
+
+Create Entity
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  entity: {
+    // a JSON Schema
+    name: "greeting",
+    schema: {
+      properties: {
+        salutation: {
+          type: "string",
+        },
+      },
+    },
+  },
+};
+
+nile.entities
+  .createEntity(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### createInstance
+
+⚡ **entities.createInstance**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Instance`](#instance)\>
+
+Create a new Instance
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  org: 56,
+  // string
+  type: "greeting",
+  // object
+  body: {
+    salutation: "hello world",
   },
 };
 
 nile
+  .createInstance(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### createOrganization
+
+🏭 **organizations.createOrganization**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Organization`](#organization)\>
+
+Create a new Organization
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  createOrganizationRequest: {
+    name: "name",
+  },
+};
+
+nile.organizations
+  .createOrganization(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### createUser
+
+🤪 **users.createUser**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // CreateUserRequest (optional)
+  createUserRequest: {
+    // string
+    email: "email",
+    // string
+    password: "password",
+  },
+};
+
+nile.users
   .createUser(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name                  | Type                  | Description | Notes |
-| --------------------- | --------------------- | ----------- | ----- |
-| **createUserRequest** | **CreateUserRequest** |             |
+### deleteInstance
 
-### Return type
+⚡ **entities.deleteInstance**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
 
-**void**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: Not defined
-
-### HTTP response details
-
-| Status code | Description         | Response headers |
-| ----------- | ------------------- | ---------------- |
-| **200**     | Created a new User. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **deleteOrganization**
-
-> void deleteOrganization()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileDeleteOrganizationRequest = {
-  // number | Unique identifier.
-  id: 1,
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  org: 56,
+  // string
+  type: type_example,
+  // number
+  id: 56,
 };
 
-nile
+nile.entities
+  .deleteInstance()
+  .then((data) => {
+    console.log("API called successfully");
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### deleteOrganization
+
+🏭 **organizations.deleteOrganization**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
+
+Delete an organization by id
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  id: 56,
+};
+
+nile.organizations
   .deleteOrganization(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name   | Type         | Description        | Notes                 |
-| ------ | ------------ | ------------------ | --------------------- |
-| **id** | [**number**] | Unique identifier. | defaults to undefined |
+### deleteUser
 
-### Return type
+🤪 **users.deleteUser**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
 
-**void**
+Delete a user
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-### HTTP response details
-
-| Status code | Description                          | Response headers |
-| ----------- | ------------------------------------ | ---------------- |
-| **204**     | Successful deletion of Organization. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **deleteUser**
-
-> void deleteUser()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileDeleteUserRequest = {
-  // number | Unique identifier.
-  id: 1,
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  id: 56,
 };
 
-nile
+nile.users
   .deleteUser(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name   | Type         | Description        | Notes                 |
-| ------ | ------------ | ------------------ | --------------------- |
-| **id** | [**number**] | Unique identifier. | defaults to undefined |
+### getEntity
 
-### Return type
+✨ **.entities.getEntity**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Entity`](#entity)\>
 
-**void**
+Get Entity
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-### HTTP response details
-
-| Status code | Description                  | Response headers |
-| ----------- | ---------------------------- | ---------------- |
-| **204**     | Successful deletion of User. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **getAcceptedInvite**
-
-> AcceptedInvite getAcceptedInvite()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileGetAcceptedInviteRequest = {
-  // number | Unique identifier.
-  id: 1,
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // string
+  type: "salutaiton",
 };
 
-nile
-  .getAcceptedInvite(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+nile.entities
+  .getEntity(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name   | Type         | Description        | Notes                 |
-| ------ | ------------ | ------------------ | --------------------- |
-| **id** | [**number**] | Unique identifier. | defaults to undefined |
+### getOpenAPI
 
-### Return type
+✨ **entities.getOpenAPI**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
 
-**AcceptedInvite**
+Get an openapi description of an entity
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description                                  | Response headers |
-| ----------- | -------------------------------------------- | ---------------- |
-| **200**     | The accepted invite with the specified code. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **getInvite**
-
-> Invite getInvite()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileGetInviteRequest = {
-  // number | Invite code.
-  code: 1,
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // string
+  type: "salutation",
 };
 
-nile
-  .getInvite(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+nile.entities
+  .getEntityOpenApi(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name     | Type         | Description  | Notes                 |
-| -------- | ------------ | ------------ | --------------------- |
-| **code** | [**number**] | Invite code. | defaults to undefined |
+### getInstance
 
-### Return type
+⚡ **entities.getInstance**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Instance`](#instance)\>
 
-**Invite**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description                                | Response headers |
-| ----------- | ------------------------------------------ | ---------------- |
-| **200**     | The Invite with the requested invite code. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **getOrganization**
-
-> Organization getOrganization()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileGetOrganizationRequest = {
-  // number | Unique identifier.
-  id: 1,
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  org: 56,
+  // string
+  type: "salutation",
+  // number
+  id: 56,
 };
 
-nile
+nile.entities
+  .getInstance(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### me
+
+🤪 **users.me**(`initOverrides?`): `Promise`<`void` \| [`User`](#user)\>
+
+Get information about current authenticated user
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+let body: any = {};
+
+nile.users
+  .me(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### getOrganization
+
+🏭 **organizations.getOrganization**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Organization`](#organization)\>
+
+Get an organization by id
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  id: 56,
+};
+
+nile.organizations
   .getOrganization(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name   | Type         | Description        | Notes                 |
-| ------ | ------------ | ------------------ | --------------------- |
-| **id** | [**number**] | Unique identifier. | defaults to undefined |
+### getUser
 
-### Return type
+🤪 **users.getUser**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`User`](#user)\>
 
-**Organization**
+Get a user by id
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description                             | Response headers |
-| ----------- | --------------------------------------- | ---------------- |
-| **200**     | The Organization with the requested ID. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **getUser**
-
-> User getUser()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileGetUserRequest = {
-  // number | Unique identifier.
-  id: 1,
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  id: 56,
 };
 
-nile
+nile.users
   .getUser(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name   | Type         | Description        | Notes                 |
-| ------ | ------------ | ------------------ | --------------------- |
-| **id** | [**number**] | Unique identifier. | defaults to undefined |
+### listEntities
 
-### Return type
+✨ **entities.listEntities**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Entity`](#entity)[]\>
 
-**User**
+List all Entities
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description                     | Response headers |
-| ----------- | ------------------------------- | ---------------- |
-| **200**     | The User with the requested ID. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **listAcceptedInvites**
-
-> Array<AcceptedInvite> listAcceptedInvites()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: any = {};
-
-nile
-  .listAcceptedInvites(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
-  })
-  .catch((error: any) => console.error(error));
-```
-
-### Parameters
-
-This endpoint does not need any parameter.
-
-### Return type
-
-**Array<AcceptedInvite>**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description               | Response headers |
-| ----------- | ------------------------- | ---------------- |
-| **200**     | List of accepted invites. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **listInvites**
-
-> Array<Invite> listInvites()
-
-### Example
-
-```typescript
-import Nile from '@theniledev/js';
-
-nile = Nile({ apiUrl: 'http://localhost:8080' });
-
-let body: NileListInvitesRequest = {
-  // number | Org ID. (optional)
-  orgId: 1,
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
 };
 
-nile
+nile.entities
+  .listEntities(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### listInstances
+
+⚡ **entities.listInstances**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Instance`](#instance)[]\>
+
+List of all instances
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  org: 56,
+  // string
+  type: "salutations",
+};
+
+nile.entities
+  .listInstances(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### listInvites
+
+🏭 **organizations.listInvites**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Invite`](#invite)[]\>
+
+List all Invites
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  org: 56,
+};
+
+nile.organizations
   .listInvites(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name      | Type         | Description | Notes                            |
-| --------- | ------------ | ----------- | -------------------------------- |
-| **orgId** | [**number**] | Org ID.     | (optional) defaults to undefined |
+### listOrganizations
 
-### Return type
+🏭 **organizations.listOrganizations**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Organization`](#organization)[]\>
 
-**Array<Invite>**
+List all Organizations
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description          | Response headers |
-| ----------- | -------------------- | ---------------- |
-| **200**     | List of all Invites. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **listOrganizations**
-
-> Array<Organization> listOrganizations()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+};
+
+nile.organizations
+  .listOrganizations(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### listUsers
+
+🤪 **listUsers**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`User`](#user)[]\>
+
+List all users for an org
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+};
+
+nile.users
+  .listUsers(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### listWorkspaces
+
+🖥️ **workspaces.listWorkspaces**(`initOverrides?`): `Promise`<`void` \| [`Organization`](#organization)[]\>
+
+List all workspaces
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
 let body: any = {};
 
-nile
-  .listOrganizations(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+nile.workspaces
+  .listWorkspaces(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-This endpoint does not need any parameter.
+### createWorkspace
 
-### Return type
+️🖥️ **createWorkspace**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Organization](#organization)\>
 
-**Array<Organization>**
+Create a workspace
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description                | Response headers |
-| ----------- | -------------------------- | ---------------- |
-| **200**     | List of all Organizations. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **listUsers**
-
-> void | Array<User> listUsers()
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileListUsersRequest = {
-  // number | Org ID. (optional)
-  orgId: 1,
-  // string | User email. (optional)
-  email: 'email_example',
+const body = {
+  reateOrganizationRequest: {
+    name: "myWorkspace",
+  },
 };
 
-nile
-  .listUsers(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+nile.workspaces
+  .createWorkspace(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name      | Type         | Description | Notes                            |
-| --------- | ------------ | ----------- | -------------------------------- |
-| **orgId** | [**number**] | Org ID.     | (optional) defaults to undefined |
-| **email** | [**string**] | User email. | (optional) defaults to undefined |
+### loginDeveloper
 
-### Return type
+💻 **developers.loginDeveloper**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Token`](#token)\>
 
-**void | Array<User>**
+login a developer to nile
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description                                                                   | Response headers |
-| ----------- | ----------------------------------------------------------------------------- | ---------------- |
-| **200**     | List of all Users in Organization.                                            | -                |
-| **204**     | Returns if called unauthenticated, to check for the availability of an email. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **login**
-
-> InlineResponse200 login(loginInfo)
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileLoginRequest = {
-  // LoginInfo
+const body = {
   loginInfo: {
-    email: 'email_example',
-    password: 'password_example',
+    // string
+    email: "email",
+    // string
+    password: "password",
   },
 };
 
-nile
-  .login(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+nile.developers
+  .loginDeveloper(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name          | Type          | Description | Notes |
-| ------------- | ------------- | ----------- | ----- |
-| **loginInfo** | **LoginInfo** |             |
+### loginUser
 
-### Return type
+🤪 **users.loginUser**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Token`](#token)\>
 
-**InlineResponse200**
+login a user to nile
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description         | Response headers |
-| ----------- | ------------------- | ---------------- |
-| **200**     | Authenticated token | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **updateOrganization**
-
-> Organization updateOrganization(patchOrganizationRequest)
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileUpdateOrganizationRequest = {
-  // number | Unique identifier.
-  id: 1,
-  // PatchOrganizationRequest
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  loginInfo: {
+    // string
+    email: "email",
+    // string
+    password: "password",
+  },
+};
+
+nile.users
+  .loginUser(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### updateInstance
+
+⚡ **entities.updateInstance**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Instance`](#instance)\>
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  org: 56,
+  // string
+  type: "salutation",
+  // number
+  id: 56,
+  patchInstanceRequest: {
+    greeting: "good morning",
+  },
+};
+
+nile.entities
+  .updateInstance(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### updateEntity
+
+✨ **entities.updateEntity**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Entity`](#entity)\>
+
+Update an Entity
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // string
+  type: "salutation",
+  patchEntityRequest: {
+    properties: {
+      bow: {
+        type: "boolean",
+      },
+    },
+  },
+};
+
+nile.entities
+  .updateEntity(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
+
+---
+
+### updateOrganization
+
+🏭 **organizations.updateOrganization**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| [`Organization`](#organization)\>
+
+Update an organization
+
+**`example`**
+
+```typescript
+import Nile from "@theniledev/js";
+
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
+
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  // number
+  id: 56,
   patchOrganizationRequest: {
-    name: 'name_example',
+    name: "name",
   },
 };
 
-nile
+nile.organizations
   .updateOrganization(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name                         | Type                         | Description        | Notes                 |
-| ---------------------------- | ---------------------------- | ------------------ | --------------------- |
-| **patchOrganizationRequest** | **PatchOrganizationRequest** |                    |
-| **id**                       | [**number**]                 | Unique identifier. | defaults to undefined |
+### validateDeveloper
 
-### Return type
+💻 **developers.validateDeveloper**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
 
-**Organization**
+validate a developer token
 
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description               | Response headers |
-| ----------- | ------------------------- | ---------------- |
-| **200**     | The updated Organization. | -                |
-
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
-
-# **updateUser**
-
-> User updateUser(patchUserRequest)
-
-### Example
+**`example`**
 
 ```typescript
-import Nile from '@theniledev/js';
+import Nile from "@theniledev/js";
 
-nile = Nile({ apiUrl: 'http://localhost:8080' });
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-let body: NileUpdateUserRequest = {
-  // number | Unique identifier.
-  id: 1,
-  // PatchUserRequest
-  patchUserRequest: {
-    email: 'email_example',
-  },
+const body = {
+  token: { token: "token" },
 };
 
-nile
-  .updateUser(body)
-  .then((data: any) => {
-    console.log('API called successfully. Returned data: ' + data);
+nile.developers
+  .validateDeveloperToken(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
   })
   .catch((error: any) => console.error(error));
 ```
 
-### Parameters
+---
 
-| Name                 | Type                 | Description        | Notes                 |
-| -------------------- | -------------------- | ------------------ | --------------------- |
-| **patchUserRequest** | **PatchUserRequest** |                    |
-| **id**               | [**number**]         | Unique identifier. | defaults to undefined |
+### validateUser
 
-### Return type
+🤪 **users.validateUser**(`requestParameters`, `initOverrides?`): `Promise`<`void` \| `object`\>
 
-**User**
+validate a user token
 
-### Authorization
+**`example`**
 
-No authorization required
+```typescript
+import Nile from "@theniledev/js";
 
-### HTTP request headers
+const nile = new Nile({
+  apiUrl: "http://localhost:8080",
+  workspace: "myWorkspace",
+});
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+const body = {
+  // string (optional override)
+  // workspace: "myWorkspace",
+  token: { token: "token" },
+};
 
-### HTTP response details
+nile.users
+  .validateUserToken(body)
+  .then((data) => {
+    console.log("API called successfully. Returned data: " + data);
+  })
+  .catch((error: any) => console.error(error));
+```
 
-| Status code | Description       | Response headers |
-| ----------- | ----------------- | ---------------- |
-| **200**     | The updated User. | -                |
+---
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+## Properties
+
+### authToken
+
+The auth token is set when a developer or user logs in. It is used to authenticate all API calls.
+
+- **authToken**: `string`
+
+## Interfaces
+
+### Entity
+
+#### Properties
+
+- **name**: `string`
+
+- **schema**: `object`
+
+### Instance
+
+#### Properties
+
+- **id**: `number`
+
+- **type**: `string`
+
+- **properties**: `object`
+
+### Invite
+
+#### Properties
+
+- **code**: `number`
+
+- **inviter**: `number`
+
+- **org**: `number`
+
+- **status**: `Active`
+
+### Organization
+
+#### Properties
+
+- **id**: `number`
+
+- **name**: `string`
+
+- **type**: `organization` | `workspace`
+
+### User
+
+#### Properties
+
+- **email**: `string`
+
+- **id**: `number`
+
+- **type**: `developer` | `user`
+
+### Token
+
+#### Properties
+
+- **token**: `string`
