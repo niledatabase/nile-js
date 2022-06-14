@@ -91,6 +91,7 @@ function ApiImpl(config?: ConfigurationParameters): NileApi {
 
   const cfg = new Configuration(config);
   const nile = new NileApi(cfg);
+  nile.workspace = cfg.workspace;
   return nile;
 }
 export default ApiImpl;
