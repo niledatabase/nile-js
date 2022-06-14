@@ -91,9 +91,8 @@ export const DefaultConfig = new Configuration();
 export class BaseAPI {
 
     private middleware: Middleware[];
-    
+
     public workspace?: string;
-    
     constructor(protected configuration = DefaultConfig) {
         this.middleware = configuration.middleware;
         this.workspace = configuration.workspace;
@@ -115,33 +114,28 @@ export class BaseAPI {
         return this.withMiddleware<T>(...middlewares);
     }
 
-    protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverideFunction): Promise<void | Response> {
+    protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
         const { url, init } = await this.createFetchParams(context, initOverrides);
         const response = await this.fetchApi(url, init);
-        // requests are cancelable, silently fail
-        if (response) {
-            if (response.status >= 200 && response.status < 300) {
-                return response;
-            }
-
-            let res;
-            try {
-                res = await response.json();
-            } catch (e) {
-                /* do the default */
-            }
-            if (res && 'message' in res) {
-                const { message } = res;
-                throw new ResponseError(response, message);
-            }
-            
-            throw new ResponseError(response, 'Response returned an error code');
+        if (response.status >= 200 && response.status < 300) {
+            return response;
         }
-        
-        return Promise.resolve(undefined);
+
+        let res;
+        try {
+            res = await response.json();
+        } catch (e) {
+            /* do the default */
+        }
+        if (res && 'message' in res) {
+            const { message } = res;
+            throw new ResponseError(response, message);
+        }
+
+        throw new ResponseError(response, 'Response returned an error code');
     }
 
-    private async createFetchParams(context: RequestOpts, initOverrides?: RequestInit | InitOverideFunction) {
+    private async createFetchParams(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction) {
         let url = this.configuration.basePath + context.path;
         if (context.query !== undefined && Object.keys(context.query).length !== 0) {
             // only add the querystring to the URL if there are query parameters.
@@ -196,17 +190,15 @@ export class BaseAPI {
                 }) || fetchParams;
             }
         }
-        let response = await (this.configuration.fetchApi || fetch)(fetchParams.url, fetchParams.init).catch(e=> console.warn(e));
-        if (response) {
-            for (const middleware of this.middleware) {
-                if (middleware.post) {
-                    response = await middleware.post({
-                        fetch: this.fetchApi,
-                        url: fetchParams.url,
-                        init: fetchParams.init,
-                        response: response.clone(),
-                    }) || response;
-                }
+        let response = await (this.configuration.fetchApi || fetch)(fetchParams.url, fetchParams.init);
+        for (const middleware of this.middleware) {
+            if (middleware.post) {
+                response = await middleware.post({
+                    fetch: this.fetchApi,
+                    url: fetchParams.url,
+                    init: fetchParams.init,
+                    response: response.clone(),
+                }) || response;
             }
         }
         return response;
@@ -258,12 +250,12 @@ export type FetchAPI = WindowOrWorkerGlobalScope['fetch'];
 export type Json = any;
 export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD';
 export type HTTPHeaders = { [key: string]: string };
-export type HTTPQuery = { [key: string]: string | number | null | boolean | Array<string | number | null | boolean> | HTTPQuery };
+export type HTTPQuery = { [key: string]: string | number | null | boolean | Array<string | number | null | boolean> | Set<string | number | null | boolean> | HTTPQuery };
 export type HTTPBody = Json | FormData | URLSearchParams;
 export type HTTPRequestInit = { headers?: HTTPHeaders; method: HTTPMethod; credentials?: RequestCredentials; body?: HTTPBody }
 export type ModelPropertyNaming = 'camelCase' | 'snake_case' | 'PascalCase' | 'original';
 
-export type InitOverideFunction = (requestContext: { init: HTTPRequestInit, context: RequestOpts }) => Promise<RequestInit>
+export type InitOverrideFunction = (requestContext: { init: HTTPRequestInit, context: RequestOpts }) => Promise<RequestInit>
 
 export interface FetchParams {
     url: string;
@@ -287,24 +279,29 @@ export function exists(json: any, key: string) {
 
 export function querystring(params: HTTPQuery, prefix: string = ''): string {
     return Object.keys(params)
-        .map((key) => {
-            const fullKey = prefix + (prefix.length ? `[${key}]` : key);
-            const value = params[key];
-            if (value instanceof Array) {
-                const multiValue = value.map(singleValue => encodeURIComponent(String(singleValue)))
-                    .join(`&${encodeURIComponent(fullKey)}=`);
-                return `${encodeURIComponent(fullKey)}=${multiValue}`;
-            }
-            if (value instanceof Date) {
-                return `${encodeURIComponent(fullKey)}=${encodeURIComponent(value.toISOString())}`;
-            }
-            if (value instanceof Object) {
-                return querystring(value as HTTPQuery, fullKey);
-            }
-            return `${encodeURIComponent(fullKey)}=${encodeURIComponent(String(value))}`;
-        })
+        .map(key => querystringSingleKey(key, params[key], prefix))
         .filter(part => part.length > 0)
         .join('&');
+}
+
+function querystringSingleKey(key: string, value: string | number | null | undefined | boolean | Array<string | number | null | boolean> | Set<string | number | null | boolean> | HTTPQuery, keyPrefix: string = ''): string {
+    const fullKey = keyPrefix + (keyPrefix.length ? `[${key}]` : key);
+    if (value instanceof Array) {
+        const multiValue = value.map(singleValue => encodeURIComponent(String(singleValue)))
+            .join(`&${encodeURIComponent(fullKey)}=`);
+        return `${encodeURIComponent(fullKey)}=${multiValue}`;
+    }
+    if (value instanceof Set) {
+        const valueAsArray = Array.from(value);
+        return querystringSingleKey(key, valueAsArray, keyPrefix);
+    }
+    if (value instanceof Date) {
+        return `${encodeURIComponent(fullKey)}=${encodeURIComponent(value.toISOString())}`;
+    }
+    if (value instanceof Object) {
+        return querystring(value as HTTPQuery, fullKey);
+    }
+    return `${encodeURIComponent(fullKey)}=${encodeURIComponent(String(value))}`;
 }
 
 {{^withoutRuntimeChecks}}
@@ -348,7 +345,7 @@ export interface Middleware {
 }
 
 export interface ApiResponse<T> {
-    raw: void | Response;
+    raw: Response;
     value(): Promise<T>;
 }
 
@@ -357,18 +354,15 @@ export interface ResponseTransformer<T> {
 }
 
 export class JSONApiResponse<T> {
-    constructor(public raw: void | Response, private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue) {}
+    constructor(public raw: Response, private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue) {}
 
-    async value(): Promise<void | T> {
-        if (this.raw && this.raw.json) {
-            return this.transformer(await this.raw.json());
-        }
-        return undefined;
+    async value(): Promise<T> {
+        return this.transformer(await this.raw.json());
     }
 }
 
 export class VoidApiResponse {
-    constructor(public raw: void | Response) {}
+    constructor(public raw: Response) {}
 
     async value(): Promise<void> {
         return undefined;
@@ -376,23 +370,17 @@ export class VoidApiResponse {
 }
 
 export class BlobApiResponse {
-    constructor(public raw: void | Response) {}
+    constructor(public raw: Response) {}
 
-    async value(): Promise<void | Blob> {
-        if (this.raw && this.raw.blob) {
-            return await this.raw.blob();
-        }
-        return undefined;
+    async value(): Promise<Blob> {
+        return await this.raw.blob();
     };
 }
 
 export class TextApiResponse {
-    constructor(public raw: void | Response) {}
+    constructor(public raw: Response) {}
 
-    async value(): Promise<void | string> {
-        if (this.raw && this.raw.text) {
-            return await this.raw.text();
-        }
-        return undefined;
+    async value(): Promise<string> {
+        return await this.raw.text();
     };
 }
