@@ -49,7 +49,7 @@ export interface {{classname}}Interface {
      * @throws {RequiredError}
      * @memberof {{classname}}Interface
      */
-    {{nickname}}({{#allParams.0}}requestParameters{{^allParams.0.required}}?{{/allParams.0.required}}: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{#returnType}}void | {{/returnType}}{{{returnType}}}{{^returnType}}void{{/returnType}}>;
+    {{nickname}}({{#allParams.0}}requestParameters{{^allParams.0.required}}?{{/allParams.0.required}}: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}>;
 
 
 {{/operation}}
@@ -113,7 +113,7 @@ export class {{classname}} extends runtime.BaseAPI {
     ```
      */
      
-    async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{#returnType}}void | {{/returnType}}{{{returnType}}}{{^returnType}}void{{/returnType}}> {
+    async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}> {
       
         {{#allParams}}
         {{#required}}
@@ -356,9 +356,8 @@ export class {{classname}} extends runtime.BaseAPI {
         const request = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
         const val = await request.value();
         if ('{{{returnType}}}'.toLowerCase() === 'token' && val && 'token' in val) {
-            if (typeof val['token'] === 'string'){
-                this.authToken = val['token'];
-            }
+            // @ts-ignore 
+            this.authToken = val['token'];
         }
         return val;
         {{/isMap}}
