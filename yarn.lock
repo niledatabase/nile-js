@@ -3845,7 +3845,7 @@
 
 "@storybook/react@^6.4.22":
   version "6.5.9"
-  resolved "https://registry.npmjs.org/@storybook/react/-/react-6.5.9.tgz"
+  resolved "https://registry.yarnpkg.com/@storybook/react/-/react-6.5.9.tgz#687ec1f6b785822a392b7ac115b61800f69fb7cd"
   integrity sha512-Rp+QaTQAzxJhwuzJXVd49mnIBLQRlF8llTxPT2YoGHdrGkku/zl/HblQ6H2yzEf15367VyzaAv/BpLsO9Jlfxg==
   dependencies:
     "@babel/preset-flow" "^7.12.1"
