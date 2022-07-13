@@ -93,16 +93,12 @@ export class {{classname}} extends runtime.BaseAPI {
       {{#hasParams}}
      * const body = {
       {{#allParams}}
-     *   // {{{dataType}}}{{#description}} | {{{description}}}{{/description}}{{^required}} (optional){{/required}}
-     *   {{paramName}}: {{#example}}{{{example}}}{{/example}}{{^example}}{}{{/example}},
+     *   {{paramName}}: {{#example}}{{{example}}}{{/example}}{{^example}}{}{{/example}}, // {{{dataType}}}{{#description}} | {{{description}}}{{/description}}{{^required}} (optional){{/required}}
       {{/allParams}}
      * };
      * {{/hasParams}}
-      {{^hasParams}}
-     * let body:any = {};
-      {{/hasParams}}
      * 
-     * nile.{{tags.0.name}}.{{{operationId}}}(body).then(({{#returnType}}data{{/returnType}}) => {
+     * nile.{{tags.0.name}}.{{{operationId}}}({{#hasParams}}body{{/hasParams}}).then(({{#returnType}}data{{/returnType}}) => {
         {{#returnType}}
      *   console.log('API called successfully. Returned data: ' + data);
         {{/returnType}}
