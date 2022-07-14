@@ -200,7 +200,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Entity'
+              $ref: '#/components/schemas/CreateEntityRequest'
         required: true
       responses:
         "200":
@@ -274,6 +274,41 @@ paths:
             application/yaml:
               schema:
                 type: string
+  /workspaces/{workspace}/events/{type}:
+    get:
+      tags:
+      - entities
+      description: Instance Events
+      operationId: instance.events
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: seq
+        in: query
+        schema:
+          type: integer
+          format: int64
+          default: 0
+      - name: limit
+        in: query
+        schema:
+          maximum: 20
+          type: integer
+          format: int64
+          default: 20
+      responses:
+        "200":
+          description: Events for the type.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InstanceEvent'
   /workspaces/{workspace}/orgs/{org}/instances/{type}:
     get:
       tags:
@@ -475,6 +510,28 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Invite'
+  /workspaces/{workspace}/orgs/{org}/members:
+    post:
+      tags:
+      - organizations
+      summary: Add a user to an organization
+      operationId: addOrgMember
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/AddOrgMemberRequest'
+      responses:
+        "204":
+          description: The user was successfully added to the org
   /workspaces/{workspace}/orgs:
     get:
       tags:
@@ -650,11 +707,7 @@ paths:
       summary: Update a user
       operationId: updateUser
       parameters:
-      - name: workspace
-        in: path
-        required: true
-        schema:
-          type: string
+      - $ref: '#/components/parameters/workspace'
       - name: id
         in: path
         required: true
@@ -731,6 +784,16 @@ components:
         id: lkc-123
         memory: 4096
         cpus: 4
+    Token:
+      required:
+      - token
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT authentication token. Most Nile operations the caller to
+            pass a valid token in Authorization HTTP header using Bearer schema
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
     Error:
       required:
       - errorCode
@@ -749,26 +812,18 @@ components:
           - workspace_not_found
           - invite_not_found
           - duplicate_org_name
+          - empty_org_name
           - duplicate_user_email
           - user_already_in_org
           - duplicate_entity_name
           - entity_not_found
           - instance_not_found
+          - invalid_entity_schema
         message:
           type: string
         statusCode:
           type: integer
           format: int32
-    Token:
-      required:
-      - token
-      type: object
-      properties:
-        token:
-          type: string
-          description: JWT authentication token. Most Nile operations the caller to
-            pass a valid token in Authorization HTTP header using Bearer schema
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
     LoginInfo:
       required:
       - email
@@ -804,11 +859,16 @@ components:
           type: string
           format: date-time
           readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
         type:
           type: string
           enum:
           - user
           - developer
+          - nile_employee
         email:
           type: string
           format: email
@@ -844,6 +904,10 @@ components:
           type: string
           format: date-time
           readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
         type:
           type: string
           enum:
@@ -864,6 +928,17 @@ components:
             type: integer
           cpus:
             type: integer
+    CreateEntityRequest:
+      required:
+      - name
+      - schema
+      type: object
+      properties:
+        name:
+          type: string
+          example: clusters
+        schema:
+          $ref: '#/components/schemas/JsonSchema'
     PatchEntityRequest:
       required:
       - schema
@@ -890,12 +965,37 @@ components:
           type: string
           format: date-time
           readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
         type:
           type: string
           description: The entity type of this instance
           example: clusters
         properties:
           $ref: '#/components/schemas/Json'
+    InstanceEvent:
+      required:
+      - timestamp
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        eventtype:
+          type: string
+          enum:
+          - CREATE
+          - UPDATE
+          - DELETE
+        before:
+          $ref: '#/components/schemas/Instance'
+        after:
+          $ref: '#/components/schemas/Instance'
+        timestamp:
+          type: string
+          format: date-time
     PatchInstanceRequest:
       required:
       - properties
@@ -924,6 +1024,14 @@ components:
           type: string
           enum:
           - active
+    AddOrgMemberRequest:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
     Organization:
       required:
       - id
@@ -943,6 +1051,10 @@ components:
           type: string
           format: date-time
           readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
         type:
           type: string
           enum:
@@ -956,6 +1068,7 @@ components:
       type: object
       properties:
         name:
+          minLength: 1
           type: string
     PatchOrganizationRequest:
       required:
@@ -963,11 +1076,9 @@ components:
       type: object
       properties:
         name:
+          minLength: 1
           type: string
     UpdateUserRequest:
-      required:
-      - email
-      - password
       type: object
       properties:
         email:
@@ -984,4 +1095,5 @@ components:
         for this user is stored
       required: true
       schema:
+        minLength: 1
         type: string
