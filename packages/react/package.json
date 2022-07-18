@@ -85,6 +85,6 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "react-query": "^3.39.0"
+    "react-query": "^3.39.2"
   }
 }
