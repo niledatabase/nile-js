@@ -35,7 +35,7 @@ function SignIn() {
 
   const { isLoading: invitesLoading, data: invites = [] } = useQuery(
     'invites',
-    () => nile.organizations.listInvites({ org: Number(orgId) }),
+    () => nile.organizations.listInvites({ org: String(orgId) }),
     { enabled: !!orgId }
   );
 
@@ -46,8 +46,8 @@ function SignIn() {
 
   const submitInvite = useCallback(async () => {
     await nile.organizations.acceptInvite({
-      code: Number(joinCode),
-      org: Number(orgId),
+      code: joinCode,
+      org: String(orgId),
     });
   }, [joinCode, nile, orgId]);
 
