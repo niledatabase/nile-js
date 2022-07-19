@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.7](https://github.com/TheNileDev/nile-js/compare/v0.12.6...v0.12.7) (2022-07-19)
+
+
+### Bug Fixes
+
+* update demo to use strings ([5898a4c](https://github.com/TheNileDev/nile-js/commit/5898a4ccc506432622ae9f2ced9c2344f4b8713d))
+
+
+
+
+
 ## [0.12.6](https://github.com/TheNileDev/nile-js/compare/v0.12.5...v0.12.6) (2022-07-14)
 
 **Note:** Version bump only for package @theniledev/packages
