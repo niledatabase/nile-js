@@ -12,13 +12,14 @@ paths:
     post:
       tags:
       - developers
-      description: login a developer to nile
+      summary: Log in a developer to nile
       operationId: loginDeveloper
       requestBody:
         content:
           '*/*':
             schema:
               $ref: '#/components/schemas/LoginInfo'
+        required: true
       responses:
         "200":
           description: JWT token for authentication
@@ -36,13 +37,14 @@ paths:
     post:
       tags:
       - developers
-      description: validate a developer token
+      summary: Validate a developer token
       operationId: validateDeveloper
       requestBody:
         content:
           '*/*':
             schema:
               $ref: '#/components/schemas/Token'
+        required: true
       responses:
         "204":
           description: valid token
@@ -56,7 +58,7 @@ paths:
     post:
       tags:
       - users
-      summary: Login user
+      summary: Log in a user
       description: "Login a user to Nile. This operation returns a JWT token. Most\
         \ Nile operations require authentication and expect this token in the 'Authorization:\
         \ Bearer <token>' header"
@@ -110,7 +112,7 @@ paths:
     post:
       tags:
       - users
-      summary: Validate User Token
+      summary: Validate a user Token
       description: "Validates a user token. Use this when using Nile authentication\
         \ to validate access to non-Nile resources. See the [Add Authentication Guide](https://nile-docs.vercel.app/docs/current/guides/how-to/add_signup_authn#decorating-the-endpoint)\
         \ for a full example"
@@ -157,7 +159,7 @@ paths:
     post:
       tags:
       - developers
-      description: Create a developer
+      summary: Create a developer
       operationId: createDeveloper
       requestBody:
         content:
@@ -176,7 +178,7 @@ paths:
     get:
       tags:
       - entities
-      description: List all Entities
+      summary: List all Entities
       operationId: listEntities
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -192,7 +194,7 @@ paths:
     post:
       tags:
       - entities
-      description: Create Entity
+      summary: Create Entity
       operationId: createEntity
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -213,7 +215,7 @@ paths:
     get:
       tags:
       - entities
-      description: Get Entity
+      summary: Get Entity
       operationId: getEntity
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -232,7 +234,7 @@ paths:
     patch:
       tags:
       - entities
-      description: Update an Entity
+      summary: Update an Entity
       operationId: updateEntity
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -258,7 +260,7 @@ paths:
     get:
       tags:
       - entities
-      description: Get a yaml OpenAPI description of an entity
+      summary: Get a yaml OpenAPI description of an entity
       operationId: getOpenAPI
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -278,7 +280,7 @@ paths:
     get:
       tags:
       - entities
-      description: Instance Events
+      summary: Get instance events
       operationId: instance.events
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -313,7 +315,7 @@ paths:
     get:
       tags:
       - entities
-      description: ' List all instances'
+      summary: ' List all instances'
       operationId: listInstances
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -321,8 +323,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       - name: type
         in: path
         required: true
@@ -340,7 +341,7 @@ paths:
     post:
       tags:
       - entities
-      description: Create a new Instance
+      summary: Create a new Instance
       operationId: createInstance
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -348,8 +349,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       - name: type
         in: path
         required: true
@@ -372,7 +372,7 @@ paths:
     get:
       tags:
       - entities
-      description: Get an instance
+      summary: Get an instance
       operationId: getInstance
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -380,8 +380,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       - name: type
         in: path
         required: true
@@ -391,8 +390,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         "200":
           description: The instance with the specified id
@@ -403,7 +401,7 @@ paths:
     put:
       tags:
       - entities
-      description: Update an instance
+      summary: Update an instance
       operationId: updateInstance
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -411,8 +409,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       - name: type
         in: path
         required: true
@@ -422,8 +419,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       requestBody:
         content:
           application/json:
@@ -440,7 +436,7 @@ paths:
     delete:
       tags:
       - entities
-      description: Delete an instance
+      summary: Delete an instance
       operationId: deleteInstance
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -448,8 +444,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       - name: type
         in: path
         required: true
@@ -459,8 +454,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         "204":
           description: Successful instance deletion
@@ -468,7 +462,7 @@ paths:
     post:
       tags:
       - organizations
-      description: Accept an invite
+      summary: Accept an invite
       operationId: acceptInvite
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -476,14 +470,12 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       - name: code
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         "204":
           description: Successful invite acceptance
@@ -491,7 +483,7 @@ paths:
     get:
       tags:
       - organizations
-      description: List all Invites
+      summary: List all Invites
       operationId: listInvites
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -499,8 +491,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         "200":
           description: A list of all invites under this org
@@ -522,13 +513,13 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       requestBody:
         content:
           '*/*':
             schema:
               $ref: '#/components/schemas/AddOrgMemberRequest'
+        required: true
       responses:
         "204":
           description: The user was successfully added to the org
@@ -536,7 +527,7 @@ paths:
     get:
       tags:
       - organizations
-      description: List all Organizations
+      summary: List all Organizations
       operationId: listOrganizations
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -552,7 +543,7 @@ paths:
     post:
       tags:
       - organizations
-      description: Create a new organization
+      summary: Create a new organization
       operationId: createOrganization
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -561,6 +552,7 @@ paths:
           '*/*':
             schema:
               $ref: '#/components/schemas/CreateOrganizationRequest'
+        required: true
       responses:
         "201":
           description: The newly created organization
@@ -572,7 +564,7 @@ paths:
     get:
       tags:
       - organizations
-      description: Get an organization by name
+      summary: Get an organization by name
       operationId: getOrganization
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -580,8 +572,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         "200":
           description: The org with the specified name under this workspace
@@ -592,7 +583,7 @@ paths:
     delete:
       tags:
       - organizations
-      description: Delete an organization by name
+      summary: Delete an organization by id
       operationId: deleteOrganization
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -600,15 +591,14 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         "204":
           description: Successful org deletion
     patch:
       tags:
       - organizations
-      description: Update an organization
+      summary: Update an organization
       operationId: updateOrganization
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -616,13 +606,13 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       requestBody:
         content:
           '*/*':
             schema:
               $ref: '#/components/schemas/PatchOrganizationRequest'
+        required: true
       responses:
         "200":
           description: The updated org
@@ -647,7 +637,7 @@ paths:
     get:
       tags:
       - users
-      description: List all users for a workspace
+      summary: List all users for a workspace
       operationId: listUsers
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -663,7 +653,7 @@ paths:
     post:
       tags:
       - users
-      description: Create a user
+      summary: Create a user
       operationId: createUser
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -684,7 +674,7 @@ paths:
     get:
       tags:
       - users
-      description: Get a user by id
+      summary: Get a user by id
       operationId: getUser
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -692,8 +682,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         "200":
           description: The user with the specified id under this workspace
@@ -712,8 +701,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       requestBody:
         content:
           '*/*':
@@ -730,7 +718,7 @@ paths:
     delete:
       tags:
       - users
-      description: Delete a user
+      summary: Delete a user
       operationId: deleteUser
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -738,8 +726,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         "204":
           description: Successful user deletion
@@ -747,7 +734,7 @@ paths:
     get:
       tags:
       - workspaces
-      description: List all workspaces
+      summary: List all workspaces
       operationId: listWorkspaces
       responses:
         "200":
@@ -761,7 +748,7 @@ paths:
     post:
       tags:
       - workspaces
-      description: Create a workspace
+      summary: Create a workspace
       operationId: createWorkspace
       requestBody:
         content:
@@ -819,6 +806,7 @@ components:
           - entity_not_found
           - instance_not_found
           - invalid_entity_schema
+          - invalid_id
         message:
           type: string
         statusCode:
@@ -848,8 +836,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int32
+          type: string
           readOnly: true
         created:
           type: string
@@ -893,8 +880,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int32
+          type: string
           readOnly: true
         created:
           type: string
@@ -954,8 +940,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int32
+          type: string
           readOnly: true
         created:
           type: string
@@ -1012,14 +997,11 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
         org:
-          type: integer
-          format: int32
+          type: string
         inviter:
-          type: integer
-          format: int32
+          type: string
         status:
           type: string
           enum:
@@ -1040,8 +1022,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int32
+          type: string
           readOnly: true
         created:
           type: string
@@ -1058,6 +1039,7 @@ components:
         type:
           type: string
           enum:
+          - nile
           - organization
           - workspace
         name:
