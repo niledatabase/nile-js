@@ -2,7 +2,7 @@ import React from 'react';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { NileProvider } from '@theniledev/react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: AppProps) {
