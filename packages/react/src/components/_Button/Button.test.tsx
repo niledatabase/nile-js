@@ -48,4 +48,30 @@ describe('Button', () => {
     fireEvent.click(button);
     expect(onClick).toHaveBeenCalled();
   });
+
+  it('calls both the passed and themed onclicks', () => {
+    const onClick = jest.fn();
+    const onClick2 = jest.fn();
+    render(
+      <Button
+        node={
+          <div
+            onClick={() => {
+              onClick2();
+              return true;
+            }}
+          >
+            mybutton
+          </div>
+        }
+        onClick={onClick}
+        text="mario"
+        name="signupButton"
+      />
+    );
+    const button = screen.getByText('mybutton');
+    fireEvent.click(button);
+    expect(onClick).toHaveBeenCalled();
+    expect(onClick2).toHaveBeenCalled();
+  });
 });
