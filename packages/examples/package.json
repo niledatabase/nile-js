@@ -11,13 +11,13 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.0.0",
+    "@tanstack/react-query": "^4.0.5",
     "@theniledev/js": "^0.12.7",
     "@uiw/react-codemirror": "^4.5.1",
     "next": "^12.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.31.1",
-    "@tanstack/react-query": "^4.0.5",
     "url-parse": "^1.5.10"
   },
   "devDependencies": {
