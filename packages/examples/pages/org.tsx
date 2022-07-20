@@ -1,12 +1,12 @@
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNile, LoginForm } from '@theniledev/react';
 
 import { ComponentList } from '../components/ComponentList';
 
 const Orgs = React.memo(() => {
   const nile = useNile();
-  const { isLoading, data: orgs } = useQuery('organizations', () =>
+  const { isLoading, data: orgs } = useQuery(['organizations'], () =>
     nile.organizations.listOrganizations()
   );
   return (

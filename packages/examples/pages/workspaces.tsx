@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNile } from '@theniledev/react';
 import { LoginInfo, User } from '@theniledev/js';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { ComponentList } from 'components/ComponentList';
 
@@ -62,8 +62,9 @@ function DeveloperLoginForm(props: { setShowForm: (show: boolean) => void }) {
 
 function Workspaces() {
   const nile = useNile();
-  const { isLoading, data: user } = useQuery<unknown, unknown, User>('me', () =>
-    nile.users.me()
+  const { isLoading, data: user } = useQuery<unknown, unknown, User>(
+    ['me'],
+    () => nile.users.me()
   );
 
   if (isLoading) {

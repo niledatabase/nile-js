@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
 import Button from '../_Button';
