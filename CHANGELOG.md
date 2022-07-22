@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/TheNileDev/nile-js/compare/v0.12.7...v0.13.0) (2022-07-22)
+
+
+### Features
+
+* default to using credentials ([b1900df](https://github.com/TheNileDev/nile-js/commit/b1900dfc98068ea14c31edc64b542e47160e7713))
+
+
+
+
+
 ## [0.12.7](https://github.com/TheNileDev/nile-js/compare/v0.12.6...v0.12.7) (2022-07-19)
 
 
