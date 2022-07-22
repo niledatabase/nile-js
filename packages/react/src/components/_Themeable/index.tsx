@@ -2,12 +2,23 @@ import React from 'react';
 
 import { useTheme, InputThemeName } from '../../theme';
 
+type LabelCallbackProps = { htmlFor: InputThemeName };
+type InputCallbackProps = { id: InputThemeName };
+type LabelThemeNode =
+  | null
+  | React.ReactNode
+  | ((props: LabelCallbackProps) => React.ReactNode);
+type InputThemeNode =
+  | null
+  | React.ReactNode
+  | ((props: InputCallbackProps) => React.ReactNode);
+
 export function Input({
   name,
   node,
 }: {
   name: InputThemeName;
-  node: React.ReactNode;
+  node: InputThemeNode;
 }) {
   const theme = useTheme(name);
   if (node === null) {
@@ -17,11 +28,11 @@ export function Input({
   const props = { id: name };
 
   if (typeof node === 'function') {
-    return node(props);
+    return <>{node(props)}</>;
   }
 
   if (React.isValidElement(node)) {
-    return React.cloneElement(node, props);
+    return <>{React.cloneElement(node, props)}</>;
   }
 
   return (
@@ -36,7 +47,7 @@ export function Label({
 }: {
   text: string;
   htmlFor: InputThemeName;
-  node: React.ReactNode;
+  node: LabelThemeNode;
 }) {
   const theme = useTheme(htmlFor);
   if (node === null) {
@@ -46,11 +57,11 @@ export function Label({
   const props = { htmlFor };
 
   if (typeof node === 'function') {
-    return node(props);
+    return <>{node(props)}</>;
   }
 
   if (React.isValidElement(node)) {
-    return React.cloneElement(node, props);
+    return <>{React.cloneElement(node, props)}</>;
   }
 
   return (
