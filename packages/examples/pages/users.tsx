@@ -2,18 +2,19 @@ import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Invite, Organization } from '@theniledev/js';
 import { useNile } from '@theniledev/react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { UserTable } from '../components/UserTable';
 
 const useOrgQuery = () => {
   const nile = useNile();
-  const { isLoading: userLoading, data: user } = useQuery('me', () =>
+  const { isLoading: userLoading, data: user } = useQuery(['me'], () =>
     nile.users.me()
   );
 
-  const { isLoading: orgLoading, data: orgs } = useQuery('organizations', () =>
-    nile.organizations.listOrganizations()
+  const { isLoading: orgLoading, data: orgs } = useQuery(
+    ['organizations'],
+    () => nile.organizations.listOrganizations()
   );
   const currentUserEmail = user?.email;
 
@@ -34,7 +35,7 @@ function SignIn() {
   const [loadingOrgId, orgId] = useOrgQuery();
 
   const { isLoading: invitesLoading, data: invites = [] } = useQuery(
-    'invites',
+    ['invites'],
     () => nile.organizations.listInvites({ org: String(orgId) }),
     { enabled: !!orgId }
   );

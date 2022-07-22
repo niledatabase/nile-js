@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
 import Button from '../_Button';
@@ -27,7 +27,8 @@ export default function SignUpForm(props: Props) {
   const mutate = mutation.mutate;
 
   const wrapSuccess = React.useCallback(
-    (payload) => handleSuccess && handleSuccess(payload),
+    (payload: { email: string; password: string }) =>
+      handleSuccess && handleSuccess(payload),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );

@@ -57,7 +57,7 @@
     }
   ],
   "devDependencies": {
-    "@babel/core": "^7.17.8",
+    "@babel/core": "^7.18.9",
     "@size-limit/preset-small-lib": "^7.0.8",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-info": "^5.3.21",
@@ -65,26 +65,25 @@
     "@storybook/addons": "^6.4.21",
     "@storybook/react": "^6.4.22",
     "@testing-library/jest-dom": "^5.16.3",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/react-hooks": "^8.0.0",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/react": "17.0.43",
-    "@types/react-dom": "17.0.14",
+    "@types/react-dom": "18.0.6",
     "@typescript-eslint/parser": "^5.30.6",
     "babel-loader": "^8.2.5",
-    "eslint": "^8.19.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "react-is": "^17.0.0",
     "size-limit": "^7.0.8",
     "tsdx": "^0.14.1",
-    "tslib": "^2.3.1",
+    "tslib": "^2.4.0",
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "react-query": "^3.39.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-is": "^18.2.0"
   }
 }

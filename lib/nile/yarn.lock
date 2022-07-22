@@ -1237,9 +1237,9 @@
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
 
-"@types/jest@^28.1.5":
-  version "28.1.5"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-28.1.5.tgz#4337404efa059adbf96c4ac53b28fdc0af514475"
+"@types/jest@^28.1.6":
+  version "28.1.6"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-28.1.6.tgz#d6a9cdd38967d2d746861fb5be6b120e38284dd4"
   dependencies:
     jest-matcher-utils "^28.0.0"
     pretty-format "^28.0.0"
@@ -1252,9 +1252,9 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
 
-"@types/node@*", "@types/node@^18.0.4":
-  version "18.0.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.4.tgz#48aedbf35efb3af1248e4cd4d792c730290cd5d6"
+"@types/node@*", "@types/node@^18.0.6":
+  version "18.0.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.6.tgz#0ba49ac517ad69abe7a1508bc9b3a5483df9d5d7"
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -4390,9 +4390,9 @@ node-fetch@^2.6.1:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-fetch@^3.2.8:
-  version "3.2.8"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.2.8.tgz#0d9516dcf43a758d78d6dbe538adf0b1f6a4944e"
+node-fetch@^3.2.9:
+  version "3.2.9"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.2.9.tgz#3f6070bf854de20f21b9fe8479f823462e615d7d"
   dependencies:
     data-uri-to-buffer "^4.0.0"
     fetch-blob "^3.1.4"
@@ -5858,9 +5858,9 @@ typedoc-plugin-markdown@^3.13.3:
   dependencies:
     handlebars "^4.7.7"
 
-typedoc@^0.23.7:
-  version "0.23.7"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.7.tgz#e47a48801d6b9d0d6f787424fa63ed600c670387"
+typedoc@^0.23.8:
+  version "0.23.8"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.8.tgz#6837fb2732f73e7aa61b46a4fbe77a301473998d"
   dependencies:
     lunr "^2.3.9"
     marked "^4.0.16"

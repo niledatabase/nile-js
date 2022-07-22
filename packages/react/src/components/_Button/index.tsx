@@ -18,7 +18,9 @@ export default function Button(props: ButtonProps) {
   if (React.isValidElement(node)) {
     const combineOnClick = (e: MouseEvent) => {
       const submit = node.props.onClick && node.props.onClick(e);
-      if (submit) {
+      if (!node.props.onClick) {
+        onClick && onClick();
+      } else if (submit) {
         onClick && onClick();
       }
     };
