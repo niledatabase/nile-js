@@ -231,7 +231,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Entity'
-    patch:
+    put:
       tags:
       - entities
       summary: Update an Entity
@@ -580,22 +580,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Organization'
-    delete:
-      tags:
-      - organizations
-      summary: Delete an organization by id
-      operationId: deleteOrganization
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "204":
-          description: Successful org deletion
-    patch:
+    put:
       tags:
       - organizations
       summary: Update an organization
@@ -620,6 +605,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Organization'
+    delete:
+      tags:
+      - organizations
+      summary: Delete an organization by id
+      operationId: deleteOrganization
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Successful org deletion
   /me:
     get:
       tags:
@@ -690,7 +690,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-    post:
+    put:
       tags:
       - users
       summary: Update a user
@@ -958,6 +958,10 @@ components:
           type: string
           description: The entity type of this instance
           example: clusters
+        deleted:
+          type: string
+          format: date-time
+          readOnly: true
         properties:
           $ref: '#/components/schemas/Json'
     InstanceEvent:
@@ -968,7 +972,7 @@ components:
         id:
           type: integer
           format: int32
-        eventtype:
+        eventType:
           type: string
           enum:
           - CREATE
