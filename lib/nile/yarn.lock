@@ -4227,9 +4227,9 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-marked@^4.0.16:
-  version "4.0.16"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.16.tgz#9ec18fc1a723032eb28666100344d9428cf7a264"
+marked@^4.0.18:
+  version "4.0.18"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.18.tgz#cd0ac54b2e5610cfb90e8fd46ccaa8292c9ed569"
 
 merge-stream@^2.0.0:
   version "2.0.0"
@@ -5858,12 +5858,12 @@ typedoc-plugin-markdown@^3.13.4:
   dependencies:
     handlebars "^4.7.7"
 
-typedoc@^0.23.9:
-  version "0.23.9"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.9.tgz#fd94451abd039513ab4fda58208fa0e5631e080b"
+typedoc@^0.23.10:
+  version "0.23.10"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.10.tgz#285d595a5f2e35ccdf6f38eba4dfe951d5bff461"
   dependencies:
     lunr "^2.3.9"
-    marked "^4.0.16"
+    marked "^4.0.18"
     minimatch "^5.1.0"
     shiki "^0.10.1"
 
