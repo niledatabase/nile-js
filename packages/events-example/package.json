@@ -16,7 +16,7 @@
     "@pulumi/pulumi": "^3.36.0",
     "@theniledev/js": "*",
     "@types/node-fetch": "^2.6.2",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^3.2.10"
   },
   "devDependencies": {
     "@types/node": "^16.9.4",
