@@ -54,6 +54,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /auth/oauth/google/callback:
+    get:
+      tags:
+      - developers
+      summary: Developer Google OAuth flow callback
+      description: |
+        This endpoint is called automatically by Google after the user authenticates successfully.
+        It's here for documentation purposes only, and it shouldn't be called directly.
+      operationId: developerGoogleOAuthCallback
+      parameters:
+      - name: code
+        in: query
+        schema:
+          type: string
+      - name: state
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A successful login/signup for a developer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperGoogleOAuthResponse'
+        "302":
+          description: |2
+             A redirect to the specified `redirect_to` URL after a successful
+             login/signup for a developer, if `redirect_to` was provided
+             when calling `/auth/oauth/google`. A response cookie
+             containing the developer's auth credentials will be set.
+  /auth/oauth/google:
+    get:
+      tags:
+      - developers
+      summary: Starts the developer Google OAuth flow
+      operationId: startDeveloperGoogleOAuth
+      parameters:
+      - name: redirect_to
+        in: query
+        description: An optional URL to redirect to after a successful login/signup.
+        schema:
+          type: string
+          format: uri
+      responses:
+        "302":
+          description: |
+            A redirect to Google for the user to authenticate.
+            After the user authenticates successfully, you'll be redirected to `/auth/oauth/google/callback`.
   /workspaces/{workspace}/auth/login:
     post:
       tags:
@@ -231,7 +280,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Entity'
-    patch:
+    put:
       tags:
       - entities
       summary: Update an Entity
@@ -501,12 +550,33 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Invite'
-  /workspaces/{workspace}/orgs/{org}/members:
+  /workspaces/{workspace}/orgs/{org}/users:
+    get:
+      tags:
+      - organizations
+      summary: List users in an organization
+      operationId: listUsersInOrg
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The users in this organization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
     post:
       tags:
       - organizations
       summary: Add a user to an organization
-      operationId: addOrgMember
+      operationId: addUserToOrg
       parameters:
       - $ref: '#/components/parameters/workspace'
       - name: org
@@ -518,11 +588,15 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/AddOrgMemberRequest'
+              $ref: '#/components/schemas/AddUserToOrgRequest'
         required: true
       responses:
-        "204":
-          description: The user was successfully added to the org
+        "200":
+          description: The user added to the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   /workspaces/{workspace}/orgs:
     get:
       tags:
@@ -580,22 +654,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Organization'
-    delete:
-      tags:
-      - organizations
-      summary: Delete an organization by id
-      operationId: deleteOrganization
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "204":
-          description: Successful org deletion
-    patch:
+    put:
       tags:
       - organizations
       summary: Update an organization
@@ -620,6 +679,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Organization'
+    delete:
+      tags:
+      - organizations
+      summary: Delete an organization by id
+      operationId: deleteOrganization
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Successful org deletion
   /me:
     get:
       tags:
@@ -690,7 +764,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-    post:
+    put:
       tags:
       - users
       summary: Update a user
@@ -828,6 +902,24 @@ components:
           type: string
           description: The password of the user
           example: mycatname
+    DeveloperGoogleOAuthResponse:
+      required:
+      - token
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+          description: JWT authentication token. Most Nile operations the caller to
+            pass a valid token in Authorization HTTP header using Bearer schema
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    OrgMembership:
+      type: object
+      properties:
+        joined:
+          type: string
+          format: date-time
     User:
       required:
       - email
@@ -859,6 +951,10 @@ components:
         email:
           type: string
           format: email
+        orgMemberships:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/OrgMembership'
     CreateUserRequest:
       required:
       - email
@@ -958,6 +1054,10 @@ components:
           type: string
           description: The entity type of this instance
           example: clusters
+        deleted:
+          type: string
+          format: date-time
+          readOnly: true
         properties:
           $ref: '#/components/schemas/Json'
     InstanceEvent:
@@ -968,7 +1068,7 @@ components:
         id:
           type: integer
           format: int32
-        eventtype:
+        eventType:
           type: string
           enum:
           - CREATE
@@ -1006,7 +1106,7 @@ components:
           type: string
           enum:
           - active
-    AddOrgMemberRequest:
+    AddUserToOrgRequest:
       required:
       - email
       type: object
@@ -1061,6 +1161,9 @@ components:
           minLength: 1
           type: string
     UpdateUserRequest:
+      required:
+      - email
+      - password
       type: object
       properties:
         email:

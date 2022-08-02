@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "es2019",
+    "incremental": true,
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": ["node_modules"]
+}
+
+
