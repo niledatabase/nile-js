@@ -20,7 +20,7 @@ $ npm install -g @theniledev/events-example
 $ nile COMMAND
 running command...
 $ nile (--version)
-@theniledev/events-example/0.0.0 darwin-arm64 node-v17.9.1
+@theniledev/events-example/0.13.1 linux-x64 node-v16.16.0
 $ nile --help [COMMAND]
 USAGE
   $ nile COMMAND
