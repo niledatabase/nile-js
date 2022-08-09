@@ -11,9 +11,10 @@ import {
     UpResult
 } from "@pulumi/pulumi/automation";
 import { Instance } from "@theniledev/js";
+import AWSConfig from "./AWSConfig";
 
 export interface PulumiFnGen {
-  (something: any): PulumiFn
+  (staticContent: any): PulumiFn
 }
 
 export default class PulumiAwsDeployment {
@@ -21,17 +22,29 @@ export default class PulumiAwsDeployment {
     projectName!: string;
     private workspace!: LocalWorkspace;
     private programGen!: PulumiFnGen;
+    private awsConfig!: AWSConfig;
 
-    static async create(projectName: string, opts: LocalWorkspaceOptions, program: PulumiFnGen): Promise<PulumiAwsDeployment> {
+    static async create(
+      projectName: string,
+      opts: LocalWorkspaceOptions,
+      programGenerator: PulumiFnGen,
+      awsConfig: AWSConfig
+    ): Promise<PulumiAwsDeployment> {
         const ws = await LocalWorkspace.create(opts);
         ws.installPlugin('aws', 'v4.0.0');
-        return new PulumiAwsDeployment(projectName, ws, program);
+        return new PulumiAwsDeployment(projectName, ws, programGenerator, awsConfig);
     };
 
-    constructor(projectName: string, workspace: LocalWorkspace, programGenerator: PulumiFnGen) {
+    constructor(
+      projectName: string,
+      workspace: LocalWorkspace,
+      programGenerator: PulumiFnGen,
+      awsConfig: AWSConfig
+    ) {
         this.projectName = projectName;
         this.workspace = workspace;
         this.programGen = programGenerator;
+        this.awsConfig = awsConfig;
     }
 
     async loadStacks(): Promise<{[key: string]: StackSummary}> {
@@ -58,7 +71,8 @@ export default class PulumiAwsDeployment {
         program,
       };
       const stack = await LocalWorkspace.createOrSelectStack(args);
-      await stack.setConfig('aws:region', { value: 'us-west-2' });    // TODO: generalize AWS config.
+
+      await stack.setConfig('aws:region', { value: this.awsConfig.region });    // TODO: generalize AWS config.
       return stack;
     }
 
