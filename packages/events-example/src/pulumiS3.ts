@@ -1,7 +1,10 @@
 import * as aws from '@pulumi/aws';
 import { PolicyDocument } from '@pulumi/aws/iam';
+import { PulumiFn } from '@pulumi/pulumi/automation';
+import { PulumiFnGen } from './deployments/pulumi';
 
-export const pulumiProgram = (something: any) => {
+
+export const pulumiProgramGenerator: PulumiFnGen = (something: any): PulumiFn => {
   return async () => {
     // Create a bucket and expose a website index document.
     const siteBucket = new aws.s3.Bucket('s3-website-bucket', {

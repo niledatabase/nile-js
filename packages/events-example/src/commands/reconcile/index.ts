@@ -10,7 +10,8 @@ import {
   PulumiFn,
 } from '@pulumi/pulumi/automation';
 
-import { pulumiProgram } from '../../pulumiS3';
+import { pulumiProgramGenerator } from '../../pulumiS3';
+import PulumiAwsDeployment from '../../deployments/pulumi';
 
 export default class Reconcile extends Command {
   static enableJsonFlag = true;
@@ -38,9 +39,11 @@ export default class Reconcile extends Command {
     status: Flags.boolean({ char: 's', description: 'status', default: false }),
   };
 
-  localWorkspace!: LocalWorkspace;
+  //localWorkspace!: LocalWorkspace;
   nile!: NileApi;
+  deployment!: PulumiAwsDeployment;
 
+  /*
   async waitOnStack(stack: Stack): Promise<void> {
     let stackInfo;
     do {
@@ -98,6 +101,7 @@ export default class Reconcile extends Command {
     this.debug(stacks);
     return stacks;
   }
+  */
 
   async loadInstances(
     organization: string,
@@ -123,10 +127,17 @@ export default class Reconcile extends Command {
     const { flags } = await this.parse(Reconcile);
 
     // pulumi setup
+    /*
     this.localWorkspace = await LocalWorkspace.create({
       projectSettings: { name: flags.workspace, runtime: 'nodejs' },
     });
     this.localWorkspace.installPlugin('aws', 'v4.0.0');
+    */
+   this.deployment = await PulumiAwsDeployment.create(
+    "tryhard", 
+    { projectSettings: { name: flags.workspace, runtime: 'nodejs' } },
+    pulumiProgramGenerator
+   )
 
     // nile setup
     this.nile = Nile({ basePath: flags.basePath, workspace: flags.workspace });
@@ -144,7 +155,7 @@ export default class Reconcile extends Command {
     this.nile.authToken = token?.token;
 
     // load our data
-    const stacks = await this.loadPulumiStacks();
+    const stacks = await this.deployment.loadStacks();
     const instances = await this.loadInstances(
       flags.organization,
       flags.entity
@@ -163,14 +174,14 @@ export default class Reconcile extends Command {
     // destroy any stacks that shouldnt exist
     for (const id of Object.keys(stacks)) {
       if (!instances[id]) {
-        this.destroyStack(id);
+        this.deployment.destroyStack(id);
       }
     }
 
     // create any stacks that should exist
     for (const id of Object.keys(instances)) {
       if (!stacks[id]) {
-        this.createStack(instances[id]);
+        this.deployment.createStack(instances[id]);
       }
     }
 
@@ -179,8 +190,8 @@ export default class Reconcile extends Command {
         this.log(JSON.stringify(e, null, 2));
         if (e.after) {
           const out = await (e.after.deleted
-            ? this.destroyStack(e.after.id)
-            : this.createStack(e.after));
+            ? this.deployment.destroyStack(e.after.id)
+            : this.deployment.createStack(e.after));
 
           this.debug(out);
         }
