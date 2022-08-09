@@ -3057,9 +3057,9 @@
     tslib "^2"
 
 "@oclif/core@^1", "@oclif/core@^1.0.8", "@oclif/core@^1.2.0", "@oclif/core@^1.2.1", "@oclif/core@^1.3.6", "@oclif/core@^1.9.9":
-  version "1.13.0"
-  resolved "https://registry.npmjs.org/@oclif/core/-/core-1.13.0.tgz"
-  integrity sha512-/cn36jfnjUxodiJZEGHtGKkUAD15qeHHBC/+FiPkKQYAvGtcht3XRL3wDidOkp3awotN6DzxhHOu5ZrDKowmTQ==
+  version "1.13.8"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.13.8.tgz#c1288049664451595710e04cd163f63297372095"
+  integrity sha512-qaJLDuzRoh4XTfqEP8Rn8Ngkj/SzXht0ywPaNJEMCQK6I2gdMzEysitWflzaVqlxa+Qx/n2EMbstBG0m2/F7Ug==
   dependencies:
     "@oclif/linewrap" "^1.0.0"
     "@oclif/screen" "^3.0.2"
@@ -5051,6 +5051,11 @@
   version "15.14.9"
   resolved "https://registry.npmjs.org/@types/node/-/node-15.14.9.tgz"
   integrity sha512-qjd88DrCxupx/kJD5yQgZdcYKZKSIGBVDIBE1/LTGcNm3d2Np/jxojkdePDdfnBHJc5W7vSMpbJ1aB7p/Py69A==
+
+"@types/node@^18.6.4":
+  version "18.6.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.6.5.tgz#06caea822caf9e59d5034b695186ee74154d2802"
+  integrity sha512-Xjt5ZGUa5WusGZJ4WJPbOT8QOqp6nDynVFRKcUt32bOgvXEoc6o085WNkYTMO7ifAj2isEfQQ2cseE+wT6jsRw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
