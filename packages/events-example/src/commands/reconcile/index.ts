@@ -43,21 +43,24 @@ export default class Reconcile extends Command {
 
     // Pulumi setup
     this.deployment = await PulumiAwsDeployment.create(
-      flags.workspace, 
+      "nile-js-examples", 
       { projectSettings: { name: flags.workspace, runtime: 'nodejs' } },
       pulumiProgramGenerator,
       { region: flags.region },
     )
 
     // Identify current state of data plane and control plane
-    const stacks = await this.deployment.loadStacks();
     const instances = await this.loadNileInstances(flags.organization, flags.entity);
+    this.debug("Instances", instances);
+
+    const stacks = await this.deployment.loadStacks();
+    this.debug("Stacks", stacks);
 
     if (flags.statusCheckOnly) {
-      console.log({ stacks, instances });
       return { stacks, instances };
     }
 
+    this.debug("Starting synchronization");
     this.synchronizeDataPlane(instances, stacks);
     this.listenForNileEvents(flags.entity, this.findLastInstance(Object.values(instances)));
   }
@@ -90,7 +93,7 @@ export default class Reconcile extends Command {
         acc[instance.id] = instance;
         return acc;
       }, {} as { [key: string]: Instance });
-    this.debug("Nile Instances", instances);
+    this.debug(`Nile instance count: ${ Object.keys(instances) }`);
     return instances;
   }
 
@@ -106,9 +109,11 @@ export default class Reconcile extends Command {
     instances: {[key: string]: Instance},
     stacks: {[key: string]: StackSummary}
   ) {
+    this.debug("synchronizing data plane...");
     // destroy any stacks that shouldnt exist
     for (const id of Object.keys(stacks)) {
       if (!instances[id]) {
+        this.debug(`destroying stack ${ id }`);
         this.deployment.destroyStack(id);
       }
     }
@@ -116,6 +121,7 @@ export default class Reconcile extends Command {
     // create any stacks that should exist
     for (const id of Object.keys(instances)) {
       if (!stacks[id]) {
+        this.debug(`creating stack ${ id }`);
         this.deployment.createStack(instances[id]);
       }
     }

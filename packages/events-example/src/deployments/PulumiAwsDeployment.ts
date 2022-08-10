@@ -54,13 +54,12 @@ export default class PulumiAwsDeployment {
           const acc = await accP;
           const fullStack = await this.getStack(stack.name, this.programGen({}));
           const info = await fullStack.info();
+          console.log("Successfully loaded stack", info);
           if (info?.kind != 'destroy') {
             acc[stack.name] = stack;
-            console.debug('adding stack', stack);
           }
           return acc;
         }, Promise.resolve({} as { [key: string]: StackSummary }));
-      console.debug(stacks);
       return stacks;
     }
 
@@ -91,7 +90,6 @@ export default class PulumiAwsDeployment {
       let stackInfo;
       do {
         stackInfo = await stack.info();
-        console.debug(stackInfo);
       } while (stackInfo != undefined && stackInfo?.result !== 'succeeded');
     }
   
