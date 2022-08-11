@@ -1,53 +1,45 @@
 import { CliUx } from '@oclif/core';
 import {
+  ConfigMap,
   DestroyResult,
   InlineProgramArgs,
   LocalWorkspace,
   PulumiFn,
   Stack,
   StackSummary,
+  UpdateSummary,
   UpResult,
 } from '@pulumi/pulumi/automation';
 import { Instance } from '@theniledev/js';
 
-type AWSConfig = {
-  region: string;
-};
-type PulumiFnGen = {
-  (staticContent: unknown): PulumiFn;
-};
-
-// eslint-disable-next-line no-console
-const stackConfig = { onOutput: console.log };
+export interface PulumiFnGen {
+  (instance?: Instance): PulumiFn;
+}
 
 export default class PulumiAwsDeployment {
   projectName!: string;
   private localWorkspace!: LocalWorkspace;
   private pulumiProgram: PulumiFnGen;
-  private awsConfig: AWSConfig;
 
   static async create(
     projectName: string,
-    pulumiProgram: PulumiFnGen,
-    awsConfig: AWSConfig
+    pulumiProgram: PulumiFnGen
   ): Promise<PulumiAwsDeployment> {
     const ws = await LocalWorkspace.create({
       projectSettings: { name: projectName, runtime: 'nodejs' },
     });
     ws.installPlugin('aws', 'v4.0.0');
-    return new PulumiAwsDeployment(projectName, ws, pulumiProgram, awsConfig);
+    return new PulumiAwsDeployment(projectName, ws, pulumiProgram);
   }
 
   constructor(
     projectName: string,
     localWorkspace: LocalWorkspace,
-    pulumiProgram: PulumiFnGen,
-    awsConfig: AWSConfig
+    pulumiProgram: PulumiFnGen
   ) {
     this.projectName = projectName;
     this.localWorkspace = localWorkspace;
     this.pulumiProgram = pulumiProgram;
-    this.awsConfig = awsConfig;
   }
 
   async loadPulumiStacks(): Promise<{ [key: string]: StackSummary }> {
@@ -55,7 +47,7 @@ export default class PulumiAwsDeployment {
       await this.localWorkspace.listStacks()
     ).reduce(async (accP, stack) => {
       const acc = await accP;
-      const fullStack = await this.getStack(stack.name, this.pulumiProgram({}));
+      const fullStack = await this.getStack(stack.name, this.pulumiProgram());
       const info = await fullStack.info();
       if (info?.kind != 'destroy') {
         acc[stack.name] = stack;
@@ -65,21 +57,13 @@ export default class PulumiAwsDeployment {
     return stacks;
   }
 
-  async waitOnStack(stack: Stack): Promise<void> {
-    let stackInfo;
-    do {
-      stackInfo = await stack.info();
-    } while (stackInfo != undefined && stackInfo?.result !== 'succeeded');
-  }
-
   async getStack(stackName: string, program: PulumiFn): Promise<Stack> {
     const args: InlineProgramArgs = {
       stackName,
-      projectName: 'tryhard',
+      projectName: this.projectName,
       program,
     };
     const stack = await LocalWorkspace.createOrSelectStack(args);
-    await stack.setConfig('aws:region', { value: this.awsConfig.region });
     return stack;
   }
 
@@ -88,21 +72,48 @@ export default class PulumiAwsDeployment {
       instance.id,
       this.pulumiProgram(instance)
     );
+    await this.configureStack(stack, instance);
     await this.waitOnStack(stack);
+
     try {
       CliUx.ux.action.start(`Creating a stack id=${instance.id}`);
-      return await stack.up(stackConfig);
+      // eslint-disable-next-line no-console
+      return await stack.up({ onOutput: console.log });
     } finally {
       CliUx.ux.action.stop();
     }
   }
 
+  private async configureStack(stack: Stack, instance: Instance) {
+    const instanceProps = instance.properties as { config: ConfigMap };
+    const stackConfig = instanceProps?.config ?? { 'aws:region': 'us-east-2' };
+
+    for (const key of Object.keys(stackConfig)) {
+      await stack.setConfig(key, { value: `${stackConfig[key]}` });
+    }
+  }
+
+  private async waitOnStack(stack: Stack): Promise<void> {
+    let stackInfo;
+    do {
+      stackInfo = await stack.info();
+    } while (this.isUnresolved(stackInfo));
+  }
+
+  private isUnresolved(stackInfo: UpdateSummary | undefined): boolean {
+    return (
+      stackInfo != undefined &&
+      !(stackInfo?.result == 'succeeded' || stackInfo?.result == 'failed')
+    );
+  }
+
   async destroyStack(id: string): Promise<DestroyResult> {
-    const stack = await this.getStack(id, this.pulumiProgram({}));
+    const stack = await this.getStack(id, this.pulumiProgram());
     await this.waitOnStack(stack);
     try {
       CliUx.ux.action.start(`Destroying a stack id=${id}`);
-      return await stack.destroy(stackConfig);
+      // eslint-disable-next-line no-console
+      return await stack.destroy({ onOutput: console.log });
     } finally {
       CliUx.ux.action.stop();
     }

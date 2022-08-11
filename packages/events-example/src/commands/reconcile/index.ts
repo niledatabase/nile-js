@@ -1,8 +1,9 @@
 import { Command } from '@oclif/core';
 import Nile, { Instance, NileApi } from '@theniledev/js';
 
+import { ReconciliationPlan } from '../../model/ReconciliationPlan';
+
 import { pulumiS3, PulumiAwsDeployment } from './lib/pulumi';
-import { ReconciliationPlan } from './ReconciliationPlan';
 import { flagDefaults } from './flagDefaults';
 
 // configuration for interacting with nile
@@ -18,21 +19,16 @@ type DeveloperCreds = {
 export default class Reconcile extends Command {
   static enableJsonFlag = true;
   static description = 'reconcile nile/pulumi deploys';
+
   static flags = flagDefaults;
 
   deployment!: PulumiAwsDeployment;
   nile!: NileApi;
 
-  /**
-   * Runner for oclif
-   * @returns void
-   */
   async run(): Promise<unknown> {
     const { flags } = await this.parse(Reconcile);
-
     const {
       status,
-      region,
       organization,
       entity,
       basePath,
@@ -41,15 +37,14 @@ export default class Reconcile extends Command {
       password,
     } = flags;
 
-    // Nile setup
+    // nile setup
     await this.connectNile({ basePath, workspace, email, password });
     const instances = await this.loadNileInstances(organization, entity);
 
-    // Pulumi setup
+    // pulumi setup
     this.deployment = await PulumiAwsDeployment.create(
       'nile-examples',
-      pulumiS3,
-      { region }
+      pulumiS3
     );
     const stacks = await this.deployment.loadPulumiStacks();
 
@@ -79,7 +74,7 @@ export default class Reconcile extends Command {
 
   /**
    * sets up Nile instance, and set auth token to the logged in developer
-   * @param config Configuration for instantiating Nile and logging ing
+   * @param config Configuration for instantiating Nile and logging in
    */
   async connectNile({
     basePath,
@@ -87,18 +82,17 @@ export default class Reconcile extends Command {
     email,
     password,
   }: NileConfig & DeveloperCreds) {
-    const developerPayload = {
-      loginInfo: {
-        email,
-        password,
-      },
-    };
     this.nile = Nile({
       basePath,
       workspace,
     });
     const token = await this.nile.developers
-      .loginDeveloper(developerPayload)
+      .loginDeveloper({
+        loginInfo: {
+          email,
+          password,
+        },
+      })
       .catch((error: unknown) => {
         // eslint-disable-next-line no-console
         console.error('Nile authentication failed', error);

@@ -1,18 +1,55 @@
 import { EntitiesApi, InstanceEvent } from './generated/openapi/src';
 
-export class EventsApi {
+export type TimersType = { [key: number]: ReturnType<typeof setTimeout> };
+export type EventListenerOptions = { type: string; seq: number };
+export type ListenerCallback = (event: InstanceEvent) => Promise<void>;
+
+export interface EventsApiInterface {
+  entities: EntitiesApi;
+  timers: TimersType;
+  on(
+    options: EventListenerOptions,
+    listener: ListenerCallback,
+    refresh?: number
+  ): number;
+  cancel(timerId: number): void;
+}
+
+/**
+ * EventsApi - Interface
+ * @export
+ * @interface EventsApiInterface
+ */
+export default class EventsApi implements EventsApiInterface {
   static onCounter = 0;
   entities: EntitiesApi;
-  timers: { [key: number]: ReturnType<typeof setTimeout> };
+  timers: TimersType;
 
   constructor(entities: EntitiesApi) {
     this.entities = entities;
     this.timers = {};
   }
 
+  /**
+   * Listen for Nile events
+   * @example
+   * ```typescript
+   * import Nile from '@theniledev/js';
+   * const nile = new Nile({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace' });
+   *
+   * const listenerOptions = {
+   *   type: 'myEntityType',
+   *   seq: 0 // from the beginning of time
+   * };
+   *
+   * nile.events.on(listenerOptions, (instanceEvent) => {
+   *   console.log(JSON.stringify(instanceEvent, null, 2));
+   * });
+   * ```
+   */
   on(
-    options: { type: string; seq: number },
-    listener: (event: InstanceEvent) => Promise<void>,
+    options: EventListenerOptions,
+    listener: ListenerCallback,
     refresh = 5000
   ): number {
     const id = EventsApi.onCounter++;
@@ -41,11 +78,29 @@ export class EventsApi {
     return id;
   }
 
-  cancel(id: number): void {
-    const timer = this.timers[id];
+  /**
+   * Remove and cancel a running timer
+   * @example
+   * ```typescript
+   * import Nile from '@theniledev/js';
+   * const nile = new Nile({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace' });
+   *
+   * const listenerOptions = {
+   *   type: 'myEntityType',
+   *   seq: 0 // from the beginning of time
+   * };
+   *
+   * const timerId = nile.events.on(listenerOptions, (instanceEvent) => {
+   *   console.log(JSON.stringify(instanceEvent, null, 2));
+   * });
+   * nile.events.cancel(timerId);
+   * ```
+   */
+  cancel(timerId: number): void {
+    const timer = this.timers[timerId];
     if (timer) {
       clearTimeout(timer);
-      delete this.timers[id];
+      delete this.timers[timerId];
     }
   }
 }
