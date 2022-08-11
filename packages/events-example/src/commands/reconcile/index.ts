@@ -3,7 +3,7 @@ import Nile, { Instance, NileApi } from '@theniledev/js';
 
 import { pulumiProgram } from '../../pulumiS3';
 import PulumiAwsDeployment from '../../deployments/PulumiAwsDeployment';
-import { ReconciliationPlan } from './ReconciliationPlan';
+import { ReconciliationPlan } from '../../model/ReconciliationPlan';
 
 export default class Reconcile extends Command {
   static enableJsonFlag = true;
@@ -29,7 +29,6 @@ export default class Reconcile extends Command {
     organization: Flags.string({ description: 'an organization in your Nile workspace' }),
     entity: Flags.string({ description: 'an entity type in your Nile workspace' }),
     status: Flags.boolean({ char: 's', description: 'check current status of your control and data planes', default: false }),
-    region: Flags.string({ description: 'AWS region', default: 'us-west-2'}),
   };
 
   deployment!: PulumiAwsDeployment;
@@ -42,7 +41,7 @@ export default class Reconcile extends Command {
     await this.connectNile(flags);
 
     // pulumi setup
-    this.deployment = await PulumiAwsDeployment.create("nile-examples", pulumiProgram, { region: flags.region });
+    this.deployment = await PulumiAwsDeployment.create("nile-examples", pulumiProgram);
 
     // load our data
     const stacks = await this.deployment.loadPulumiStacks();
