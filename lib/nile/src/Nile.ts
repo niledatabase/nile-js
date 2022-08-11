@@ -25,7 +25,7 @@ export class EventsApi {
   }
 
   on(
-    options: { type: string; seq: any },
+    options: { type: string; seq: number },
     listener: (event: InstanceEvent) => Promise<void>,
     refresh = 5000
   ): number {
