@@ -1,16 +1,9 @@
-import { CliUx, Command, Flags } from '@oclif/core';
+import { Command, Flags } from '@oclif/core';
 import Nile, { Instance, NileApi } from '@theniledev/js';
-import {
-  DestroyResult,
-  InlineProgramArgs,
-  LocalWorkspace,
-  StackSummary,
-  Stack,
-  UpResult,
-  PulumiFn,
-} from '@pulumi/pulumi/automation';
 
 import { pulumiProgram } from '../../pulumiS3';
+import PulumiAwsDeployment from '../../deployments/PulumiAwsDeployment';
+import { ReconciliationPlan } from './ReconciliationPlan';
 
 export default class Reconcile extends Command {
   static enableJsonFlag = true;
@@ -18,88 +11,75 @@ export default class Reconcile extends Command {
 
   static flags = {
     basePath: Flags.string({
-      description: 'basePath',
+      description: 'root URL for the Nile API',
       default: 'http://localhost:8080',
     }),
     workspace: Flags.string({
-      description: 'workspace',
-      default: 'tryhard',
+      description: 'your Nile workspace name',
+      default: 'dev',
     }),
     email: Flags.string({
-      description: 'email',
-      default: 'trying@demo.com',
+      description: 'developer email address',
+      default: 'developer@demo.com',
     }),
     password: Flags.string({
-      description: 'password',
-      default: 'trying',
+      description: 'developer password',
+      default: 'very_secret',
     }),
-    organization: Flags.string({ description: 'organization' }),
-    entity: Flags.string({ description: 'entity' }),
-    status: Flags.boolean({ char: 's', description: 'status', default: false }),
+    organization: Flags.string({ description: 'an organization in your Nile workspace' }),
+    entity: Flags.string({ description: 'an entity type in your Nile workspace' }),
+    status: Flags.boolean({ char: 's', description: 'check current status of your control and data planes', default: false }),
+    region: Flags.string({ description: 'AWS region', default: 'us-west-2'}),
   };
 
-  localWorkspace!: LocalWorkspace;
+  deployment!: PulumiAwsDeployment;
   nile!: NileApi;
 
-  async waitOnStack(stack: Stack): Promise<void> {
-    let stackInfo;
-    do {
-      stackInfo = await stack.info();
-      this.debug(stackInfo);
-    } while (stackInfo != undefined && stackInfo?.result !== 'succeeded');
-  }
+  async run(): Promise<any> {
+    const { flags } = await this.parse(Reconcile);
 
-  async getStack(stackName: string, program: PulumiFn): Promise<Stack> {
-    const args: InlineProgramArgs = {
-      stackName,
-      projectName: 'tryhard',
-      program,
-    };
-    const stack = await LocalWorkspace.createOrSelectStack(args);
-    await stack.setConfig('aws:region', { value: 'us-west-2' });
-    return stack;
-  }
+    // nile setup
+    await this.connectNile(flags);
 
-  async createStack(instance: Instance): Promise<UpResult> {
-    const stack = await this.getStack(instance.id, pulumiProgram(instance));
-    await this.waitOnStack(stack);
-    try {
-      CliUx.ux.action.start(`Creating a stack id=${instance.id}`);
-      return await stack.up({ onOutput: console.log });
-    } finally {
-      CliUx.ux.action.stop();
+    // pulumi setup
+    this.deployment = await PulumiAwsDeployment.create("nile-examples", pulumiProgram, { region: flags.region });
+
+    // load our data
+    const stacks = await this.deployment.loadPulumiStacks();
+    const instances = await this.loadNileInstances(
+      flags.organization,
+      flags.entity
+    );
+    const plan = new ReconciliationPlan(instances, stacks);
+
+    if (flags.status) {
+      this.log('Status check only.');
+      this.log(`Pending destruction: ${ plan.destructionIds } (${ plan.destructionIds.length})`);
+      this.log(`Pending creation: ${ plan.creationIds } (${ plan.creationIds.length })`)
+      return { stacks, instances };
     }
+
+    await this.synchronizeDataPlane(plan);
+    await this.listenForNileEvents(flags.entity, this.findLastSeq(Object.values(instances)));
   }
 
-  async destroyStack(id: string): Promise<DestroyResult> {
-    const stack = await this.getStack(id, pulumiProgram({}));
-    await this.waitOnStack(stack);
-    try {
-      CliUx.ux.action.start(`Destroying a stack id=${id}`);
-      return await stack.destroy({ onOutput: console.log });
-    } finally {
-      CliUx.ux.action.stop();
-    }
+  async connectNile(parsedFlags: {[name: string]: any}) {
+    this.nile = Nile({ basePath: parsedFlags.basePath, workspace: parsedFlags.workspace });
+    const token = await this.nile.developers
+      .loginDeveloper({
+        loginInfo: {
+          email: parsedFlags.email,
+          password: parsedFlags.password,
+        },
+      })
+      .catch((error: unknown) => {
+        // eslint-disable-next-line no-console
+        console.error("Nile authentication failed", error);
+      });
+    this.nile.authToken = token?.token;
   }
 
-  async loadPulumiStacks(): Promise<{ [key: string]: StackSummary }> {
-    const stacks = await (
-      await this.localWorkspace.listStacks()
-    ).reduce(async (accP, stack) => {
-      const acc = await accP;
-      const fullStack = await this.getStack(stack.name, pulumiProgram({}));
-      const info = await fullStack.info();
-      if (info?.kind != 'destroy') {
-        acc[stack.name] = stack;
-        this.debug('adding stack', stack);
-      }
-      return acc;
-    }, Promise.resolve({} as { [key: string]: StackSummary }));
-    this.debug(stacks);
-    return stacks;
-  }
-
-  async loadInstances(
+  async loadNileInstances(
     organization: string,
     entity: string
   ): Promise<{ [key: string]: Instance }> {
@@ -108,83 +88,53 @@ export default class Reconcile extends Command {
         org: organization,
         type: entity,
       })
-    ).reduce((acc, instance: Instance) => {
-      if (instance) {
-        acc[instance.id] = instance;
-      }
-
+    )
+    .filter((value: Instance) => value !== null && value !== undefined)
+    .reduce((acc, instance: Instance) => {
+      acc[instance.id] = instance;
       return acc;
     }, {} as { [key: string]: Instance });
-    this.debug(instances);
+    this.debug("Nile Instances", instances);
     return instances;
   }
 
-  async run(): Promise<any> {
-    const { flags } = await this.parse(Reconcile);
+  private findLastSeq(instances: Instance[]): number {
+    return instances
+      .map((value: Instance) => value?.seq || 0)
+      .reduce((prev: number, curr: number) => {
+        return Math.max(prev, curr || 0);
+      }, 0);
+  }
 
-    // pulumi setup
-    this.localWorkspace = await LocalWorkspace.create({
-      projectSettings: { name: flags.workspace, runtime: 'nodejs' },
-    });
-    this.localWorkspace.installPlugin('aws', 'v4.0.0');
+  private async synchronizeDataPlane(plan: ReconciliationPlan) {
+    this.debug('Synchronizing data and control planes...');
+    this.debug(plan);
 
-    // nile setup
-    this.nile = Nile({ basePath: flags.basePath, workspace: flags.workspace });
-    const token = await this.nile.developers
-      .loginDeveloper({
-        loginInfo: {
-          email: flags.email,
-          password: flags.password,
-        },
-      })
-      .catch((error: unknown) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      });
-    this.nile.authToken = token?.token;
-
-    // load our data
-    const stacks = await this.loadPulumiStacks();
-    const instances = await this.loadInstances(
-      flags.organization,
-      flags.entity
-    );
-    let seq = 0;
-    for (const instance of Object.values(instances)) {
-      if (seq == null || (instance?.seq || seq) > seq) {
-        seq = instance?.seq || seq;
-      }
-    }
-
-    if (flags.status) {
-      return { stacks, instances };
-    }
-
-    // destroy any stacks that shouldnt exist
-    for (const id of Object.keys(stacks)) {
-      if (!instances[id]) {
-        this.destroyStack(id);
-      }
+    // destroy any stacks that should not exist
+    for (const id of plan.destructionIds) {
+      await this.deployment.destroyStack(id);
     }
 
     // create any stacks that should exist
-    for (const id of Object.keys(instances)) {
-      if (!stacks[id]) {
-        this.createStack(instances[id]);
-      }
+    for (const spec of plan.creationSpecs) {
+      await this.deployment.createStack(spec)
     }
+  }
 
+  private async listenForNileEvents(entityType: string, fromSeq: number) {
+    this.log(`Listening for events for ${ entityType } entities from sequence #${ fromSeq }`);
     await new Promise(() => {
-      this.nile.events.on({ type: flags.entity, seq }, async (e) => {
+      this.nile.events.on({ type: entityType, seq: fromSeq }, async (e) => {
         this.log(JSON.stringify(e, null, 2));
         if (e.after) {
           const out = await (e.after.deleted
-            ? this.destroyStack(e.after.id)
-            : this.createStack(e.after));
+            ? this.deployment.destroyStack(e.after.id)
+            : this.deployment.createStack(e.after));
 
-          this.debug(out);
+          this.debug("Event Received", out);
         }
       });
     });
   }
+
 }
