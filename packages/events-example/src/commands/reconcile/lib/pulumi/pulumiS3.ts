@@ -1,8 +1,8 @@
 import * as aws from '@pulumi/aws';
 import { PolicyDocument } from '@pulumi/aws/iam';
-import { Instance } from "@theniledev/js";
+import { Instance } from '@theniledev/js';
 
-export const pulumiProgram = (instance?: Instance) => {
+export const pulumiS3 = (instance?: Instance) => {
   return async () => {
     // Create a bucket and expose a website index document.
     const siteBucket = new aws.s3.Bucket('s3-website-bucket', {
@@ -11,8 +11,8 @@ export const pulumiProgram = (instance?: Instance) => {
       },
     });
 
-    const instanceProps = instance?.properties as {[key: string]: any};
-    const greeting = instanceProps?.greeting || "Hello, world!";
+    const instanceProps = instance?.properties as { [key: string]: unknown };
+    const greeting = instanceProps?.greeting || 'Hello, world!';
     const indexContent = `<html><head>
 <title>Hello S3</title><meta charset="UTF-8">
 </head>
