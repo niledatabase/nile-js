@@ -58,7 +58,7 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.18.10",
-    "@size-limit/preset-small-lib": "^8.0.0",
+    "@size-limit/preset-small-lib": "^8.0.1",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-info": "^5.3.21",
     "@storybook/addon-links": "^6.5.10",
@@ -76,7 +76,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
-    "size-limit": "^8.0.0",
+    "size-limit": "^8.0.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4"
