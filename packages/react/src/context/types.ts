@@ -11,5 +11,5 @@ export interface NileProviderProps {
   children: React.ReactNode;
   basePath: string;
   workspace?: string;
-  theme?: string;
+  theme?: Theme;
 }
