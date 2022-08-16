@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/TheNileDev/nile-js/compare/v0.13.1...v0.14.0) (2022-08-16)
+
+
+### Features
+
+* add instance table ([ed0a057](https://github.com/TheNileDev/nile-js/commit/ed0a057856a88c11797f99c3a6e8955905f478dc))
+* **react:** have opinions about libs, upgrade to use them ([498af4e](https://github.com/TheNileDev/nile-js/commit/498af4e80b0dc880488c14aa89062acd5cac652d))
+
+
+
+
+
 ## [0.13.1](https://github.com/TheNileDev/nile-js/compare/v0.13.0...v0.13.1) (2022-08-02)
 
 **Note:** Version bump only for package @theniledev/react
