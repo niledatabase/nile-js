@@ -33,13 +33,13 @@ A method exposing the `@theniledev/js` instance created in `<NileProvider />`. T
 
 ```typescript
 import React, { useEffect } from 'react';
-import { useNile } from '@theniledev/react';
+import { useNile, Queries } from '@theniledev/react';
 import { useQuery } from '@tanstack/react-query';
 
 export default function UserTable() {
   const nile = useNile();
   const [users, setUsers] = useState();
-  const { data: users = [] } = useQuery(['ListUsers'], () => nile.listUsers());
+  const { data: users = [] } = useQuery(Queries.ListUsers, () => nile.listUsers());
   // with multiple requests
   // const [{ data: users = [] }, { data: invites = [] }] = useQueries([
   //   { queryKey: ['users'], queryFn: () => nile.listUsers({}) },
@@ -56,9 +56,9 @@ export default function UserTable() {
 
 ### UI customization
 
-For theming and display, [mui joy](https://mui.com/joy-ui/getting-started/overview/) is used.
+For theming and display, A combination of [mui joy](https://mui.com/joy-ui/getting-started/overview/) and [material ui](https://mui.com/material-ui/getting-started/overview/) is used. As joy approaches feature parity with material, it will be removed from this codebase. For now, there are helper functions in the theme to support both, with the theming function preferring mui joy settings and colors over material.
 
-For details on theming, see their [theming documentation](https://mui.com/joy-ui/customization/approaches/). You can pass a custom `theme` object to the `NileProvider` and it will pass the custom theme to Mui Joy.
+For details on theming, see their [theming documentation](https://mui.com/joy-ui/customization/approaches/). You can pass a custom `theme` object to the `NileProvider` and it will merge it with the combined materia and joy themes in the `<NileProvider />`.
 
 ```typescript
 import { NileProvider } from '@theniledev/react';
@@ -95,3 +95,5 @@ function App() {
 [LoginForm](./src/components/LoginForm/README.md)
 
 [SignUpForm](./src/components/SignUpForm/README.md)
+
+[InstanceTable]('./src/components/InstanceTable/README.md)

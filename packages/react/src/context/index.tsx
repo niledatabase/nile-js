@@ -5,13 +5,14 @@ import Nile, { NileApi } from '@theniledev/js';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+import theme from './themeJoiner';
 import { NileContext, NileProviderProps } from './types';
+
+const queryClient = new QueryClient();
 
 const defaultContext: NileContext = {
   instance: Nile({ basePath: '', workspace: 'none', credentials: 'include' }),
   workspace: '',
-  theme: {},
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -27,14 +28,13 @@ export const NileProvider = (props: NileProviderProps) => {
         workspace: props.workspace,
         credentials: 'include',
       }),
-      theme: props.theme,
     };
-  }, [props.basePath, props.theme, props.workspace]);
+  }, [props.basePath, props.workspace]);
 
   if (props.theme) {
     return (
       <QueryClientProvider client={queryClient}>
-        <CssVarsProvider theme={props.theme}>
+        <CssVarsProvider theme={theme(props.theme)}>
           <Provider value={values}>{children}</Provider>
         </CssVarsProvider>
       </QueryClientProvider>
@@ -43,7 +43,7 @@ export const NileProvider = (props: NileProviderProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CssVarsProvider>
+      <CssVarsProvider theme={theme()}>
         <Provider value={values}>{children}</Provider>
       </CssVarsProvider>
     </QueryClientProvider>
@@ -56,8 +56,4 @@ const useNileContext = (): NileContext => {
 
 export const useNile = (): NileApi => {
   return useNileContext().instance;
-};
-
-export const useNileContextTheme = (): void | string => {
-  return useNileContext().theme;
 };
