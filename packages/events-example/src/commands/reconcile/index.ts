@@ -39,7 +39,10 @@ export default class Reconcile extends Command {
 
     // nile setup
     await this.connectNile({ basePath, workspace, email, password });
-    const instances = await this.loadNileInstances(organization, entity);
+    const instances = await this.loadNileInstances(
+      String(organization),
+      String(entity)
+    );
 
     // pulumi setup
     this.deployment = await PulumiAwsDeployment.create(
@@ -67,7 +70,7 @@ export default class Reconcile extends Command {
 
     // listen to updates from nile and handle stacks accordingly
     await this.listenForNileEvents(
-      flags.entity,
+      String(flags.entity),
       this.findLastSeq(Object.values(instances))
     );
   }
