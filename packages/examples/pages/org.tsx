@@ -39,7 +39,7 @@ function Org() {
     <>
       <h1>🤩 InstaExpense 🤩</h1>
       <LoginForm
-        handleSuccess={() => {
+        onSuccess={() => {
           setSuccess(true);
         }}
       />

@@ -13,7 +13,7 @@ function SignIn() {
       <h1>🤩 InstaExpense 🤩</h1>
       <h2>Sign in</h2>
       <LoginForm
-        handleSuccess={() => {
+        onSuccess={() => {
           if (redirect) {
             router.push(`/${redirect}`);
           } else {

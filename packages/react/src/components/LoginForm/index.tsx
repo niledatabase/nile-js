@@ -1,65 +1,29 @@
 import React from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { LoginInfo } from '@theniledev/js';
 
-import Button from '../_Button';
 import { useNile } from '../../context';
-import { Label, Input } from '../_Themeable';
+import UserForm from '../../lib/UserForm';
 
 import { Props } from './types';
 
 export default function LoginForm(props: Props) {
   const nile = useNile();
-  const {
-    button,
-    emailInput,
-    emailLabel,
-    passwordLabel,
-    passwordInput,
-    handleSuccess,
-    handleFailure,
-  } = props;
-
-  const handleSubmit = React.useCallback(
-    async function () {
-      const email =
-        typeof document !== 'undefined' &&
-        (document.querySelector('#login #email') as HTMLInputElement);
-      const password =
-        typeof document !== 'undefined' &&
-        (document.querySelector('#login #password') as HTMLInputElement);
-      const emailValue = email ? email.value : '';
-      const passwordValue = password ? password.value : '';
-
-      const loginInfo = {
-        email: emailValue,
-        password: passwordValue,
-      };
-
-      const success = await nile.users
-        .loginUser({ loginInfo })
-        .catch((e: Error) => {
-          handleFailure && handleFailure(e);
-        });
-
-      if (success) {
-        nile.authToken = nile.users.authToken;
-        handleSuccess && handleSuccess(loginInfo);
-      }
-    },
-    [handleFailure, handleSuccess, nile]
+  const { onSuccess, onError } = props;
+  const mutation = useMutation(
+    (data: LoginInfo) => nile.users.loginUser({ loginInfo: data }),
+    {
+      onSuccess: (token, data) => {
+        if (token) {
+          nile.authToken = token?.token;
+          onSuccess && onSuccess(data);
+        }
+      },
+      onError: (error) => {
+        onError && onError(error as Error);
+      },
+    }
   );
 
-  return (
-    <form id="login">
-      <Label node={emailLabel} htmlFor="email" text="Email" />
-      <Input node={emailInput} name="email" />
-      <Label node={passwordLabel} htmlFor="password" text="Password" />
-      <Input node={passwordInput} name="password" />
-      <Button
-        node={button}
-        onClick={handleSubmit}
-        text="Log in"
-        name="loginButton"
-      />
-    </form>
-  );
+  return <UserForm mutation={mutation} buttonText="Log in" />;
 }

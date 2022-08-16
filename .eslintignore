@@ -1,3 +1,5 @@
 dist
 lib/nile/src/generated
 node_modules
+!.storybook
+storybook-static

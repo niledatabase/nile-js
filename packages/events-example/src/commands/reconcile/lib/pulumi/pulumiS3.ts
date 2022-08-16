@@ -1,7 +1,8 @@
 import * as aws from '@pulumi/aws';
 import { PolicyDocument } from '@pulumi/aws/iam';
+import { Instance } from '@theniledev/js';
 
-export const pulumiProgram = (something: any) => {
+export const pulumiS3 = (instance?: Instance) => {
   return async () => {
     // Create a bucket and expose a website index document.
     const siteBucket = new aws.s3.Bucket('s3-website-bucket', {
@@ -10,12 +11,17 @@ export const pulumiProgram = (something: any) => {
       },
     });
 
+    const instanceProps = instance?.properties as { [key: string]: unknown };
+    const greeting = instanceProps?.greeting || 'Hello, world!';
     const indexContent = `<html><head>
 <title>Hello S3</title><meta charset="UTF-8">
 </head>
-<body><p>Hello, world!</p><p>Made with ❤️ with <a href="https://pulumi.com">Pulumi</a></p>
-<p>deployed with nile</p>
-<p>${JSON.stringify(something)}</p>
+<body>
+<h1>${greeting}</h1>
+<p>Made with ❤️ with <a href="https://pulumi.com">Pulumi</a></p>
+<p>Deployed with nile</p>
+<h2>Instance Details</h2>
+<p>${JSON.stringify(instance, null, 2)}</p>
 </body></html>
 `;
 

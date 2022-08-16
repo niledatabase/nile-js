@@ -14,9 +14,12 @@
     "build:react": "yarn workspace @theniledev/react build",
     "build:events-example": "yarn workspace @theniledev/events-example build",
     "build:examples": "yarn workspace @theniledev/examples build",
+    "build:react-storybook": "yarn workspace @theniledev/react build-storybook",
     "lint": "yarn eslint . --max-warnings=0",
     "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
-    "publish": "yarn lerna publish"
+    "publish": "yarn lerna publish",
+    "postinstall": "husky install",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "17.0.3",
@@ -24,7 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.15.0",
     "eslint": "^8.20.0",
-    "eslint-config-next": "12.2.3",
+    "eslint-config-next": "12.2.5",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -38,7 +41,7 @@
     "typescript": "^4.7.2"
   },
   "lint-staged": {
-    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix --ignore-pattern '!packages/react/.storybook'  --resolve-plugins-relative-to .",
-    "lib/nile/src/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix  --resolve-plugins-relative-to ."
+    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix .",
+    "lib/nile/src/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix  ."
   }
 }
