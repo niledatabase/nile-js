@@ -2,13 +2,16 @@
 // @ts-nocheck
 import React, { useMemo, createContext, useContext } from 'react';
 import Nile, { NileApi } from '@theniledev/js';
+import { CssVarsProvider } from '@mui/joy/styles';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+const queryClient = new QueryClient();
 import { NileContext, NileProviderProps } from './types';
 
 const defaultContext: NileContext = {
   instance: Nile({ basePath: '', workspace: 'none', credentials: 'include' }),
   workspace: '',
-  theme: '',
+  theme: {},
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -28,7 +31,23 @@ export const NileProvider = (props: NileProviderProps) => {
     };
   }, [props.basePath, props.theme, props.workspace]);
 
-  return <Provider value={values}>{children}</Provider>;
+  if (props.theme) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <CssVarsProvider theme={props.theme}>
+          <Provider value={values}>{children}</Provider>
+        </CssVarsProvider>
+      </QueryClientProvider>
+    );
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <CssVarsProvider>
+        <Provider value={values}>{children}</Provider>
+      </CssVarsProvider>
+    </QueryClientProvider>
+  );
 };
 
 const useNileContext = (): NileContext => {
