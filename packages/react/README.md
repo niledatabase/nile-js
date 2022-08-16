@@ -2,7 +2,7 @@
 
 ## Storybook
 
-[Storybook](link-to-story-book)
+[Storybook](https://react-storybook-ten.vercel.app)
 
 ## Usage
 
