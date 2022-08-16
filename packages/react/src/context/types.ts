@@ -1,9 +1,10 @@
 import { NileApi } from '@theniledev/js';
 import React from 'react';
+import { Theme } from '@mui/joy/styles';
 
 export interface NileContext {
   instance: NileApi;
-  theme?: string;
+  theme?: Theme;
 }
 
 export interface NileProviderProps {

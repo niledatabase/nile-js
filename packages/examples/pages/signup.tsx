@@ -9,7 +9,7 @@ function Signup() {
       <h1>🤩 InstaExpense 🤩</h1>
       <h2>Sign up</h2>
       <SignUpForm
-        handleSuccess={() => {
+        onSuccess={() => {
           alert('user signed up!');
         }}
       />

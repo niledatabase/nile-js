@@ -1,12 +1,13 @@
+// Button.stories.ts|tsx
+
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
-const Placeholder = () => {
-  return <div>placeholder</div>;
-};
+import SignUpForm from '../src/components/SignUpForm';
+import { NileProvider } from '../src/context';
+
 const meta: Meta = {
-  title: 'Welcome',
-  component: Placeholder,
+  component: SignUpForm,
   argTypes: {
     children: {
       control: {
@@ -21,10 +22,14 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<null> = (args) => <Placeholder {...args} />;
+const Template: Story<null> = () => (
+  <NileProvider basePath="http://localhost:8080">
+    <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
+      <SignUpForm onSuccess={() => alert('success!')} />
+    </div>
+  </NileProvider>
+);
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
 // https://storybook.js.org/docs/react/workflows/unit-testing
 export const Default = Template.bind({});
-
-Default.args = {};
