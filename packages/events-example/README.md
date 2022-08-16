@@ -20,7 +20,7 @@ $ npm install -g @theniledev/events-example
 $ nile COMMAND
 running command...
 $ nile (--version)
-@theniledev/events-example/0.13.1 linux-x64 node-v16.16.0
+@theniledev/events-example/0.14.0 linux-x64 node-v16.16.0
 $ nile --help [COMMAND]
 USAGE
   $ nile COMMAND
@@ -29,5 +29,31 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`nile reconcile`](#nile-reconcile)
 
+## `nile reconcile`
+
+reconcile nile/pulumi deploys
+
+```
+USAGE
+  $ nile reconcile [--json] [--basePath <value>] [--workspace <value>] [--email <value>] [--password <value>]
+    [--organization <value>] [--entity <value>] [-s] [--region <value>]
+
+FLAGS
+  -s, --status            check current status of your control and data planes
+  --basePath=<value>      [default: http://localhost:8080] root URL for the Nile API
+  --email=<value>         [default: developer@demo.com] developer email address
+  --entity=<value>        an entity type in your Nile workspace
+  --organization=<value>  an organization in your Nile workspace
+  --password=<value>      [default: very_secret] developer password
+  --region=<value>        [default: us-west-2] AWS region
+  --workspace=<value>     [default: dev] your Nile workspace name
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  reconcile nile/pulumi deploys
+```
 <!-- commandsstop -->
