@@ -10,7 +10,7 @@ export const TableWrapper = styled('div', {
 }>`
   ${(props) => ({
     marginTop: props.theme.spacing(2),
-    height: Math.min(props.itemCount * 52 + 10, 600),
+    height: Math.min(props.itemCount * 52 + 24, 600),
     width: '100%',
   })}
 `;
