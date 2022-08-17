@@ -34,7 +34,7 @@ export const NileProvider = (props: NileProviderProps) => {
   if (props.theme) {
     return (
       <QueryClientProvider client={queryClient}>
-        <CssVarsProvider theme={theme(props.theme)}>
+        <CssVarsProvider theme={props.theme}>
           <Provider value={values}>{children}</Provider>
         </CssVarsProvider>
       </QueryClientProvider>
@@ -43,7 +43,7 @@ export const NileProvider = (props: NileProviderProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CssVarsProvider theme={theme()}>
+      <CssVarsProvider theme={theme}>
         <Provider value={values}>{children}</Provider>
       </CssVarsProvider>
     </QueryClientProvider>

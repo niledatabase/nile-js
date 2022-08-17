@@ -101,7 +101,7 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
           <Stack
             spacing={1}
             direction="row"
-            sx={{ justifyContent: 'flex-end' }}
+            sx={{ justifyContent: 'flex-end', alignItems: 'center' }}
           >
             {actionButtons?.map((button, idx) => {
               return <React.Fragment key={idx}>{button}</React.Fragment>;
