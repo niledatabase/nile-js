@@ -2,7 +2,6 @@
  * this should go away in the future when joy reaches parity with material
  */
 import { deepmerge } from '@mui/utils';
-import { Theme } from '@mui/joy/styles';
 import type {} from '@mui/material/themeCssVarsAugmentation';
 import {
   experimental_extendTheme as extendMuiTheme,
@@ -156,14 +155,14 @@ export const muiTheme = extendMuiTheme({
 });
 
 // remove things that break
-const joyTheme = extendJoyTheme({
+// if the theme is being overridden, these need added to the custom theme
+const fixer = extendJoyTheme({
   colorSchemes: {
-    dark: { palette: { divider: colors.grey[200] } },
-    light: { palette: { divider: colors.grey[800] } },
+    dark: { palette: { divider: colors.grey[200], Skeleton: {} } },
+    light: { palette: { divider: colors.grey[800], Skeleton: {} } },
   },
 });
-const merged = deepmerge(muiTheme, joyTheme);
 
-export default function theme(overrides: Theme) {
-  return deepmerge(merged, overrides);
-}
+const theme = deepmerge(muiTheme, fixer);
+
+export default theme;
