@@ -21,7 +21,23 @@ function App() {
 }
 ```
 
-Once added, there is a hook and components available for use.
+Once added, there is a hook and components available for use. It is recommended to place the `<NileProvider />` as high up in your render tree as possible, since it contains both stying and request wrappers.
+
+### Included libraries
+
+Out of the box, [react-query](https://react-query.tanstack.com/) and [mui joy](https://mui.com/joy-ui/getting-started/overview/) is available for use. No set up is required, simply add the dependencies to your code, then use components and functions provided by those libraries.
+
+They can be customize as follows:
+
+```typescript
+function App() {
+  return (
+    <NileProvider basePath={API_URL} queryClient={myQueryClient} theme={theme}>
+      <div>Welcome to my great app</div>
+    </NileProvider>
+  );
+}
+```
 
 ### useNile
 
