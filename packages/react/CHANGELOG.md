@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/TheNileDev/nile-js/compare/v0.14.2...v0.15.0) (2022-08-17)
+
+
+### Bug Fixes
+
+* **react:** add more padding height to instance table ([d73a16d](https://github.com/TheNileDev/nile-js/commit/d73a16daf53ba44bb25f7c9ac7df43ad65f11ffd))
+
+
+### Features
+
+* **react:** allow a custom react-query queryclient ([3e3da5a](https://github.com/TheNileDev/nile-js/commit/3e3da5ab50ef3cd6917c7aa26ccc50d39bb96a05))
+
+
+
+
+
 ## [0.14.2](https://github.com/TheNileDev/nile-js/compare/v0.14.1...v0.14.2) (2022-08-17)
 
 
