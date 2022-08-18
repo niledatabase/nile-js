@@ -1,3 +1,2 @@
-
-export { PulumiAwsDeployment } from './deployments/PulumiAwsDeployment';
-export { PulumiInstanceGen } from './model/PulumiInstanceGen';
+export * from './deployments/PulumiAwsDeployment';
+export * from './model/PulumiInstanceGen';
