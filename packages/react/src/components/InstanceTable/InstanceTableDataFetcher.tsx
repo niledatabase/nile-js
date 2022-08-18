@@ -1,8 +1,7 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
-import Queries from '../../lib/queries';
+import Queries, { useQuery } from '../../lib/queries';
 
 import InstanceTable from './InstanceTable';
 import { InstanceTableProps } from './types';
@@ -34,9 +33,7 @@ export default function InstanceTableDataFetcher(
 
   const { data: entityData, isFetching: isEntityFetching } = useQueryHook(
     Queries.GetEntity(entity),
-    () => {
-      return nile.entities.getEntity({ type: String(entity) });
-    }
+    () => nile.entities.getEntity({ type: String(entity) })
   );
 
   const { data: instances, isFetching: isInstancesFetching } = useQueryHook(
@@ -47,7 +44,6 @@ export default function InstanceTableDataFetcher(
         org: String(org),
       })
   );
-
   return (
     <InstanceTable
       instances={instances}
