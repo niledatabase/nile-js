@@ -1,10 +1,9 @@
 import { Command } from '@oclif/core';
 import Nile, { Instance, NileApi } from '@theniledev/js';
 
-import { ReconciliationPlan } from '../../model/ReconciliationPlan';
-
-import { pulumiS3, PulumiAwsDeployment } from './lib/pulumi';
-import { flagDefaults } from './flagDefaults';
+import { pulumiS3, PulumiAwsDeployment } from '../../pulumi';
+import { flagDefaults } from '../../config/flagDefaults';
+import ReconciliationPlan from '../../model/ReconciliationPlan';
 
 // configuration for interacting with nile
 type NileConfig = {

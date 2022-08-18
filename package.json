@@ -4,8 +4,8 @@
   "version": "0.0.2",
   "private": true,
   "workspaces": [
-    "lib/nile",
-    "packages/*"
+    "lib/*",
+    "packages/react"
   ],
   "scripts": {
     "build": "yarn build:lib && yarn build:react && yarn build:examples && yarn build:events-example",
