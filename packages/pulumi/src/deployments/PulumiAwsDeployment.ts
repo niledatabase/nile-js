@@ -7,7 +7,7 @@ import {
   UpdateSummary,
 } from '@pulumi/pulumi/automation';
 import { Instance } from '@theniledev/js';
-import { Deployment, NileCommandFlags } from '@theniledev/agent';
+import { Deployment } from '@theniledev/agent';
 import { CliUx } from '@oclif/core';
 
 import { PulumiInstanceGen } from '../model/PulumiInstanceGen';
@@ -41,7 +41,6 @@ export class PulumiAwsDeployment implements Deployment {
   }
 
   async identifyRemoteObjects(): Promise<string[]> {
-    const f = NileCommandFlags;
     return await (
       await this.localWorkspace.listStacks()
     ).reduce(async (accP, stack) => {

@@ -1,6 +1,6 @@
 import { Instance } from '@theniledev/js';
 
-import ReconciliationPlan from '../../src/model/ReconciliationPlan';
+import { ReconciliationPlan } from '../../src';
 
 describe('ReconciliationPlan', () => {
   function someInstances(ids: string[]): Instance[] {
