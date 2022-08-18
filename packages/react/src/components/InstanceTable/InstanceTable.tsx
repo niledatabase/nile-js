@@ -80,6 +80,19 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
       }
       return baseArr;
     }
+    if (columns) {
+      return columns.map((header: string | GridColDef): GridColDef => {
+        if (typeof header === 'object') {
+          return header;
+        }
+        return {
+          minWidth: 200,
+          field: header,
+          headerName: header,
+          flex: 1,
+        };
+      });
+    }
     return [];
   }, [additionalColumns, columns, entityData, processColumns]);
 
@@ -92,6 +105,7 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
     }
     return `No ${entity} found`;
   }
+
   return (
     <TableSkeleton isFetching={isFetching} numberOfRows={flatInstances.length}>
       {flatInstances.length === 0 ? (
