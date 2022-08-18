@@ -3,7 +3,7 @@ import { Flags } from '@oclif/core';
 export const flagDefaults = {
   basePath: Flags.string({
     description: 'root URL for the Nile API',
-    default: 'http://localhost:8080',
+    default: 'https://prod.thenile.dev:443',
   }),
   workspace: Flags.string({
     description: 'your Nile workspace name',
@@ -17,6 +17,9 @@ export const flagDefaults = {
     description: 'developer password',
     default: 'very_secret',
   }),
+  devtoken: Flags.string({
+    description: 'Developer access token. If used, this overrides the email/password flags.',
+  }),
   organization: Flags.string({
     description: 'an organization in your Nile workspace',
   }),
@@ -25,7 +28,7 @@ export const flagDefaults = {
   }),
   status: Flags.boolean({
     char: 's',
-    description: 'check current status of your control and data planes',
+    description: 'Only check current status of your control and data planes',
     default: false,
   }),
   region: Flags.string({ description: 'AWS region', default: 'us-west-2' }),

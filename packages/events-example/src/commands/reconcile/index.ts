@@ -14,6 +14,7 @@ type NileConfig = {
 type DeveloperCreds = {
   email: string; // developer email
   password: string; // developer password
+  devtoken: string; // developer access token
 };
 
 export default class Reconcile extends Command {
@@ -35,10 +36,11 @@ export default class Reconcile extends Command {
       workspace,
       email,
       password,
+      devtoken,
     } = flags;
 
     // nile setup
-    await this.connectNile({ basePath, workspace, email, password });
+    await this.connectNile({ basePath, workspace, email, password, devtoken });
     const instances = await this.loadNileInstances(organization, entity);
 
     // pulumi setup
@@ -81,23 +83,29 @@ export default class Reconcile extends Command {
     workspace,
     email,
     password,
+    devtoken
   }: NileConfig & DeveloperCreds) {
     this.nile = Nile({
       basePath,
       workspace,
     });
-    const token = await this.nile.developers
-      .loginDeveloper({
-        loginInfo: {
-          email,
-          password,
-        },
-      })
-      .catch((error: unknown) => {
-        // eslint-disable-next-line no-console
-        console.error('Nile authentication failed', error);
-      });
-    this.nile.authToken = token?.token;
+    if (devtoken) {
+      console.log("using access token instead of email/password auth")
+      this.nile.authToken = devtoken
+    } else {
+      const token = await this.nile.developers
+        .loginDeveloper({
+          loginInfo: {
+            email,
+            password,
+          },
+        })
+        .catch((error: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error('Nile authentication failed', error);
+        });
+      this.nile.authToken = token?.token;
+    }
   }
 
   /**
