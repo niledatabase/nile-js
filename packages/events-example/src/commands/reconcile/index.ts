@@ -1,10 +1,9 @@
 import { Command } from '@oclif/core';
 import Nile, { Instance, NileApi } from '@theniledev/js';
 
-import { ReconciliationPlan } from '../../model/ReconciliationPlan';
-
-import { pulumiS3, PulumiAwsDeployment } from './lib/pulumi';
-import { flagDefaults } from './flagDefaults';
+import { pulumiS3, PulumiAwsDeployment } from '../../pulumi';
+import { flagDefaults } from '../../config/flagDefaults';
+import ReconciliationPlan from '../../model/ReconciliationPlan';
 
 // configuration for interacting with nile
 type NileConfig = {
@@ -41,7 +40,10 @@ export default class Reconcile extends Command {
 
     // nile setup
     await this.connectNile({ basePath, workspace, email, password, devtoken });
-    const instances = await this.loadNileInstances(organization, entity);
+    const instances = await this.loadNileInstances(
+      String(organization),
+      String(entity)
+    );
 
     // pulumi setup
     this.deployment = await PulumiAwsDeployment.create(
@@ -69,7 +71,7 @@ export default class Reconcile extends Command {
 
     // listen to updates from nile and handle stacks accordingly
     await this.listenForNileEvents(
-      flags.entity,
+      String(flags.entity),
       this.findLastSeq(Object.values(instances))
     );
   }

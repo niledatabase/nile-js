@@ -34,7 +34,7 @@ export default function LoginForm(props: {
         placeholder="Email"
         error={Boolean(errors.Email)}
         helperText={errors.Email && 'This field is required'}
-        {...register('Email', { required: true })}
+        {...register('email', { required: true })}
       />
 
       <TextField
@@ -43,7 +43,7 @@ export default function LoginForm(props: {
         type="password"
         error={Boolean(errors.Password)}
         helperText={errors.Password && 'This field is required'}
-        {...register('Password', { required: true })}
+        {...register('password', { required: true })}
       />
 
       <Button type="submit">{buttonText}</Button>

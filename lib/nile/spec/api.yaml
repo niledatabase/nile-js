@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: "0.1"
+  version: 0.1-88505fc
 servers:
 - url: localhost:8080
 paths:
@@ -204,6 +204,128 @@ paths:
               console.log("API called successfully. Returned data: " + data);
             })
             .catch((error: any) => console.error(error));
+  /workspaces/{workspace}/orgs/{org}/authz/rules:
+    get:
+      tags:
+      - authz
+      summary: List all rules
+      operationId: listRules
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of all rules in this organization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+    post:
+      tags:
+      - authz
+      summary: Create a new rule
+      operationId: createRule
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRuleRequest'
+        required: true
+      responses:
+        "201":
+          description: The newly created rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+  /workspaces/{workspace}/orgs/{org}/authz/rules/{ruleId}:
+    get:
+      tags:
+      - authz
+      summary: Get a rule
+      operationId: getRule
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The rule with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+    put:
+      tags:
+      - authz
+      summary: Update a rule
+      operationId: updateRule
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rule'
+        required: true
+      responses:
+        "200":
+          description: Updated version of the rule with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+    delete:
+      tags:
+      - authz
+      summary: Delete a rule
+      operationId: deleteRule
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Successful instance deletion
   /developers:
     post:
       tags:
@@ -408,7 +530,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Json'
+              $ref: '#/components/schemas/JsonSchemaInstance'
         required: true
       responses:
         "201":
@@ -507,6 +629,28 @@ paths:
       responses:
         "204":
           description: Successful instance deletion
+  /workspaces/{workspace}/instances/{type}:
+    get:
+      tags:
+      - entities
+      summary: ' List all instances'
+      operationId: listInstancesInWorkspace
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of all instances of the specified type under this workspace
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Instance'
   /workspaces/{workspace}/orgs/{org}/invites/{code}/accept:
     post:
       tags:
@@ -550,6 +694,59 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Invite'
+  /metrics/filter:
+    post:
+      tags:
+      - metrics
+      summary: List of metrics matching the filter
+      operationId: filterMetrics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filter'
+        required: true
+      responses:
+        "200":
+          description: A list of metrics that match the filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Metric'
+  /metrics:
+    post:
+      tags:
+      - metrics
+      summary: Produce a Metric
+      operationId: produceMetric
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Metric'
+        required: true
+      responses:
+        "204":
+          description: The metric has been saved
+  /metrics/batch:
+    post:
+      tags:
+      - metrics
+      summary: Produce a Batch of Metrics
+      operationId: produceBatchOfMetrics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Metric'
+        required: true
+      responses:
+        "204":
+          description: the metrics have been saved
   /workspaces/{workspace}/orgs/{org}/users:
     get:
       tags:
@@ -818,7 +1015,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: '#/components/schemas/Workspace'
     post:
       tags:
       - workspaces
@@ -828,7 +1025,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/CreateOrganizationRequest'
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
         required: true
       responses:
         "201":
@@ -836,15 +1033,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: '#/components/schemas/Workspace'
 components:
   schemas:
-    Json:
-      type: object
-      example:
-        id: lkc-123
-        memory: 4096
-        cpus: 4
     Token:
       required:
       - token
@@ -873,12 +1064,15 @@ components:
           - workspace_not_found
           - invite_not_found
           - duplicate_org_name
+          - duplicate_workspace_name
           - empty_org_name
+          - empty_workspace_name
           - duplicate_user_email
           - user_already_in_org
           - duplicate_entity_name
           - entity_not_found
           - instance_not_found
+          - rule_not_found
           - invalid_entity_schema
           - invalid_id
         message:
@@ -920,6 +1114,8 @@ components:
         joined:
           type: string
           format: date-time
+      example:
+        joined: 2022-08-03T17:30:00.295581
     User:
       required:
       - email
@@ -951,10 +1147,121 @@ components:
         email:
           type: string
           format: email
-        orgMemberships:
+        org_memberships:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/OrgMembership'
+          example:
+            org_02qaCO8qNEmfpAcomojhLb:
+              joined: 2022-08-09T10:27:30.956079
+            org_02qdS9KPAnG6Pt5XFAomu6:
+              joined: 2022-08-03T17:30:00.295581
+    AuthzRuleResource:
+      required:
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+    AuthzRuleSubject:
+      required:
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+          enum:
+          - user
+          - developer
+          - nile_employee
+        customProperties:
+          type: object
+          additionalProperties:
+            type: object
+        email:
+          type: string
+    Rule:
+      required:
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          enum:
+          - rule
+        deleted:
+          type: string
+          format: date-time
+          readOnly: true
+        subject:
+          $ref: '#/components/schemas/AuthzRuleSubject'
+        resource:
+          $ref: '#/components/schemas/AuthzRuleResource'
+        actions:
+          type: array
+          items:
+            type: string
+    CreateRuleRequest:
+      type: object
+      properties:
+        subject:
+          $ref: '#/components/schemas/AuthzRuleSubject'
+        resource:
+          $ref: '#/components/schemas/AuthzRuleResource'
+        actions:
+          type: array
+          items:
+            type: string
     CreateUserRequest:
       required:
       - email
@@ -1001,6 +1308,7 @@ components:
           $ref: '#/components/schemas/JsonSchema'
     JsonSchema:
       type: object
+      description: A JSON Schema
       example:
         type: object
         properties:
@@ -1059,7 +1367,7 @@ components:
           format: date-time
           readOnly: true
         properties:
-          $ref: '#/components/schemas/Json'
+          $ref: '#/components/schemas/JsonSchemaInstance'
     InstanceEvent:
       required:
       - timestamp
@@ -1081,13 +1389,20 @@ components:
         timestamp:
           type: string
           format: date-time
+    JsonSchemaInstance:
+      type: object
+      description: An *instance* of a JSON Schema
+      example:
+        id: lkc-123
+        memory: 4096
+        cpus: 4
     PatchInstanceRequest:
       required:
       - properties
       type: object
       properties:
         properties:
-          $ref: '#/components/schemas/Json'
+          $ref: '#/components/schemas/JsonSchemaInstance'
     Invite:
       required:
       - code
@@ -1106,6 +1421,54 @@ components:
           type: string
           enum:
           - active
+    Metric:
+      required:
+      - end_time_nano
+      - instance_id
+      - name
+      - start_time_nano
+      - type
+      - value
+      - workspace_name
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - gauge
+          - sum
+        start_time_nano:
+          type: integer
+          format: int64
+        end_time_nano:
+          type: integer
+          format: int64
+        value:
+          type: number
+        instance_id:
+          type: string
+        workspace_name:
+          type: string
+        attributes:
+          type: object
+          additionalProperties:
+            type: object
+    Filter:
+      type: object
+      properties:
+        metric_name:
+          type: string
+        type:
+          type: string
+          enum:
+          - gauge
+          - sum
+        instance_id:
+          type: string
+        workspace_name:
+          type: string
     AddUserToOrgRequest:
       required:
       - email
@@ -1171,6 +1534,41 @@ components:
           format: email
         password:
           minLength: 1
+          type: string
+    Workspace:
+      required:
+      - id
+      - name
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          enum:
+          - workspace
+        name:
+          type: string
+    CreateWorkspaceRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
           type: string
   parameters:
     workspace:

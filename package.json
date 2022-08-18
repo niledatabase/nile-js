@@ -4,7 +4,7 @@
   "version": "0.0.2",
   "private": true,
   "workspaces": [
-    "lib/nile",
+    "lib/*",
     "packages/*"
   ],
   "scripts": {
@@ -17,7 +17,9 @@
     "build:react-storybook": "yarn workspace @theniledev/react build-storybook",
     "lint": "yarn eslint . --max-warnings=0",
     "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
-    "publish": "yarn lerna publish"
+    "publish": "yarn lerna publish",
+    "postinstall": "husky install",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "17.0.3",
