@@ -1,7 +1,7 @@
 import { Instance } from '@theniledev/js';
 import { StackSummary } from '@pulumi/pulumi/automation';
 
-export class ReconciliationPlan {
+export default class ReconciliationPlan {
   readonly creationSpecs!: Instance[];
   readonly destructionIds!: string[];
 
