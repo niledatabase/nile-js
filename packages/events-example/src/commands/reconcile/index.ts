@@ -26,7 +26,6 @@ export default class Reconcile extends Command {
     const { dryRun, basePath, workspace, org, entity, email, password } = flags;
 
     // nile setup
-    // nile setup
     const nile = await NileAgent.connect(
       {
         basePath,
