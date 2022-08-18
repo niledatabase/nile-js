@@ -1,0 +1,75 @@
+{
+  "name": "@theniledev/pulumi",
+  "version": "0.1.0",
+  "description": "Tooling and support for integrating Nile with Pulumi",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "packageManager": "yarn@3.2.0",
+  "author": "nile",
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "dist",
+    "src",
+    "test"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "@oclif/core": "^1.14.2",
+    "@pulumi/aws": "^5.10.0",
+    "@pulumi/awsx": "^0.40.0",
+    "@pulumi/pulumi": "^3.36.0",
+    "@theniledev/agent": "^0.1.0",
+    "@theniledev/js": "^0.13.1",
+    "@types/node-fetch": "^2.6.2",
+    "node-fetch": "^3.2.10"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.6.3",
+    "chai": "^4",
+    "eslint": "^8.21.0",
+    "eslint-config-oclif": "^4",
+    "eslint-config-oclif-typescript": "^1.0.2",
+    "globby": "^11",
+    "jest": "^28.1.3",
+    "node-ts": "^5.1.2",
+    "shx": "^0.3.3",
+    "ts-jest": "^28.0.8",
+    "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "lint": "eslint . --ext .ts --config .eslintrc",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "yarn lint",
+    "prepack": "yarn build && oclif manifest && oclif readme",
+    "test": "jest --forceExit --coverage --verbose --detectOpenHandles",
+    "watch-test": "yarn run test -- --watchAll",
+    "version": "oclif readme && git add README.md"
+  },
+  "types": "dist/index.d.ts",
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "tsx",
+      "jsx"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/test/**/*.(ts|js|tsx|jsx)",
+      "**/?(*.)(spec|test).ts?(x)"
+    ],
+    "testEnvironment": "node"
+  }
+}
