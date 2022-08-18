@@ -1,6 +1,7 @@
 {
   "packages": [
     "packages/react",
+    "packages/pulumi",
     "lib/*"
   ],
   "version": "0.16.1",
