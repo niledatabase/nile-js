@@ -5,29 +5,39 @@ import {
 } from '@theniledev/js/dist/generated/openapi/src';
 import Nile, { NileApi } from '@theniledev/js';
 
-import { ReconciliationPlan } from './model';
+import { DeveloperCreds, ReconciliationPlan } from './model';
 import { Deployment } from './deployments';
 
 export const NileAgent = {
   /**
    * Creates a NileApi instance and connects using the developer credentials
    * provided
-   * @param config
-   * @param loginInfo
+   * @param config - the NileApi configuration parameters
+   * @param creds - developer credentials; either a username and password or
+   *   an auth token are required.
    * @returns NileApi
    */
   async connect(
     config: ConfigurationParameters,
-    loginInfo: LoginInfo
+    creds: DeveloperCreds
   ): Promise<NileApi> {
     const nile = Nile(config);
-    const token = await nile.developers
-      .loginDeveloper({ loginInfo })
-      .catch((error: unknown) => {
-        // eslint-disable-next-line no-console
-        console.error('Nile authentication failed', error);
-      });
-    nile.authToken = token?.token;
+    if (creds.authToken) {
+      nile.authToken = creds.authToken;
+    } else {
+      const token = await nile.developers
+        .loginDeveloper({
+          loginInfo: {
+            email: creds.email || '',
+            password: creds.password || '',
+          },
+        })
+        .catch((error: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error('Nile authentication failed', error);
+        });
+      nile.authToken = token?.token;
+    }
     return nile;
   },
 
