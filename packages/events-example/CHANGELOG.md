@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/TheNileDev/nile-js/compare/v0.15.0...v0.16.0) (2022-08-18)
+
+**Note:** Version bump only for package @theniledev/events-example
+
+
+
+
+
 # [0.15.0](https://github.com/TheNileDev/nile-js/compare/v0.14.2...v0.15.0) (2022-08-17)
 
 **Note:** Version bump only for package @theniledev/events-example

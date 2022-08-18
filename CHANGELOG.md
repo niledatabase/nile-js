@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/TheNileDev/nile-js/compare/v0.15.0...v0.16.0) (2022-08-18)
+
+
+### Bug Fixes
+
+* **react:** use correct names for user form ([d70a9ef](https://github.com/TheNileDev/nile-js/commit/d70a9ef2edd36bbb6c0bb46e0a5cb277f063d610))
+
+
+### Features
+
+* **react:** export useQuery and useMutation ([0f229e4](https://github.com/TheNileDev/nile-js/commit/0f229e4901e25d63c013ad42531bc98b71cad881))
+
+
+
+
+
 # [0.15.0](https://github.com/TheNileDev/nile-js/compare/v0.14.2...v0.15.0) (2022-08-17)
 
 
