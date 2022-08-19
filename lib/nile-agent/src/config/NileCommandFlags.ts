@@ -6,6 +6,7 @@ export const NileCommandFlags = {
     description: 'root URL for the Nile API',
     required: true,
     env: 'NILE_BASE_PATH',
+    default: 'https://prod.thenile.dev:443',
   }),
   workspace: Flags.string({
     char: 'w',
@@ -27,13 +28,16 @@ export const NileCommandFlags = {
   }),
   email: Flags.string({
     description: 'your Nile developer email address',
-    required: true,
     env: 'NILE_EMAIL',
   }),
   password: Flags.string({
     description: 'your Nile developer password',
-    required: true,
     env: 'NILE_PASSWORD',
+  }),
+  authToken: Flags.string({
+    description:
+      'Developer access token. If used, this overrides the email/password flags.',
+    env: 'NILE_AUTH_TOKEN',
   }),
   dryRun: Flags.boolean({
     description: 'check current status of your control and data planes',

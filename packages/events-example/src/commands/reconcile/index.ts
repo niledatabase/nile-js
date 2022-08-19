@@ -1,5 +1,5 @@
 import { Command, Flags } from '@oclif/core';
-import { Instance } from '@theniledev/js';
+import { Instance, LoginInfo } from '@theniledev/js';
 import NileAgent, {
   NileCommandFlags,
   ReconciliationPlan,
@@ -23,7 +23,16 @@ export default class Reconcile extends Command {
 
   async run(): Promise<unknown> {
     const { flags } = await this.parse(Reconcile);
-    const { dryRun, basePath, workspace, org, entity, email, password } = flags;
+    const {
+      dryRun,
+      basePath,
+      workspace,
+      org,
+      entity,
+      email,
+      password,
+      authToken,
+    } = flags;
 
     // nile setup
     const nile = await NileAgent.connect(
@@ -32,6 +41,7 @@ export default class Reconcile extends Command {
         workspace,
       },
       {
+        authToken,
         email,
         password,
       }
@@ -75,7 +85,7 @@ export default class Reconcile extends Command {
   }
 
   /**
-   *
+   * Find sequence number of the last Instance in the collection.
    * @param instances Array<Instance> info about Pulumi stacks
    * @returns the max value of `seq`, which is the most recent Instance
    */
