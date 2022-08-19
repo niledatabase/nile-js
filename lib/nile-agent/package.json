@@ -11,7 +11,8 @@
   "files": [
     "dist",
     "src",
-    "test"
+    "test",
+    "tsconfig.json"
   ],
   "engines": {
     "node": ">=14.0.0"
@@ -44,11 +45,12 @@
     "shx": "^0.3.3",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.2.1",
-    "tslib": "^2.3.1",
+    "tslib": "^2.4.0",
     "typescript": "^4.4.3"
   },
   "scripts": {
-    "build": "shx rm -rf dist && tsc -b",
+    "build": "shx rm -rf dist && tsc -b && yarn build:types",
+    "build:types": "tsc -d --declarationDir dist --emitDeclarationOnly",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",

@@ -8,10 +8,13 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn build:lib && yarn build:react && yarn build:examples && yarn build:events-example",
-    "build:lib": "yarn workspace @theniledev/js build",
-    "test:lib": "yarn workspace @theniledev/js test",
+    "build": "yarn build:js-lib && yarn build:agent-lib && yarn build:react && yarn build:pulumi && yarn build:examples && yarn build:events-example",
+    "build:js-lib": "yarn workspace @theniledev/js build",
+    "build:agent-lib": "yarn workspace @theniledev/agent build",
+    "test:js-lib": "yarn workspace @theniledev/js test",
+    "test:agent-lib": "yarn workspace @theniledev/agent test",
     "build:react": "yarn workspace @theniledev/react build",
+    "build:pulumi": "yarn workspace @theniledev/pulumi build",
     "build:events-example": "yarn workspace @theniledev/events-example build",
     "build:examples": "yarn workspace @theniledev/examples build",
     "build:react-storybook": "yarn workspace @theniledev/react build-storybook",
