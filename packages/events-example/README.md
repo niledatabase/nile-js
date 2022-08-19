@@ -13,7 +13,7 @@ This example assumes you have:
 * [A Pulumi account](https://app.pulumi.com/signup) that's 
   [connected to your AWS account](https://www.pulumi.com/docs/get-started/aws/begin/)
 * [The Pulumi CLI installed]()
-* A Nile developer account (see [Appendix](#appendix) for help)
+* A Nile developer account
 
 ## Configure Your Control Plane ##
 
@@ -47,8 +47,8 @@ This example assumes you have:
 
 ## Configure Your Data Plane ##
 
-| These instructions summarize how to [get started with Pulumi](https://www.pulumi.com/docs/get-started/aws/begin/)
-| on AWS. See their docs for a more complete setup.
+> These instructions summarize how to [get started with Pulumi](https://www.pulumi.com/docs/get-started/aws/begin/)
+> on AWS. See their docs for a more complete setup.
 
 Install the Pulumi CLI and set up a new Pulumi project:
 
@@ -87,12 +87,12 @@ To run the binary, you'll need to pass arguments for your Nile workspace,
 organization, and entity type, plus your developer login. The workspace
 and entity type are identified by name, but the organization requires an id.
 
-| The organization id is not visible in the NAD yet, but can be obtained from
-| the URL when you select an org. In this case:
-|
-| `https://nad.thenile.dev/cyberdyne/organization/org_02qfJTCBve6bw0XlxC92CG`
-|
-| the organization id is `org_02qfJTCBve6bw0XlxC92CG`.
+> The organization id is not visible in the NAD yet, but can be obtained from
+> the URL when you select an org. In this case:
+>
+> `https://nad.thenile.dev/cyberdyne/organization/org_02qfJTCBve6bw0XlxC92CG`
+>
+> the organization id is `org_02qfJTCBve6bw0XlxC92CG`.
 
 Execute the binary with:
 
@@ -100,7 +100,7 @@ Execute the binary with:
 ./bin/dev reconcile --basePath https://prod.thenile.dev \
 --workspace cyberdyne \
 --entity SkyNet \
---organization YOUR_ORG_ID \
+--org YOUR_ORG_ID \
 --email YOUR_EMAIL \
 --password YOUR_PASSWORD
 ```

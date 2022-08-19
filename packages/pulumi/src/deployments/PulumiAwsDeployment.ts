@@ -1,29 +1,25 @@
-import { CliUx } from '@oclif/core';
 import {
   ConfigMap,
-  DestroyResult,
   InlineProgramArgs,
   LocalWorkspace,
   PulumiFn,
   Stack,
-  StackSummary,
   UpdateSummary,
-  UpResult,
 } from '@pulumi/pulumi/automation';
 import { Instance } from '@theniledev/js';
+import { Deployment } from '@theniledev/agent';
+import { CliUx } from '@oclif/core';
 
-export interface PulumiFnGen {
-  (instance?: Instance): PulumiFn;
-}
+import { PulumiInstanceGen } from '../model/PulumiInstanceGen';
 
-export default class PulumiAwsDeployment {
+export class PulumiAwsDeployment implements Deployment {
   projectName!: string;
   private localWorkspace!: LocalWorkspace;
-  private pulumiProgram: PulumiFnGen;
+  private pulumiProgram: PulumiInstanceGen;
 
   static async create(
     projectName: string,
-    pulumiProgram: PulumiFnGen
+    pulumiProgram: PulumiInstanceGen
   ): Promise<PulumiAwsDeployment> {
     const ws = await LocalWorkspace.create({
       projectSettings: { name: projectName, runtime: 'nodejs' },
@@ -32,32 +28,33 @@ export default class PulumiAwsDeployment {
     return new PulumiAwsDeployment(projectName, ws, pulumiProgram);
   }
 
+  private static upSuccessStatuses = ['in-progress', 'succeeded'];
+
   constructor(
     projectName: string,
     localWorkspace: LocalWorkspace,
-    pulumiProgram: PulumiFnGen
+    pulumiProgram: PulumiInstanceGen
   ) {
     this.projectName = projectName;
     this.localWorkspace = localWorkspace;
     this.pulumiProgram = pulumiProgram;
   }
 
-  async loadPulumiStacks(): Promise<{ [key: string]: StackSummary }> {
-    const stacks = await (
+  async identifyRemoteObjects(): Promise<string[]> {
+    return await (
       await this.localWorkspace.listStacks()
     ).reduce(async (accP, stack) => {
       const acc = await accP;
       const fullStack = await this.getStack(stack.name, this.pulumiProgram());
       const info = await fullStack.info();
       if (info?.kind != 'destroy') {
-        acc[stack.name] = stack;
+        acc.push(stack.name);
       }
       return acc;
-    }, Promise.resolve({} as { [key: string]: StackSummary }));
-    return stacks;
+    }, Promise.resolve([] as string[]));
   }
 
-  async getStack(stackName: string, program: PulumiFn): Promise<Stack> {
+  private async getStack(stackName: string, program: PulumiFn): Promise<Stack> {
     const args: InlineProgramArgs = {
       stackName,
       projectName: this.projectName,
@@ -67,7 +64,7 @@ export default class PulumiAwsDeployment {
     return stack;
   }
 
-  async createStack(instance: Instance): Promise<UpResult> {
+  async createObject(instance: Instance): Promise<boolean> {
     const stack = await this.getStack(
       instance.id,
       this.pulumiProgram(instance)
@@ -78,7 +75,10 @@ export default class PulumiAwsDeployment {
     try {
       CliUx.ux.action.start(`Creating a stack id=${instance.id}`);
       // eslint-disable-next-line no-console
-      return await stack.up({ onOutput: console.log });
+      const upResult = await stack.up({ onOutput: console.log });
+      return PulumiAwsDeployment.upSuccessStatuses.includes(
+        upResult.summary.result
+      );
     } finally {
       CliUx.ux.action.stop();
     }
@@ -107,13 +107,16 @@ export default class PulumiAwsDeployment {
     );
   }
 
-  async destroyStack(id: string): Promise<DestroyResult> {
+  async destroyObject(id: string): Promise<boolean> {
     const stack = await this.getStack(id, this.pulumiProgram());
     await this.waitOnStack(stack);
     try {
       CliUx.ux.action.start(`Destroying a stack id=${id}`);
       // eslint-disable-next-line no-console
-      return await stack.destroy({ onOutput: console.log });
+      const destroyResult = await stack.destroy({ onOutput: console.log });
+      return PulumiAwsDeployment.upSuccessStatuses.includes(
+        destroyResult.summary.result
+      );
     } finally {
       CliUx.ux.action.stop();
     }

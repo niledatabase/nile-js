@@ -1,7 +1,8 @@
 {
   "packages": [
+    "lib/*",
     "packages/react",
-    "lib/*"
+    "packages/pulumi"
   ],
   "version": "0.16.1",
   "npmClient": "yarn",
