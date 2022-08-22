@@ -3021,7 +3021,7 @@
 
 "@mui/joy@^5.0.0-alpha.40":
   version "5.0.0-alpha.41"
-  resolved "https://registry.npmjs.org/@mui/joy/-/joy-5.0.0-alpha.41.tgz"
+  resolved "https://registry.yarnpkg.com/@mui/joy/-/joy-5.0.0-alpha.41.tgz#5dbc32b88e60114cee2145a3c554758a29aa2722"
   integrity sha512-9MDNhXNjbskTA5dyGhPqGSmfR5aGJZn0Ju3rheiC9vIVTt1PAehcul1Xt0HLhj1fLx2kzF0K/edtCQlcSxpkAA==
   dependencies:
     "@babel/runtime" "^7.17.2"
