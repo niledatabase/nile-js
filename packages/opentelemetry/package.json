@@ -1,0 +1,87 @@
+{
+  "name": "@theniledev/otel",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=16.0"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "jest --forceExit --coverage --verbose --detectOpenHandles",
+    "test-watch": "jest --watchAll --verbose --detectOpenHandles",
+    "lint": "eslint src",
+    "prepare": "tsdx build"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "author": "nile",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheNileDev/nile-js.git",
+    "directory": "packages/opentelemetry"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@opentelemetry/core": "1.0.1",
+    "@opentelemetry/resources": "1.0.1",
+    "@opentelemetry/sdk-metrics": "^0.32.0",
+    "@opentelemetry/sdk-trace-base": "1.0.1",
+    "@opentelemetry/semantic-conventions": "1.0.1",
+    "@theniledev/js": "^0.16.2"
+  },
+  "devDependencies": {
+    "@opentelemetry/api": "^1.0.0",
+    "@opentelemetry/resources": "1.5.0",
+    "@types/jest": "^28.1.6",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^28.1.3",
+    "size-limit": "^8.0.1",
+    "ts-jest": "^28.0.8",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  },
+  "peerDependencies": {
+    "@opentelemetry/api": "^1.0.3"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.test.json"
+      }
+    },
+    "preset": "ts-jest",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "tsx",
+      "jsx"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/test/**/*.(ts|js|tsx|jsx)",
+      "**/?(*.)(spec|test).ts?(x)"
+    ],
+    "testEnvironment": "node"
+  }
+}

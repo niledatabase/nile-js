@@ -4,16 +4,15 @@
 
 import {
   AuthzApi,
+  Configuration,
+  ConfigurationParameters,
   DevelopersApi,
   EntitiesApi,
+  MetricsApi,
   OrganizationsApi,
   UsersApi,
   WorkspacesApi,
 } from './generated/openapi/src';
-import {
-  Configuration,
-  ConfigurationParameters,
-} from './generated/openapi/src/runtime';
 import EventsApi from './EventsApi';
 import { AuthToken, DeveloperCredentials } from './model/DeveloperCredentials';
 
@@ -25,6 +24,7 @@ export class NileApi {
   organizations: OrganizationsApi;
   events: EventsApi;
   authz: AuthzApi;
+  metrics: MetricsApi;
 
   constructor(configuration?: Configuration) {
     this.users = new UsersApi(configuration);
@@ -34,6 +34,7 @@ export class NileApi {
     this.organizations = new OrganizationsApi(configuration);
     this.events = new EventsApi(this.entities);
     this.authz = new AuthzApi(configuration);
+    this.metrics = new MetricsApi(configuration);
   }
 
   set workspace(workspace: void | string) {
@@ -44,6 +45,7 @@ export class NileApi {
       this.workspaces.workspace = workspace;
       this.organizations.workspace = workspace;
       this.authz.workspace = workspace;
+      this.metrics.workspace = workspace;
     }
   }
 
@@ -66,6 +68,9 @@ export class NileApi {
     if (this.authz.workspace) {
       return this.authz.workspace;
     }
+    if (this.metrics.workspace) {
+      return this.metrics.workspace;
+    }
   }
 
   set authToken(token: void | string) {
@@ -76,6 +81,7 @@ export class NileApi {
       this.workspaces.authToken = token;
       this.organizations.authToken = token;
       this.authz.authToken = token;
+      this.metrics.authToken = token;
     }
   }
 
@@ -97,6 +103,9 @@ export class NileApi {
     }
     if (this.authz.authToken) {
       return this.authz.authToken;
+    }
+    if (this.metrics.authToken) {
+      return this.metrics.authToken;
     }
   }
   /**
