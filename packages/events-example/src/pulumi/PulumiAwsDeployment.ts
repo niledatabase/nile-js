@@ -7,10 +7,11 @@ import {
   UpdateSummary,
 } from '@pulumi/pulumi/automation';
 import { Instance } from '@theniledev/js';
-import { Deployment } from '@theniledev/agent';
 import { CliUx } from '@oclif/core';
 
-import { PulumiInstanceGen } from '../model/PulumiInstanceGen';
+import { Deployment } from '../utils/Deployment';
+
+import { PulumiInstanceGen } from './PulumiInstanceGen';
 
 export class PulumiAwsDeployment implements Deployment {
   projectName!: string;

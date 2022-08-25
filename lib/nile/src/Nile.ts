@@ -13,6 +13,7 @@ import {
   ConfigurationParameters,
 } from './generated/openapi/src/runtime';
 import EventsApi from './EventsApi';
+import { DeveloperCredentials } from './model/DeveloperCredentials';
 
 export class NileApi {
   users: UsersApi;
@@ -84,6 +85,39 @@ export class NileApi {
     if (this.organizations.authToken) {
       return this.organizations.authToken;
     }
+  }
+
+  /**
+   * Creates a NileApi instance and connects using the provided credentials.
+   * @param config - the NileApi configuration parameters
+   * @param credentials - developer credentials; either a username and password or
+   *   an auth token are required.
+   * @returns NileApi
+   */
+  static async connect(
+    config: ConfigurationParameters,
+    credentials: DeveloperCredentials
+  ): Promise<NileApi> {
+    const nile = ApiImpl(config);
+    if (credentials.authToken) {
+      nile.authToken = credentials.authToken;
+    } else {
+      const token = await nile.developers
+        .loginDeveloper({
+          loginInfo: {
+            email: credentials.email || '',
+            password: credentials.password || '',
+          },
+        })
+        .catch((error: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error('Nile authentication failed', error);
+        });
+      if (token) {
+        nile.authToken = token.token;
+      }
+    }
+    return nile;
   }
 }
 

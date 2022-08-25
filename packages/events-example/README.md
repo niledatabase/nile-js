@@ -1,10 +1,11 @@
 # Nile Events Example #
 
-This example demonstrates how to use a Nile agent to synchronize your data 
+This example demonstrates how to create a Nile agent to synchronize your data 
 plane and control plane in real time with Nile events.
 
 Nile doesn't prescribe any particular deployment solution, but here we'll be
 using [Pulumi](https://app.pulumi.com/) to deploy objects into AWS.
+
 ## Prerequisites ##
 
 This example assumes you have:
@@ -19,7 +20,7 @@ This example assumes you have:
 
 1. [Login to the Nile Admin Dashboard](https://nad.thenile.dev/) If you don't 
   already have one, create a workspace named "cyberdyne".
-2. Create an entity type named "SkyNet". An simple schema is sufficient for 
+2. Create an entity type named "SkyNet". A simple schema is sufficient for 
   this example:
 
 ```json
@@ -128,7 +129,7 @@ Resources:
 
 Duration: 5s
 ```
-Pull up that `websiteUrl` in browser and you'll find your provided `greeting`
+Pull up that `websiteUrl` in-browser and you'll find your provided `greeting`
 as well as all of your instance details.
 
 ## Add/Remove Instances ##
