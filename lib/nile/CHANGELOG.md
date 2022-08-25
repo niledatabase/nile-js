@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.2](https://github.com/TheNileDev/nile-js/compare/v0.16.1...v0.16.2) (2022-08-25)
+
+
+### Bug Fixes
+
+* remove nile-agent, pulumi package for self-contained events example ([09f809b](https://github.com/TheNileDev/nile-js/commit/09f809b102ff6a3c44d9a5620c7d88caa4be6841))
+
+
+
+
+
 ## [0.16.1](https://github.com/TheNileDev/nile-js/compare/v0.16.0...v0.16.1) (2022-08-18)
 
 **Note:** Version bump only for package @theniledev/js

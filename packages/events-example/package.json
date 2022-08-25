@@ -1,7 +1,7 @@
 {
   "name": "@theniledev/events-example",
   "description": "reconcile between nile and pulumi deploy",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "author": "nile",
   "private": true,
   "bin": {
@@ -14,7 +14,7 @@
     "@pulumi/aws": "^5.10.0",
     "@pulumi/awsx": "^0.40.0",
     "@pulumi/pulumi": "^3.36.0",
-    "@theniledev/js": "^0.16.1",
+    "@theniledev/js": "^0.16.2",
     "@types/node-fetch": "^2.6.2",
     "node-fetch": "^3.2.10"
   },
