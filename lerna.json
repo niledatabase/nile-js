@@ -3,7 +3,7 @@
     "lib/*",
     "packages/react"
   ],
-  "version": "0.16.2",
+  "version": "0.16.3",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {
