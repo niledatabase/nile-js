@@ -1,9 +1,9 @@
 {
   "packages": [
-    "packages/react",
-    "lib/nile"
+    "lib/*",
+    "packages/react"
   ],
-  "version": "0.13.1",
+  "version": "0.16.1",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {

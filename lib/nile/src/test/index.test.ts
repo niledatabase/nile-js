@@ -17,6 +17,7 @@ describe('index', () => {
         'entities',
         'workspaces',
         'organizations',
+        'events',
       ]);
       keys.forEach((k) => {
         const props = Object.getOwnPropertyNames(
@@ -34,11 +35,13 @@ describe('index', () => {
           expect(props).toEqual([
             'constructor',
             'acceptInvite',
+            'addUserToOrg',
             'createOrganization',
             'deleteOrganization',
             'getOrganization',
             'listInvites',
             'listOrganizations',
+            'listUsersInOrg',
             'updateOrganization',
           ]);
         }
@@ -51,8 +54,10 @@ describe('index', () => {
             'getEntity',
             'getInstance',
             'getOpenAPI',
+            'instanceEvents',
             'listEntities',
             'listInstances',
+            'listInstancesInWorkspace',
             'updateEntity',
             'updateInstance',
           ]);
@@ -61,7 +66,9 @@ describe('index', () => {
           expect(props).toEqual([
             'constructor',
             'createDeveloper',
+            'developerGoogleOAuthCallback',
             'loginDeveloper',
+            'startDeveloperGoogleOAuth',
             'validateDeveloper',
           ]);
         }
@@ -74,6 +81,7 @@ describe('index', () => {
             'listUsers',
             'loginUser',
             'me',
+            'token',
             'updateUser',
             'validateUser',
           ]);

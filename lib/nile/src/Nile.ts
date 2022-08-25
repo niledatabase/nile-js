@@ -4,7 +4,6 @@
 import {
   DevelopersApi,
   EntitiesApi,
-  InstanceEvent,
   OrganizationsApi,
   UsersApi,
   WorkspacesApi,
@@ -13,56 +12,8 @@ import {
   Configuration,
   ConfigurationParameters,
 } from './generated/openapi/src/runtime';
-
-export class EventsApi {
-  static onCounter = 0;
-  entities: EntitiesApi;
-  timers: { [key: number]: ReturnType<typeof setTimeout> };
-
-  constructor(entities: EntitiesApi) {
-    this.entities = entities;
-    this.timers = {};
-  }
-
-  on(
-    options: { type: string; seq: any },
-    listener: (event: InstanceEvent) => Promise<void>,
-    refresh = 5000
-  ): number {
-    const id = EventsApi.onCounter++;
-    let seq = options.seq;
-    const getEvents = async () => {
-      const events = await this.entities.instanceEvents({
-        type: options.type,
-        seq,
-      });
-      if (events) {
-        for (let i = 0; i < events.length; i++) {
-          const event = events[i];
-          if (event) {
-            await listener(event);
-            if (seq == null || (event?.after?.seq || seq) > seq) {
-              seq = event?.after?.seq || seq;
-            }
-          }
-        }
-      }
-      const timer = setTimeout(getEvents, refresh);
-      this.timers[id] = timer;
-    };
-    const timer = setTimeout(getEvents, 0);
-    this.timers[id] = timer;
-    return id;
-  }
-
-  cancel(id: number): void {
-    const timer = this.timers[id];
-    if (timer) {
-      clearTimeout(timer);
-      delete this.timers[id];
-    }
-  }
-}
+import EventsApi from './EventsApi';
+import { DeveloperCredentials } from './model/DeveloperCredentials';
 
 export class NileApi {
   users: UsersApi;
@@ -134,6 +85,39 @@ export class NileApi {
     if (this.organizations.authToken) {
       return this.organizations.authToken;
     }
+  }
+
+  /**
+   * Creates a NileApi instance and connects using the provided credentials.
+   * @param config - the NileApi configuration parameters
+   * @param credentials - developer credentials; either a username and password or
+   *   an auth token are required.
+   * @returns NileApi
+   */
+  static async connect(
+    config: ConfigurationParameters,
+    credentials: DeveloperCredentials
+  ): Promise<NileApi> {
+    const nile = ApiImpl(config);
+    if (credentials.authToken) {
+      nile.authToken = credentials.authToken;
+    } else {
+      const token = await nile.developers
+        .loginDeveloper({
+          loginInfo: {
+            email: credentials.email || '',
+            password: credentials.password || '',
+          },
+        })
+        .catch((error: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error('Nile authentication failed', error);
+        });
+      if (token) {
+        nile.authToken = token.token;
+      }
+    }
+    return nile;
   }
 }
 

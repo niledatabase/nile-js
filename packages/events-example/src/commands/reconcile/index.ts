@@ -1,188 +1,199 @@
-import { CliUx, Command, Flags } from '@oclif/core';
-import Nile, { Instance, NileApi } from '@theniledev/js';
-import {
-  DestroyResult,
-  InlineProgramArgs,
-  LocalWorkspace,
-  StackSummary,
-  Stack,
-  UpResult,
-  PulumiFn,
-} from '@pulumi/pulumi/automation';
+import { Command, Flags } from '@oclif/core';
+import { Instance, NileApi } from '@theniledev/js';
 
-import { pulumiProgram } from '../../pulumiS3';
+import { PulumiAwsDeployment, pulumiS3 } from '../../pulumi';
+import { Deployment, ReconciliationPlan } from '../../utils';
 
 export default class Reconcile extends Command {
   static enableJsonFlag = true;
-  static description = 'reconcile nile/pulumi deploys';
-
+  static description =
+    'reconcile Nile instance definitions with deployed objects';
   static flags = {
     basePath: Flags.string({
-      description: 'basePath',
-      default: 'http://localhost:8080',
+      char: 'p',
+      description: 'root URL for the Nile API',
+      required: true,
+      env: 'NILE_BASE_PATH',
+      default: 'https://prod.thenile.dev:443',
     }),
     workspace: Flags.string({
-      description: 'workspace',
-      default: 'tryhard',
+      char: 'w',
+      description: 'your Nile workspace name',
+      required: true,
+      env: 'NILE_WORKSPACE',
+    }),
+    org: Flags.string({
+      char: 'o',
+      description: 'an organization in your Nile workspace',
+      required: true,
+      env: 'NILE_ORG',
+    }),
+    entity: Flags.string({
+      char: 'e',
+      description: 'an entity type in your Nile workspace',
+      required: true,
+      env: 'NILE_ENTITY',
     }),
     email: Flags.string({
-      description: 'email',
-      default: 'trying@demo.com',
+      description: 'your Nile developer email address',
+      env: 'NILE_EMAIL',
     }),
     password: Flags.string({
-      description: 'password',
-      default: 'trying',
+      description: 'your Nile developer password',
+      env: 'NILE_PASSWORD',
     }),
-    organization: Flags.string({ description: 'organization' }),
-    entity: Flags.string({ description: 'entity' }),
-    status: Flags.boolean({ char: 's', description: 'status', default: false }),
+    authToken: Flags.string({
+      description:
+        'Developer access token. If used, this overrides the email/password flags.',
+      env: 'NILE_AUTH_TOKEN',
+    }),
+    dryRun: Flags.boolean({
+      description: 'check current status of your control and data planes',
+      default: false,
+    }),
   };
 
-  localWorkspace!: LocalWorkspace;
-  nile!: NileApi;
-
-  async waitOnStack(stack: Stack): Promise<void> {
-    let stackInfo;
-    do {
-      stackInfo = await stack.info();
-      this.debug(stackInfo);
-    } while (stackInfo != undefined && stackInfo?.result !== 'succeeded');
-  }
-
-  async getStack(stackName: string, program: PulumiFn): Promise<Stack> {
-    const args: InlineProgramArgs = {
-      stackName,
-      projectName: 'tryhard',
-      program,
-    };
-    const stack = await LocalWorkspace.createOrSelectStack(args);
-    await stack.setConfig('aws:region', { value: 'us-west-2' });
-    return stack;
-  }
-
-  async createStack(instance: Instance): Promise<UpResult> {
-    const stack = await this.getStack(instance.id, pulumiProgram(instance));
-    await this.waitOnStack(stack);
-    try {
-      CliUx.ux.action.start(`Creating a stack id=${instance.id}`);
-      return await stack.up({ onOutput: console.log });
-    } finally {
-      CliUx.ux.action.stop();
-    }
-  }
-
-  async destroyStack(id: string): Promise<DestroyResult> {
-    const stack = await this.getStack(id, pulumiProgram({}));
-    await this.waitOnStack(stack);
-    try {
-      CliUx.ux.action.start(`Destroying a stack id=${id}`);
-      return await stack.destroy({ onOutput: console.log });
-    } finally {
-      CliUx.ux.action.stop();
-    }
-  }
-
-  async loadPulumiStacks(): Promise<{ [key: string]: StackSummary }> {
-    const stacks = await (
-      await this.localWorkspace.listStacks()
-    ).reduce(async (accP, stack) => {
-      const acc = await accP;
-      const fullStack = await this.getStack(stack.name, pulumiProgram({}));
-      const info = await fullStack.info();
-      if (info?.kind != 'destroy') {
-        acc[stack.name] = stack;
-        this.debug('adding stack', stack);
-      }
-      return acc;
-    }, Promise.resolve({} as { [key: string]: StackSummary }));
-    this.debug(stacks);
-    return stacks;
-  }
-
-  async loadInstances(
-    organization: string,
-    entity: string
-  ): Promise<{ [key: string]: Instance }> {
-    const instances = (
-      await this.nile.entities.listInstances({
-        org: organization,
-        type: entity,
-      })
-    ).reduce((acc, instance: Instance) => {
-      if (instance) {
-        acc[instance.id] = instance;
-      }
-
-      return acc;
-    }, {} as { [key: string]: Instance });
-    this.debug(instances);
-    return instances;
-  }
-
-  async run(): Promise<any> {
+  async run(): Promise<unknown> {
     const { flags } = await this.parse(Reconcile);
-
-    // pulumi setup
-    this.localWorkspace = await LocalWorkspace.create({
-      projectSettings: { name: flags.workspace, runtime: 'nodejs' },
-    });
-    this.localWorkspace.installPlugin('aws', 'v4.0.0');
+    const {
+      dryRun,
+      basePath,
+      workspace,
+      org,
+      entity,
+      email,
+      password,
+      authToken,
+    } = flags;
 
     // nile setup
-    this.nile = Nile({ basePath: flags.basePath, workspace: flags.workspace });
-    const token = await this.nile.developers
-      .loginDeveloper({
-        loginInfo: {
-          email: flags.email,
-          password: flags.password,
-        },
-      })
-      .catch((error: unknown) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      });
-    this.nile.authToken = token?.token;
-
-    // load our data
-    const stacks = await this.loadPulumiStacks();
-    const instances = await this.loadInstances(
-      flags.organization,
-      flags.entity
+    const nile = await NileApi.connect(
+      {
+        basePath,
+        workspace,
+      },
+      {
+        authToken,
+        email,
+        password,
+      }
     );
-    let seq = 0;
-    for (const instance of Object.values(instances)) {
-      if (seq == null || (instance?.seq || seq) > seq) {
-        seq = instance?.seq || seq;
-      }
+
+    const instances = await this.loadEntityInstances(nile, org, entity);
+
+    // pulumi setup
+    const deployment = await PulumiAwsDeployment.create(
+      'nile-examples',
+      pulumiS3
+    );
+
+    // find ids of current data plane objects
+    const extantIds = await deployment.identifyRemoteObjects();
+
+    // identify objects for creation and destruction
+    const plan = new ReconciliationPlan(instances, extantIds);
+
+    if (dryRun) {
+      this.log(
+        `Pending destruction: ${plan.destructionIds} (${plan.destructionIds.length})`
+      );
+      this.log(
+        `Pending creation: ${plan.creationIds} (${plan.creationIds.length})`
+      );
+      return { stacks: extantIds, instances };
     }
 
-    if (flags.status) {
-      return { stacks, instances };
-    }
+    // load or remove stacks based on Nile
+    await this.synchronizeDataPlane(plan, deployment);
 
-    // destroy any stacks that shouldnt exist
-    for (const id of Object.keys(stacks)) {
-      if (!instances[id]) {
-        this.destroyStack(id);
-      }
+    // listen to updates from nile and handle stacks accordingly
+    await this.watchEntityEvents(
+      nile,
+      org,
+      entity,
+      this.findLastSeq(instances),
+      deployment
+    );
+  }
+
+  /**
+   *  Requests all the instances of a specific Entity type for a single
+   *  organization
+   * @param nile A connected NileApi object
+   * @param org An organization in the Nile workspace
+   * @param entityType An entity in the Nile workspace
+   * @returns Array<Instance> All instances of the entity for the organization
+   */
+  async loadEntityInstances(
+    nile: NileApi,
+    org: string,
+    entityType: string
+  ): Promise<Instance[]> {
+    const instances = await nile.entities.listInstances({
+      org,
+      type: entityType,
+    });
+
+    return instances.filter(
+      (value: Instance) => value !== null && value !== undefined
+    );
+  }
+
+  /**
+   * Find sequence number of the last Instance in the collection.
+   * @param instances Array<Instance> Nile instance definitions
+   * @returns the max value of `seq`, which is the most recent Instance
+   */
+  private findLastSeq(instances: Instance[]): number {
+    return instances
+      .map((value: Instance) => value?.seq || 0)
+      .reduce((prev: number, curr: number) => {
+        return Math.max(prev, curr || 0);
+      }, 0);
+  }
+
+  /**
+   * Applies the reconciliation plan to the deployment, creating or destroying
+   * objects in the data plane.
+   * @param plan ReconciliationPlan
+   * @param deployment Deployment
+   */
+  private async synchronizeDataPlane(
+    plan: ReconciliationPlan,
+    deployment: Deployment
+  ) {
+    // destroy any stacks that should not exist
+    for (const id of plan.destructionIds) {
+      await deployment.destroyObject(id);
     }
 
     // create any stacks that should exist
-    for (const id of Object.keys(instances)) {
-      if (!stacks[id]) {
-        this.createStack(instances[id]);
-      }
+    for (const spec of plan.creationSpecs) {
+      await deployment.createObject(spec);
     }
+  }
 
+  /**
+   * Listens for Nile events and reconciles objects in the data plane.
+   * @param nile A connected NileApi object
+   * @param org An organization in the Nile workspace
+   * @param entityType An entity in the Nile workspace
+   * @param fromSeq the starting point to begin listening for events (0 is from the beginning of time)
+   * @param deployment Deployment
+   */
+  private async watchEntityEvents(
+    nile: NileApi,
+    org: string,
+    entityType: string,
+    fromSeq: number,
+    deployment: Deployment
+  ): Promise<void> {
     await new Promise(() => {
-      this.nile.events.on({ type: flags.entity, seq }, async (e) => {
-        this.log(JSON.stringify(e, null, 2));
+      nile.events.on({ type: entityType, seq: fromSeq }, async (e) => {
         if (e.after) {
-          const out = await (e.after.deleted
-            ? this.destroyStack(e.after.id)
-            : this.createStack(e.after));
-
-          this.debug(out);
+          await (e.after.deleted
+            ? deployment.destroyObject(e.after.id)
+            : deployment.createObject(e.after));
         }
       });
     });

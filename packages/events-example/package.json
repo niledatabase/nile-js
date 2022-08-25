@@ -1,7 +1,7 @@
 {
   "name": "@theniledev/events-example",
   "description": "reconcile between nile and pulumi deploy",
-  "version": "0.13.1",
+  "version": "0.16.1",
   "author": "nile",
   "private": true,
   "bin": {
@@ -14,7 +14,7 @@
     "@pulumi/aws": "^5.10.0",
     "@pulumi/awsx": "^0.40.0",
     "@pulumi/pulumi": "^3.36.0",
-    "@theniledev/js": "^0.13.1",
+    "@theniledev/js": "^0.16.1",
     "@types/node-fetch": "^2.6.2",
     "node-fetch": "^3.2.10"
   },
@@ -24,7 +24,7 @@
     "eslint": "^8.21.0",
     "eslint-config-oclif": "^4",
     "eslint-config-oclif-typescript": "^1.0.2",
-    "globby": "^13",
+    "globby": "^11",
     "oclif": "^3",
     "shx": "^0.3.3",
     "ts-node": "^10.2.1",

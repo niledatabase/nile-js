@@ -11,11 +11,11 @@ const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
 
 function SignUp() {
   return (
-    <NileProvider apiUrl={API_URL}>
+    <NileProvider basePath={API_URL}>
       <h1>🤩 My Great App🤩</h1>
       <h2>Sign in</h2>
       <SignUpForm
-        handleSuccess={() => {
+        onSuccess={() => {
           console.log('a new user has signed up');
         }}
       />
@@ -26,31 +26,4 @@ function SignUp() {
 
 ## Theming
 
-### General theming (recommended)
-
-[theming](../../theme/README.md)
-
-### Advanced theming
-
-The labels and inputs of this form are customizable via props. You can pass any `React.Node` to it, but at a minimum an `id` must use the passed into the customized `<input />` to ensure submission works properly. For completeness, spread all provided props input `<input />` or `<label />`and override as necessary.
-
-```typescript
-import { SignUpForm, LabelOverride, InputOverride } from '@theniledev/react';
-
-const EmailLabel = (props: LabelOverride) => {
-  return (
-    <label {...props} htmlFor="fancyName">
-      Not an email
-    </label>
-  );
-};
-
-const EmailInput = (props: InputOverride) => (
-  <>
-    <img src="/fancy-name.svg" alt="fancy name" />
-    <input {...props} type="email" name="fancyName" placeholder="Email" />
-  </>
-);
-
-<SignUpForm emailLabel={EmailLabel} emailInput={EmailInput} />;
-```
+[theming](../../../README.md#UI%20customization)
