@@ -8,11 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn build:js-lib && yarn build:react && yarn build:examples && yarn build:events-example",
+    "build": "yarn build:js-lib && yarn build:react && yarn build:examples",
     "build:js-lib": "yarn workspace @theniledev/js build",
     "test:js-lib": "yarn workspace @theniledev/js test",
     "build:react": "yarn workspace @theniledev/react build",
-    "build:events-example": "yarn workspace @theniledev/events-example build",
     "build:examples": "yarn workspace @theniledev/examples build",
     "build:react-storybook": "yarn workspace @theniledev/react build-storybook",
     "lint": "yarn eslint . --max-warnings=0",
