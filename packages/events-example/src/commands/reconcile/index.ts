@@ -1,5 +1,5 @@
 import { Command, Flags } from '@oclif/core';
-import { Instance, NileApi } from '@theniledev/js';
+import Nile, { Instance, NileApi } from '@theniledev/js';
 
 import { PulumiAwsDeployment, pulumiS3 } from '../../pulumi';
 import { Deployment, ReconciliationPlan } from '../../utils';
@@ -67,17 +67,10 @@ export default class Reconcile extends Command {
     } = flags;
 
     // nile setup
-    const nile = await NileApi.connect(
-      {
-        basePath,
-        workspace,
-      },
-      {
-        authToken,
-        email,
-        password,
-      }
-    );
+    const nile = await Nile({
+      basePath,
+      workspace,
+    }).connect(authToken ?? { email, password });
 
     const instances = await this.loadEntityInstances(nile, org, entity);
 

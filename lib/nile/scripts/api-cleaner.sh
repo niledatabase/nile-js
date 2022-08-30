@@ -8,6 +8,7 @@ declare -a arr=(
   "UsersApi"
   "WorkspacesApi" 
   "DevelopersApi"
+  "AuthzApi"
 )
 
 for i in "${arr[@]}"
