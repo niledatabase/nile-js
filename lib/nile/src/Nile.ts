@@ -1,7 +1,9 @@
 /**
  * dependencies need generated with `yarn build:api:gen`
  */
+
 import {
+  AuthzApi,
   DevelopersApi,
   EntitiesApi,
   OrganizationsApi,
@@ -13,7 +15,7 @@ import {
   ConfigurationParameters,
 } from './generated/openapi/src/runtime';
 import EventsApi from './EventsApi';
-import { DeveloperCredentials } from './model/DeveloperCredentials';
+import { AuthToken, DeveloperCredentials } from './model/DeveloperCredentials';
 
 export class NileApi {
   users: UsersApi;
@@ -22,6 +24,8 @@ export class NileApi {
   workspaces: WorkspacesApi;
   organizations: OrganizationsApi;
   events: EventsApi;
+  authz: AuthzApi;
+
   constructor(configuration?: Configuration) {
     this.users = new UsersApi(configuration);
     this.developers = new DevelopersApi(configuration);
@@ -29,6 +33,7 @@ export class NileApi {
     this.workspaces = new WorkspacesApi(configuration);
     this.organizations = new OrganizationsApi(configuration);
     this.events = new EventsApi(this.entities);
+    this.authz = new AuthzApi(configuration);
   }
 
   set workspace(workspace: void | string) {
@@ -38,6 +43,7 @@ export class NileApi {
       this.entities.workspace = workspace;
       this.workspaces.workspace = workspace;
       this.organizations.workspace = workspace;
+      this.authz.workspace = workspace;
     }
   }
 
@@ -57,6 +63,9 @@ export class NileApi {
     if (this.organizations.workspace) {
       return this.organizations.workspace;
     }
+    if (this.authz.workspace) {
+      return this.authz.workspace;
+    }
   }
 
   set authToken(token: void | string) {
@@ -66,6 +75,7 @@ export class NileApi {
       this.entities.authToken = token;
       this.workspaces.authToken = token;
       this.organizations.authToken = token;
+      this.authz.authToken = token;
     }
   }
 
@@ -85,8 +95,10 @@ export class NileApi {
     if (this.organizations.authToken) {
       return this.organizations.authToken;
     }
+    if (this.authz.authToken) {
+      return this.authz.authToken;
+    }
   }
-
   /**
    * Creates a NileApi instance and connects using the provided credentials.
    * @param config - the NileApi configuration parameters
@@ -94,15 +106,11 @@ export class NileApi {
    *   an auth token are required.
    * @returns NileApi
    */
-  static async connect(
-    config: ConfigurationParameters,
-    credentials: DeveloperCredentials
-  ): Promise<NileApi> {
-    const nile = ApiImpl(config);
-    if (credentials.authToken) {
-      nile.authToken = credentials.authToken;
+  async connect(credentials: AuthToken | DeveloperCredentials) {
+    if (typeof credentials === 'string') {
+      this.authToken = credentials;
     } else {
-      const token = await nile.developers
+      const token = await this.developers
         .loginDeveloper({
           loginInfo: {
             email: credentials.email || '',
@@ -114,10 +122,10 @@ export class NileApi {
           console.error('Nile authentication failed', error);
         });
       if (token) {
-        nile.authToken = token.token;
+        this.authToken = token.token;
       }
     }
-    return nile;
+    return this;
   }
 }
 

@@ -18,6 +18,7 @@ describe('index', () => {
         'workspaces',
         'organizations',
         'events',
+        'authz',
       ]);
       keys.forEach((k) => {
         const props = Object.getOwnPropertyNames(
@@ -86,9 +87,44 @@ describe('index', () => {
             'validateUser',
           ]);
         }
+        if (k === 'authz') {
+          expect(props).toEqual([
+            'constructor',
+            'createRule',
+            'deleteRule',
+            'getRule',
+            'listRules',
+            'updateRule',
+          ]);
+        }
+      });
+    });
+
+    describe('Nile.connect', () => {
+      it('takes a string', () => {
+        const nile = Nile().connect('my sweet auth token');
+        expect(nile).toBeTruthy();
+      });
+      it('takes a username/password', async () => {
+        // suppress the error from fetch
+        const error = jest
+          .spyOn(console, 'error')
+          .mockImplementation(() => 'fetch not defined');
+        const nile = await Nile().connect({
+          email: 'patrick@underthesea.com',
+          password: 'nothisispatrick',
+        });
+        expect(nile).toMatchObject(
+          Nile().connect({
+            email: 'patrick@underthesea.com',
+            password: 'nothisispatrick',
+          })
+        );
+        error.mockReset();
       });
     });
   });
+
   describe('login', () => {
     let payload: LoginInfo;
     beforeEach(() => {
