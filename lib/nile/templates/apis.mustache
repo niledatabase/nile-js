@@ -88,7 +88,7 @@ export class {{classname}} extends runtime.BaseAPI {
      *```typescript
      * import {{moduleName}} from '{{{projectName}}}';
      * 
-     * const nile = new {{{moduleName}}}({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace' });
+     * const nile = {{{moduleName}}}({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace' });
      * 
       {{#hasParams}}
      * const body = {
@@ -106,7 +106,7 @@ export class {{classname}} extends runtime.BaseAPI {
      *   console.log('API called successfully.');
         {{/returnType}}
      * }).catch((error:any) => console.error(error));
-    ```
+     * ```
      */
      
     async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}> {

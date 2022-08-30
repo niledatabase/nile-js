@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1-4c73989
+  version: 0.1-fe8df41
 servers:
 - url: localhost:8080
 paths:
@@ -230,6 +230,9 @@ paths:
       tags:
       - authz
       summary: Create a new rule
+      description: Creates a new authorization rule. Note that once you create an
+        authorization ruleyour workspace defaults to deny-by-default behavior for
+        all users in all orgs.
       operationId: createRule
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -297,7 +300,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Rule'
+              $ref: '#/components/schemas/UpdateRuleRequest'
         required: true
       responses:
         "200":
@@ -418,7 +421,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/PatchEntityRequest'
+              $ref: '#/components/schemas/UpdateEntityRequest'
         required: true
       responses:
         "200":
@@ -595,7 +598,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchInstanceRequest'
+              $ref: '#/components/schemas/UpdateInstanceRequest'
         required: true
       responses:
         "200":
@@ -694,12 +697,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Invite'
-  /metrics/filter:
+  /workspaces/{workspace}/metrics/filter:
     post:
       tags:
       - metrics
       summary: List of metrics matching the filter
       operationId: filterMetrics
+      parameters:
+      - $ref: '#/components/parameters/workspace'
       requestBody:
         content:
           application/json:
@@ -715,27 +720,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Metric'
-  /metrics:
-    post:
-      tags:
-      - metrics
-      summary: Produce a Metric
-      operationId: produceMetric
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Metric'
-        required: true
-      responses:
-        "204":
-          description: The metric has been saved
-  /metrics/batch:
+  /workspaces/{workspace}/metrics:
     post:
       tags:
       - metrics
       summary: Produce a Batch of Metrics
       operationId: produceBatchOfMetrics
+      parameters:
+      - $ref: '#/components/parameters/workspace'
       requestBody:
         content:
           application/json:
@@ -867,7 +859,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/PatchOrganizationRequest'
+              $ref: '#/components/schemas/UpdateOrganizationRequest'
         required: true
       responses:
         "200":
@@ -908,15 +900,24 @@ paths:
     get:
       tags:
       - users
-      description: Get the auth token for the current authenticated user
+      description: "Echoes the auth token for the current authenticated user. This\
+        \ operation requires that theauth token is passed either as a Bearer token\
+        \ in the authorization header or as a cookie named 'token'. When both are\
+        \ present, they must match."
       operationId: token
       responses:
         "200":
-          description: The auth token for the authenticated user
+          description: The auth token for the current authenticated user
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Token'
+        "401":
+          description: The current user is not authorized to access this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /workspaces/{workspace}/users:
     get:
       tags:
@@ -1089,6 +1090,8 @@ components:
           - invalid_entity_schema
           - invalid_id
           - invalid_action
+          - empty_actions
+          - invalid_action_combination
         message:
           type: string
         statusCode:
@@ -1170,6 +1173,13 @@ components:
               joined: 2022-08-09T10:27:30.956079
             org_02qdS9KPAnG6Pt5XFAomu6:
               joined: 2022-08-03T17:30:00.295581
+    Action:
+      type: string
+      description: The action to be allowed on the resource if a rule is matched.
+        The `deny` action is a special action that denies all access.
+      enum:
+      - read
+      - deny
     Resource:
       type: object
       properties:
@@ -1177,7 +1187,8 @@ components:
           type: string
         type:
           type: string
-      description: A subset of properties of any custom instance to authorize against.
+      description: "A subset of properties of any custom instance to authorize against.\
+        \ Only exact matching is supported, for now."
       example:
         id: inst_123
         type: cluster
@@ -1218,11 +1229,10 @@ components:
         resource:
           $ref: '#/components/schemas/Resource'
         actions:
+          uniqueItems: true
           type: array
           items:
-            type: string
-            enum:
-            - deny
+            $ref: '#/components/schemas/Action'
     Subject:
       type: object
       properties:
@@ -1230,8 +1240,11 @@ components:
           type: string
         email:
           type: string
-      description: A subset of properties of a user to authorize against.
+      description: "A subset of properties of a user to authorize against. Only exact\
+        \ matching is supported, for now."
     CreateRuleRequest:
+      required:
+      - actions
       type: object
       properties:
         subject:
@@ -1239,11 +1252,29 @@ components:
         resource:
           $ref: '#/components/schemas/Resource'
         actions:
+          minLength: 1
+          uniqueItems: true
+          type: array
+          description: "The actions to be allowed on the resource if a rule matches\
+            \ a request. At least one action must be provided and executable actions\
+            \ (i.e: `read`, `write`) cannot be combined with non-executable actions\
+            \ (i.e: `deny`). If multiple rules match a request, rules with a `deny`\
+            \ action take precedence over rules with a `read` action. You can define\
+            \ `deny` rules to make exceptions in your rules that allow access."
+          items:
+            $ref: '#/components/schemas/Action'
+    UpdateRuleRequest:
+      type: object
+      properties:
+        subject:
+          $ref: '#/components/schemas/Subject'
+        resource:
+          $ref: '#/components/schemas/Resource'
+        actions:
+          uniqueItems: true
           type: array
           items:
-            type: string
-            enum:
-            - deny
+            $ref: '#/components/schemas/Action'
     CreateUserRequest:
       required:
       - email
@@ -1311,7 +1342,7 @@ components:
           example: clusters
         schema:
           $ref: '#/components/schemas/JsonSchema'
-    PatchEntityRequest:
+    UpdateEntityRequest:
       required:
       - schema
       type: object
@@ -1378,7 +1409,7 @@ components:
         id: lkc-123
         memory: 4096
         cpus: 4
-    PatchInstanceRequest:
+    UpdateInstanceRequest:
       required:
       - properties
       type: object
@@ -1411,7 +1442,6 @@ components:
       - start_time_nano
       - type
       - value
-      - workspace_name
       type: object
       properties:
         name:
@@ -1430,8 +1460,6 @@ components:
         value:
           type: number
         instance_id:
-          type: string
-        workspace_name:
           type: string
         attributes:
           type: object
@@ -1497,7 +1525,7 @@ components:
         name:
           minLength: 1
           type: string
-    PatchOrganizationRequest:
+    UpdateOrganizationRequest:
       required:
       - name
       type: object
