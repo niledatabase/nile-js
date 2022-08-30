@@ -101,6 +101,16 @@ export class NileApi {
   }
   /**
    * Creates a NileApi instance and connects using the provided credentials.
+   * @example
+   * ```typescript
+   * import Nile from '@theniledev/js';
+   *
+   * const authToken = '2asdafsW4adaas.asdfas3asdadfsad';
+   *
+   * const nile = Nile({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace' }).connect(authToken);
+   *
+   * ```
+   *
    * @param config - the NileApi configuration parameters
    * @param credentials - developer credentials; either a username and password or
    *   an auth token are required.
