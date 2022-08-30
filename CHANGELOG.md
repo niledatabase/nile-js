@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/TheNileDev/nile-js/compare/v0.16.3...v0.17.0) (2022-08-30)
+
+
+### Bug Fixes
+
+* add example for Nile.connect ([4932cc2](https://github.com/TheNileDev/nile-js/commit/4932cc28677bcd6c8099467b729ebed6a45d13d9))
+* **events-example:** update package.json to remove reference to events-example in build scripts ([9739331](https://github.com/TheNileDev/nile-js/commit/9739331d6cff426ef6fe64cdee42e025ca5fe418))
+
+
+### Features
+
+* **events-example:** move the events-example to the examples repo ([cc2bfc8](https://github.com/TheNileDev/nile-js/commit/cc2bfc831ca9e0a756c1379ac431b9e7b9d56f1e))
+* **nile-js:** spec, connect interface, add authz ([4b431ce](https://github.com/TheNileDev/nile-js/commit/4b431ce6fad7a159cec2063eca200c7e15c95f51))
+* **nile-js:** support for auth token in rebuild ([82f9ccd](https://github.com/TheNileDev/nile-js/commit/82f9ccdb1aa805a182fc13b1ae72c54c5479bc68))
+
+
+
+
+
 ## [0.16.3](https://github.com/TheNileDev/nile-js/compare/v0.16.2...v0.16.3) (2022-08-25)
 
 **Note:** Version bump only for package @theniledev/packages
