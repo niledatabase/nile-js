@@ -79,7 +79,7 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.8.4",
-    "@mui/joy": "^5.0.0-alpha.40",
+    "@mui/joy": "^5.0.0-alpha.43",
     "@mui/material": "^5.10.0",
     "@mui/x-data-grid": "^5.15.2",
     "@tanstack/react-query": "^4.1.3",
