@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1-fe8df41
+  version: 0.1-7b170ae
 servers:
 - url: localhost:8080
 paths:
@@ -231,7 +231,7 @@ paths:
       - authz
       summary: Create a new rule
       description: Creates a new authorization rule. Note that once you create an
-        authorization ruleyour workspace defaults to deny-by-default behavior for
+        authorization rule your workspace defaults to deny-by-default behavior for
         all users in all orgs.
       operationId: createRule
       parameters:
@@ -697,48 +697,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Invite'
-  /workspaces/{workspace}/metrics/filter:
-    post:
-      tags:
-      - metrics
-      summary: List of metrics matching the filter
-      operationId: filterMetrics
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Filter'
-        required: true
-      responses:
-        "200":
-          description: A list of metrics that match the filter
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Metric'
-  /workspaces/{workspace}/metrics:
-    post:
-      tags:
-      - metrics
-      summary: Produce a Batch of Metrics
-      operationId: produceBatchOfMetrics
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Metric'
-        required: true
-      responses:
-        "204":
-          description: the metrics have been saved
   /workspaces/{workspace}/orgs/{org}/users:
     get:
       tags:
@@ -1092,6 +1050,7 @@ components:
           - invalid_action
           - empty_actions
           - invalid_action_combination
+          - forbidden
         message:
           type: string
         statusCode:
@@ -1179,6 +1138,7 @@ components:
         The `deny` action is a special action that denies all access.
       enum:
       - read
+      - write
       - deny
     Resource:
       type: object
@@ -1434,51 +1394,6 @@ components:
           type: string
           enum:
           - active
-    Metric:
-      required:
-      - end_time_nano
-      - instance_id
-      - name
-      - start_time_nano
-      - type
-      - value
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-          enum:
-          - gauge
-          - sum
-        start_time_nano:
-          type: integer
-          format: int64
-        end_time_nano:
-          type: integer
-          format: int64
-        value:
-          type: number
-        instance_id:
-          type: string
-        attributes:
-          type: object
-          additionalProperties:
-            type: object
-    Filter:
-      type: object
-      properties:
-        metric_name:
-          type: string
-        type:
-          type: string
-          enum:
-          - gauge
-          - sum
-        instance_id:
-          type: string
-        workspace_name:
-          type: string
     AddUserToOrgRequest:
       required:
       - email
