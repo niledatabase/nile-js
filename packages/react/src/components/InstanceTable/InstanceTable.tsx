@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack } from '@mui/joy';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, DataGridProps } from '@mui/x-data-grid';
 import { Entity, Instance, Organization } from '@theniledev/js';
 
 import { TableWrapper, TableSkeleton } from '../../lib/table';
@@ -13,6 +13,7 @@ type Props = Omit<InstanceTableProps, 'org'> & {
   entityData: void | Entity;
   organization: void | Organization;
   isFetching: boolean;
+  dataGridProps?: DataGridProps;
 };
 
 const InstanceTable = React.memo(function InstanceTable(props: Props) {
@@ -30,6 +31,7 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
     showExpandedView,
     processColumns,
     actionButtons,
+    dataGridProps = {},
   } = props;
 
   const flatInstances = React.useMemo(() => {
@@ -106,6 +108,18 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
     return `No ${entity} found`;
   }
 
+  const styleOverrides = React.useMemo(
+    () => ({
+      '.MuiDataGrid-cell:focus': {
+        outline: typeof handleRowClick === 'function' ? 'none' : null,
+      },
+      '.MuiDataGrid-row:hover': {
+        cursor: typeof handleRowClick === 'function' ? 'pointer' : 'inherit',
+      },
+    }),
+    [handleRowClick]
+  );
+
   return (
     <TableSkeleton isFetching={isFetching} numberOfRows={flatInstances.length}>
       {flatInstances.length === 0 ? (
@@ -115,7 +129,11 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
           <Stack
             spacing={1}
             direction="row"
-            sx={{ justifyContent: 'flex-end', alignItems: 'center' }}
+            sx={{
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              paddingTop: actionButtons ? 1 : 0,
+            }}
           >
             {actionButtons?.map((button, idx) => {
               return <React.Fragment key={idx}>{button}</React.Fragment>;
@@ -126,10 +144,12 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
           ) : (
             <TableWrapper itemCount={flatInstances.length + 1}>
               <DataGrid
+                sx={styleOverrides}
                 rows={flatInstances}
                 onRowClick={handleRowClick}
                 columns={headerRow}
                 hideFooter={true}
+                {...dataGridProps}
               />
             </TableWrapper>
           )}
