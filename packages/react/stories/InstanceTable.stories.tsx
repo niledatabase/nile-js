@@ -95,6 +95,9 @@ const Template: Story<StoryProps> = (args) => {
         instances={args.renderEmpty ? [] : instances}
         entityData={entityData}
         organization={organization}
+        handleRowClick={() => {
+          alert('clicked on a row');
+        }}
       />
     </NileProvider>
   );
