@@ -5863,9 +5863,9 @@ typedoc-plugin-markdown@^3.13.4:
   dependencies:
     handlebars "^4.7.7"
 
-typedoc@^0.23.11:
-  version "0.23.11"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.11.tgz#eacdc389038efd6de40a3c4561c413ad00f1ab16"
+typedoc@^0.23.14:
+  version "0.23.14"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.14.tgz#d3af50b38fe98210ac39e112b5892f9d88546c93"
   dependencies:
     lunr "^2.3.9"
     marked "^4.0.19"
