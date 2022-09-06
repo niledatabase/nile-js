@@ -1490,15 +1490,16 @@
     "@emotion/styled-base" "^10.3.0"
     babel-plugin-emotion "^10.0.27"
 
-"@emotion/styled@^11.10.0":
-  version "11.10.0"
-  resolved "https://registry.yarnpkg.com/@emotion/styled/-/styled-11.10.0.tgz#c19484dab4206ae46727c07efb4316423dd21312"
-  integrity sha512-V9oaEH6V4KePeQpgUE83i8ht+4Ri3E8Djp/ZPJ4DQlqWhSKITvgzlR3/YQE2hdfP4Jw3qVRkANJz01LLqK9/TA==
+"@emotion/styled@^11.10.4":
+  version "11.10.4"
+  resolved "https://registry.yarnpkg.com/@emotion/styled/-/styled-11.10.4.tgz#e93f84a4d54003c2acbde178c3f97b421fce1cd4"
+  integrity sha512-pRl4R8Ez3UXvOPfc2bzIoV8u9P97UedgHS4FPX594ntwEuAMA114wlaHvOK24HB48uqfXiGlYIZYCxVJ1R1ttQ==
   dependencies:
     "@babel/runtime" "^7.18.3"
     "@emotion/babel-plugin" "^11.10.0"
     "@emotion/is-prop-valid" "^1.2.0"
     "@emotion/serialize" "^1.1.0"
+    "@emotion/use-insertion-effect-with-fallbacks" "^1.0.0"
     "@emotion/utils" "^1.2.0"
 
 "@emotion/stylis@0.8.5":
@@ -1515,6 +1516,11 @@
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.8.0.tgz#a4a36e9cbdc6903737cd20d38033241e1b8833db"
   integrity sha512-VINS5vEYAscRl2ZUDiT3uMPlrFQupiKgHz5AA4bCH1miKBg4qtwkim1qPmJj/4WG6TreYMY111rEFsjupcOKHw==
+
+"@emotion/use-insertion-effect-with-fallbacks@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@emotion/use-insertion-effect-with-fallbacks/-/use-insertion-effect-with-fallbacks-1.0.0.tgz#ffadaec35dbb7885bd54de3fa267ab2f860294df"
+  integrity sha512-1eEgUGmkaljiBnRMTdksDV1W4kUnmwgp7X9G8B++9GYwl1lUdqSndSriIrTJ0N7LQaoauY9JJ2yhiOYK5+NI4A==
 
 "@emotion/utils@0.11.3":
   version "0.11.3"
@@ -3315,10 +3321,10 @@
     "@testing-library/dom" "^8.5.0"
     "@types/react-dom" "^18.0.0"
 
-"@theniledev/js@^0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.17.0.tgz#ca8abefe60745a4732b403589dd201ad9e0670f9"
-  integrity sha512-gwYrHn5BvmZ7fD7qxOFdB2au1lsw4TYljwJDDkmPLs3gNxRUeEHhmVvEaBVdRGUcd4YTAPuoCniHMKwpZEOErA==
+"@theniledev/js@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.17.1.tgz#0bf1be84770d83bec233ef5156afdf5fc49c2af4"
+  integrity sha512-gOhJ6yRkTlnKb4m4ixp7Dk6Wfkz0ji+PRivyJKB3O7u/ds1E9E628aK/pWcr2OO7kWUgECs4Zv7hTIkosqS+Lw==
   dependencies:
     "@openapitools/openapi-generator-cli" "^2.5.1"
     es6-promise "^4.2.8"
@@ -13953,10 +13959,10 @@ typescript@^3.7.3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
   integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
-typescript@^4.7.4:
-  version "4.7.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
-  integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
+typescript@^4.8.2:
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.2.tgz#e3b33d5ccfb5914e4eeab6699cf208adee3fd790"
+  integrity sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==
 
 ua-parser-js@^0.7.30:
   version "0.7.31"
