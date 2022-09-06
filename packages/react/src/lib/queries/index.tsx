@@ -7,6 +7,7 @@ enum Queries {
   Instances = '/instances',
   Invites = '/invites',
   Users = '/users',
+  Authz = '/authz',
 }
 
 const ListOrganizations = [Queries.Organizations];
@@ -27,9 +28,20 @@ const GetOpenApi = (type: ParamType) => [`${GetEntity(type)}/openapi`];
 
 const GetUser = (id: ParamType) => [`${Queries.Users}/${id}`];
 
+const GetMe = [`${Queries.Users}/me`];
+const GetDeveloperToken = [`${Queries.Users}/token`];
+
 const GetInstance = (type: ParamType, org: ParamType, id: ParamType) => [
   `${ListInstances(type, org)}/${id}`,
 ];
+
+const ListRules = (org: ParamType) => [
+  `${Queries.Authz}/${GetOrganization(org)}/rules`,
+];
+const GetRule = (org: ParamType, id: ParamType) => [
+  `${Queries.Authz}/${GetOrganization(org)}/rules/${id}`,
+];
+
 const queryKeys = {
   ListWorkspaces,
   ListOrganizations,
@@ -43,9 +55,14 @@ const queryKeys = {
   ListUsers,
   GetOpenApi,
   ListUsersInOrg,
+  GetMe,
+  GetDeveloperToken,
+  ListRules,
+  GetRule,
 };
 
 export default queryKeys;
 
 export { useQuery } from './useQuery';
 export { useMutation } from './useMutation';
+export { useQueries } from './useQueries';
