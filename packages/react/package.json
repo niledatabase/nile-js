@@ -81,7 +81,7 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/joy": "^5.0.0-alpha.44",
     "@mui/material": "^5.10.4",
-    "@mui/x-data-grid": "^5.15.2",
+    "@mui/x-data-grid": "^5.17.1",
     "@tanstack/react-query": "^4.2.3",
     "@theniledev/js": "^0.17.1",
     "react": "^18.2.0",
