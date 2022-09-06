@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/TheNileDev/nile-js/compare/v0.17.1...v0.18.0) (2022-09-06)
+
+
+### Bug Fixes
+
+* show better auth error on rebuild ([a983f18](https://github.com/TheNileDev/nile-js/commit/a983f18945057c98fdda980ac7baaddbe6217e80))
+
+
+
+
+
 ## [0.17.1](https://github.com/TheNileDev/nile-js/compare/v0.17.0...v0.17.1) (2022-09-01)
 
 **Note:** Version bump only for package @theniledev/js
