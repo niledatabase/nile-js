@@ -52,7 +52,7 @@
     }
   ],
   "devDependencies": {
-    "@babel/core": "^7.18.13",
+    "@babel/core": "^7.19.0",
     "@size-limit/preset-small-lib": "^8.0.1",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-info": "^5.3.21",
