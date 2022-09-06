@@ -5952,9 +5952,9 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typedoc-plugin-markdown@^3.13.4:
-  version "3.13.4"
-  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.13.4.tgz#4c2f02b254c47d25b91579177900c1da5c5579b8"
+typedoc-plugin-markdown@^3.13.6:
+  version "3.13.6"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.13.6.tgz#a419794e3bdbe459fb22772d8e6e02bac05211c1"
   dependencies:
     handlebars "^4.7.7"
 
