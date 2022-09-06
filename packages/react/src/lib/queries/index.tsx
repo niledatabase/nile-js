@@ -65,3 +65,4 @@ export default queryKeys;
 
 export { useQuery } from './useQuery';
 export { useMutation } from './useMutation';
+export { useQueries } from './useQueries';
