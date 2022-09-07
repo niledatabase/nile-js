@@ -1,0 +1,1769 @@
+openapi: 3.0.3
+info:
+  title: Nile API
+  description: Making SaaS chill.
+  contact:
+    email: support@thenile.dev
+  version: 0.1-7b170ae
+servers:
+  - url: 'localhost:8080'
+paths:
+  /auth/login:
+    post:
+      tags:
+        - developers
+      summary: Log in a developer to nile
+      operationId: loginDeveloper
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/LoginInfo'
+        required: true
+      responses:
+        '200':
+          description: JWT token for authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/validate:
+    post:
+      tags:
+        - developers
+      summary: Validate a developer token
+      operationId: validateDeveloper
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Token'
+        required: true
+      responses:
+        '204':
+          description: valid token
+        '400':
+          description: invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/oauth/google/callback:
+    get:
+      tags:
+        - developers
+      summary: Developer Google OAuth flow callback
+      description: >
+        This endpoint is called automatically by Google after the user
+        authenticates successfully.
+
+        It's here for documentation purposes only, and it shouldn't be called
+        directly.
+      operationId: developerGoogleOAuthCallback
+      parameters:
+        - name: code
+          in: query
+          schema:
+            type: string
+        - name: state
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful login/signup for a developer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperGoogleOAuthResponse'
+        '302':
+          description: |2
+             A redirect to the specified `redirect_to` URL after a successful
+             login/signup for a developer, if `redirect_to` was provided
+             when calling `/auth/oauth/google`. A response cookie
+             containing the developer's auth credentials will be set.
+  /auth/oauth/google:
+    get:
+      tags:
+        - developers
+      summary: Starts the developer Google OAuth flow
+      operationId: startDeveloperGoogleOAuth
+      parameters:
+        - name: redirect_to
+          in: query
+          description: An optional URL to redirect to after a successful login/signup.
+          schema:
+            type: string
+            format: uri
+      responses:
+        '302':
+          description: >
+            A redirect to Google for the user to authenticate.
+
+            After the user authenticates successfully, you'll be redirected to
+            `/auth/oauth/google/callback`.
+  '/workspaces/{workspace}/auth/login':
+    post:
+      tags:
+        - users
+      summary: Log in a user
+      description: >-
+        Login a user to Nile. This operation returns a JWT token. Most Nile
+        operations require authentication and expect this token in the
+        'Authorization: Bearer <token>' header
+      operationId: loginUser
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInfo'
+        required: true
+      responses:
+        '200':
+          description: JWT token for authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-code-samples:
+        - lang: cURL
+          source: >-
+            curl -X POST https://app.thenile.dev:443/auth/login -H
+            'Content-Type: application/json' -D '{"email": "shaun@colton.demo", 
+            "password": "mycatname"}
+        - lang: JS
+          source: >-
+            import Nile from "@theniledev/js";
+
+            const nile = new Nile({ apiUrl: "http://localhost:8080", workspace:
+            "1" });
+
+
+            const body = {
+              workspace: 56,
+              loginInfo: {
+                email: "shaun@colton.demo",
+                password: "mycatname",
+              },
+            };
+
+
+            nile
+              .loginUser(body)
+              .then((data) => {
+                console.log("API called successfully. Returned data: " + data);
+              })
+              .catch((error: any) => console.error(error));
+  '/workspaces/{workspace}/auth/validate':
+    post:
+      tags:
+        - users
+      summary: Validate a user Token
+      description: >-
+        Validates a user token. Use this when using Nile authentication to
+        validate access to non-Nile resources. See the [Add Authentication
+        Guide](https://nile-docs.vercel.app/docs/current/guides/how-to/add_signup_authn#decorating-the-endpoint)
+        for a full example
+      operationId: validateUser
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Token'
+        required: true
+      responses:
+        '204':
+          description: The token is valid
+        '400':
+          description: The token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-code-samples:
+        - lang: cURL
+          source: >-
+            curl -X POST https://app.thenile.dev:443/auth/validate  -H
+            'Content-Type: application/json' -D '{"token": "token"}'
+        - lang: JS
+          source: >-
+            import Nile from "@theniledev/js";
+
+
+            const nile = new Nile({ apiUrl: "http://localhost:8080", workspace:
+            "1" });
+
+
+            const body = {
+              workspace: 56,
+              token: { token: "token" },
+            };
+
+
+            nile
+              .validateUserToken(body)
+              .then((data) => {
+                console.log("API called successfully. Returned data: " + data);
+              })
+              .catch((error: any) => console.error(error));
+  '/workspaces/{workspace}/orgs/{org}/authz/rules':
+    get:
+      tags:
+        - authz
+      summary: List all rules
+      operationId: listRules
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of all rules in this organization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+    post:
+      tags:
+        - authz
+      summary: Create a new rule
+      description: >-
+        Creates a new authorization rule. Note that once you create an
+        authorization rule your workspace defaults to deny-by-default behavior
+        for all users in all orgs.
+      operationId: createRule
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRuleRequest'
+        required: true
+      responses:
+        '201':
+          description: The newly created rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+  '/workspaces/{workspace}/orgs/{org}/authz/rules/{ruleId}':
+    get:
+      tags:
+        - authz
+      summary: Get a rule
+      operationId: getRule
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ruleId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The rule with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+    put:
+      tags:
+        - authz
+      summary: Update a rule
+      operationId: updateRule
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ruleId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRuleRequest'
+        required: true
+      responses:
+        '200':
+          description: Updated version of the rule with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+    delete:
+      tags:
+        - authz
+      summary: Delete a rule
+      operationId: deleteRule
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ruleId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful instance deletion
+  /developers:
+    post:
+      tags:
+        - developers
+      summary: Create a developer
+      operationId: createDeveloper
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+        required: true
+      responses:
+        '201':
+          description: The newly created developer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  '/workspaces/{workspace}/entities':
+    get:
+      tags:
+        - entities
+      summary: List all Entities
+      operationId: listEntities
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+      responses:
+        '200':
+          description: list of entities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entity'
+    post:
+      tags:
+        - entities
+      summary: Create Entity
+      operationId: createEntity
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateEntityRequest'
+        required: true
+      responses:
+        '200':
+          description: created entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+  '/workspaces/{workspace}/entities/{type}':
+    get:
+      tags:
+        - entities
+      summary: Get Entity
+      operationId: getEntity
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the entity with the requested type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+    put:
+      tags:
+        - entities
+      summary: Update an Entity
+      operationId: updateEntity
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateEntityRequest'
+        required: true
+      responses:
+        '200':
+          description: the updated entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+  '/workspaces/{workspace}/entities/{type}/openapi':
+    get:
+      tags:
+        - entities
+      summary: Get a yaml OpenAPI description of an entity
+      operationId: getOpenAPI
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The yaml OpenAPI description of the specified entity
+          content:
+            application/yaml:
+              schema:
+                type: string
+  '/workspaces/{workspace}/events/{type}':
+    get:
+      tags:
+        - entities
+      summary: Get instance events
+      operationId: instance.events
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: seq
+          in: query
+          schema:
+            type: integer
+            format: int64
+            default: 0
+        - name: limit
+          in: query
+          schema:
+            maximum: 20
+            type: integer
+            format: int64
+            default: 20
+      responses:
+        '200':
+          description: Events for the type.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InstanceEvent'
+  '/workspaces/{workspace}/orgs/{org}/instances/{type}':
+    get:
+      tags:
+        - entities
+      summary: ' List all instances'
+      operationId: listInstances
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of all instances of the specified type under this org
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Instance'
+    post:
+      tags:
+        - entities
+      summary: Create a new Instance
+      operationId: createInstance
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonSchemaInstance'
+        required: true
+      responses:
+        '201':
+          description: The newly created instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+  '/workspaces/{workspace}/orgs/{org}/instances/{type}/{id}':
+    get:
+      tags:
+        - entities
+      summary: Get an instance
+      operationId: getInstance
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The instance with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+    put:
+      tags:
+        - entities
+      summary: Update an instance
+      operationId: updateInstance
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInstanceRequest'
+        required: true
+      responses:
+        '200':
+          description: The updated instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+    delete:
+      tags:
+        - entities
+      summary: Delete an instance
+      operationId: deleteInstance
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful instance deletion
+  '/workspaces/{workspace}/instances/{type}':
+    get:
+      tags:
+        - entities
+      summary: ' List all instances'
+      operationId: listInstancesInWorkspace
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of all instances of the specified type under this workspace
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Instance'
+  '/workspaces/{workspace}/orgs/{org}/invites/{code}/accept':
+    post:
+      tags:
+        - organizations
+      summary: Accept an invite
+      operationId: acceptInvite
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful invite acceptance
+  '/workspaces/{workspace}/orgs/{org}/invites':
+    get:
+      tags:
+        - organizations
+      summary: List all Invites
+      operationId: listInvites
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of all invites under this org
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invite'
+  '/workspaces/{workspace}/orgs/{org}/users':
+    get:
+      tags:
+        - organizations
+      summary: List users in an organization
+      operationId: listUsersInOrg
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The users in this organization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - organizations
+      summary: Add a user to an organization
+      operationId: addUserToOrg
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/AddUserToOrgRequest'
+        required: true
+      responses:
+        '200':
+          description: The user added to the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  '/workspaces/{workspace}/orgs':
+    get:
+      tags:
+        - organizations
+      summary: List all Organizations
+      operationId: listOrganizations
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+      responses:
+        '200':
+          description: A list of all orgs under this workspace
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+    post:
+      tags:
+        - organizations
+      summary: Create a new organization
+      operationId: createOrganization
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+        required: true
+      responses:
+        '201':
+          description: The newly created organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+  '/workspaces/{workspace}/orgs/{org}':
+    get:
+      tags:
+        - organizations
+      summary: Get an organization by name
+      operationId: getOrganization
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The org with the specified name under this workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+    put:
+      tags:
+        - organizations
+      summary: Update an organization
+      operationId: updateOrganization
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationRequest'
+        required: true
+      responses:
+        '200':
+          description: The updated org
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+    delete:
+      tags:
+        - organizations
+      summary: Delete an organization by id
+      operationId: deleteOrganization
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful org deletion
+  /me:
+    get:
+      tags:
+        - users
+      description: Get information about current authenticated user
+      operationId: me
+      responses:
+        '200':
+          description: The currently authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /me/token:
+    get:
+      tags:
+        - users
+      description: >-
+        Echoes the auth token for the current authenticated user. This operation
+        requires that theauth token is passed either as a Bearer token in the
+        authorization header or as a cookie named 'token'. When both are
+        present, they must match.
+      operationId: token
+      responses:
+        '200':
+          description: The auth token for the current authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: The current user is not authorized to access this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/workspaces/{workspace}/users':
+    get:
+      tags:
+        - users
+      summary: List all users for a workspace
+      operationId: listUsers
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+      responses:
+        '200':
+          description: A list of all users under this workspace
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - users
+      summary: Create a user
+      operationId: createUser
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+        required: true
+      responses:
+        '201':
+          description: The newly created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  '/workspaces/{workspace}/users/{id}':
+    get:
+      tags:
+        - users
+      summary: Get a user by id
+      operationId: getUser
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The user with the specified id under this workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+        - users
+      summary: Update a user
+      operationId: updateUser
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        required: true
+      responses:
+        '200':
+          description: the updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      operationId: deleteUser
+      parameters:
+        - $ref: '#/components/parameters/workspace'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful user deletion
+  /workspaces:
+    get:
+      tags:
+        - workspaces
+      summary: List all workspaces
+      operationId: listWorkspaces
+      responses:
+        '200':
+          description: A list of all workspaces
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workspace'
+    post:
+      tags:
+        - workspaces
+      summary: Create a workspace
+      operationId: createWorkspace
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
+        required: true
+      responses:
+        '201':
+          description: The newly created workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+  '/workspaces/{workspace}/instances/athlete':
+    parameters:
+      - $ref: '#/components/parameters/workspaceInPath'
+    get:
+      tags:
+        - athlete
+      operationId: listAthleteInstances
+      summary: Get all Athletes
+      responses:
+        '200':
+          description: List of all Athlete instances
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Athlete'
+    post:
+      tags:
+        - athlete
+      operationId: createAthleteInstance
+      summary: Create a new Athlete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Athlete'
+      responses:
+        '200':
+          description: Created a new Athlete
+  '/workspaces/{workspaces}/instances/athlete/{id}':
+    parameters:
+      - $ref: '#/components/parameters/workspaceInPath'
+      - $ref: '#/components/parameters/idInPath'
+    get:
+      tags:
+        - athlete
+      operationId: getAthleteInstance
+      summary: Get a single Athlete instance
+      responses:
+        '200':
+          description: A single Athlete instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Athlete'
+    put:
+      tags:
+        - athlete
+      operationId: updateAthleteInstance
+      summary: Update a single Athlete instance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Athlete'
+      responses:
+        '200':
+          description: The updated Athlete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Athlete'
+    delete:
+      tags:
+        - athlete
+      operationId: deleteAthleteInstance
+      summary: Delete a single Athlete instance
+      responses:
+        '204':
+          description: Successful deletion of the Athlete
+  '/workspaces/{workspace}/orgs/{org}/instances/athlete':
+    parameters:
+      - $ref: '#/components/parameters/workspaceInPath'
+      - $ref: '#/components/parameters/orgInPath'
+    get:
+      tags:
+        - entities
+      summary: List all Athlete instances in an organization
+      operationId: listOrgAthleteInstances
+      responses:
+        '200':
+          description: A list of all instances of the specified type under this org
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Athlete'
+    post:
+      tags:
+        - entities
+      summary: Create a new Athlete instance in an organization
+      operationId: createOrgAthleteInstance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Athlete'
+        required: true
+      responses:
+        '201':
+          description: The newly created instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+  '/workspaces/{workspace}/orgs/{org}/instances/athlete/{id}':
+    parameters:
+      - $ref: '#/components/parameters/workspaceInPath'
+      - $ref: '#/components/parameters/orgInPath'
+      - $ref: '#/components/parameters/idInPath'
+    get:
+      tags:
+        - entities
+      summary: Get a single Athlete instance within an Organization
+      operationId: getOrgAthleteInstance
+      responses:
+        '200':
+          description: The instance with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Athlete'
+    put:
+      tags:
+        - entities
+      summary: Update a single Athlete instance within an Organization
+      operationId: updateOrgAthleteInstance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Athlete'
+        required: true
+      responses:
+        '200':
+          description: The updated instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+    delete:
+      tags:
+        - entities
+      summary: Delete an instance
+      operationId: deleteInstance1
+      responses:
+        '204':
+          description: Successful instance deletion
+  '/workspaces/{workspace}/events/athlete':
+    parameters:
+      - $ref: '#/components/parameters/workspaceInPath'
+    get:
+      tags:
+        - events
+      summary: Get Athlete instance events
+      operationId: athleteInstance.events
+      responses:
+        '200':
+          description: Events for the type.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AthleteEvent'
+components:
+  schemas:
+    Token:
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+          description: >-
+            JWT authentication token. Most Nile operations the caller to pass a
+            valid token in Authorization HTTP header using Bearer schema
+          example: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    Error:
+      required:
+        - errorCode
+        - message
+        - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - internal_error
+            - bad_request
+            - unauthorized_credentials
+            - user_not_found
+            - org_not_found
+            - workspace_not_found
+            - invite_not_found
+            - duplicate_org_name
+            - duplicate_workspace_name
+            - empty_org_name
+            - empty_workspace_name
+            - duplicate_user_email
+            - user_already_in_org
+            - duplicate_entity_name
+            - entity_not_found
+            - instance_not_found
+            - rule_not_found
+            - invalid_entity_schema
+            - invalid_id
+            - invalid_action
+            - empty_actions
+            - invalid_action_combination
+            - forbidden
+        message:
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    LoginInfo:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email of the user we are authenticating
+          format: email
+          example: shaun@colton.demo
+        password:
+          minLength: 1
+          type: string
+          description: The password of the user
+          example: mycatname
+    DeveloperGoogleOAuthResponse:
+      required:
+        - token
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+          description: >-
+            JWT authentication token. Most Nile operations the caller to pass a
+            valid token in Authorization HTTP header using Bearer schema
+          example: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    OrgMembership:
+      type: object
+      properties:
+        joined:
+          type: string
+          format: date-time
+      example:
+        joined: '2022-08-03T17:30:00.295Z'
+    User:
+      required:
+        - email
+        - id
+        - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - user
+            - developer
+            - nile_employee
+        email:
+          type: string
+          format: email
+        org_memberships:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/OrgMembership'
+          example:
+            org_02qaCO8qNEmfpAcomojhLb:
+              joined: '2022-08-09T10:27:30.956Z'
+            org_02qdS9KPAnG6Pt5XFAomu6:
+              joined: '2022-08-03T17:30:00.295Z'
+    Action:
+      type: string
+      description: >-
+        The action to be allowed on the resource if a rule is matched. The
+        `deny` action is a special action that denies all access.
+      enum:
+        - read
+        - write
+        - deny
+    Resource:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+      description: >-
+        A subset of properties of any custom instance to authorize against. Only
+        exact matching is supported, for now.
+      example:
+        id: inst_123
+        type: cluster
+        properties:
+          region: us-west-2
+          status: running
+    Rule:
+      required:
+        - id
+        - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - rule
+        deleted:
+          type: string
+          format: date-time
+          readOnly: true
+        subject:
+          $ref: '#/components/schemas/Subject'
+        resource:
+          $ref: '#/components/schemas/Resource'
+        actions:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    Subject:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+      description: >-
+        A subset of properties of a user to authorize against. Only exact
+        matching is supported, for now.
+    CreateRuleRequest:
+      required:
+        - actions
+      type: object
+      properties:
+        subject:
+          $ref: '#/components/schemas/Subject'
+        resource:
+          $ref: '#/components/schemas/Resource'
+        actions:
+          minLength: 1
+          uniqueItems: true
+          type: array
+          description: >-
+            The actions to be allowed on the resource if a rule matches a
+            request. At least one action must be provided and executable actions
+            (i.e: `read`, `write`) cannot be combined with non-executable
+            actions (i.e: `deny`). If multiple rules match a request, rules with
+            a `deny` action take precedence over rules with a `read` action. You
+            can define `deny` rules to make exceptions in your rules that allow
+            access.
+          items:
+            $ref: '#/components/schemas/Action'
+    UpdateRuleRequest:
+      type: object
+      properties:
+        subject:
+          $ref: '#/components/schemas/Subject'
+        resource:
+          $ref: '#/components/schemas/Resource'
+        actions:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    CreateUserRequest:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          minLength: 1
+          type: string
+    Entity:
+      required:
+        - id
+        - name
+        - schema
+        - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - entity
+        name:
+          type: string
+          example: clusters
+        schema:
+          $ref: '#/components/schemas/JsonSchema'
+    JsonSchema:
+      type: object
+      description: A JSON Schema
+      example:
+        type: object
+        properties:
+          id:
+            type: string
+          memory:
+            type: integer
+          cpus:
+            type: integer
+    CreateEntityRequest:
+      required:
+        - name
+        - schema
+      type: object
+      properties:
+        name:
+          type: string
+          example: clusters
+        schema:
+          $ref: '#/components/schemas/JsonSchema'
+    UpdateEntityRequest:
+      required:
+        - schema
+      type: object
+      properties:
+        schema:
+          $ref: '#/components/schemas/JsonSchema'
+    Instance:
+      required:
+        - id
+        - properties
+        - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          description: The entity type of this instance
+          example: clusters
+        deleted:
+          type: string
+          format: date-time
+          readOnly: true
+        properties:
+          $ref: '#/components/schemas/JsonSchemaInstance'
+    InstanceEvent:
+      required:
+        - timestamp
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        eventType:
+          type: string
+          enum:
+            - CREATE
+            - UPDATE
+            - DELETE
+        before:
+          $ref: '#/components/schemas/Instance'
+        after:
+          $ref: '#/components/schemas/Instance'
+        timestamp:
+          type: string
+          format: date-time
+    JsonSchemaInstance:
+      type: object
+      description: An *instance* of a JSON Schema
+      example:
+        id: lkc-123
+        memory: 4096
+        cpus: 4
+    UpdateInstanceRequest:
+      required:
+        - properties
+      type: object
+      properties:
+        properties:
+          $ref: '#/components/schemas/JsonSchemaInstance'
+    Invite:
+      required:
+        - code
+        - inviter
+        - org
+        - status
+      type: object
+      properties:
+        code:
+          type: string
+        org:
+          type: string
+        inviter:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+    AddUserToOrgRequest:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+    Organization:
+      required:
+        - id
+        - name
+        - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - nile
+            - organization
+            - workspace
+        name:
+          type: string
+    CreateOrganizationRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+    UpdateOrganizationRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+    UpdateUserRequest:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          minLength: 1
+          type: string
+    Workspace:
+      required:
+        - id
+        - name
+        - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - workspace
+        name:
+          type: string
+    CreateWorkspaceRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+    Athlete:
+      allOf:
+        - $ref: 'https://prod.thenile.dev/openapi.yaml#/components/schemas/Instance'
+        - type: object
+          required:
+            - team
+            - jersey
+          properties:
+            type:
+              type: string
+              enum:
+                - athlete
+            properties:
+              type: object
+              required:
+                - team
+                - jersey
+              properties:
+                team:
+                  type: string
+                jersey:
+                  type: integer
+                position:
+                  type: string
+    AthleteEvent:
+      allOf:
+        - $ref: >-
+            https://prod.thenile.dev/openapi.yaml#/components/schemas/InstanceEvent
+        - type: object
+          properties:
+            before:
+              $ref: '#/components/schemas/Athlete'
+            after:
+              $ref: '#/components/schemas/Athlete'
+  parameters:
+    workspace:
+      name: workspace
+      in: path
+      description: >-
+        The name of the Nile workspace where all the data-plane metadata for
+        this user is stored
+      required: true
+      schema:
+        minLength: 1
+        type: string
+    orgIdInQuery:
+      in: query
+      name: orgId
+      schema:
+        type: integer
+      required: true
+      description: Org ID
+    idInPath:
+      in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Unique identifier
+    typeInPath:
+      in: path
+      name: type
+      schema:
+        type: string
+      required: true
+      description: Entity type
+    workspaceInPath:
+      name: workspace
+      in: path
+      description: The name of the Nile workspace
+      required: true
+      schema:
+        minLength: 1
+        type: string

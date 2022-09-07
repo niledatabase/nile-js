@@ -1,0 +1,4 @@
+inputs:
+  - inputFile: api.yaml
+  - inputFile: workspace.yaml
+output: ./merged.yaml

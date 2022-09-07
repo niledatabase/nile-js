@@ -1,0 +1,248 @@
+openapi: 3.0.2
+info:
+  title: nile
+  version: '0.1'
+servers:
+- url: 'https://api.thenile.dev/v0'
+paths:
+  /workspaces/{workspace}/instances/athlete:
+    parameters:
+    - $ref: '#/components/parameters/workspaceInPath'
+    get:
+      tags:
+      - athlete
+      operationId: listAthleteInstances
+      summary: Get all Athletes
+      responses:
+        '200':
+          description: List of all Athlete instances
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Athlete'
+    post:
+      tags:
+      - athlete
+      operationId: createAthleteInstance
+      summary: Create a new Athlete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Athlete'
+      responses:
+        '200':
+          description: Created a new Athlete
+
+  /workspaces/{workspaces}/instances/athlete/{id}:
+    parameters:
+    - $ref: '#/components/parameters/workspaceInPath'
+    - $ref: '#/components/parameters/idInPath'
+    get:
+      tags:
+      - athlete
+      operationId: getAthleteInstance
+      summary: Get a single Athlete instance
+      responses:
+        '200':
+          description: A single Athlete instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Athlete'
+    put:
+      tags:
+      - athlete
+      operationId: updateAthleteInstance
+      summary: Update a single Athlete instance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Athlete'
+      responses:
+        '200':
+          description: The updated Athlete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Athlete'
+    delete:
+      tags:
+      - athlete
+      operationId: deleteAthleteInstance
+      summary: Delete a single Athlete instance
+      responses:
+        204:
+          description: Successful deletion of the Athlete
+
+  /workspaces/{workspace}/orgs/{org}/instances/athlete:
+    parameters:
+    - $ref: '#/components/parameters/workspaceInPath'
+    - $ref: '#/components/parameters/orgInPath'
+    get:
+      tags:
+      - entities
+      summary: List all Athlete instances in an organization
+      operationId: listOrgAthleteInstances
+      responses:
+        "200":
+          description: A list of all instances of the specified type under this org
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Athlete'
+    post:
+      tags:
+      - entities
+      summary: Create a new Athlete instance in an organization
+      operationId: createOrgAthleteInstance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Athlete'
+        required: true
+      responses:
+        "201":
+          description: The newly created instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+
+  /workspaces/{workspace}/orgs/{org}/instances/athlete/{id}:
+    parameters:
+    - $ref: '#/components/parameters/workspaceInPath'
+    - $ref: '#/components/parameters/orgInPath'
+    - $ref: '#/components/parameters/idInPath'
+    get:
+      tags:
+      - entities
+      summary: Get a single Athlete instance within an Organization
+      operationId: getOrgAthleteInstance
+      responses:
+        "200":
+          description: The instance with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Athlete'
+    put:
+      tags:
+      - entities
+      summary: Update a single Athlete instance within an Organization
+      operationId: updateOrgAthleteInstance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Athlete'
+        required: true
+      responses:
+        "200":
+          description: The updated instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+    delete:
+      tags:
+      - entities
+      summary: Delete an instance
+      operationId: deleteInstance
+      responses:
+        "204":
+          description: Successful instance deletion
+
+  /workspaces/{workspace}/events/athlete:
+    parameters:
+    - $ref: '#/components/parameters/workspaceInPath'
+    get:
+      tags:
+      - events
+      summary: Get Athlete instance events
+      operationId: athleteInstance.events
+      responses:
+        "200":
+          description: Events for the type.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AthleteEvent'
+
+components:
+  parameters:
+    orgIdInQuery:
+      in: query
+      name: orgId
+      schema:
+        type: integer
+      required: true
+      description: Org ID
+    idInPath:
+      in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Unique identifier
+    typeInPath:
+      in: path
+      name: type
+      schema:
+        type: string
+      required: true
+      description: Entity type
+    workspaceInPath:
+      name: workspace
+      in: path
+      description: The name of the Nile workspace
+      required: true
+      schema:
+        minLength: 1
+        type: string
+
+  schemas:
+    Athlete:
+      allOf:
+      - $ref: 'https://prod.thenile.dev/openapi.yaml#/components/schemas/Instance'
+      - type: object
+        required:
+        - "team"
+        - "jersey"
+        properties:
+          type:
+            type: string
+            enum:
+            - athlete
+          properties:
+            type: object
+            required:
+            - "team"
+            - "jersey"
+            properties:
+              team:
+                type: "string"
+              jersey:
+                type: "integer"
+              position:
+                type: "string"
+
+    AthleteEvent:
+      allOf:
+      - $ref: 'https://prod.thenile.dev/openapi.yaml#/components/schemas/InstanceEvent'
+      - type: object
+        properties:
+          before:
+            $ref: '#/components/schemas/Athlete'
+          after:
+            $ref: '#/components/schemas/Athlete'
