@@ -44,10 +44,10 @@
     }
   ],
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^8.0.1",
+    "@size-limit/preset-small-lib": "^8.1.0",
     "@types/jest": "^29.0.0",
     "@types/node": "^18.7.15",
-    "size-limit": "^8.0.1",
+    "size-limit": "^8.1.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
     "typedoc": "^0.23.14",
