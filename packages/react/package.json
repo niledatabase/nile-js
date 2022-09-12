@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/react",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -83,7 +83,7 @@
     "@mui/material": "^5.10.4",
     "@mui/x-data-grid": "^5.17.1",
     "@tanstack/react-query": "^4.2.3",
-    "@theniledev/js": "^0.18.0",
+    "@theniledev/js": "^0.19.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.34.1",
