@@ -4,10 +4,143 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1-7b170ae
+  version: 0.1-29dfbdb
 servers:
 - url: localhost:8080
 paths:
+  /workspaces/{workspace}/orgs/{org}/access/policies:
+    get:
+      tags:
+      - access
+      summary: List all access policies
+      operationId: listPolicies
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of all access policies in this organization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Policy'
+    post:
+      tags:
+      - access
+      summary: Create a new access policy
+      description: |
+        Access policies allow your users to set up access controls for entities in their organization. All Access is determined based on 3 inputs:
+        1. Subject: who is trying to act (think User)
+        2. Resource: on what are they acting (for now, only instances and access policies themselves are supported)
+        3. Action: what are they doing (think Read, Write, Deny)
+
+        Note that the creator of an organization is automatically granted access to all access policies in the organization
+        regardless of the access policies defined.
+
+        Also note that once a user creates an access policy their organization defaults to deny-by-default behavior
+        for all users in the organization.
+      operationId: createPolicy
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePolicyRequest'
+        required: true
+      responses:
+        "201":
+          description: The newly created access policy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+  /workspaces/{workspace}/orgs/{org}/access/policies/{policyId}:
+    get:
+      tags:
+      - access
+      summary: Get an access policy
+      operationId: getPolicy
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: policyId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The access policy with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+    put:
+      tags:
+      - access
+      summary: Update an access policy
+      operationId: updatePolicy
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: policyId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePolicyRequest'
+        required: true
+      responses:
+        "200":
+          description: Updated version of the access policy with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+    delete:
+      tags:
+      - access
+      summary: Delete an access policy
+      operationId: deletePolicy
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: policyId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Successful instance deletion
   /auth/login:
     post:
       tags:
@@ -204,131 +337,6 @@ paths:
               console.log("API called successfully. Returned data: " + data);
             })
             .catch((error: any) => console.error(error));
-  /workspaces/{workspace}/orgs/{org}/authz/rules:
-    get:
-      tags:
-      - authz
-      summary: List all rules
-      operationId: listRules
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: A list of all rules in this organization
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Rule'
-    post:
-      tags:
-      - authz
-      summary: Create a new rule
-      description: Creates a new authorization rule. Note that once you create an
-        authorization rule your workspace defaults to deny-by-default behavior for
-        all users in all orgs.
-      operationId: createRule
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateRuleRequest'
-        required: true
-      responses:
-        "201":
-          description: The newly created rule
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Rule'
-  /workspaces/{workspace}/orgs/{org}/authz/rules/{ruleId}:
-    get:
-      tags:
-      - authz
-      summary: Get a rule
-      operationId: getRule
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: ruleId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: The rule with the specified id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Rule'
-    put:
-      tags:
-      - authz
-      summary: Update a rule
-      operationId: updateRule
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: ruleId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateRuleRequest'
-        required: true
-      responses:
-        "200":
-          description: Updated version of the rule with the specified id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Rule'
-    delete:
-      tags:
-      - authz
-      summary: Delete a rule
-      operationId: deleteRule
-      parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: ruleId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "204":
-          description: Successful instance deletion
   /developers:
     post:
       tags:
@@ -841,6 +849,37 @@ paths:
       responses:
         "204":
           description: Successful org deletion
+  /workspaces/{workspace}/orgs/{org}/users/{user}:
+    put:
+      tags:
+      - organizations
+      summary: Update a user in an organization
+      operationId: updateUserInOrg
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: user
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationMembershipRequest'
+        required: true
+      responses:
+        "200":
+          description: The updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   /me:
     get:
       tags:
@@ -1008,6 +1047,110 @@ paths:
                 $ref: '#/components/schemas/Workspace'
 components:
   schemas:
+    Action:
+      type: string
+      description: The action to be allowed on the resource if an access policy is
+        matched. The `deny` action is a special action that denies all access.
+      enum:
+      - read
+      - write
+      - deny
+    Policy:
+      required:
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        seq:
+          type: integer
+          format: int64
+          readOnly: true
+        type:
+          type: string
+          enum:
+          - policy
+        deleted:
+          type: string
+          format: date-time
+          readOnly: true
+        subject:
+          $ref: '#/components/schemas/Subject'
+        resource:
+          $ref: '#/components/schemas/Resource'
+        actions:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    Resource:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+      description: "A subset of properties of any custom instance to authorize against.\
+        \ Only exact matching is supported, for now."
+      example:
+        id: inst_123
+        type: cluster
+        properties:
+          region: us-west-2
+          status: running
+    Subject:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+      description: "A subset of properties of a user to authorize against. Only exact\
+        \ matching is supported, for now."
+    CreatePolicyRequest:
+      required:
+      - actions
+      type: object
+      properties:
+        subject:
+          $ref: '#/components/schemas/Subject'
+        resource:
+          $ref: '#/components/schemas/Resource'
+        actions:
+          minLength: 1
+          uniqueItems: true
+          type: array
+          description: "The actions to be allowed on the resource if an access policy\
+            \ matches a request. At least one action must be provided and executable\
+            \ actions (i.e: `read`, `write`) cannot be combined with non-executable\
+            \ actions (i.e: `deny`). If multiple access policies match a request,\
+            \ policies with a `deny` action take precedence over policies with a `read`\
+            \ action. You can define `deny` access policies to make exceptions in\
+            \ your policies that allow access."
+          items:
+            $ref: '#/components/schemas/Action'
+    UpdatePolicyRequest:
+      type: object
+      properties:
+        subject:
+          $ref: '#/components/schemas/Subject'
+        resource:
+          $ref: '#/components/schemas/Resource'
+        actions:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
     Token:
       required:
       - token
@@ -1020,12 +1163,12 @@ components:
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
     Error:
       required:
-      - errorCode
+      - error_code
       - message
-      - statusCode
+      - status_code
       type: object
       properties:
-        errorCode:
+        error_code:
           type: string
           enum:
           - internal_error
@@ -1044,7 +1187,7 @@ components:
           - duplicate_entity_name
           - entity_not_found
           - instance_not_found
-          - rule_not_found
+          - access_policy_not_found
           - invalid_entity_schema
           - invalid_id
           - invalid_action
@@ -1053,7 +1196,7 @@ components:
           - forbidden
         message:
           type: string
-        statusCode:
+        status_code:
           type: integer
           format: int32
     LoginInfo:
@@ -1084,14 +1227,29 @@ components:
           description: JWT authentication token. Most Nile operations the caller to
             pass a valid token in Authorization HTTP header using Bearer schema
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    Metadata:
+      type: object
+      description: Arbitrary metadata.
+      example:
+        internal_id: "12345"
+        location: US
+        age: 21
+        is_admin: true
+        name:
+          first: John
+          last: Doe
     OrgMembership:
       type: object
       properties:
         joined:
           type: string
           format: date-time
+        metadata:
+          $ref: '#/components/schemas/Metadata'
       example:
         joined: 2022-08-03T17:30:00.295581
+        metadata:
+          position: CEO
     User:
       required:
       - email
@@ -1123,6 +1281,8 @@ components:
         email:
           type: string
           format: email
+        metadata:
+          $ref: '#/components/schemas/Metadata'
         org_memberships:
           type: object
           additionalProperties:
@@ -1130,111 +1290,12 @@ components:
           example:
             org_02qaCO8qNEmfpAcomojhLb:
               joined: 2022-08-09T10:27:30.956079
+              metadata:
+                role: admin
             org_02qdS9KPAnG6Pt5XFAomu6:
               joined: 2022-08-03T17:30:00.295581
-    Action:
-      type: string
-      description: The action to be allowed on the resource if a rule is matched.
-        The `deny` action is a special action that denies all access.
-      enum:
-      - read
-      - write
-      - deny
-    Resource:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-      description: "A subset of properties of any custom instance to authorize against.\
-        \ Only exact matching is supported, for now."
-      example:
-        id: inst_123
-        type: cluster
-        properties:
-          region: us-west-2
-          status: running
-    Rule:
-      required:
-      - id
-      - type
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        updated:
-          type: string
-          format: date-time
-          readOnly: true
-        seq:
-          type: integer
-          format: int64
-          readOnly: true
-        type:
-          type: string
-          enum:
-          - rule
-        deleted:
-          type: string
-          format: date-time
-          readOnly: true
-        subject:
-          $ref: '#/components/schemas/Subject'
-        resource:
-          $ref: '#/components/schemas/Resource'
-        actions:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/Action'
-    Subject:
-      type: object
-      properties:
-        id:
-          type: string
-        email:
-          type: string
-      description: "A subset of properties of a user to authorize against. Only exact\
-        \ matching is supported, for now."
-    CreateRuleRequest:
-      required:
-      - actions
-      type: object
-      properties:
-        subject:
-          $ref: '#/components/schemas/Subject'
-        resource:
-          $ref: '#/components/schemas/Resource'
-        actions:
-          minLength: 1
-          uniqueItems: true
-          type: array
-          description: "The actions to be allowed on the resource if a rule matches\
-            \ a request. At least one action must be provided and executable actions\
-            \ (i.e: `read`, `write`) cannot be combined with non-executable actions\
-            \ (i.e: `deny`). If multiple rules match a request, rules with a `deny`\
-            \ action take precedence over rules with a `read` action. You can define\
-            \ `deny` rules to make exceptions in your rules that allow access."
-          items:
-            $ref: '#/components/schemas/Action'
-    UpdateRuleRequest:
-      type: object
-      properties:
-        subject:
-          $ref: '#/components/schemas/Subject'
-        resource:
-          $ref: '#/components/schemas/Resource'
-        actions:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/Action'
+              metadata:
+                role: member
     CreateUserRequest:
       required:
       - email
@@ -1247,6 +1308,8 @@ components:
         password:
           minLength: 1
           type: string
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     Entity:
       required:
       - id
@@ -1349,7 +1412,7 @@ components:
         id:
           type: integer
           format: int32
-        eventType:
+        event_type:
           type: string
           enum:
           - CREATE
@@ -1402,8 +1465,11 @@ components:
         email:
           type: string
           format: email
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     Organization:
       required:
+      - creator
       - id
       - name
       - type
@@ -1432,6 +1498,9 @@ components:
           - workspace
         name:
           type: string
+        creator:
+          type: string
+          description: ID of the user who created this organization
     CreateOrganizationRequest:
       required:
       - name
@@ -1448,6 +1517,11 @@ components:
         name:
           minLength: 1
           type: string
+    UpdateOrganizationMembershipRequest:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     UpdateUserRequest:
       required:
       - email
@@ -1460,6 +1534,8 @@ components:
         password:
           minLength: 1
           type: string
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     Workspace:
       required:
       - id

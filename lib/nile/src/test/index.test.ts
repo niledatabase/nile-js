@@ -18,7 +18,7 @@ describe('index', () => {
         'workspaces',
         'organizations',
         'events',
-        'authz',
+        'access',
       ]);
       keys.forEach((k) => {
         const props = Object.getOwnPropertyNames(
@@ -44,6 +44,7 @@ describe('index', () => {
             'listOrganizations',
             'listUsersInOrg',
             'updateOrganization',
+            'updateUserInOrg',
           ]);
         }
         if (k === 'entities') {
@@ -87,14 +88,14 @@ describe('index', () => {
             'validateUser',
           ]);
         }
-        if (k === 'authz') {
+        if (k === 'access') {
           expect(props).toEqual([
             'constructor',
-            'createRule',
-            'deleteRule',
-            'getRule',
-            'listRules',
-            'updateRule',
+            'createPolicy',
+            'deletePolicy',
+            'getPolicy',
+            'listPolicies',
+            'updatePolicy',
           ]);
         }
       });
