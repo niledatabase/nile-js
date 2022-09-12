@@ -3,3 +3,4 @@
 
 yarn lint-staged 
 yarn workspace @theniledev/react test
+yarn workspace @theniledev/js test
