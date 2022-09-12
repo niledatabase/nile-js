@@ -1,7 +1,6 @@
 import React from 'react';
-import { useNile } from '@theniledev/react';
+import { useQuery, useNile } from '@theniledev/react';
 import { User } from '@theniledev/js';
-import { useQuery } from '@tanstack/react-query';
 
 export function UserTable() {
   const nile = useNile();

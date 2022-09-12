@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useNile } from '@theniledev/react';
+import { useNile, useQuery } from '@theniledev/react';
 import { LoginInfo, User } from '@theniledev/js';
-import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { ComponentList } from 'components/ComponentList';
 
