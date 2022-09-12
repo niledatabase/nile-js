@@ -2098,10 +2098,10 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
-"@openapitools/openapi-generator-cli@^2.5.1":
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/@openapitools/openapi-generator-cli/-/openapi-generator-cli-2.5.1.tgz#3825be4f7317199183fbd0d464dd8a7ba055fcf5"
-  integrity sha512-WSRQBU0dCSVD+0Qv8iCsv0C4iMaZe/NpJ/CT4SmrEYLH3txoKTE8wEfbdj/kqShS8Or0YEGDPUzhSIKY151L0w==
+"@openapitools/openapi-generator-cli@^2.5.2":
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/@openapitools/openapi-generator-cli/-/openapi-generator-cli-2.5.2.tgz#727a0f29fec1f91ffb467003d0d12ef35554e0ef"
+  integrity sha512-FLgkjzpDiHVsH821db0VDSElDoA6TcspGyq3RD4zLBJaJhbSsRwr4u87sNoyuHKBg4OMJbZMT4iJxAhkosKrzw==
   dependencies:
     "@nestjs/common" "8.4.4"
     "@nestjs/core" "8.4.4"
@@ -3254,12 +3254,12 @@
     "@testing-library/dom" "^8.5.0"
     "@types/react-dom" "^18.0.0"
 
-"@theniledev/js@^0.17.1":
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.17.1.tgz#0bf1be84770d83bec233ef5156afdf5fc49c2af4"
-  integrity sha512-gOhJ6yRkTlnKb4m4ixp7Dk6Wfkz0ji+PRivyJKB3O7u/ds1E9E628aK/pWcr2OO7kWUgECs4Zv7hTIkosqS+Lw==
+"@theniledev/js@^0.19.1":
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.19.1.tgz#91b72123b1f6bf50f988239418d958d1016c45df"
+  integrity sha512-V7CvRAQhQWTw+tzTY3H3zotsLddrD1rlw6GfTjmFm+iJglp15iegk0L8d96dzUCaco4UY6UqDhRqC+XG9uvhyg==
   dependencies:
-    "@openapitools/openapi-generator-cli" "^2.5.1"
+    "@openapitools/openapi-generator-cli" "^2.5.2"
     es6-promise "^4.2.8"
     node-fetch "^3.2.10"
     sade "^1.8.1"
@@ -11851,10 +11851,10 @@ react-helmet-async@^1.0.2:
     react-fast-compare "^3.2.0"
     shallowequal "^1.1.0"
 
-react-hook-form@^7.34.1:
-  version "7.34.2"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.34.2.tgz#9ac6d1a309a7c4aaa369d1269357a70e9e9bf4de"
-  integrity sha512-1lYWbEqr0GW7HHUjMScXMidGvV0BE2RJV3ap2BL7G0EJirkqpccTaawbsvBO8GZaB3JjCeFBEbnEWI1P8ZoLRQ==
+react-hook-form@^7.35.0:
+  version "7.35.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.35.0.tgz#b133de48fc84b1e62f9277ba79dfbacd9bb13dd3"
+  integrity sha512-9CYdOed+Itbiu5VMVxW0PK9mBR3f0gDGJcZEyUSm0eJbDymQ913TRs2gHcQZZmfTC+rtxyDFRuelMxx/+xwMcw==
 
 react-inspector@^5.1.0:
   version "5.1.1"
