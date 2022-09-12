@@ -2098,10 +2098,10 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
-"@openapitools/openapi-generator-cli@^2.5.1":
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/@openapitools/openapi-generator-cli/-/openapi-generator-cli-2.5.1.tgz#3825be4f7317199183fbd0d464dd8a7ba055fcf5"
-  integrity sha512-WSRQBU0dCSVD+0Qv8iCsv0C4iMaZe/NpJ/CT4SmrEYLH3txoKTE8wEfbdj/kqShS8Or0YEGDPUzhSIKY151L0w==
+"@openapitools/openapi-generator-cli@^2.5.2":
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/@openapitools/openapi-generator-cli/-/openapi-generator-cli-2.5.2.tgz#727a0f29fec1f91ffb467003d0d12ef35554e0ef"
+  integrity sha512-FLgkjzpDiHVsH821db0VDSElDoA6TcspGyq3RD4zLBJaJhbSsRwr4u87sNoyuHKBg4OMJbZMT4iJxAhkosKrzw==
   dependencies:
     "@nestjs/common" "8.4.4"
     "@nestjs/core" "8.4.4"
@@ -3254,12 +3254,12 @@
     "@testing-library/dom" "^8.5.0"
     "@types/react-dom" "^18.0.0"
 
-"@theniledev/js@^0.17.1":
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.17.1.tgz#0bf1be84770d83bec233ef5156afdf5fc49c2af4"
-  integrity sha512-gOhJ6yRkTlnKb4m4ixp7Dk6Wfkz0ji+PRivyJKB3O7u/ds1E9E628aK/pWcr2OO7kWUgECs4Zv7hTIkosqS+Lw==
+"@theniledev/js@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.18.0.tgz#e05574eb9537220fbd923bc5c81d79b1df6dcca7"
+  integrity sha512-3M9CQXm0ySnjvrSZt9monHsmVou8MIS2OXJBHbk6NRbKjE3kyBZD77SiCtrR6M31x9w7qwFp6OXqbnsDFU1quQ==
   dependencies:
-    "@openapitools/openapi-generator-cli" "^2.5.1"
+    "@openapitools/openapi-generator-cli" "^2.5.2"
     es6-promise "^4.2.8"
     node-fetch "^3.2.10"
     sade "^1.8.1"
