@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1-29dfbdb
+  version: 0.1-296b8c8
 servers:
 - url: localhost:8080
 paths:
@@ -1100,8 +1100,11 @@ components:
           type: string
         type:
           type: string
-      description: "A subset of properties of any custom instance to authorize against.\
-        \ Only exact matching is supported, for now."
+      additionalProperties: true
+      description: |
+        A subset of properties of any custom or built-in entity instance to authorize against.
+        Only exact matching of properties is supported for now.
+        For built-in entity instances, only the "rule" entity is currently supported.
       example:
         id: inst_123
         type: cluster
