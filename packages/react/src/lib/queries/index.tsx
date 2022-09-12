@@ -35,11 +35,11 @@ const GetInstance = (type: ParamType, org: ParamType, id: ParamType) => [
   `${ListInstances(type, org)}/${id}`,
 ];
 
-const ListRules = (org: ParamType) => [
-  `${Queries.Authz}/${GetOrganization(org)}/rules`,
+const ListPolicies = (org: ParamType) => [
+  `${Queries.Authz}/${GetOrganization(org)}/policies`,
 ];
-const GetRule = (org: ParamType, id: ParamType) => [
-  `${Queries.Authz}/${GetOrganization(org)}/rules/${id}`,
+const GetPolicy = (org: ParamType, id: ParamType) => [
+  `${Queries.Authz}/${GetOrganization(org)}/policies/${id}`,
 ];
 
 const queryKeys = {
@@ -57,8 +57,8 @@ const queryKeys = {
   ListUsersInOrg,
   GetMe,
   GetDeveloperToken,
-  ListRules,
-  GetRule,
+  ListPolicies,
+  GetPolicy,
 };
 
 export default queryKeys;

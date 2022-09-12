@@ -3,7 +3,7 @@
  */
 
 import {
-  AuthzApi,
+  AccessApi,
   DevelopersApi,
   EntitiesApi,
   OrganizationsApi,
@@ -24,7 +24,7 @@ export class NileApi {
   workspaces: WorkspacesApi;
   organizations: OrganizationsApi;
   events: EventsApi;
-  authz: AuthzApi;
+  access: AccessApi;
 
   constructor(configuration?: Configuration) {
     this.users = new UsersApi(configuration);
@@ -33,7 +33,7 @@ export class NileApi {
     this.workspaces = new WorkspacesApi(configuration);
     this.organizations = new OrganizationsApi(configuration);
     this.events = new EventsApi(this.entities);
-    this.authz = new AuthzApi(configuration);
+    this.access = new AccessApi(configuration);
   }
 
   set workspace(workspace: void | string) {
@@ -43,7 +43,7 @@ export class NileApi {
       this.entities.workspace = workspace;
       this.workspaces.workspace = workspace;
       this.organizations.workspace = workspace;
-      this.authz.workspace = workspace;
+      this.access.workspace = workspace;
     }
   }
 
@@ -63,8 +63,8 @@ export class NileApi {
     if (this.organizations.workspace) {
       return this.organizations.workspace;
     }
-    if (this.authz.workspace) {
-      return this.authz.workspace;
+    if (this.access.workspace) {
+      return this.access.workspace;
     }
   }
 
@@ -75,7 +75,7 @@ export class NileApi {
       this.entities.authToken = token;
       this.workspaces.authToken = token;
       this.organizations.authToken = token;
-      this.authz.authToken = token;
+      this.access.authToken = token;
     }
   }
 
@@ -95,8 +95,8 @@ export class NileApi {
     if (this.organizations.authToken) {
       return this.organizations.authToken;
     }
-    if (this.authz.authToken) {
-      return this.authz.authToken;
+    if (this.access.authToken) {
+      return this.access.authToken;
     }
   }
   /**
