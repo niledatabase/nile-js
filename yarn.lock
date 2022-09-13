@@ -1199,7 +1199,7 @@
     "@codemirror/view" "^6.0.0"
     "@lezer/common" "^1.0.0"
 
-"@codemirror/commands@^6.0.0":
+"@codemirror/commands@^6.0.0", "@codemirror/commands@^6.1.0":
   version "6.1.0"
   resolved "https://registry.npmjs.org/@codemirror/commands/-/commands-6.1.0.tgz"
   integrity sha512-qCj2YqmbBjj0P1iumnlL5lBqZvJPzT+t2UvgjcaXErp5ZvMqFRVgQyrEfdXX6SX5UcvcHKBjXqno+MkUp0aYvQ==
@@ -1252,7 +1252,7 @@
     "@codemirror/view" "^6.0.0"
     crelt "^1.0.5"
 
-"@codemirror/state@^6.0.0":
+"@codemirror/state@^6.0.0", "@codemirror/state@^6.1.1":
   version "6.1.1"
   resolved "https://registry.npmjs.org/@codemirror/state/-/state-6.1.1.tgz"
   integrity sha512-2s+aXsxmAwnR3Rd+JDHPG/1lw0YsA9PEwl7Re88gHJHGfxyfEzKBmsN4rr53RyPIR4lzbbhJX0DCq0WlqlBIRw==
@@ -5170,10 +5170,10 @@
     "@typescript-eslint/types" "5.36.2"
     eslint-visitor-keys "^3.3.0"
 
-"@uiw/codemirror-extensions-basic-setup@4.11.6":
-  version "4.11.6"
-  resolved "https://registry.npmjs.org/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.11.6.tgz"
-  integrity sha512-VW9tmkHvdD5u3osksBrDU/DQYNGcifK3qJPmmMKmje106pZTgIhvxABVhNCEJlDIrG5zYV5cqLtwb9TPbkd5qQ==
+"@uiw/codemirror-extensions-basic-setup@4.12.2":
+  version "4.12.2"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.12.2.tgz#0d8dbc389122acb53cbc87e212eb9ee2f2c4a716"
+  integrity sha512-XVBgPPTlSHlZmRGm1UpBxlEXe1hzFSuCtd+aC14FeNPSOjibzbwM3bQB2Jw4+CmZhvifyKdUtZOg6XP7FuCLng==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
     "@codemirror/commands" "^6.0.0"
@@ -5184,13 +5184,15 @@
     "@codemirror/view" "^6.0.0"
 
 "@uiw/react-codemirror@^4.5.1":
-  version "4.11.6"
-  resolved "https://registry.npmjs.org/@uiw/react-codemirror/-/react-codemirror-4.11.6.tgz"
-  integrity sha512-xPBOHtWE1MqHp8H/hTnOTxnz1ZQiQ2CHi1neiTpnjUxQUNv5mm5vTSgw2POxPh1AJqAVFuS6L1p3EZZPiVyehQ==
+  version "4.12.2"
+  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.12.2.tgz#64462dc31b02ea953e992c2d95cde08ca67e01bb"
+  integrity sha512-wTEz1Gje1WxCwOZIMspcOe4Edke2jxTUgDF7Vv+YS/U0GyWXIoyylO8y2MY+5RsgFdYqY4ADt6u6Kj5X4y2d2w==
   dependencies:
     "@babel/runtime" "^7.18.6"
+    "@codemirror/commands" "^6.1.0"
+    "@codemirror/state" "^6.1.1"
     "@codemirror/theme-one-dark" "^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup" "4.11.6"
+    "@uiw/codemirror-extensions-basic-setup" "4.12.2"
     codemirror "^6.0.0"
 
 "@webassemblyjs/ast@1.11.1":
