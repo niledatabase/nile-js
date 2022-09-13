@@ -14,6 +14,12 @@ module.exports = {
       (f) => f.test.toString() !== '/\\.css$/'
     );
 
+    config.module.rules.push({
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
+    });
+
     config.resolve.modules = [
       ...(config.resolve.modules || []),
       path.resolve(__dirname, '../'),
