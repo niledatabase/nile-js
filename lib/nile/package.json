@@ -44,15 +44,15 @@
     }
   ],
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^8.0.1",
-    "@types/jest": "^29.0.0",
+    "@size-limit/preset-small-lib": "^8.1.0",
+    "@types/jest": "^29.0.2",
     "@types/node": "^18.7.15",
     "size-limit": "^8.0.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
     "typedoc": "^0.23.14",
     "typedoc-plugin-markdown": "^3.13.6",
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.3"
   },
   "repository": {
     "type": "git",
