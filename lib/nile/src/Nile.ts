@@ -9,6 +9,7 @@ import {
   OrganizationsApi,
   UsersApi,
   WorkspacesApi,
+  MetricsApi,
 } from './generated/openapi/src';
 import {
   Configuration,
@@ -25,7 +26,7 @@ export class NileApi {
   organizations: OrganizationsApi;
   events: EventsApi;
   access: AccessApi;
-
+  metrics: MetricsApi;
   constructor(configuration?: Configuration) {
     this.users = new UsersApi(configuration);
     this.developers = new DevelopersApi(configuration);
@@ -34,6 +35,7 @@ export class NileApi {
     this.organizations = new OrganizationsApi(configuration);
     this.events = new EventsApi(this.entities);
     this.access = new AccessApi(configuration);
+    this.metrics = new MetricsApi(configuration);
   }
 
   set workspace(workspace: void | string) {
@@ -44,6 +46,7 @@ export class NileApi {
       this.workspaces.workspace = workspace;
       this.organizations.workspace = workspace;
       this.access.workspace = workspace;
+      this.metrics.workspace = workspace;
     }
   }
 
@@ -66,6 +69,9 @@ export class NileApi {
     if (this.access.workspace) {
       return this.access.workspace;
     }
+    if (this.metrics.workspace) {
+      return this.metrics.workspace;
+    }
   }
 
   set authToken(token: void | string) {
@@ -76,6 +82,7 @@ export class NileApi {
       this.workspaces.authToken = token;
       this.organizations.authToken = token;
       this.access.authToken = token;
+      this.metrics.authToken = token;
     }
   }
 
@@ -97,6 +104,9 @@ export class NileApi {
     }
     if (this.access.authToken) {
       return this.access.authToken;
+    }
+    if (this.metrics.authToken) {
+      return this.metrics.authToken;
     }
   }
   /**
