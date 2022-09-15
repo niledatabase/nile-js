@@ -1,5 +1,3 @@
-// Button.stories.ts|tsx
-
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import {
@@ -42,7 +40,7 @@ const entityData = {
   },
 };
 const organization: Organization = {
-  creator: 'some_creator',
+  creator: 'someone?',
   id: 'org_02qdzMMNHAPIF1XSeD9jrx',
   created: new Date(),
   updated: new Date(),
