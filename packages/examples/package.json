@@ -2,7 +2,7 @@
   "name": "@theniledev/examples",
   "license": "MIT",
   "private": true,
-  "version": "0.19.1",
+  "version": "0.20.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.0.2",
-    "@theniledev/js": "^0.19.1",
+    "@theniledev/js": "^0.20.0",
     "@uiw/react-codemirror": "^4.12.2",
     "next": "^12.3.0",
     "react": "^18.2.0",
