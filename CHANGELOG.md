@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.1](https://github.com/TheNileDev/nile-js/compare/v0.20.0...v0.20.1) (2022-09-16)
+
+
+### Bug Fixes
+
+* update spec, export types ([f04ef17](https://github.com/TheNileDev/nile-js/commit/f04ef176ef5e7f95121dc8fcb8a48fbf623ee5e1))
+
+
+
+
+
 # [0.20.0](https://github.com/TheNileDev/nile-js/compare/v0.19.1...v0.20.0) (2022-09-16)
 
 
