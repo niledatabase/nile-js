@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/TheNileDev/nile-js/compare/v0.19.1...v0.20.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* add webpack rule for storybook ([427da87](https://github.com/TheNileDev/nile-js/commit/427da87a2fbabcc1c87d84a4a6684dd7f424a8df))
+
+
+### Features
+
+* add metrics methods to nile ([923f785](https://github.com/TheNileDev/nile-js/commit/923f785ec0ecfdee1f2b8344a0c316c96dcfa974))
+* update deps ([a76df31](https://github.com/TheNileDev/nile-js/commit/a76df317687977f667f84bb0affd03d0cc6edd18))
+
+
+
+
+
 ## [0.19.1](https://github.com/TheNileDev/nile-js/compare/v0.19.0...v0.19.1) (2022-09-12)
 
 
