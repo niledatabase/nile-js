@@ -104,6 +104,7 @@ describe('index', () => {
           expect(props).toEqual([
             'constructor',
             'filterMetrics',
+            'filterMetricsForEntityType',
             'produceBatchOfMetrics',
           ]);
         }

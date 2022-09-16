@@ -4,9 +4,41 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1-f7863eb
+  version: 0.1-8f06453
 servers:
 - url: localhost:8080
+tags:
+- name: access
+  description: |
+    Access policies allow your users to set up access controls for entities in their organization.
+
+    All access is determined based on 3 inputs:
+    1. **Subject**: Who is trying to act (think User)
+    2. **Resource**: What are they acting on (for now, only custom entities and access policies themselves are supported).
+    All properties on a resource are optional, and any combination of them can be specified when creating a policy.
+    3. **Action**: What are they doing (think Read, Write, Deny)
+
+    Note that:
+
+    * The creator of an organization is automatically granted access to all access policies in the organization
+    regardless of the access policies defined.
+    * Once a user creates an access policy their organization defaults to deny-by-default behavior
+    for all users in the organization. Deleting all access policies will revert the organization back to allow-by-default behavior.
+
+    ### Access control for access policies:
+
+    You might want to control who can create, update, and delete access policies in your organization.
+    You can do this by creating access policies for access policies 🤯:
+
+    ```
+    "subject": {
+      "email": "admin@your_org.com"
+    },
+    "resource": {
+        "type": "policy",
+    },
+    "actions": ["read", "write"]
+    ```
 paths:
   /workspaces/{workspace}/orgs/{org}/access/policies:
     get:
@@ -34,17 +66,6 @@ paths:
       tags:
       - access
       summary: Create a new access policy
-      description: |
-        Access policies allow your users to set up access controls for entities in their organization. All Access is determined based on 3 inputs:
-        1. Subject: who is trying to act (think User)
-        2. Resource: on what are they acting (for now, only instances and access policies themselves are supported)
-        3. Action: what are they doing (think Read, Write, Deny)
-
-        Note that the creator of an organization is automatically granted access to all access policies in the organization
-        regardless of the access policies defined.
-
-        Also note that once a user creates an access policy their organization defaults to deny-by-default behavior
-        for all users in the organization.
       operationId: createPolicy
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -747,6 +768,53 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Metric'
+  /workspaces/{workspace}/metrics/entities/{entity_type}/filter:
+    post:
+      tags:
+      - metrics
+      summary: List of metrics for the entity matching the filter
+      operationId: filterMetricsForEntityType
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: entity_type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: from_timestamp
+        in: query
+        schema:
+          type: string
+          description: "The ISO-8601 formatted timestamp used to begin searching for\
+            \ matching metrics, i.e., 2018-11-13T20:20:39+00:00. If not provided the\
+            \ range will start from the epoch. Results returned are inclusive of this\
+            \ timestamp."
+          format: date-time
+      - name: duration
+        in: query
+        schema:
+          type: integer
+          description: "The duration (seconds) added to from_timestamp to limit the\
+            \ time range of the query. i.e., the query will be restricting to metric.timestamp\
+            \ >= from_timestamp AND metric.timestamp < from_timestamp + duration.\
+            \  If not provided or the duration is <=0 then the end timestamp is set\
+            \ to now"
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filter'
+        required: true
+      responses:
+        "200":
+          description: A list of metrics that match the filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Metric'
   /workspaces/{workspace}/metrics:
     post:
       tags:
@@ -1138,6 +1206,7 @@ paths:
 components:
   schemas:
     Action:
+      minLength: 1
       type: string
       description: The action to be allowed on the resource if an access policy is
         matched. The `deny` action is a special action that denies all access.
@@ -1145,6 +1214,17 @@ components:
       - read
       - write
       - deny
+    Metadata:
+      type: object
+      description: Arbitrary metadata.
+      example:
+        internal_id: "12345"
+        location: US
+        age: 21
+        is_admin: true
+        name:
+          first: John
+          last: Doe
     Policy:
       required:
       - id
@@ -1192,9 +1272,25 @@ components:
           type: string
       additionalProperties: true
       description: |
+        You can specify concrete values for resource and subject properties
+        or use variables to match a subject property against a resource property.
+        An access policy with the following resource would allow access to clusters with location matching the subject's region:
+        ```
+        {
+          "type": "cluster",
+          "properties": {
+            "location": ${subject.metadata.location}
+          }
+        }
+        ```
+
         A subset of properties of any custom or built-in entity instance to authorize against.
-        Only exact matching of properties is supported for now.
-        For built-in entity instances, only the "rule" entity is currently supported.
+        All properties on a resource are optional, and any combination of them can be specified when creating a policy.
+
+        Note that:
+        * Only exact matching of properties is supported for now.
+        * For built-in entity instances, only the Policy entity is currently supported.
+        * Custom properties on a resource must be specified under the "properties" key.
       example:
         id: inst_123
         type: cluster
@@ -1208,8 +1304,27 @@ components:
           type: string
         email:
           type: string
-      description: "A subset of properties of a user to authorize against. Only exact\
-        \ matching is supported, for now."
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      description: |
+        A subset of properties of a user to authorize against.
+        You can specify concrete values for subject properties
+        or use variables to match a subject property against a resource property.
+
+        An access policy with no resource (which matches all resources)
+        and the following subject would allow access to any resource with the same location as the subject:
+        ```
+        {
+          "metadata": {
+            "location": ${resource.properties.location}
+          }
+        }
+        ```
+      example:
+        email: user@company.com
+        metadata:
+          role: admin
+          location: us
     CreatePolicyRequest:
       required:
       - actions
@@ -1223,16 +1338,23 @@ components:
           minLength: 1
           uniqueItems: true
           type: array
-          description: "The actions to be allowed on the resource if an access policy\
-            \ matches a request. At least one action must be provided and executable\
-            \ actions (i.e: `read`, `write`) cannot be combined with non-executable\
-            \ actions (i.e: `deny`). If multiple access policies match a request,\
-            \ policies with a `deny` action take precedence over policies with a `read`\
-            \ action. You can define `deny` access policies to make exceptions in\
-            \ your policies that allow access."
+          description: |
+            The actions to be allowed on the resource if an access policy matches a
+            request.
+
+            At least one action must be provided and executable actions
+            (i.e: `read`, `write`) cannot be combined with non-executable actions
+            (i.e: `deny`).
+
+            If multiple access policies match a request, policies
+            with a `deny` action take precedence over policies with a `read`
+            action. You can define `deny` access policies to make exceptions in
+            your policies that allow access.
           items:
             $ref: '#/components/schemas/Action'
     UpdatePolicyRequest:
+      required:
+      - actions
       type: object
       properties:
         subject:
@@ -1240,8 +1362,21 @@ components:
         resource:
           $ref: '#/components/schemas/Resource'
         actions:
+          minLength: 1
           uniqueItems: true
           type: array
+          description: |
+            The actions to be allowed on the resource if an access policy matches a
+            request.
+
+            At least one action must be provided and executable actions
+            (i.e: `read`, `write`) cannot be combined with non-executable actions
+            (i.e: `deny`).
+
+            If multiple access policies match a request, policies
+            with a `deny` action take precedence over policies with a `read`
+            action. You can define `deny` access policies to make exceptions in
+            your policies that allow access.
           items:
             $ref: '#/components/schemas/Action'
     Token:
@@ -1286,6 +1421,7 @@ components:
           - invalid_action
           - empty_actions
           - invalid_action_combination
+          - invalid_policy_variable
           - forbidden
         message:
           type: string
@@ -1320,17 +1456,6 @@ components:
           description: JWT authentication token. Most Nile operations the caller to
             pass a valid token in Authorization HTTP header using Bearer schema
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-    Metadata:
-      type: object
-      description: Arbitrary metadata.
-      example:
-        internal_id: "12345"
-        location: US
-        age: 21
-        is_admin: true
-        name:
-          first: John
-          last: Doe
     OrgMembership:
       type: object
       properties:
@@ -1569,14 +1694,10 @@ components:
         instance_id:
           type: string
           description: InstanceId of the Nile instance this datapoint is related to
-        attributes:
-          type: object
-          additionalProperties:
-            type: object
       description: Measurements associated with this metric
     Metric:
       required:
-      - entityType
+      - entity_type
       - measurements
       - name
       - type
@@ -1591,7 +1712,7 @@ components:
           enum:
           - gauge
           - sum
-        entityType:
+        entity_type:
           type: string
           description: The Nile entity type this metric is related to
         measurements:
@@ -1610,7 +1731,11 @@ components:
           description: The Nile instance id to filter on
         entity_type:
           type: string
-          description: The Nile entity type to filter on
+          description: The Nile entity type to filter on. This is ignored if entity_type
+            is on a URL param.
+        organization_id:
+          type: string
+          description: The Nile organization id to filter on
     AddUserToOrgRequest:
       required:
       - email
