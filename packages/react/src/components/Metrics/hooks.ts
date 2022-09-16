@@ -9,13 +9,31 @@ import {
 import { useNile } from '../../context';
 import Queries, { useQuery } from '../../lib/queries';
 
-type Props = FilterMetricsRequest;
 type UseMetricsReturn = {
   isLoading: boolean;
   metrics: Measurement[];
 };
 
-export const useMetrics = (props?: Props): UseMetricsReturn => {
+/**
+ * @example
+ * ```typescript
+ * import { useMetrics } from '@theniledev/react';
+ * function MyChart() {
+ *   const filter = {
+ *     entityName="clusters",
+ *     metric="my.metric"
+ *   }
+ *   const { isLoading, metrics } = useMetrics({
+ *     filter,
+ *     fromTimestamp: new Date(),
+ *     duration: 60 * 1000
+ *   });
+ * }
+ * ```
+ * @param props config object for a metrics request
+ * @returns a boolean for the loading state and metrics flattened into measurements
+ */
+export const useMetrics = (props?: FilterMetricsRequest): UseMetricsReturn => {
   const nile = useNile();
 
   const filter: void | Filter = props?.filter;
@@ -27,11 +45,13 @@ export const useMetrics = (props?: Props): UseMetricsReturn => {
 
   const { data: fetchedData = [], isLoading } = useQuery(
     [Queries.FilterMetrics(JSON.stringify(filter))],
-    () =>
-      nile.metrics.filterMetrics({
+    () => {
+      const payload: FilterMetricsRequest = {
         ...props,
         filter: filter ? filter : {},
-      }),
+      } as FilterMetricsRequest;
+      return nile.metrics.filterMetrics(payload);
+    },
     { enabled: Boolean(nile.workspace && nile.authToken) }
   );
 

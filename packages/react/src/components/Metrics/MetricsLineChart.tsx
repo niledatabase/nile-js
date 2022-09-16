@@ -1,11 +1,31 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/joy';
-import { XAxis, YAxis, LineChart, Line, Tooltip, Legend } from 'recharts';
+import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
-import { LineProps } from 'recharts';
 import { FilterMetricsRequest } from '@theniledev/js';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartDataset,
+} from 'chart.js';
 
 import { useMetrics } from './hooks';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export enum DataKeys {
   timestamp = 'timestamp',
@@ -14,25 +34,63 @@ export enum DataKeys {
   attributes = 'attributes',
 }
 
-export type MetricsComponentProps = {
-  height?: number;
-  width?: number;
-  timeFormat?: 'string';
-  line?: LineProps;
+type LabelAndData = {
+  labels: string[];
+  data: number[];
 };
 
+export type MetricsComponentProps = {
+  timeFormat?: 'string';
+  dataset?: Omit<ChartDataset<'line', number[]>, 'data'>;
+};
+
+/**
+ *
+ * @example
+ * ```typescript
+ * import { MetricsLineChart, NileProvider } from '@theniledev/react';
+ * function MyChart() {
+ *   const filter = {
+ *     entityType: 'clusters',
+ *     metricName: 'my.metric
+ *   };
+ *
+ *   return (
+ *     <NileProvider baseUrl="https://prod.thenile.dev" workspace="clustify">
+ *       <MetricsLineChart filter={filter} />
+ *     </NileProvider>
+ *   );
+ * }
+ * ```
+ * @param props configuration for the metrics request and chart.js line
+ * @returns  a chart.js line
+ */
 export default function MetricsLineChart(
   props: FilterMetricsRequest & MetricsComponentProps
 ): React.ReactElement | null {
   const {
     filter,
-    width = 500,
-    height = 300,
     timeFormat = 'HH:ss',
-    line = { type: 'monotone', stroke: '#82ca9d' },
+    dataset = {
+      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+    },
   } = props;
+
   const { isLoading, metrics } = useMetrics(props);
   const metricName = filter.metricName;
+
+  const { labels, data } = React.useMemo<LabelAndData>(() => {
+    return metrics.reduce(
+      (accum: LabelAndData, metric) => {
+        const label: string = format(metric.timestamp, timeFormat);
+        accum.labels.push(label);
+        accum.data.push(metric.value);
+        return accum;
+      },
+      { labels: [], data: [] }
+    );
+  }, [metrics, timeFormat]);
 
   if (isLoading) {
     return null;
@@ -41,22 +99,18 @@ export default function MetricsLineChart(
   return (
     <Stack>
       <Typography level="h4">{metricName}</Typography>
-      <LineChart data={metrics} width={width} height={height}>
-        <Legend />
-        <Tooltip />
-        <XAxis
-          dataKey={DataKeys.timestamp}
-          tickFormatter={(time: string | Date): string => {
-            if (time instanceof Date) {
-              return format(time, timeFormat);
-            }
-            return time;
-          }}
-        />
-        <YAxis />
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
-        <Line dataKey={DataKeys.value} {...(line as any)} />
-      </LineChart>
+      <Line
+        data={{
+          labels,
+          datasets: [
+            {
+              label: metricName,
+              data,
+              ...dataset,
+            },
+          ],
+        }}
+      />
     </Stack>
   );
 }
