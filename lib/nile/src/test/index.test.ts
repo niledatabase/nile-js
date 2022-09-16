@@ -19,6 +19,7 @@ describe('index', () => {
         'organizations',
         'events',
         'access',
+        'metrics',
       ]);
       keys.forEach((k) => {
         const props = Object.getOwnPropertyNames(
@@ -29,6 +30,7 @@ describe('index', () => {
           expect(props).toEqual([
             'constructor',
             'createWorkspace',
+            'getWorkspaceOpenApi',
             'listWorkspaces',
           ]);
         }
@@ -96,6 +98,13 @@ describe('index', () => {
             'getPolicy',
             'listPolicies',
             'updatePolicy',
+          ]);
+        }
+        if (k === 'metrics') {
+          expect(props).toEqual([
+            'constructor',
+            'filterMetrics',
+            'produceBatchOfMetrics',
           ]);
         }
       });
