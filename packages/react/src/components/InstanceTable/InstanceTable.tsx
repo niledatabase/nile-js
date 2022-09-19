@@ -16,6 +16,62 @@ type Props = Omit<InstanceTableProps, 'org'> & {
   dataGridProps?: DataGridProps;
 };
 
+export const generateHeaderRow = (
+  additionalColumns: GridColDef[],
+  columns: Array<string>,
+  entityData: void | Entity,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  processColumns?: (header: string, flatSchema: any) => GridColDef
+) => {
+  const flatSchema = entityData && flattenSchema(entityData?.schema, true);
+  if (flatSchema) {
+    const baseArr = Object.keys(flatSchema).map((header) => {
+      if (processColumns) {
+        return processColumns(header, flatSchema);
+      }
+      return {
+        minWidth: 200,
+        field: String(header),
+        headerName: String(header),
+        flex: 1,
+      };
+    });
+    if (columns && columns.length > 0) {
+      const colLookup = baseArr.reduce(
+        (accum: { [header: string]: GridColDef }, prop) => {
+          if (prop.headerName) {
+            accum[prop.headerName] = prop;
+          }
+          return accum;
+        },
+        {}
+      );
+
+      return columns.map((col) => {
+        return colLookup[String(col)];
+      });
+    }
+    if (additionalColumns && additionalColumns.length) {
+      return baseArr.concat(additionalColumns);
+    }
+    return baseArr;
+  }
+  if (columns) {
+    return columns.map((header: string | GridColDef): GridColDef => {
+      if (typeof header === 'object') {
+        return header;
+      }
+      return {
+        minWidth: 200,
+        field: header,
+        headerName: header,
+        flex: 1,
+      };
+    });
+  }
+  return [];
+};
+
 const InstanceTable = React.memo(function InstanceTable(props: Props) {
   const {
     isFetching,
@@ -56,47 +112,16 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
     });
   }, [columns, instances]);
 
-  const headerRow = React.useMemo(() => {
-    const flatSchema = entityData && flattenSchema(entityData?.schema, true);
-    if (flatSchema) {
-      const baseArr = Object.keys(flatSchema)
-        .map((header) => {
-          if (processColumns) {
-            return processColumns(header, flatSchema);
-          }
-          return {
-            minWidth: 200,
-            field: String(header),
-            headerName: String(header),
-            flex: 1,
-          };
-        })
-        .filter((header: GridColDef) => {
-          if (columns && columns.length > 0 && header.headerName) {
-            return columns.includes(header.headerName);
-          }
-          return true;
-        });
-      if (additionalColumns && additionalColumns.length) {
-        return baseArr.concat(additionalColumns);
-      }
-      return baseArr;
-    }
-    if (columns) {
-      return columns.map((header: string | GridColDef): GridColDef => {
-        if (typeof header === 'object') {
-          return header;
-        }
-        return {
-          minWidth: 200,
-          field: header,
-          headerName: header,
-          flex: 1,
-        };
-      });
-    }
-    return [];
-  }, [additionalColumns, columns, entityData, processColumns]);
+  const headerRow = React.useMemo(
+    () =>
+      generateHeaderRow(
+        additionalColumns ?? [],
+        columns ?? [],
+        entityData,
+        processColumns
+      ),
+    [additionalColumns, columns, entityData, processColumns]
+  );
 
   function renderEmptyState() {
     if (emptyState && organization) {

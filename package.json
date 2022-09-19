@@ -11,6 +11,7 @@
     "build": "yarn build:js-lib && yarn build:react && yarn build:examples",
     "build:js-lib": "yarn workspace @theniledev/js build",
     "test:js-lib": "yarn workspace @theniledev/js test",
+    "test:react": "yarn workspace @theniledev/react test",
     "build:react": "yarn workspace @theniledev/react build",
     "build:examples": "yarn workspace @theniledev/examples build",
     "build:react-storybook": "yarn workspace @theniledev/react build-storybook",
