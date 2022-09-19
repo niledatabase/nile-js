@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.2](https://github.com/TheNileDev/nile-js/compare/v0.20.1...v0.20.2) (2022-09-19)
+
+
+### Bug Fixes
+
+* types ([d798c10](https://github.com/TheNileDev/nile-js/commit/d798c10f2fc298a44f1a05d1f086202d952bec58))
+* update readme ([4ac7ed9](https://github.com/TheNileDev/nile-js/commit/4ac7ed98b00ecf60bbb7e36ba4ce4c26b25deabc))
+* use columns order on instance table ([2b27be8](https://github.com/TheNileDev/nile-js/commit/2b27be884d13fcc0596ab3dba565d01d89c0dc1b))
+
+
+
+
+
 ## [0.20.1](https://github.com/TheNileDev/nile-js/compare/v0.20.0...v0.20.1) (2022-09-16)
 
 

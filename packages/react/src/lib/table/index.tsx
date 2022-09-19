@@ -3,7 +3,8 @@ import { styled, Box, Stack, Button } from '@mui/joy';
 import { Skeleton } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 
-export const TableWrapper = styled('div', {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const TableWrapper: any = styled('div', {
   shouldForwardProp: (prop) => prop !== 'itemCount',
 })<{
   itemCount: number;
@@ -35,7 +36,7 @@ export function TableSkeleton({
       >
         <Box sx={{ marginBottom: 2 }}>
           <Skeleton animation="wave" variant="rectangular">
-            <Button variant="solid" startIcon={<Add />} size="sm">
+            <Button variant="solid" startDecorator={<Add />} size="sm">
               Create instance
             </Button>
           </Skeleton>

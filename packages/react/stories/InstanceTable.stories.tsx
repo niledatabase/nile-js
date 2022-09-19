@@ -2,7 +2,12 @@
 
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Instance, EntityTypeEnum, OrganizationTypeEnum } from '@theniledev/js';
+import {
+  Instance,
+  EntityTypeEnum,
+  OrganizationTypeEnum,
+  Organization,
+} from '@theniledev/js';
 import { Box, Button, Stack, Typography } from '@mui/joy';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import { Add } from '@mui/icons-material';
@@ -36,7 +41,8 @@ const entityData = {
     },
   },
 };
-const organization = {
+const organization: Organization = {
+  creator: 'some_creator',
   id: 'org_02qdzMMNHAPIF1XSeD9jrx',
   created: new Date(),
   updated: new Date(),
@@ -191,7 +197,12 @@ const ActionButtons = () => (
       entityData={entityData}
       organization={organization}
       actionButtons={[
-        <Button variant="solid" startIcon={<Add />} size="sm" key="addEntity">
+        <Button
+          variant="solid"
+          startDecorator={<Add />}
+          size="sm"
+          key="addEntity"
+        >
           Create myEntity
         </Button>,
       ]}
