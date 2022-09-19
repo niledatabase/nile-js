@@ -7,7 +7,7 @@ export interface InstanceTableProps {
   org: string;
   handleRowClick?: (params: GridRowParams) => void;
   additionalColumns?: GridColDef[];
-  columns?: Array<string | GridColDef>;
+  columns?: Array<string>;
   showExpandedView?: boolean;
   actionButtons?: React.ReactNode[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
