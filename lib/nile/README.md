@@ -10,6 +10,7 @@ A full list of functions available to the Nile object can be found in the [docs]
 import Nile from "@theniledev/js";
 
 const nile = Nile({ apiUrl: props.apiUrl });
+
 await nile.developer.loginDeveloper({
   loginInfo: {
     email: "dev@dev.dev",
@@ -22,7 +23,12 @@ nile.authToken = nile.developer.authToken;
 
 // create a user
 await nile.user
-  .createUser({ email: "anon@anon.com", password: "secret" })
+  .createUser({
+    loginInfo: {
+      email: "anon@anon.com",
+      password: "secret",
+    },
+  })
   .catch((error) => console.error(error));
 
 const user = await nile.getUser({ id: 1 });
