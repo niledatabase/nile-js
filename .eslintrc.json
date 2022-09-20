@@ -16,7 +16,8 @@
     "plugin:react/recommended",
     "eslint:recommended",
     "prettier",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:storybook/recommended"
   ],
   "parserOptions": {
     "extraFileExtensions": [".mjs"]
