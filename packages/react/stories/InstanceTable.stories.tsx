@@ -197,7 +197,11 @@ const ActionButtons = () => (
       actionButtons={[
         <Button
           variant="solid"
-          startDecorator={<Add />}
+          startDecorator={
+            <>
+              <Add />
+            </>
+          }
           size="sm"
           key="addEntity"
         >

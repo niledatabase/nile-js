@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/joy';
 import { Metric, MetricTypeEnum } from '@theniledev/js';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, Control } from 'react-hook-form';
 
 import { MetricsLineChart } from '../src/components/Metrics';
 import { NileProvider, useNile } from '../src/context';
@@ -104,7 +104,11 @@ const meta = {
 
 export default meta;
 
-const useEntityDropdown = ({ control }) => {
+const useEntityDropdown = ({
+  control,
+}: {
+  control: Control<{ entityType: string; authToken: string }>;
+}) => {
   const nile = useNile();
   const { data = [] } = useQuery(
     [Queries.ListEntities],

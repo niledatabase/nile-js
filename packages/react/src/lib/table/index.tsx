@@ -36,7 +36,15 @@ export function TableSkeleton({
       >
         <Box sx={{ marginBottom: 2 }}>
           <Skeleton animation="wave" variant="rectangular">
-            <Button variant="solid" startDecorator={<Add />} size="sm">
+            <Button
+              variant="solid"
+              startDecorator={
+                <>
+                  <Add />
+                </>
+              }
+              size="sm"
+            >
               Create instance
             </Button>
           </Skeleton>
