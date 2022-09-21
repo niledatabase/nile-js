@@ -8,6 +8,7 @@ enum Queries {
   Invites = '/invites',
   Users = '/users',
   Authz = '/authz',
+  Metrics = '/metrics',
 }
 
 const ListOrganizations = [Queries.Organizations];
@@ -42,6 +43,8 @@ const GetPolicy = (org: ParamType, id: ParamType) => [
   `${Queries.Authz}/${GetOrganization(org)}/policies/${id}`,
 ];
 
+const FilterMetrics = (filter: ParamType) => [`${Queries.Metrics}/${filter}`];
+
 const queryKeys = {
   ListWorkspaces,
   ListOrganizations,
@@ -59,6 +62,7 @@ const queryKeys = {
   GetDeveloperToken,
   ListPolicies,
   GetPolicy,
+  FilterMetrics,
 };
 
 export default queryKeys;

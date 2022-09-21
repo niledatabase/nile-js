@@ -8,3 +8,5 @@ export {
   useMutation,
   useQueries,
 } from './lib/queries';
+
+export { MetricsLineChart, useMetrics } from './components/Metrics';
