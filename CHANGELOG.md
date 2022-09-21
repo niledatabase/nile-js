@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/TheNileDev/nile-js/compare/v0.20.2...v0.21.0) (2022-09-21)
+
+
+### Bug Fixes
+
+* flow types on storybook ([0fa5f7d](https://github.com/TheNileDev/nile-js/commit/0fa5f7dce54174ab3fd4aa65605383c34485c9a5))
+* story type ([805c79f](https://github.com/TheNileDev/nile-js/commit/805c79fc6359a4648611529291ff2b073021cd55))
+
+
+### Features
+
+* add metrics ([0291eaa](https://github.com/TheNileDev/nile-js/commit/0291eaa36d63daaf1eb051923a94fa436fe8ca9b))
+
+
+
+
+
 ## [0.20.2](https://github.com/TheNileDev/nile-js/compare/v0.20.1...v0.20.2) (2022-09-19)
 
 
