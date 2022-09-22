@@ -1,17 +1,22 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { LoginInfo } from '@theniledev/js';
 
+import { Attribute } from '../../lib/SimpleForm/types';
 import { useNile } from '../../context';
-import UserForm from '../../lib/UserForm';
+import UserForm, { AttributeType } from '../../lib/SimpleForm';
 
 import { Props } from './types';
 
 export default function LoginForm(props: Props) {
   const nile = useNile();
-  const { onSuccess, onError } = props;
+
+  const { attributes, onSuccess, onError } = props;
+
   const mutation = useMutation(
-    (data: LoginInfo) => nile.users.loginUser({ loginInfo: data }),
+    (data: { email: string; password: string }) => {
+      const { email, password } = data;
+      return nile.users.loginUser({ loginInfo: { email, password } });
+    },
     {
       onSuccess: (token, data) => {
         if (token) {
@@ -25,5 +30,34 @@ export default function LoginForm(props: Props) {
     }
   );
 
-  return <UserForm mutation={mutation} buttonText="Log in" />;
+  const completeAttributes = React.useMemo(() => {
+    const mainAttributes: Attribute[] = [
+      {
+        name: 'email',
+        label: 'Email',
+        type: AttributeType.Text,
+        defaultValue: '',
+        required: true,
+      },
+      {
+        name: 'password',
+        label: 'Password',
+        type: AttributeType.Password,
+        defaultValue: '',
+        required: true,
+      },
+    ];
+    if (attributes && attributes.length > 0) {
+      return mainAttributes.concat(attributes);
+    }
+    return mainAttributes;
+  }, [attributes]);
+
+  return (
+    <UserForm
+      mutation={mutation}
+      buttonText="Log in"
+      attributes={completeAttributes}
+    />
+  );
 }
