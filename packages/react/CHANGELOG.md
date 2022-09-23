@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.1](https://github.com/TheNileDev/nile-js/compare/v0.22.0...v0.22.1) (2022-09-23)
+
+
+### Bug Fixes
+
+* make form fields match their config on save ([798f40e](https://github.com/TheNileDev/nile-js/commit/798f40e9f2610dd022a9cfdece8158f8ba159a00))
+
+
+
+
+
 # [0.22.0](https://github.com/TheNileDev/nile-js/compare/v0.21.0...v0.22.0) (2022-09-22)
 
 
