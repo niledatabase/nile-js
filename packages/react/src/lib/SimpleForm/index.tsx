@@ -9,7 +9,7 @@ import { Attribute, AttributeType } from './types';
 
 export { AttributeType, Attribute } from './types';
 
-type AttrMap = { [key: string]: string };
+type AttrMap = { [key: string]: string | number };
 type DisplayProps = {
   key: string;
   label: string;
