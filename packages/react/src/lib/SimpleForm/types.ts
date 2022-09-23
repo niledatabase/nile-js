@@ -3,12 +3,15 @@ export enum AttributeType {
   Password = 'password',
   Select = 'select',
   Number = 'number',
+  Float = 'float',
 }
+type NumberOrString = number | string;
+
 export type Attribute = {
   name: string;
   type?: AttributeType;
-  defaultValue?: string;
-  options?: { label: string; value: string }[];
+  defaultValue?: NumberOrString;
+  options?: { label: string; value: NumberOrString }[];
   label?: string;
   required?: boolean;
   placeholder?: string;
