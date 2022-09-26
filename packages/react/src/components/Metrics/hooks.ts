@@ -33,9 +33,12 @@ type UseMetricsReturn = {
  * @param props config object for a metrics request
  * @returns a boolean for the loading state and metrics flattened into measurements
  */
-export const useMetrics = (props?: FilterMetricsRequest): UseMetricsReturn => {
+export const useMetrics = (
+  props?: FilterMetricsRequest & { updateInterval?: number }
+): UseMetricsReturn => {
   const nile = useNile();
 
+  const updateInterval = props?.updateInterval;
   const filter: void | Filter = props?.filter;
 
   // API does not like this currently
@@ -43,7 +46,11 @@ export const useMetrics = (props?: FilterMetricsRequest): UseMetricsReturn => {
     delete filter.metricName;
   }
 
-  const { data: fetchedData = [], isLoading } = useQuery(
+  const {
+    data: fetchedData = [],
+    isLoading,
+    refetch,
+  } = useQuery(
     [Queries.FilterMetrics(JSON.stringify(filter))],
     () => {
       const payload: FilterMetricsRequest = {
@@ -63,5 +70,25 @@ export const useMetrics = (props?: FilterMetricsRequest): UseMetricsReturn => {
     [fetchedData]
   );
 
+  useInterval(() => {
+    refetch();
+  }, updateInterval);
+
   return { isLoading, metrics: flatMetrics };
+};
+
+export const useInterval = (cb: () => void, delay: void | number) => {
+  const savedCallback = React.useRef(cb);
+
+  React.useEffect(() => {
+    savedCallback.current = cb;
+  }, [cb]);
+
+  React.useEffect(() => {
+    if (!delay) {
+      return;
+    }
+    const id = setInterval(() => savedCallback.current(), delay);
+    return () => clearInterval(id);
+  }, [delay]);
 };

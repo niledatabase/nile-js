@@ -13,6 +13,7 @@ import {
   Tooltip,
   Legend,
   ChartDataset,
+  ChartOptions,
 } from 'chart.js';
 
 import { useMetrics } from './hooks';
@@ -40,8 +41,11 @@ type LabelAndData = {
 };
 
 export type MetricsComponentProps = {
-  timeFormat?: 'string';
+  timeFormat?: string;
   dataset?: Omit<ChartDataset<'line', number[]>, 'data'>;
+  updateInterval?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  chartOptions?: ChartOptions<any>;
 };
 
 /**
@@ -52,7 +56,7 @@ export type MetricsComponentProps = {
  * function MyChart() {
  *   const filter = {
  *     entityType: 'clusters',
- *     metricName: 'my.metric
+ *     metricName: 'my.metric',
  *   };
  *
  *   return (
@@ -70,7 +74,8 @@ export default function MetricsLineChart(
 ): React.ReactElement | null {
   const {
     filter,
-    timeFormat = 'HH:ss',
+    chartOptions,
+    timeFormat = 'HH:mm:ss',
     dataset = {
       borderColor: 'rgb(255, 99, 132)',
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -100,6 +105,7 @@ export default function MetricsLineChart(
     <Stack>
       <Typography level="h4">{metricName}</Typography>
       <Line
+        options={chartOptions}
         data={{
           labels,
           datasets: [
