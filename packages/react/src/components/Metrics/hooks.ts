@@ -59,7 +59,7 @@ export const useMetrics = (
       } as FilterMetricsRequest;
       return nile.metrics.filterMetrics(payload);
     },
-    { enabled: Boolean(nile.workspace && nile.authToken) }
+    { enabled: Boolean(nile.workspace) }
   );
 
   const flatMetrics = React.useMemo(
