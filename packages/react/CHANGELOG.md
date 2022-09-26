@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.3](https://github.com/TheNileDev/nile-js/compare/v0.22.2...v0.22.3) (2022-09-26)
+
+
+### Bug Fixes
+
+* **react:** remove requirement for authtoken on metrics ([dfbf34d](https://github.com/TheNileDev/nile-js/commit/dfbf34defc56fc7fb7585197aa8e67b01a407c38))
+
+
+
+
+
 ## [0.22.2](https://github.com/TheNileDev/nile-js/compare/v0.22.1...v0.22.2) (2022-09-26)
 
 
