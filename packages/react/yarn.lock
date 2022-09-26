@@ -3277,17 +3277,17 @@
     regenerator-runtime "^0.13.7"
     resolve-from "^5.0.0"
 
-"@tanstack/query-core@4.3.8":
-  version "4.3.8"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.3.8.tgz#d5f07c1d9d4f83f16f0bed7f3b245fa0e557b037"
-  integrity sha512-AEUWtCNBIImFZ9tMt/P8V86kIhMHpfoJqAI1auGOLR8Wzeq7Ymiue789PJG0rKYcyViUicBZeHjggMqyEQVMfQ==
+"@tanstack/query-core@4.6.1":
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.6.1.tgz#5361b37af4374bd57dd8acd5699e8deb6ab050ef"
+  integrity sha512-r5PXj0EG3z/5Rhb4gttPo/EOqfGhx4wSWJncI8WA4rwe2E2stpeZKnEEsQU7rEqReVCOYseswTYn+lwRF2Ap3Q==
 
-"@tanstack/react-query@^4.3.9":
-  version "4.3.9"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.3.9.tgz#13332a1d4dd404baec24c2853883bcb3cc61ea92"
-  integrity sha512-odfDW6WiSntCsCh+HFeJtUys3UnVOjfJMhykAtGtYvcklMyyDmCv9BVBt5KlSpbk/qW3kURPFCDapO+BFUlCwg==
+"@tanstack/react-query@^4.6.1":
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.6.1.tgz#877ab7603858292696d72f734458f83b2ab9c4be"
+  integrity sha512-fDLIqLq4KLv0PmLHOGXp2ppJdydF/8YoYQrePTODK3RsiZDQVPLLAojz7M3v7GK5VionIb4KgiK3qBoAiN3Y4A==
   dependencies:
-    "@tanstack/query-core" "4.3.8"
+    "@tanstack/query-core" "4.6.1"
     use-sync-external-store "^1.2.0"
 
 "@testing-library/dom@^8.5.0":
@@ -3328,10 +3328,10 @@
     "@testing-library/dom" "^8.5.0"
     "@types/react-dom" "^18.0.0"
 
-"@theniledev/js@^0.20.2":
-  version "0.20.2"
-  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.20.2.tgz#cff2109ff3bf6aeabe7f3776fa88b4606d916b19"
-  integrity sha512-7j0supxoINJ7aMAyUfM5/N3npQRfLmFlQhWICpA1mRMY5CTOn20u8Yv+ftyw6HsvRfCjIrLJUlUpWmSd1GB9dA==
+"@theniledev/js@^0.22.3":
+  version "0.22.3"
+  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.22.3.tgz#37993d1854c68fdc7a8e07bcd40fbf43bcb6d838"
+  integrity sha512-damWjt15/hJ0bP1zTVVTxalbg5qEWlqKvFfbb+0ymNFMZnoZrmFZniNksB9wZ3fdgXfPTZphN2HQHLCKg8qZmA==
   dependencies:
     "@openapitools/openapi-generator-cli" "^2.5.2"
     es6-promise "^4.2.8"
