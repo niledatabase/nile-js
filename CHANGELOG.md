@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.2](https://github.com/TheNileDev/nile-js/compare/v0.22.1...v0.22.2) (2022-09-26)
+
+
+### Bug Fixes
+
+* **react:** add refresh and style customizations to line chart ([17b83a7](https://github.com/TheNileDev/nile-js/commit/17b83a71cd127ec37a5018f73db98730d22ca175))
+
+
+
+
+
 ## [0.22.1](https://github.com/TheNileDev/nile-js/compare/v0.22.0...v0.22.1) (2022-09-23)
 
 
