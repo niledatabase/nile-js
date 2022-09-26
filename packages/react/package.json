@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/react",
-  "version": "0.22.1",
+  "version": "0.22.2",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -83,7 +83,7 @@
     "@mui/material": "^5.10.6",
     "@mui/x-data-grid": "^5.17.3",
     "@tanstack/react-query": "^4.3.9",
-    "@theniledev/js": "^0.22.1",
+    "@theniledev/js": "^0.22.2",
     "chart.js": "^3.9.1",
     "date-fns": "^2.29.3",
     "react": ">=18",
