@@ -3328,10 +3328,10 @@
     "@testing-library/dom" "^8.5.0"
     "@types/react-dom" "^18.0.0"
 
-"@theniledev/js@^0.20.2":
-  version "0.20.2"
-  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.20.2.tgz#cff2109ff3bf6aeabe7f3776fa88b4606d916b19"
-  integrity sha512-7j0supxoINJ7aMAyUfM5/N3npQRfLmFlQhWICpA1mRMY5CTOn20u8Yv+ftyw6HsvRfCjIrLJUlUpWmSd1GB9dA==
+"@theniledev/js@^0.22.3":
+  version "0.22.3"
+  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-0.22.3.tgz#37993d1854c68fdc7a8e07bcd40fbf43bcb6d838"
+  integrity sha512-damWjt15/hJ0bP1zTVVTxalbg5qEWlqKvFfbb+0ymNFMZnoZrmFZniNksB9wZ3fdgXfPTZphN2HQHLCKg8qZmA==
   dependencies:
     "@openapitools/openapi-generator-cli" "^2.5.2"
     es6-promise "^4.2.8"
