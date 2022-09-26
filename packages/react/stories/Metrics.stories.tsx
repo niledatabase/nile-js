@@ -127,7 +127,20 @@ const useEntityDropdown = ({
         name="entityType"
         render={({ field }) => {
           return (
-            <Select {...field}>
+            <Select
+              {...field}
+              onChange={(e) => {
+                const target = e?.target as HTMLElement;
+                if (target) {
+                  const option = entities.find(
+                    (entity) => entity === target.innerText
+                  );
+                  if (option) {
+                    field.onChange(option);
+                  }
+                }
+              }}
+            >
               {entities.map((name) => {
                 return (
                   <Option key={name} value={name}>
