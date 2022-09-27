@@ -8,6 +8,7 @@ import SimpleForm, { Attribute, AttributeType } from '../../lib/SimpleForm';
 type AllowedAny = any;
 
 type Props = {
+  beforeMutate?: (data: AllowedAny) => AllowedAny;
   onSuccess: (data: AllowedAny) => void;
   onError?: (error: Error) => void;
   cancelLink?: string;
@@ -60,7 +61,20 @@ export const processFormData = (data: AllowedAny, fields: Attribute[]) => {
 
 export default function EntityForm(props: Props) {
   const nile = useNile();
-  const { fields, org, entityType, cancelLink, onSuccess, onError } = props;
+  const {
+    fields,
+    org,
+    entityType,
+    cancelLink,
+    onSuccess,
+    onError,
+    beforeMutate,
+  } = props;
+
+  const handleMutate =
+    typeof beforeMutate === 'function'
+      ? beforeMutate
+      : (data: AllowedAny): AllowedAny => data;
 
   const mutation = useMutation(
     (data: AllowedAny) => {
@@ -68,7 +82,7 @@ export default function EntityForm(props: Props) {
       return nile.entities.createInstance({
         org,
         type: entityType,
-        body,
+        body: handleMutate(body),
       });
     },
     {
