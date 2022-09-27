@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { Attribute } from '../../lib/SimpleForm/types';
 import { useNile } from '../../context';
-import UserForm, { AttributeType } from '../../lib/SimpleForm';
+import SimpleForm, { AttributeType } from '../../lib/SimpleForm';
 
 import { Props } from './types';
 
@@ -54,7 +54,7 @@ export default function LoginForm(props: Props) {
   }, [attributes]);
 
   return (
-    <UserForm
+    <SimpleForm
       mutation={mutation}
       buttonText="Log in"
       attributes={completeAttributes}
