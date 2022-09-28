@@ -1,13 +1,13 @@
-import { Attribute } from '../../lib/SimpleForm/types';
+import { Organization } from '@theniledev/js';
 
-type LoginSuccess = (LoginInfo: { email: string; password: string }) => void;
+type OrgCreateSuccess = (org: Organization) => void;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
 
 export interface Props {
   beforeMutate?: (data: AllowedAny) => AllowedAny;
-  onSuccess: LoginSuccess;
+  onSuccess: OrgCreateSuccess;
   onError?: (error: Error) => void;
-  attributes?: Attribute[];
+  cancelLink?: string;
 }

@@ -1,21 +1,27 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { LoginInfo } from '@theniledev/js';
 
 import { Attribute } from '../../lib/SimpleForm/types';
 import { useNile } from '../../context';
-import UserForm, { AttributeType } from '../../lib/SimpleForm';
+import SimpleForm, { AttributeType } from '../../lib/SimpleForm';
 
-import { Props } from './types';
+import { Props, AllowedAny } from './types';
 
 export default function LoginForm(props: Props) {
   const nile = useNile();
 
-  const { attributes, onSuccess, onError } = props;
+  const { attributes, onSuccess, onError, beforeMutate } = props;
+
+  const handleMutate =
+    typeof beforeMutate === 'function'
+      ? beforeMutate
+      : (data: AllowedAny): AllowedAny => data;
 
   const mutation = useMutation(
     (data: { email: string; password: string }) => {
-      const { email, password } = data;
-      return nile.users.loginUser({ loginInfo: { email, password } });
+      const _data = handleMutate(data);
+      return nile.users.loginUser({ loginInfo: _data as LoginInfo });
     },
     {
       onSuccess: (token, data) => {
@@ -54,7 +60,7 @@ export default function LoginForm(props: Props) {
   }, [attributes]);
 
   return (
-    <UserForm
+    <SimpleForm
       mutation={mutation}
       buttonText="Log in"
       attributes={completeAttributes}

@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1-8f06453
+  version: 0.1.0-f3cf1a9
 servers:
 - url: localhost:8080
 tags:
@@ -726,6 +726,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Invite'
+  /workspaces/{workspace}/metrics/{metric_name}/aggregate:
+    post:
+      tags:
+      - metrics
+      summary: Aggregation result for the metric
+      operationId: aggregateMetrics
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: metric_name
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AggregationRequest'
+        required: true
+      responses:
+        "200":
+          description: The resulting aggregation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AggregationResponse'
   /workspaces/{workspace}/metrics/filter:
     post:
       tags:
@@ -808,13 +834,48 @@ paths:
         required: true
       responses:
         "200":
-          description: A list of metrics that match the filter
+          description: A list of metrics for the entity matching the filter
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Metric'
+  /workspaces/{workspace}/metrics/metric_definitions:
+    get:
+      tags:
+      - metrics
+      summary: List metric definitions in a workspace
+      operationId: listMetricDefinitions
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      responses:
+        "200":
+          description: A list of metrics definitions for the workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMetricDefinitionsResponse'
+  /workspaces/{workspace}/metrics/entities/{entity_type}/metric_definitions:
+    get:
+      tags:
+      - metrics
+      summary: List metric definitions for an entity
+      operationId: listMetricDefinitionsForEntityType
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: entity_type
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of metric definitions for the provided entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMetricDefinitionsResponse'
   /workspaces/{workspace}/metrics:
     post:
       tags:
@@ -1218,10 +1279,9 @@ components:
       type: object
       description: Arbitrary metadata.
       example:
-        internal_id: "12345"
         location: US
         age: 21
-        is_admin: true
+        active: true
         name:
           first: John
           last: Doe
@@ -1272,8 +1332,12 @@ components:
           type: string
       additionalProperties: true
       description: |
+        A subset of properties of any custom or built-in entity instance to authorize against.
+
+        All properties on a resource are optional, and any combination of them can be specified when creating a policy.
         You can specify concrete values for resource and subject properties
         or use variables to match a subject property against a resource property.
+
         An access policy with the following resource would allow access to clusters with location matching the subject's region:
         ```
         {
@@ -1284,8 +1348,6 @@ components:
         }
         ```
 
-        A subset of properties of any custom or built-in entity instance to authorize against.
-        All properties on a resource are optional, and any combination of them can be specified when creating a policy.
 
         Note that:
         * Only exact matching of properties is supported for now.
@@ -1306,25 +1368,35 @@ components:
           type: string
         metadata:
           $ref: '#/components/schemas/Metadata'
-      description: |
-        A subset of properties of a user to authorize against.
-        You can specify concrete values for subject properties
-        or use variables to match a subject property against a resource property.
+        org_membership:
+          $ref: '#/components/schemas/SubjectOrgMembership'
+      description: |2
+          A subset of properties of a user to authorize against.
 
-        An access policy with no resource (which matches all resources)
-        and the following subject would allow access to any resource with the same location as the subject:
-        ```
-        {
-          "metadata": {
-            "location": ${resource.properties.location}
+          You can specify concrete values for subject properties
+          or use variables to match a subject property against a resource property.
+
+          An access policy with no resource (which matches all resources)
+          and the following subject would allow access to any resource with the same location as the subject:
+          ```
+          {
+            "metadata": {
+              "location": ${resource.properties.location}
+            }
           }
-        }
-        ```
+          ```
+    SubjectOrgMembership:
+      type: object
+      properties:
+        joined:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/Metadata'
       example:
-        email: user@company.com
+        joined: 2022-08-09T10:27:30.956079
         metadata:
           role: admin
-          location: us
     CreatePolicyRequest:
       required:
       - actions
@@ -1423,6 +1495,7 @@ components:
           - invalid_action_combination
           - invalid_policy_variable
           - forbidden
+          - metric_not_found
         message:
           type: string
         status_code:
@@ -1495,6 +1568,7 @@ components:
           enum:
           - user
           - developer
+          - service_account
           - nile_employee
         email:
           type: string
@@ -1514,6 +1588,8 @@ components:
               joined: 2022-08-03T17:30:00.295581
               metadata:
                 role: member
+        developer:
+          type: boolean
     CreateUserRequest:
       required:
       - email
@@ -1675,6 +1751,86 @@ components:
           type: string
           enum:
           - active
+    AggregationResponse:
+      type: object
+      properties:
+        buckets:
+          type: array
+          description: The buckets of the aggregation
+          items:
+            $ref: '#/components/schemas/Bucket'
+    Bucket:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp when the bucket starts
+          format: date-time
+        bucket_size:
+          type: string
+          description: The size of the bucket
+          enum:
+          - 1h
+          - 1d
+          - 10m
+        average:
+          type: number
+          description: The average of all values in the bucket
+          format: double
+        sum:
+          type: number
+          description: The sum of all values in the bucket
+          format: double
+        min:
+          type: number
+          description: The min of all values in the bucket
+          format: double
+        max:
+          type: number
+          description: The max of all values in the bucket
+          format: double
+        percentile_95:
+          type: number
+          description: The 95th percentile
+          format: double
+        organization_id:
+          type: string
+          description: The organization id
+        instance_id:
+          type: string
+          description: The organization id
+      description: The buckets of the aggregation
+    AggregationRequest:
+      required:
+      - start_time
+      type: object
+      properties:
+        bucket_size:
+          type: string
+          description: The size of the bucket
+          enum:
+          - 1h
+          - 1d
+          - 10m
+        buckets:
+          minimum: 1
+          type: integer
+          description: Number of buckets to return. Defaults to 3 if not provided.
+          format: int32
+          default: 3
+        start_time:
+          type: string
+          description: "An ISO-8601 formatted date-time, i.e., 2018-11-13T20:20:39+00:00,\
+            \ that the aggregation should start at. This time will be truncated based\
+            \ on bucket_size, i.e., if bucket_size is 1h, then the start_time will\
+            \ be truncated to the nearest hour."
+          format: date-time
+        organization_id:
+          type: string
+          description: The Nile organization id to aggregate on
+        instance_id:
+          type: string
+          description: The optional Nile instance id to aggregate on
     Measurement:
       required:
       - instance_id
@@ -1684,9 +1840,10 @@ components:
       properties:
         timestamp:
           type: string
-          description: An ISO-8601 formatted date-time https://www.iso.org/iso-8601-date-and-time-format.html
-            that represents the time the datapoint was created
+          description: "An ISO-8601 formatted date-time, i.e., 2018-11-13T20:20:39+00:00,\
+            \ that represents the time the measurement was created."
           format: date-time
+          example: 2022-11-13T20:20:39Z
         value:
           type: number
           description: the measured value
@@ -1736,6 +1893,36 @@ components:
         organization_id:
           type: string
           description: The Nile organization id to filter on
+    ListMetricDefinitionsResponse:
+      required:
+      - metric_definitions
+      type: object
+      properties:
+        metric_definitions:
+          type: array
+          description: The list of metric definitions for a workspace or entity
+          items:
+            $ref: '#/components/schemas/MetricDefinition'
+    MetricDefinition:
+      required:
+      - entity_type
+      - name
+      - type
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the metric
+        type:
+          type: string
+          description: The type of the metric
+          enum:
+          - gauge
+          - sum
+        entity_type:
+          type: string
+          description: The entity type of the metric
+      description: The list of metric definitions for a workspace or entity
     AddUserToOrgRequest:
       required:
       - email
