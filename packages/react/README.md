@@ -2,7 +2,7 @@
 
 ## Storybook
 
-[Storybook](https://react-storybook-ten.vercel.app)
+[Storybook](https://storybook.thenile.dev)
 
 ## Usage
 
@@ -112,4 +112,8 @@ function App() {
 
 [SignUpForm](./src/components/SignUpForm/README.md)
 
-[InstanceTable]('./src/components/InstanceTable/README.md)
+[InstanceTable](./src/components/InstanceTable/README.md)
+
+[Metrics](./src/components/Metrics/README.md)
+
+[OrganizationForm](./src/components/OrganizationForm/README.md)
