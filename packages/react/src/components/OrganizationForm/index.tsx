@@ -5,7 +5,7 @@ import { useNile } from '../../context';
 import { useMutation } from '../../lib/queries';
 import SimpleForm, { AttributeType } from '../../lib/SimpleForm';
 
-import { Props } from './types';
+import { AllowedAny, Props } from './types';
 
 const attributes = [
   {
@@ -18,13 +18,17 @@ const attributes = [
 ];
 
 export default function AddOrgForm(props: Props) {
-  const { onSuccess, onError, cancelLink } = props;
+  const { onSuccess, onError, cancelLink, beforeMutate } = props;
   const nile = useNile();
+  const handleMutate =
+    typeof beforeMutate === 'function'
+      ? beforeMutate
+      : (data: AllowedAny): AllowedAny => data;
 
   const mutation = useMutation(
     (data: CreateOrganizationRequest) =>
       nile.organizations.createOrganization({
-        createOrganizationRequest: data,
+        createOrganizationRequest: handleMutate(data),
       }),
     {
       onSuccess: (data: Organization) => {
