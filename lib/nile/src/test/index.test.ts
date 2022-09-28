@@ -103,8 +103,11 @@ describe('index', () => {
         if (k === 'metrics') {
           expect(props).toEqual([
             'constructor',
+            'aggregateMetrics',
             'filterMetrics',
             'filterMetricsForEntityType',
+            'listMetricDefinitions',
+            'listMetricDefinitionsForEntityType',
             'produceBatchOfMetrics',
           ]);
         }
