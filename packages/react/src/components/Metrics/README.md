@@ -58,11 +58,11 @@ function App() {
 
 ## useMetrics
 
-It is expected that the basic charts provided by this library will not meet the needs of every use case. For custom charts, the `useMetrics` hook can be used to request and format data, to then be iterated on.
+It is expected that the basic charts provided by this library will not meet the needs of every use case. For custom charts, the `useMetrics` hook can be used to request and format data, and then iterated on.
 
 ### Usage
 
-Assuming a metric is being prodiced of uptime 1 being up and 0 being down...
+Assuming a metric is being produced of uptime 1 being up and 0 being down...
 
 ```typescript
 function MyMetricComponent() {
