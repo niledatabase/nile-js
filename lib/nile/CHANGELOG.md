@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.23.0](https://github.com/TheNileDev/nile-js/compare/v0.22.3...v0.23.0) (2022-09-28)
+
+
+### Features
+
+* update spec, add metric aggregate ([856baf5](https://github.com/TheNileDev/nile-js/commit/856baf5cbc098611f48f756687160e862d33955b))
+
+
+
+
+
 ## [0.22.3](https://github.com/TheNileDev/nile-js/compare/v0.22.2...v0.22.3) (2022-09-26)
 
 **Note:** Version bump only for package @theniledev/js
