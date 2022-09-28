@@ -3259,17 +3259,17 @@
     regenerator-runtime "^0.13.7"
     resolve-from "^5.0.0"
 
-"@tanstack/query-core@4.3.8":
-  version "4.3.8"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.3.8.tgz#d5f07c1d9d4f83f16f0bed7f3b245fa0e557b037"
-  integrity sha512-AEUWtCNBIImFZ9tMt/P8V86kIhMHpfoJqAI1auGOLR8Wzeq7Ymiue789PJG0rKYcyViUicBZeHjggMqyEQVMfQ==
+"@tanstack/query-core@4.7.1":
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.7.1.tgz#e732da7d0a4f31b4caa806099fc599617753d451"
+  integrity sha512-BzFI4KdiklxfUUgNiO6E4XsSwaX5NscuIhP7aqWbS8Hqik1KohfvO+SXpftSZHOyzm0+XpycRsip/QEs3Hx3AA==
 
-"@tanstack/react-query@^4.3.9":
-  version "4.3.9"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.3.9.tgz#13332a1d4dd404baec24c2853883bcb3cc61ea92"
-  integrity sha512-odfDW6WiSntCsCh+HFeJtUys3UnVOjfJMhykAtGtYvcklMyyDmCv9BVBt5KlSpbk/qW3kURPFCDapO+BFUlCwg==
+"@tanstack/react-query@^4.7.1":
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.7.1.tgz#ff7d58e113b735c231138f9b9be828e1730923c4"
+  integrity sha512-/3PBXuvdlvUbSv5eqgkda4VAN14t+rpDop9LnZmEmIMW8ARrbW7Rt6PYTya33JGaeo6XoztRzEH8TaY5S+neNQ==
   dependencies:
-    "@tanstack/query-core" "4.3.8"
+    "@tanstack/query-core" "4.7.1"
     use-sync-external-store "^1.2.0"
 
 "@testing-library/dom@^8.5.0":
