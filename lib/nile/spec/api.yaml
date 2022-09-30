@@ -1070,6 +1070,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+    delete:
+      tags:
+      - organizations
+      summary: Remove a user from an organization
+      operationId: removeUserFromOrg
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: user
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Successful user removal
   /me:
     get:
       tags:
