@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1.0-f3cf1a9
+  version: 0.1.0-05b1110
 servers:
 - url: localhost:8080
 tags:
@@ -760,25 +760,6 @@ paths:
       operationId: filterMetrics
       parameters:
       - $ref: '#/components/parameters/workspace'
-      - name: from_timestamp
-        in: query
-        schema:
-          type: string
-          description: "The ISO-8601 formatted timestamp used to begin searching for\
-            \ matching metrics, i.e., 2018-11-13T20:20:39+00:00. If not provided the\
-            \ range will start from the epoch. Results returned are inclusive of this\
-            \ timestamp."
-          format: date-time
-      - name: duration
-        in: query
-        schema:
-          type: integer
-          description: "The duration (seconds) added to from_timestamp to limit the\
-            \ time range of the query. i.e., the query will be restricting to metric.timestamp\
-            \ >= from_timestamp AND metric.timestamp < from_timestamp + duration.\
-            \  If not provided or the duration is <=0 then the end timestamp is set\
-            \ to now"
-          format: int32
       requestBody:
         content:
           application/json:
@@ -807,25 +788,6 @@ paths:
         required: true
         schema:
           type: string
-      - name: from_timestamp
-        in: query
-        schema:
-          type: string
-          description: "The ISO-8601 formatted timestamp used to begin searching for\
-            \ matching metrics, i.e., 2018-11-13T20:20:39+00:00. If not provided the\
-            \ range will start from the epoch. Results returned are inclusive of this\
-            \ timestamp."
-          format: date-time
-      - name: duration
-        in: query
-        schema:
-          type: integer
-          description: "The duration (seconds) added to from_timestamp to limit the\
-            \ time range of the query. i.e., the query will be restricting to metric.timestamp\
-            \ >= from_timestamp AND metric.timestamp < from_timestamp + duration.\
-            \  If not provided or the duration is <=0 then the end timestamp is set\
-            \ to now"
-          format: int32
       requestBody:
         content:
           application/json:
@@ -1070,6 +1032,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+    delete:
+      tags:
+      - organizations
+      summary: Remove a user from an organization by user id
+      operationId: removeUserFromOrg
+      parameters:
+      - $ref: '#/components/parameters/workspace'
+      - name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: user
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Successful user removal
   /me:
     get:
       tags:
@@ -1766,9 +1748,11 @@ components:
           type: string
           description: The timestamp when the bucket starts
           format: date-time
+          example: 2021-01-01T00:00:00Z
         bucket_size:
           type: string
           description: The size of the bucket
+          example: 1h
           enum:
           - 1h
           - 1d
@@ -1796,9 +1780,11 @@ components:
         organization_id:
           type: string
           description: The organization id
+          example: org_02qwn8bovgrXdNx8XlVzbU
         instance_id:
           type: string
           description: The organization id
+          example: inst_02qwn8bovgrXdNx8XlVzbU
       description: The buckets of the aggregation
     AggregationRequest:
       required:
@@ -1848,9 +1834,12 @@ components:
           type: number
           description: the measured value
           format: double
+          example: 11.8
         instance_id:
           type: string
-          description: InstanceId of the Nile instance this datapoint is related to
+          description: InstanceId of the Nile instance this measurement is related
+            to
+          example: inst_02qwn8bovgrXdNx8XlVzbU
       description: Measurements associated with this metric
     Metric:
       required:
@@ -1863,15 +1852,18 @@ components:
         name:
           type: string
           description: The name of the metric that is unique in a workspace
+          example: cluster.bytes.in
         type:
           type: string
           description: Type of metric. Currently sum or gauge
+          example: sum
           enum:
           - gauge
           - sum
         entity_type:
           type: string
           description: The Nile entity type this metric is related to
+          example: cluster
         measurements:
           type: array
           description: Measurements associated with this metric
@@ -1883,16 +1875,37 @@ components:
         metric_name:
           type: string
           description: Name of the metric to filter on
+          example: cluster.bytes.in
         instance_id:
           type: string
           description: The Nile instance id to filter on
+          example: inst_02qwn8bovgrXdNx8XlVzbU
         entity_type:
           type: string
           description: The Nile entity type to filter on. This is ignored if entity_type
             is on a URL param.
+          example: cluster
         organization_id:
           type: string
           description: The Nile organization id to filter on
+          example: org_02qwn8bovgrXdNx8XlVzbU
+        from_timestamp:
+          type: string
+          description: "The ISO-8601 formatted timestamp used to begin searching for\
+            \ matching metrics, i.e., 2018-11-13T20:20:39+00:00. If not provided the\
+            \ range will start from the epoch. Results returned are inclusive of this\
+            \ timestamp."
+          format: date-time
+          example: 2021-01-01T00:00:00Z
+        duration:
+          type: integer
+          description: "The duration is added to from_timestamp to limit the time\
+            \ range of the query. i.e., the query will be restricted to metric.timestamp\
+            \ >= from_timestamp AND metric.timestamp < from_timestamp + duration.\
+            \  If not provided or the duration is <=0 then the end timestamp is set\
+            \ to now"
+          format: int32
+          example: 600000
     ListMetricDefinitionsResponse:
       required:
       - metric_definitions
@@ -1913,15 +1926,18 @@ components:
         name:
           type: string
           description: The name of the metric
+          example: cluster.bytes.out
         type:
           type: string
           description: The type of the metric
+          example: gauge
           enum:
           - gauge
           - sum
         entity_type:
           type: string
           description: The entity type of the metric
+          example: cluster
       description: The list of metric definitions for a workspace or entity
     AddUserToOrgRequest:
       required:
