@@ -45,6 +45,7 @@ describe('index', () => {
             'listInvites',
             'listOrganizations',
             'listUsersInOrg',
+            'removeUserFromOrg',
             'updateOrganization',
             'updateUserInOrg',
           ]);
