@@ -24,22 +24,22 @@
   "devDependencies": {
     "@commitlint/cli": "17.1.2",
     "@commitlint/config-conventional": "17.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.38.0",
-    "@typescript-eslint/parser": "^5.38.0",
-    "eslint": "^8.23.1",
-    "eslint-config-next": "12.2.5",
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
+    "eslint": "^8.24.0",
+    "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-storybook": "^0.6.4",
     "husky": "8.0.1",
-    "lerna": "^5.5.1",
+    "lerna": "^5.6.1",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "prettier-eslint": "^15.0.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.4"
   },
   "lint-staged": {
     "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix .",
