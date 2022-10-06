@@ -112,7 +112,7 @@ function App() {
 
 [SignUpForm](./src/components/SignUpForm/README.md)
 
-[InstanceTable](./src/components/InstanceTable/README.md)
+[InstanceList](./src/components/InstanceList/README.md)
 
 [Metrics](./src/components/Metrics/README.md)
 

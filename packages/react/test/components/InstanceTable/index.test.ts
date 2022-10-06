@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { generateHeaderRow } from '../../../src/components/InstanceTable/InstanceTable';
+import { generateHeaderRow } from '../../../src/components/InstanceList/InstanceList';
 
 describe('instance table', () => {
   let entityData: any;
@@ -40,6 +40,15 @@ describe('instance table', () => {
     const headerRow = generateHeaderRow(additionalColumns, columns, entityData);
     expect(headerRow).toEqual([
       { field: 'givenName', flex: 1, headerName: 'givenName', minWidth: 200 },
+      { field: 'familyName', flex: 1, headerName: 'familyName', minWidth: 200 },
+    ]);
+  });
+
+  it('handles columns that do not exist', () => {
+    const additionalColumns: any = [];
+    const columns: any = ['not here', 'familyName'];
+    const headerRow = generateHeaderRow(additionalColumns, columns, entityData);
+    expect(headerRow).toEqual([
       { field: 'familyName', flex: 1, headerName: 'familyName', minWidth: 200 },
     ]);
   });

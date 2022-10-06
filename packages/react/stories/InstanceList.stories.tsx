@@ -11,7 +11,7 @@ import { GridRenderCellParams } from '@mui/x-data-grid';
 import { Add } from '@mui/icons-material';
 import Card from '@mui/joy/Card';
 
-import InstanceTable from '../src/components/InstanceTable/InstanceTable';
+import InstanceList from '../src/components/InstanceList/InstanceList';
 import { NileProvider } from '../src/context';
 
 const entityData = {
@@ -61,7 +61,7 @@ const instances: Instance[] = [
   },
 ];
 const meta: Meta = {
-  component: InstanceTable,
+  component: InstanceList,
   argTypes: {
     isFetching: {
       description:
@@ -93,7 +93,7 @@ type StoryProps = {
 const Template: Story<StoryProps> = (args) => {
   return (
     <NileProvider basePath="http://localhost:8080">
-      <InstanceTable
+      <InstanceList
         entity="myEntity"
         isFetching={args.isFetching}
         instances={args.renderEmpty ? [] : instances}
@@ -118,7 +118,7 @@ Default.args = {
 
 const EmptyState = () => (
   <NileProvider basePath="http://localhost:8080">
-    <InstanceTable
+    <InstanceList
       entity="myEntity"
       isFetching={false}
       instances={[]}
@@ -164,7 +164,7 @@ const RenderEventLink = (props: GridRenderCellParams<Instance>) => {
 
 const Columns = () => (
   <NileProvider basePath="http://localhost:8080">
-    <InstanceTable
+    <InstanceList
       entity="myEntity"
       isFetching={false}
       instances={instances}
@@ -188,7 +188,7 @@ export const FilteredAndCustomColumns = Columns.bind({});
 
 const ActionButtons = () => (
   <NileProvider basePath="http://localhost:8080">
-    <InstanceTable
+    <InstanceList
       entity="myEntity"
       isFetching={false}
       instances={instances}
@@ -216,7 +216,7 @@ export const TableActionButtons = ActionButtons.bind({});
 
 const Cards = () => (
   <NileProvider basePath="http://localhost:8080">
-    <InstanceTable
+    <InstanceList
       entity="myEntity"
       isFetching={false}
       instances={instances.concat([
