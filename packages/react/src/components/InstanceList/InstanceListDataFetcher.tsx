@@ -1,14 +1,19 @@
 import React from 'react';
 
+import { useInterval } from '../../lib/hooks/useInterval';
 import { useNile } from '../../context';
 import Queries, { useQuery } from '../../lib/queries';
 
-import InstanceTable from './InstanceTable';
-import { InstanceTableProps } from './types';
+import InstanceList from './InstanceList';
+import { InstanceListProps, ComponentProps } from './types';
 
-export type InstanceTableDataFetcherProps = InstanceTableProps;
-export default function InstanceTableDataFetcher(
-  props: InstanceTableDataFetcherProps
+export type InstanceListDataFetcherProps = InstanceListProps & {
+  refreshInterval?: number;
+  Component: ComponentProps;
+};
+
+export default function InstanceListDataFetcher(
+  props: InstanceListDataFetcherProps
 ) {
   const {
     entity,
@@ -22,6 +27,8 @@ export default function InstanceTableDataFetcher(
     useQuery: customUseQuery,
     processColumns,
     actionButtons,
+    refreshInterval,
+    Component = InstanceList,
   } = props;
   const nile = useNile();
   const useQueryHook = customUseQuery ?? useQuery;
@@ -36,16 +43,21 @@ export default function InstanceTableDataFetcher(
     () => nile.entities.getEntity({ type: String(entity) })
   );
 
-  const { data: instances, isFetching: isInstancesFetching } = useQueryHook(
-    Queries.ListInstances(entity, org),
-    () =>
-      nile.entities.listInstances({
-        type: String(entity),
-        org: String(org),
-      })
+  const {
+    refetch,
+    data: instances,
+    isFetching: isInstancesFetching,
+  } = useQueryHook(Queries.ListInstances(entity, org), () =>
+    nile.entities.listInstances({
+      type: String(entity),
+      org: String(org),
+    })
   );
+
+  useInterval(refetch, refreshInterval);
+
   return (
-    <InstanceTable
+    <Component
       instances={instances}
       entityData={entityData}
       organization={organization}

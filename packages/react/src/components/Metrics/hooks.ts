@@ -8,6 +8,7 @@ import {
 
 import { useNile } from '../../context';
 import Queries, { useQuery } from '../../lib/queries';
+import { useInterval } from '../../lib/hooks/useInterval';
 
 type UseMetricsReturn = {
   isLoading: boolean;
@@ -75,20 +76,4 @@ export const useMetrics = (
   }, updateInterval);
 
   return { isLoading, metrics: flatMetrics };
-};
-
-export const useInterval = (cb: () => void, delay: void | number) => {
-  const savedCallback = React.useRef(cb);
-
-  React.useEffect(() => {
-    savedCallback.current = cb;
-  }, [cb]);
-
-  React.useEffect(() => {
-    if (!delay) {
-      return;
-    }
-    const id = setInterval(() => savedCallback.current(), delay);
-    return () => clearInterval(id);
-  }, [delay]);
 };

@@ -1,6 +1,6 @@
 export { default as LoginForm } from './components/LoginForm';
 export { default as SignUpForm } from './components/SignUpForm';
-export { default as InstanceTable } from './components/InstanceTable';
+export { default as InstanceList } from './components/InstanceList';
 export { default as EntityForm } from './components/EntityForm';
 export { NileProvider, useNile } from './context';
 export {
