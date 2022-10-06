@@ -13,3 +13,4 @@ export {
 export { AttributeType, Attribute } from './lib/SimpleForm';
 
 export { MetricsLineChart, useMetrics } from './components/Metrics';
+export { default as OrganizationForm } from './components/OrganizationForm';
