@@ -51,7 +51,7 @@
     }
   ],
   "devDependencies": {
-    "@babel/core": "^7.19.1",
+    "@babel/core": "^7.19.3",
     "@size-limit/preset-small-lib": "^8.1.0",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-info": "^5.3.21",
@@ -62,7 +62,7 @@
     "@testing-library/react": "^13.4.0",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
-    "@typescript-eslint/parser": "^5.38.1",
+    "@typescript-eslint/parser": "^5.39.0",
     "babel-loader": "^8.2.5",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
@@ -70,19 +70,19 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-storybook": "^0.6.4",
     "husky": "^8.0.1",
-    "size-limit": "^8.0.1",
+    "size-limit": "^8.1.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.4"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.6",
-    "@mui/joy": "^5.0.0-alpha.46",
-    "@mui/material": "^5.10.6",
-    "@mui/x-data-grid": "^5.17.4",
-    "@tanstack/react-query": "^4.7.1",
+    "@mui/joy": "^5.0.0-alpha.48",
+    "@mui/material": "^5.10.8",
+    "@mui/x-data-grid": "^5.17.5",
+    "@tanstack/react-query": "^4.10.1",
     "@theniledev/js": "^0.24.0",
     "chart.js": "^3.9.1",
     "date-fns": "^2.29.3",

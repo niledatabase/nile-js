@@ -2,7 +2,7 @@ import { GridRowParams, GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import { Instance, Organization } from '@theniledev/js';
 
-export interface InstanceTableProps {
+export interface InstanceListProps {
   entity: string;
   org: string;
   handleRowClick?: (params: GridRowParams) => void;
@@ -22,3 +22,7 @@ export interface InstanceTableProps {
     organization: Organization;
   }) => React.ReactNode;
 }
+
+export type ComponentProps = React.FunctionComponent<
+  Omit<InstanceListProps, 'entity' | 'org'>
+>;

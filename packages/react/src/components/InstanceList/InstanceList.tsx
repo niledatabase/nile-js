@@ -6,9 +6,9 @@ import { Entity, Instance, Organization } from '@theniledev/js';
 import { TableWrapper, TableSkeleton } from '../../lib/table';
 import { flattenSchema, flatten } from '../../lib/utils/schema';
 
-import { InstanceTableProps } from './types';
+import { InstanceListProps } from './types';
 
-type Props = Omit<InstanceTableProps, 'org'> & {
+type Props = Omit<InstanceListProps, 'org'> & {
   instances: void | Instance[];
   entityData: void | Entity;
   organization: void | Organization;
@@ -22,7 +22,7 @@ export const generateHeaderRow = (
   entityData: void | Entity,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   processColumns?: (header: string, flatSchema: any) => GridColDef
-) => {
+): GridColDef[] => {
   const flatSchema = entityData && flattenSchema(entityData?.schema, true);
   if (flatSchema) {
     const baseArr = Object.keys(flatSchema).map((header) => {
@@ -47,9 +47,12 @@ export const generateHeaderRow = (
         {}
       );
 
-      return columns.map((col) => {
-        return colLookup[String(col)];
-      });
+      return columns.reduce((accum: GridColDef[], col) => {
+        if (colLookup[String(col)] != null) {
+          accum.push(colLookup[String(col)]);
+        }
+        return accum;
+      }, []);
     }
     if (additionalColumns && additionalColumns.length) {
       return baseArr.concat(additionalColumns);
@@ -72,7 +75,7 @@ export const generateHeaderRow = (
   return [];
 };
 
-const InstanceTable = React.memo(function InstanceTable(props: Props) {
+const InstanceList = React.memo(function InstanceList(props: Props) {
   const {
     isFetching,
     instances,
@@ -183,4 +186,4 @@ const InstanceTable = React.memo(function InstanceTable(props: Props) {
     </TableSkeleton>
   );
 });
-export default InstanceTable;
+export default InstanceList;

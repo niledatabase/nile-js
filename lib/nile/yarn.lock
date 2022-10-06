@@ -1303,9 +1303,9 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
 
-"@types/node@*", "@types/node@^18.7.21":
-  version "18.7.21"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.21.tgz#63ee6688070e456325b6748dc492a7b948593871"
+"@types/node@*", "@types/node@^18.8.0":
+  version "18.8.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.8.0.tgz#b8ee8d83a99470c0661bd899417fcd77060682fe"
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -5984,9 +5984,9 @@ typescript@^3.7.3:
   version "3.9.10"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
 
-typescript@^4.8.3:
-  version "4.8.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.3.tgz#d59344522c4bc464a65a730ac695007fdb66dd88"
+typescript@^4.8.4:
+  version "4.8.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
 
 uglify-js@^3.1.4:
   version "3.15.4"
