@@ -3,462 +3,258 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [0.24.0](https://github.com/TheNileDev/nile-js/compare/v0.23.0...v0.24.0) (2022-09-30)
+# [0.25.0](https://github.com/TheNileDev/nile-js/compare/v0.24.0...v0.25.0) (2022-10-06)
 
+**Note:** Version bump only for package @theniledev/js
+
+# [0.24.0](https://github.com/TheNileDev/nile-js/compare/v0.23.0...v0.24.0) (2022-09-30)
 
 ### Features
 
-* removeUserFromOrg ([f763130](https://github.com/TheNileDev/nile-js/commit/f763130e31edeb52b7b6a317abf72919c1d5155a))
-* removeUserFromOrg, dynamic spec pull ([9672ce7](https://github.com/TheNileDev/nile-js/commit/9672ce7bdfa296f6f29b2674543bb557942c6f66))
-
-
-
-
+- removeUserFromOrg ([f763130](https://github.com/TheNileDev/nile-js/commit/f763130e31edeb52b7b6a317abf72919c1d5155a))
+- removeUserFromOrg, dynamic spec pull ([9672ce7](https://github.com/TheNileDev/nile-js/commit/9672ce7bdfa296f6f29b2674543bb557942c6f66))
 
 # [0.23.0](https://github.com/TheNileDev/nile-js/compare/v0.22.3...v0.23.0) (2022-09-28)
 
-
 ### Features
 
-* update spec, add metric aggregate ([856baf5](https://github.com/TheNileDev/nile-js/commit/856baf5cbc098611f48f756687160e862d33955b))
-
-
-
-
+- update spec, add metric aggregate ([856baf5](https://github.com/TheNileDev/nile-js/commit/856baf5cbc098611f48f756687160e862d33955b))
 
 ## [0.22.3](https://github.com/TheNileDev/nile-js/compare/v0.22.2...v0.22.3) (2022-09-26)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 ## [0.22.2](https://github.com/TheNileDev/nile-js/compare/v0.22.1...v0.22.2) (2022-09-26)
 
 **Note:** Version bump only for package @theniledev/js
-
-
-
-
 
 ## [0.22.1](https://github.com/TheNileDev/nile-js/compare/v0.22.0...v0.22.1) (2022-09-23)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 # [0.22.0](https://github.com/TheNileDev/nile-js/compare/v0.21.0...v0.22.0) (2022-09-22)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 # [0.21.0](https://github.com/TheNileDev/nile-js/compare/v0.20.2...v0.21.0) (2022-09-21)
-
 
 ### Features
 
-* add metrics ([0291eaa](https://github.com/TheNileDev/nile-js/commit/0291eaa36d63daaf1eb051923a94fa436fe8ca9b))
-
-
-
-
+- add metrics ([0291eaa](https://github.com/TheNileDev/nile-js/commit/0291eaa36d63daaf1eb051923a94fa436fe8ca9b))
 
 ## [0.20.2](https://github.com/TheNileDev/nile-js/compare/v0.20.1...v0.20.2) (2022-09-19)
 
-
 ### Bug Fixes
 
-* update readme ([4ac7ed9](https://github.com/TheNileDev/nile-js/commit/4ac7ed98b00ecf60bbb7e36ba4ce4c26b25deabc))
-
-
-
-
+- update readme ([4ac7ed9](https://github.com/TheNileDev/nile-js/commit/4ac7ed98b00ecf60bbb7e36ba4ce4c26b25deabc))
 
 ## [0.20.1](https://github.com/TheNileDev/nile-js/compare/v0.20.0...v0.20.1) (2022-09-16)
 
-
 ### Bug Fixes
 
-* update spec, export types ([f04ef17](https://github.com/TheNileDev/nile-js/commit/f04ef176ef5e7f95121dc8fcb8a48fbf623ee5e1))
-
-
-
-
+- update spec, export types ([f04ef17](https://github.com/TheNileDev/nile-js/commit/f04ef176ef5e7f95121dc8fcb8a48fbf623ee5e1))
 
 # [0.20.0](https://github.com/TheNileDev/nile-js/compare/v0.19.1...v0.20.0) (2022-09-16)
 
-
 ### Features
 
-* add metrics methods to nile ([923f785](https://github.com/TheNileDev/nile-js/commit/923f785ec0ecfdee1f2b8344a0c316c96dcfa974))
-* update deps ([a76df31](https://github.com/TheNileDev/nile-js/commit/a76df317687977f667f84bb0affd03d0cc6edd18))
-
-
-
-
+- add metrics methods to nile ([923f785](https://github.com/TheNileDev/nile-js/commit/923f785ec0ecfdee1f2b8344a0c316c96dcfa974))
+- update deps ([a76df31](https://github.com/TheNileDev/nile-js/commit/a76df317687977f667f84bb0affd03d0cc6edd18))
 
 ## [0.19.1](https://github.com/TheNileDev/nile-js/compare/v0.19.0...v0.19.1) (2022-09-12)
 
-
 ### Bug Fixes
 
-* user bag of options in spec ([29d0230](https://github.com/TheNileDev/nile-js/commit/29d023002c9761872c0680636126824a28c704f1))
-
-
-
-
+- user bag of options in spec ([29d0230](https://github.com/TheNileDev/nile-js/commit/29d023002c9761872c0680636126824a28c704f1))
 
 # [0.19.0](https://github.com/TheNileDev/nile-js/compare/v0.18.0...v0.19.0) (2022-09-12)
 
-
 ### Features
 
-* rename to authz -> policies, user metadata bag ([e5cfb77](https://github.com/TheNileDev/nile-js/commit/e5cfb7775e0f4097de78dc0a53ced81269b3e342))
-
-
-
-
+- rename to authz -> policies, user metadata bag ([e5cfb77](https://github.com/TheNileDev/nile-js/commit/e5cfb7775e0f4097de78dc0a53ced81269b3e342))
 
 # [0.18.0](https://github.com/TheNileDev/nile-js/compare/v0.17.1...v0.18.0) (2022-09-06)
 
-
 ### Bug Fixes
 
-* show better auth error on rebuild ([a983f18](https://github.com/TheNileDev/nile-js/commit/a983f18945057c98fdda980ac7baaddbe6217e80))
-
-
-
-
+- show better auth error on rebuild ([a983f18](https://github.com/TheNileDev/nile-js/commit/a983f18945057c98fdda980ac7baaddbe6217e80))
 
 ## [0.17.1](https://github.com/TheNileDev/nile-js/compare/v0.17.0...v0.17.1) (2022-09-01)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 # [0.17.0](https://github.com/TheNileDev/nile-js/compare/v0.16.3...v0.17.0) (2022-08-30)
-
 
 ### Bug Fixes
 
-* add example for Nile.connect ([4932cc2](https://github.com/TheNileDev/nile-js/commit/4932cc28677bcd6c8099467b729ebed6a45d13d9))
-
+- add example for Nile.connect ([4932cc2](https://github.com/TheNileDev/nile-js/commit/4932cc28677bcd6c8099467b729ebed6a45d13d9))
 
 ### Features
 
-* **nile-js:** spec, connect interface, add authz ([4b431ce](https://github.com/TheNileDev/nile-js/commit/4b431ce6fad7a159cec2063eca200c7e15c95f51))
-* **nile-js:** support for auth token in rebuild ([82f9ccd](https://github.com/TheNileDev/nile-js/commit/82f9ccdb1aa805a182fc13b1ae72c54c5479bc68))
-
-
-
-
+- **nile-js:** spec, connect interface, add authz ([4b431ce](https://github.com/TheNileDev/nile-js/commit/4b431ce6fad7a159cec2063eca200c7e15c95f51))
+- **nile-js:** support for auth token in rebuild ([82f9ccd](https://github.com/TheNileDev/nile-js/commit/82f9ccdb1aa805a182fc13b1ae72c54c5479bc68))
 
 ## [0.16.3](https://github.com/TheNileDev/nile-js/compare/v0.16.2...v0.16.3) (2022-08-25)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 ## [0.16.2](https://github.com/TheNileDev/nile-js/compare/v0.16.1...v0.16.2) (2022-08-25)
-
 
 ### Bug Fixes
 
-* remove nile-agent, pulumi package for self-contained events example ([09f809b](https://github.com/TheNileDev/nile-js/commit/09f809b102ff6a3c44d9a5620c7d88caa4be6841))
-
-
-
-
+- remove nile-agent, pulumi package for self-contained events example ([09f809b](https://github.com/TheNileDev/nile-js/commit/09f809b102ff6a3c44d9a5620c7d88caa4be6841))
 
 ## [0.16.1](https://github.com/TheNileDev/nile-js/compare/v0.16.0...v0.16.1) (2022-08-18)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 # [0.16.0](https://github.com/TheNileDev/nile-js/compare/v0.15.0...v0.16.0) (2022-08-18)
 
 **Note:** Version bump only for package @theniledev/js
-
-
-
-
 
 # [0.15.0](https://github.com/TheNileDev/nile-js/compare/v0.14.2...v0.15.0) (2022-08-17)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 ## [0.14.2](https://github.com/TheNileDev/nile-js/compare/v0.14.1...v0.14.2) (2022-08-17)
 
 **Note:** Version bump only for package @theniledev/js
-
-
-
-
 
 ## [0.14.1](https://github.com/TheNileDev/nile-js/compare/v0.14.0...v0.14.1) (2022-08-17)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 # [0.14.0](https://github.com/TheNileDev/nile-js/compare/v0.13.1...v0.14.0) (2022-08-16)
-
 
 ### Bug Fixes
 
-* **events-example:** linting on events, documentation ([fa464e5](https://github.com/TheNileDev/nile-js/commit/fa464e5a77aedd987aa996b9d47c571908f62ce3))
-* **nile-js:** add typedoc to events class ([e4f66e8](https://github.com/TheNileDev/nile-js/commit/e4f66e8f495d4936432f6a0fb00ed82125ee4bdb))
-
-
-
-
+- **events-example:** linting on events, documentation ([fa464e5](https://github.com/TheNileDev/nile-js/commit/fa464e5a77aedd987aa996b9d47c571908f62ce3))
+- **nile-js:** add typedoc to events class ([e4f66e8](https://github.com/TheNileDev/nile-js/commit/e4f66e8f495d4936432f6a0fb00ed82125ee4bdb))
 
 ## [0.13.1](https://github.com/TheNileDev/nile-js/compare/v0.13.0...v0.13.1) (2022-08-02)
 
-
 ### Bug Fixes
 
-* spec update ([544039f](https://github.com/TheNileDev/nile-js/commit/544039f5bc1055bde0f6a57879d09201bcb40e4d))
-
-
-
-
+- spec update ([544039f](https://github.com/TheNileDev/nile-js/commit/544039f5bc1055bde0f6a57879d09201bcb40e4d))
 
 # [0.13.0](https://github.com/TheNileDev/nile-js/compare/v0.12.7...v0.13.0) (2022-07-22)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 ## [0.12.7](https://github.com/TheNileDev/nile-js/compare/v0.12.6...v0.12.7) (2022-07-19)
 
 **Note:** Version bump only for package @theniledev/js
-
-
-
-
 
 ## [0.12.6](https://github.com/TheNileDev/nile-js/compare/v0.12.5...v0.12.6) (2022-07-14)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 ## [0.12.5](https://github.com/TheNileDev/nile-js/compare/v0.12.4...v0.12.5) (2022-06-14)
-
 
 ### Bug Fixes
 
-* make types less voidable ([d3ba4d5](https://github.com/TheNileDev/nile-js/commit/d3ba4d5f4824183bc05dbb17449874158334417a))
-
-
-
-
+- make types less voidable ([d3ba4d5](https://github.com/TheNileDev/nile-js/commit/d3ba4d5f4824183bc05dbb17449874158334417a))
 
 ## [0.12.4](https://github.com/TheNileDev/nile-js/compare/v0.12.3...v0.12.4) (2022-06-14)
 
-
 ### Bug Fixes
 
-* use initial workspace ([824c039](https://github.com/TheNileDev/nile-js/commit/824c0399db2dcb360b0599375c5e613c99f051b3))
-
-
-
-
+- use initial workspace ([824c039](https://github.com/TheNileDev/nile-js/commit/824c0399db2dcb360b0599375c5e613c99f051b3))
 
 ## [0.12.3](https://github.com/TheNileDev/nile-js/compare/v0.12.2...v0.12.3) (2022-06-14)
 
-
 ### Bug Fixes
 
-* document API ([6860995](https://github.com/TheNileDev/nile-js/commit/686099541a8acea527fcb485eb0fcf92b036f8de))
-
-
-
-
+- document API ([6860995](https://github.com/TheNileDev/nile-js/commit/686099541a8acea527fcb485eb0fcf92b036f8de))
 
 ## [0.12.2](https://github.com/TheNileDev/nile-js/compare/v0.12.1...v0.12.2) (2022-06-07)
 
-
 ### Bug Fixes
 
-* update spec ([123a149](https://github.com/TheNileDev/nile-js/commit/123a149a42abe11dd66089128fcff566650d65f2))
-
-
-
-
+- update spec ([123a149](https://github.com/TheNileDev/nile-js/commit/123a149a42abe11dd66089128fcff566650d65f2))
 
 ## [0.12.1](https://github.com/TheNileDev/nile-js/compare/v0.12.0...v0.12.1) (2022-05-31)
 
-
 ### Bug Fixes
 
-* updateInstances -> updateInstance ([f9f5427](https://github.com/TheNileDev/nile-js/commit/f9f54276ab610033fb2dddc1e4e86a4e7ce8c498))
-
-
-
-
+- updateInstances -> updateInstance ([f9f5427](https://github.com/TheNileDev/nile-js/commit/f9f54276ab610033fb2dddc1e4e86a4e7ce8c498))
 
 # [0.12.0](https://github.com/TheNileDev/nile-js/compare/v0.11.1...v0.12.0) (2022-05-31)
 
-
-* feat!: add support for workspaces ([8818bab](https://github.com/TheNileDev/nile-js/commit/8818babcdbb58d0e52e826fdfbdebda002bb9e88))
-
+- feat!: add support for workspaces ([8818bab](https://github.com/TheNileDev/nile-js/commit/8818babcdbb58d0e52e826fdfbdebda002bb9e88))
 
 ### BREAKING CHANGES
 
-* workspaces are a whole different structure and spec.
-
-
-
-
+- workspaces are a whole different structure and spec.
 
 ## [0.11.1](https://github.com/TheNileDev/nile-js/compare/v0.11.0...v0.11.1) (2022-05-19)
 
-
 ### Bug Fixes
 
-* show errors from the API, add better examples ([fec034f](https://github.com/TheNileDev/nile-js/commit/fec034f427d0712c3c1be5a34602e305180c041c))
-
-
-
-
+- show errors from the API, add better examples ([fec034f](https://github.com/TheNileDev/nile-js/commit/fec034f427d0712c3c1be5a34602e305180c041c))
 
 # [0.11.0](https://github.com/TheNileDev/nile-js/compare/v0.10.1...v0.11.0) (2022-05-12)
 
-
 ### Features
 
-* remove useFetch, implement react-query ([26cc6d4](https://github.com/TheNileDev/nile-js/commit/26cc6d4014aa831bf5781bc281636986c1344bc3))
-
-
-
-
+- remove useFetch, implement react-query ([26cc6d4](https://github.com/TheNileDev/nile-js/commit/26cc6d4014aa831bf5781bc281636986c1344bc3))
 
 ## [0.10.1](https://github.com/TheNileDev/nile-js/compare/v0.10.0...v0.10.1) (2022-05-11)
 
-
 ### Bug Fixes
 
-* add missing promises, fix forms ([d802d54](https://github.com/TheNileDev/nile-js/commit/d802d5467e869068f45188e6de7ed9105fd38f3c))
-* remove readOnly from spec ([5a89baf](https://github.com/TheNileDev/nile-js/commit/5a89baf86bb20c4a0a16a0de055d62e16a69f787))
-
-
-
-
+- add missing promises, fix forms ([d802d54](https://github.com/TheNileDev/nile-js/commit/d802d5467e869068f45188e6de7ed9105fd38f3c))
+- remove readOnly from spec ([5a89baf](https://github.com/TheNileDev/nile-js/commit/5a89baf86bb20c4a0a16a0de055d62e16a69f787))
 
 # [0.10.0](https://github.com/TheNileDev/nile-js/compare/v0.9.0...v0.10.0) (2022-05-11)
 
-
 ### Features
 
-* add useNileFetch hook ([471a0e9](https://github.com/TheNileDev/nile-js/commit/471a0e9c9055015b531f797ce99bbd31972c1d32))
-
+- add useNileFetch hook ([471a0e9](https://github.com/TheNileDev/nile-js/commit/471a0e9c9055015b531f797ce99bbd31972c1d32))
 
 ### BREAKING CHANGES
 
-* changed sdk interface, added *Raw functions and cancellation
-
-
-
-
+- changed sdk interface, added \*Raw functions and cancellation
 
 # [0.9.0](https://github.com/TheNileDev/nile-js/compare/v0.8.0...v0.9.0) (2022-05-02)
 
-
 ### Features
 
-* update cli and api spec ([b8afbd5](https://github.com/TheNileDev/nile-js/commit/b8afbd534c22cb651000f2f06c472fc7f3ba078e))
-
-
-
-
+- update cli and api spec ([b8afbd5](https://github.com/TheNileDev/nile-js/commit/b8afbd534c22cb651000f2f06c472fc7f3ba078e))
 
 # [0.8.0](https://github.com/TheNileDev/nile-js/compare/v0.7.3...v0.8.0) (2022-04-26)
 
-
 ### Features
 
-* fetch latest spec, add cli ([8b03527](https://github.com/TheNileDev/nile-js/commit/8b03527468b76acf8a8f4579d94606c949c9b87f))
-
-
-
-
+- fetch latest spec, add cli ([8b03527](https://github.com/TheNileDev/nile-js/commit/8b03527468b76acf8a8f4579d94606c949c9b87f))
 
 ## [0.7.3](https://github.com/TheNileDev/nile-js/compare/v0.7.2...v0.7.3) (2022-04-12)
 
-
 ### Bug Fixes
 
-* add more deps to js lib ([82e4269](https://github.com/TheNileDev/nile-js/commit/82e4269d5640816be3eac293592ef01c0ebfa8fb))
-
-
-
-
+- add more deps to js lib ([82e4269](https://github.com/TheNileDev/nile-js/commit/82e4269d5640816be3eac293592ef01c0ebfa8fb))
 
 ## [0.7.2](https://github.com/TheNileDev/nile-js/compare/v0.7.1...v0.7.2) (2022-04-12)
 
-
 ### Bug Fixes
 
-* add url-parse as dep, not peer-dep ([f6aecaa](https://github.com/TheNileDev/nile-js/commit/f6aecaa9654572ceff41d7926f069cb0e293b1bc))
-
-
-
-
+- add url-parse as dep, not peer-dep ([f6aecaa](https://github.com/TheNileDev/nile-js/commit/f6aecaa9654572ceff41d7926f069cb0e293b1bc))
 
 ## [0.7.1](https://github.com/TheNileDev/nile-js/compare/v0.7.0...v0.7.1) (2022-04-12)
 
-
 ### Bug Fixes
 
-* add url-parse to deps ([99935de](https://github.com/TheNileDev/nile-js/commit/99935de80cdedd3d890d0f931531190262b0deb5))
-
-
-
-
+- add url-parse to deps ([99935de](https://github.com/TheNileDev/nile-js/commit/99935de80cdedd3d890d0f931531190262b0deb5))
 
 # [0.7.0](https://github.com/TheNileDev/nile-js/compare/v0.6.1...v0.7.0) (2022-04-11)
 
 **Note:** Version bump only for package @theniledev/js
 
-
-
-
-
 ## [0.6.1](https://github.com/TheNileDev/nile-js/compare/v0.6.0...v0.6.1) (2022-04-08)
-
 
 ### Bug Fixes
 
-* only add bearer when auth token is set ([55a03ed](https://github.com/TheNileDev/nile-js/commit/55a03ed73c10608cdbad2af1a1171cd7d59e1867))
-
-
-
-
+- only add bearer when auth token is set ([55a03ed](https://github.com/TheNileDev/nile-js/commit/55a03ed73c10608cdbad2af1a1171cd7d59e1867))
 
 # [0.6.0](https://github.com/TheNileDev/nile-js/compare/v0.5.5...v0.6.0) (2022-04-07)
 
