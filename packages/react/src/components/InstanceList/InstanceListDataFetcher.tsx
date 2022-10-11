@@ -1,15 +1,14 @@
 import React from 'react';
 
-import { useInterval } from '../../lib/hooks/useInterval';
 import { useNile } from '../../context';
 import Queries, { useQuery } from '../../lib/queries';
+import { useInstances } from '../../lib/hooks/useInstances';
 
 import InstanceList from './InstanceList';
-import { InstanceListProps, ComponentProps } from './types';
+import { InstanceListProps } from './types';
 
 export type InstanceListDataFetcherProps = InstanceListProps & {
   refreshInterval?: number;
-  Component: ComponentProps;
 };
 
 export default function InstanceListDataFetcher(
@@ -28,7 +27,6 @@ export default function InstanceListDataFetcher(
     processColumns,
     actionButtons,
     refreshInterval,
-    Component = InstanceList,
   } = props;
   const nile = useNile();
   const useQueryHook = customUseQuery ?? useQuery;
@@ -43,21 +41,14 @@ export default function InstanceListDataFetcher(
     () => nile.entities.getEntity({ type: String(entity) })
   );
 
-  const {
-    refetch,
-    data: instances,
-    isFetching: isInstancesFetching,
-  } = useQueryHook(Queries.ListInstances(entity, org), () =>
-    nile.entities.listInstances({
-      type: String(entity),
-      org: String(org),
-    })
+  const { data: instances, isFetching: isInstancesFetching } = useInstances(
+    org,
+    entity,
+    { useQuery: useQueryHook, refreshInterval }
   );
 
-  useInterval(refetch, refreshInterval);
-
   return (
-    <Component
+    <InstanceList
       instances={instances}
       entityData={entityData}
       organization={organization}
