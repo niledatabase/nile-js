@@ -3,7 +3,7 @@ import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
 import { Controller, useForm } from 'react-hook-form';
 import Stack from '@mui/joy/Stack';
-import { Select, Option, FormLabel, Link, Box, Typography } from '@mui/joy';
+import { Select, Option, FormLabel, Box, Typography } from '@mui/joy';
 
 import { Attribute, AttributeType } from './types';
 
@@ -24,12 +24,12 @@ type FieldConfig = {
 
 export default function ConfigForm(props: {
   buttonText: string;
-  cancelLink?: string;
+  cancelButton?: React.ReactNode;
   attributes: Attribute[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mutation: { mutate: (data: any) => void };
 }) {
-  const { mutation, buttonText, attributes, cancelLink } = props;
+  const { mutation, buttonText, attributes, cancelButton } = props;
 
   const defaultValues = React.useMemo(
     () =>
@@ -159,11 +159,9 @@ export default function ConfigForm(props: {
             );
         }
       })}
-      {cancelLink ? (
+      {cancelButton ? (
         <Stack spacing={2} direction="row">
-          <Link href={cancelLink}>
-            <Button variant="outlined">Cancel</Button>
-          </Link>
+          {cancelButton}
           <Box>
             <Button type="submit">{buttonText}</Button>
           </Box>

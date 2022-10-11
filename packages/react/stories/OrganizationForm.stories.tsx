@@ -1,5 +1,6 @@
 import React from 'react';
 import { Story } from '@storybook/react';
+import { Button } from '@mui/joy';
 
 import OrganizationForm from '../src/components/OrganizationForm';
 import { NileProvider } from '../src/context';
@@ -21,7 +22,7 @@ const Template: Story = () => (
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
       <OrganizationForm
         onSuccess={() => alert('success!')}
-        cancelLink="#linkToSomewhere"
+        cancelButton={<Button variant="outlined">Cancel</Button>}
       />
     </div>
   </NileProvider>

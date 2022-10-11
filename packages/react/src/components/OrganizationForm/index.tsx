@@ -18,7 +18,7 @@ const attributes = [
 ];
 
 export default function AddOrgForm(props: Props) {
-  const { onSuccess, onError, cancelLink, beforeMutate } = props;
+  const { onSuccess, onError, cancelButton, beforeMutate } = props;
   const nile = useNile();
   const handleMutate =
     typeof beforeMutate === 'function'
@@ -45,7 +45,7 @@ export default function AddOrgForm(props: Props) {
       mutation={mutation}
       buttonText="Create organization"
       attributes={attributes}
-      cancelLink={cancelLink}
+      cancelButton={cancelButton}
     />
   );
 }
