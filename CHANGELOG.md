@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.25.1](https://github.com/TheNileDev/nile-js/compare/v0.25.0...v0.25.1) (2022-10-11)
+
+### Bug Fixes
+
+- **react:** change cancel link to a button ([d99012b](https://github.com/TheNileDev/nile-js/commit/d99012b8bf6959dfd8347d0c0718e2b42c0b3d5b))
+- **react:** remove Component in favor of useInstances ([3748468](https://github.com/TheNileDev/nile-js/commit/3748468d7651e464273abb4733fd9b6f2f9aca85))
+
 # [0.25.0](https://github.com/TheNileDev/nile-js/compare/v0.24.0...v0.25.0) (2022-10-06)
 
 ### Bug Fixes
