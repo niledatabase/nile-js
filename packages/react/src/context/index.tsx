@@ -30,7 +30,10 @@ export const NileProvider = (props: NileProviderProps) => {
   }, [props.basePath, props.workspace]);
 
   return (
-    <QueryClientProvider client={queryClient ?? defaultQueryClient}>
+    <QueryClientProvider
+      client={queryClient ?? defaultQueryClient}
+      contextSharing={true}
+    >
       <CssVarsProvider theme={theme ?? defaultTheme}>
         <Provider value={values}>{children}</Provider>
       </CssVarsProvider>
