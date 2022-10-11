@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1.0-05b1110
+  version: 0.1.0-9f4a9bf
 servers:
 - url: localhost:8080
 tags:
@@ -13,7 +13,7 @@ tags:
     Access policies allow your users to set up access controls for entities in their organization.
 
     All access is determined based on 3 inputs:
-    1. **Subject**: Who is trying to act (think User)
+    1. **Subject**: Who is trying to act (think User or ServiceAccount)
     2. **Resource**: What are they acting on (for now, only custom entities and access policies themselves are supported).
     All properties on a resource are optional, and any combination of them can be specified when creating a policy.
     3. **Action**: What are they doing (think Read, Write, Deny)
@@ -243,7 +243,7 @@ paths:
     get:
       tags:
       - developers
-      summary: Starts the developer Google OAuth flow
+      summary: Start the developer Google OAuth flow
       operationId: startDeveloperGoogleOAuth
       parameters:
       - name: redirect_to
@@ -315,7 +315,7 @@ paths:
     post:
       tags:
       - users
-      summary: Validate a user Token
+      summary: Validate a user token
       description: "Validates a user token. Use this when using Nile authentication\
         \ to validate access to non-Nile resources. See the [Add Authentication Guide](https://nile-docs.vercel.app/docs/current/guides/how-to/add_signup_authn#decorating-the-endpoint)\
         \ for a full example"
@@ -381,7 +381,7 @@ paths:
     get:
       tags:
       - entities
-      summary: List all Entities
+      summary: List all entities
       operationId: listEntities
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -397,7 +397,7 @@ paths:
     post:
       tags:
       - entities
-      summary: Create Entity
+      summary: Create an entity
       operationId: createEntity
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -418,7 +418,7 @@ paths:
     get:
       tags:
       - entities
-      summary: Get Entity
+      summary: Get an entity
       operationId: getEntity
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -437,7 +437,7 @@ paths:
     put:
       tags:
       - entities
-      summary: Update an Entity
+      summary: Update an entity
       operationId: updateEntity
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -544,7 +544,7 @@ paths:
     post:
       tags:
       - entities
-      summary: Create a new Instance
+      summary: Create a new instance
       operationId: createInstance
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -730,7 +730,7 @@ paths:
     post:
       tags:
       - metrics
-      summary: Aggregation result for the metric
+      summary: "Perform sum, min, max, avg, and percentile aggregations over a metric "
       operationId: aggregateMetrics
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -779,7 +779,7 @@ paths:
     post:
       tags:
       - metrics
-      summary: List of metrics for the entity matching the filter
+      summary: List metrics for the entity matching the filter
       operationId: filterMetricsForEntityType
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -857,6 +857,12 @@ paths:
       responses:
         "204":
           description: the metrics have been saved
+        "409":
+          description: there was a conflict saving the metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /workspaces/{workspace}/orgs/{org}/users:
     get:
       tags:
@@ -908,7 +914,7 @@ paths:
     get:
       tags:
       - organizations
-      summary: List all Organizations
+      summary: List all organizations
       operationId: listOrganizations
       parameters:
       - $ref: '#/components/parameters/workspace'
@@ -1056,7 +1062,7 @@ paths:
     get:
       tags:
       - users
-      description: Get information about current authenticated user
+      summary: Get information about current authenticated user
       operationId: me
       responses:
         "200":
@@ -1069,8 +1075,9 @@ paths:
     get:
       tags:
       - users
-      description: "Echoes the auth token for the current authenticated user. This\
-        \ operation requires that theauth token is passed either as a Bearer token\
+      summary: Get the auth token of the currently authenticated user
+      description: "Echoes the auth token of the currently authenticated user. This\
+        \ operation requires that the auth token is passed either as a Bearer token\
         \ in the authorization header or as a cookie named 'token'. When both are\
         \ present, they must match."
       operationId: token
@@ -1478,6 +1485,7 @@ components:
           - invalid_policy_variable
           - forbidden
           - metric_not_found
+          - conflict
         message:
           type: string
         status_code:
@@ -1526,13 +1534,11 @@ components:
     User:
       required:
       - email
-      - id
       - type
       type: object
       properties:
         id:
           type: string
-          readOnly: true
         created:
           type: string
           format: date-time
@@ -1552,9 +1558,6 @@ components:
           - developer
           - service_account
           - nile_employee
-        email:
-          type: string
-          format: email
         metadata:
           $ref: '#/components/schemas/Metadata'
         org_memberships:
@@ -1565,13 +1568,14 @@ components:
             org_02qaCO8qNEmfpAcomojhLb:
               joined: 2022-08-09T10:27:30.956079
               metadata:
-                role: admin
+                region: us-east-2
             org_02qdS9KPAnG6Pt5XFAomu6:
               joined: 2022-08-03T17:30:00.295581
               metadata:
-                role: member
-        developer:
-          type: boolean
+                region: us-west-2
+        email:
+          type: string
+          format: email
     CreateUserRequest:
       required:
       - email
@@ -1889,7 +1893,7 @@ components:
           type: string
           description: The Nile organization id to filter on
           example: org_02qwn8bovgrXdNx8XlVzbU
-        from_timestamp:
+        start_time:
           type: string
           description: "The ISO-8601 formatted timestamp used to begin searching for\
             \ matching metrics, i.e., 2018-11-13T20:20:39+00:00. If not provided the\
