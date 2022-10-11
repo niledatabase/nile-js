@@ -44,6 +44,12 @@ const GetPolicy = (org: ParamType, id: ParamType) => [
 ];
 
 const FilterMetrics = (filter: ParamType) => [`${Queries.Metrics}/${filter}`];
+const ListMetrics = (entity: ParamType) => [
+  `${Queries.Metrics}/listMetrics/${entity}`,
+];
+const AggregateMetrics = (metricName: ParamType, startTime: Date) => [
+  `${Queries.Metrics}/${metricName}/aggregate/${startTime.toISOString()}`,
+];
 
 const queryKeys = {
   ListWorkspaces,
@@ -63,6 +69,8 @@ const queryKeys = {
   ListPolicies,
   GetPolicy,
   FilterMetrics,
+  ListMetrics,
+  AggregateMetrics,
 };
 
 export default queryKeys;
