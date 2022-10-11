@@ -2,22 +2,35 @@
 import React, { useMemo, createContext, useContext } from 'react';
 import Nile, { NileApi } from '@theniledev/js';
 import { CssVarsProvider } from '@mui/joy/styles';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import defaultTheme from './themeJoiner';
 import { NileContext, NileProviderProps } from './types';
 
-const defaultQueryClient = new QueryClient();
+const queryClient = new QueryClient();
 
 const defaultContext: NileContext = {
   instance: Nile({ basePath: '', workspace: 'none', credentials: 'include' }),
 };
 
 const context = createContext<NileContext>(defaultContext);
+
 const { Provider } = context;
 
+export const BaseQueryProvider = ({
+  children,
+}: {
+  children: JSX.Element;
+}): JSX.Element => {
+  return (
+    <QueryClientProvider client={queryClient} contextSharing={true}>
+      {children}
+    </QueryClientProvider>
+  );
+};
+
 export const NileProvider = (props: NileProviderProps) => {
-  const { children, theme, queryClient } = props;
+  const { children, theme, QueryProvider = BaseQueryProvider } = props;
 
   const values = useMemo<NileContext>(() => {
     return {
@@ -30,14 +43,11 @@ export const NileProvider = (props: NileProviderProps) => {
   }, [props.basePath, props.workspace]);
 
   return (
-    <QueryClientProvider
-      client={queryClient ?? defaultQueryClient}
-      contextSharing={true}
-    >
+    <QueryProvider>
       <CssVarsProvider theme={theme ?? defaultTheme}>
         <Provider value={values}>{children}</Provider>
       </CssVarsProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   );
 };
 

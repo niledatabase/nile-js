@@ -1,5 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
+
 import { useNile } from '../../../context';
-import Queries, { useQuery } from '../../queries';
+import Queries from '../../queries';
 import { useInterval } from '../useInterval';
 
 type Props = {

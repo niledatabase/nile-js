@@ -1,5 +1,6 @@
 import React from 'react';
 import { Story } from '@storybook/react';
+import { Button } from '@mui/joy';
 
 import EntityForm from '../src/components/EntityForm';
 import { AttributeType } from '../src/lib/SimpleForm';
@@ -57,7 +58,7 @@ const Template: Story<StoryArgs> = ({ org, entityType }: StoryArgs) => (
         onSuccess={() => alert('success!')}
         fields={customFieldAttributes}
         org={org}
-        cancelLink="#linkToSomewhere"
+        cancelButton={<Button variant="outlined">Cancel</Button>}
       />
     </div>
   </NileProvider>

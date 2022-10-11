@@ -6,6 +6,8 @@ Because the preferred requesting framework is react-query, and it's challenging 
 
 ```typescript
 import { useNile, Queries } from '@theniledev/react';
+import { useQuery } from '@tanstack/react-query';
+
 function DataFetcher() {
   const nile = useNile();
 
