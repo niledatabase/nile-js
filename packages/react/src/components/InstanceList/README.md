@@ -22,31 +22,8 @@ function App() {
 
 ## Customization
 
-See the [InstanceList storybook](https://react-storybook-ten.vercel.app/?path=/story/InstanceList--default) for samples on customizing `<InstanceList />` to fit your needs.
-
-If you need full control over rendering, you can pass a `Component` prop. `<InstanceList />` will do the data fetching, and pass props back to you.
-
-```typescript
-import { InstanceList, NileProvider, ComponentProps } from '@theniledev/react';
-
-const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
-
-function HandleEverything(props: ComponentProps) {
-  return <>{JSON.stringify(props)}</>;
-}
-
-function App() {
-  return (
-    <NileProvider basePath={API_URL}>
-      <InstanceList
-        entity="myEntity"
-        org="userOrg"
-        Component={HandleEverything}
-      />
-    </NileProvider>
-  );
-}
-```
+See the [InstanceList storybook](https://storybook.thenile.dev/?path=/story/InstanceList--default) for samples on customizing `<InstanceList />` to fit your needs.
+If none of the customizations work for a particular usecase, using the underlying [`useInstances`](../../lib/hooks/useInstances) hook offers maximum flexibility.
 
 ## Theming
 

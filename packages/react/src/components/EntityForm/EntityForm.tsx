@@ -11,7 +11,7 @@ type Props = {
   beforeMutate?: (data: AllowedAny) => AllowedAny;
   onSuccess: (data: AllowedAny) => void;
   onError?: (error: Error) => void;
-  cancelLink?: string;
+  cancelButton?: React.ReactNode;
   fields: Attribute[];
   entityType: string;
   org: string;
@@ -65,7 +65,7 @@ export default function EntityForm(props: Props) {
     fields,
     org,
     entityType,
-    cancelLink,
+    cancelButton,
     onSuccess,
     onError,
     beforeMutate,
@@ -99,7 +99,7 @@ export default function EntityForm(props: Props) {
       attributes={fields}
       mutation={mutation}
       buttonText={`Create ${entityType}`}
-      cancelLink={cancelLink}
+      cancelButton={cancelButton}
     />
   );
 }

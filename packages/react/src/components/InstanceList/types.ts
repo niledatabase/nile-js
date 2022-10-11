@@ -22,7 +22,3 @@ export interface InstanceListProps {
     organization: Organization;
   }) => React.ReactNode;
 }
-
-export type ComponentProps = React.FunctionComponent<
-  Omit<InstanceListProps, 'entity' | 'org'>
->;

@@ -1,4 +1,5 @@
 import { Organization } from '@theniledev/js';
+import React from 'react';
 
 type OrgCreateSuccess = (org: Organization) => void;
 
@@ -9,5 +10,5 @@ export interface Props {
   beforeMutate?: (data: AllowedAny) => AllowedAny;
   onSuccess: OrgCreateSuccess;
   onError?: (error: Error) => void;
-  cancelLink?: string;
+  cancelButton?: React.ReactNode;
 }
