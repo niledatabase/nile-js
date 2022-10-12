@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.26.0](https://github.com/TheNileDev/nile-js/compare/v0.25.2...v0.26.0) (2022-10-12)
+
+### Features
+
+- **react:** accept a whole react-query provider, remove re-exports ([c10acd6](https://github.com/TheNileDev/nile-js/commit/c10acd660e87048ac40ef7de948eee35d9f68829))
+
 ## [0.25.2](https://github.com/TheNileDev/nile-js/compare/v0.25.1...v0.25.2) (2022-10-11)
 
 ### Bug Fixes
