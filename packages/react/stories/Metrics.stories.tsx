@@ -11,10 +11,11 @@ import {
 } from '@mui/joy';
 import { Metric, MetricTypeEnum } from '@theniledev/js';
 import { Controller, useForm, Control } from 'react-hook-form';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { MetricsLineChart } from '../src/components/Metrics';
 import { NileProvider, useNile } from '../src/context';
-import Queries, { useMutation, useQuery } from '../src/lib/queries';
+import Queries from '../src/lib/queries';
 
 const mData = [
   {

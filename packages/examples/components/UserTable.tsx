@@ -1,6 +1,6 @@
 import React from 'react';
-import { useQuery, useNile } from '@theniledev/react';
-import { User } from '@theniledev/js';
+import { useQuery } from '@tanstack/react-query';
+import { useNile } from '@theniledev/react';
 
 export function UserTable() {
   const nile = useNile();
@@ -10,9 +10,7 @@ export function UserTable() {
     isError,
     error,
     data: users = [],
-  } = useQuery<unknown, unknown, User[]>(['nileUsers'], () =>
-    nile.users.listUsers()
-  );
+  } = useQuery(['nileUsers'], () => nile.users.listUsers());
 
   if (isLoading) {
     return <div>Loading...</div>;
