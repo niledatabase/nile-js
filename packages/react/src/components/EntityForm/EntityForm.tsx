@@ -1,7 +1,7 @@
 import React from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
-import { useMutation } from '../../lib/queries';
 import SimpleForm, { Attribute, AttributeType } from '../../lib/SimpleForm';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

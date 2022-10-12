@@ -1,7 +1,8 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
-import Queries, { useQuery } from '../../lib/queries';
+import Queries from '../../lib/queries';
 import { useInstances } from '../../lib/hooks/useInstances';
 
 import InstanceList from './InstanceList';

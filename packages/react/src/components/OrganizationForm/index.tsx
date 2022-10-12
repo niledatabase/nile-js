@@ -1,8 +1,8 @@
 import React from 'react';
 import { CreateOrganizationRequest, Organization } from '@theniledev/js';
+import { useMutation } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
-import { useMutation } from '../../lib/queries';
 import SimpleForm, { AttributeType } from '../../lib/SimpleForm';
 
 import { AllowedAny, Props } from './types';

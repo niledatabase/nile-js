@@ -5,9 +5,10 @@ import {
   Measurement,
   Metric,
 } from '@theniledev/js';
+import { useQuery } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
-import Queries, { useQuery } from '../../lib/queries';
+import Queries from '../../lib/queries';
 import { useInterval } from '../../lib/hooks/useInterval';
 
 type UseMetricsReturn = {

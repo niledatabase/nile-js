@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Invite, Organization } from '@theniledev/js';
-import { useQuery, useNile } from '@theniledev/react';
+import { useNile } from '@theniledev/react';
+import { useQuery } from '@tanstack/react-query';
 
 import { UserTable } from '../components/UserTable';
 

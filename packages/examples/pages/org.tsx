@@ -1,5 +1,6 @@
 import React from 'react';
-import { useQuery, useNile, LoginForm } from '@theniledev/react';
+import { useNile, LoginForm } from '@theniledev/react';
+import { useQuery } from '@tanstack/react-query';
 
 import { ComponentList } from '../components/ComponentList';
 
