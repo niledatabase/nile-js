@@ -60,6 +60,8 @@ function App() {
 
 It is expected that the basic charts provided by this library will not meet the needs of every use case. For custom charts, the `useMetrics` hook can be used to request and format data, and then iterated on.
 
+Be sure to have a `metricName` on your filter. If you need to obtain more than one filter, pass `queryKey` to the hook to prevent a looping render in your app.
+
 ### Usage
 
 Assuming a metric is being produced of uptime 1 being up and 0 being down...
@@ -69,16 +71,16 @@ function MyMetricComponent() {
 
   const { metrics } = useMetrics({
     updateInterval: 5000, // update every 5 seconds
-    fromTimestamp: new Date(), // start reading metrics from right now
     filter: {
+      startTime: new Date(), // start reading metrics from right now
       metricName: 'uptime',
-      entityType: 'SaaSDB',
+      entityType: 'DB',
     },
   });
 
   return (
     <div>
-      {metrics.map((metric, idx)=> {
+      {metrics?.map((metric, idx)=> {
         if (metric.value === 0) {
           return <div key={idx}>🤪 Oh nooo! It's broked 🤪</div>;
         }

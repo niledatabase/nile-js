@@ -1,5 +1,4 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/joy';
 import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
 import { FilterMetricsRequest } from '@theniledev/js';
@@ -67,7 +66,7 @@ export type MetricsComponentProps = {
  * }
  * ```
  * @param props configuration for the metrics request and chart.js line
- * @returns  a chart.js line
+ * @returns a chart.js line
  */
 export default function MetricsLineChart(
   props: FilterMetricsRequest & MetricsComponentProps
@@ -86,6 +85,10 @@ export default function MetricsLineChart(
   const metricName = filter.metricName;
 
   const { labels, data } = React.useMemo<LabelAndData>(() => {
+    if (!metrics) {
+      return { labels: [], data: [] };
+    }
+
     return metrics.reduce(
       (accum: LabelAndData, metric) => {
         const label: string = format(metric.timestamp, timeFormat);
@@ -102,21 +105,18 @@ export default function MetricsLineChart(
   }
 
   return (
-    <Stack>
-      <Typography level="h4">{metricName}</Typography>
-      <Line
-        options={chartOptions}
-        data={{
-          labels,
-          datasets: [
-            {
-              label: metricName,
-              data,
-              ...dataset,
-            },
-          ],
-        }}
-      />
-    </Stack>
+    <Line
+      options={chartOptions}
+      data={{
+        labels,
+        datasets: [
+          {
+            label: metricName,
+            data,
+            ...dataset,
+          },
+        ],
+      }}
+    />
   );
 }
