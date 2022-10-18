@@ -6,8 +6,11 @@ export default Nile;
 
 export * from './generated/openapi/src/models';
 export {
-  FilterMetricsRequest,
+  AggregateMetricsRequest,
   FilterMetricsForEntityTypeRequest,
+  FilterMetricsRequest,
+  ListMetricDefinitionsForEntityTypeRequest,
+  ListMetricDefinitionsRequest,
   ProduceBatchOfMetricsRequest,
 } from './generated/openapi/src/apis/MetricsApi';
 export { ConfigurationParameters } from './generated/openapi/src/runtime';
