@@ -7,6 +7,7 @@ export { NileProvider, useNile } from './context';
 export { default as Queries } from './lib/queries';
 
 export { useInstances } from './lib/hooks/useInstances';
+export { default as useFetch } from './lib/hooks/useFetch';
 
 export { AttributeType, Attribute } from './lib/SimpleForm/types';
 
