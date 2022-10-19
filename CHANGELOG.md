@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/TheNileDev/nile-js/compare/v0.26.0...v0.27.0) (2022-10-19)
+
+### Bug Fixes
+
+- **react:** remove circular dep with simple form types ([5245ad5](https://github.com/TheNileDev/nile-js/commit/5245ad59c2acb8f60bf81409c3670456da72e22b))
+- **react:** update useFetch examples ([6038400](https://github.com/TheNileDev/nile-js/commit/60384003b51a0c491a5249b2a4f692504a5905be))
+- **react:** update useMetrics to prevent loops ([6a53f93](https://github.com/TheNileDev/nile-js/commit/6a53f93dcda13e7b5f75ac45fb9ac185f57092f6))
+
+### Features
+
+- add useFetch to default credentials ([2902dbd](https://github.com/TheNileDev/nile-js/commit/2902dbd840ebf97f5b44b8da9e2a816cfd59a9f1))
+- **react:** add aggregations ([#652](https://github.com/TheNileDev/nile-js/issues/652)) ([110d8b6](https://github.com/TheNileDev/nile-js/commit/110d8b6f149ef8ee9c95bc09066ca7ebcf362c2c))
+
 # [0.26.0](https://github.com/TheNileDev/nile-js/compare/v0.25.2...v0.26.0) (2022-10-12)
 
 ### Features
