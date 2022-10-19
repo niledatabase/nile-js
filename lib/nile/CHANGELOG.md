@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/TheNileDev/nile-js/compare/v0.26.0...v0.27.0) (2022-10-19)
+
+### Features
+
+- **react:** add aggregations ([#652](https://github.com/TheNileDev/nile-js/issues/652)) ([110d8b6](https://github.com/TheNileDev/nile-js/commit/110d8b6f149ef8ee9c95bc09066ca7ebcf362c2c))
+
 # [0.26.0](https://github.com/TheNileDev/nile-js/compare/v0.25.2...v0.26.0) (2022-10-12)
 
 **Note:** Version bump only for package @theniledev/js
