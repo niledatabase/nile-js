@@ -1,8 +1,5 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/joy';
-import { Line } from 'react-chartjs-2';
-import { format } from 'date-fns';
-import { FilterMetricsRequest } from '@theniledev/js';
+import { Filter } from '@theniledev/js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,11 +9,11 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartDataset,
-  ChartOptions,
 } from 'chart.js';
 
-import { useMetrics } from './hooks';
+import FilterLineChart from './FilterLineChart';
+import AggregateLineChart from './AggregateLineChart';
+import { AggregateMetricsRequest, MetricsComponentProps } from './types';
 
 ChartJS.register(
   CategoryScale,
@@ -27,26 +24,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-export enum DataKeys {
-  timestamp = 'timestamp',
-  value = 'value',
-  instanceId = 'instanceId',
-  attributes = 'attributes',
-}
-
-type LabelAndData = {
-  labels: string[];
-  data: number[];
-};
-
-export type MetricsComponentProps = {
-  timeFormat?: string;
-  dataset?: Omit<ChartDataset<'line', number[]>, 'data'>;
-  updateInterval?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  chartOptions?: ChartOptions<any>;
-};
 
 /**
  *
@@ -67,56 +44,26 @@ export type MetricsComponentProps = {
  * }
  * ```
  * @param props configuration for the metrics request and chart.js line
- * @returns  a chart.js line
+ * @returns a chart.js line
  */
 export default function MetricsLineChart(
-  props: FilterMetricsRequest & MetricsComponentProps
+  props: {
+    filter?: Filter;
+    aggregation?: AggregateMetricsRequest;
+  } & MetricsComponentProps
 ): React.ReactElement | null {
-  const {
-    filter,
-    chartOptions,
-    timeFormat = 'HH:mm:ss',
-    dataset = {
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-  } = props;
+  const { filter, aggregation, queryKey, updateInterval } = props;
 
-  const { isLoading, metrics } = useMetrics(props);
-  const metricName = filter.metricName;
+  const commonProps = {
+    queryKey,
+    updateInterval,
+  };
 
-  const { labels, data } = React.useMemo<LabelAndData>(() => {
-    return metrics.reduce(
-      (accum: LabelAndData, metric) => {
-        const label: string = format(metric.timestamp, timeFormat);
-        accum.labels.push(label);
-        accum.data.push(metric.value);
-        return accum;
-      },
-      { labels: [], data: [] }
-    );
-  }, [metrics, timeFormat]);
-
-  if (isLoading) {
-    return null;
+  if (aggregation) {
+    return <AggregateLineChart {...commonProps} aggregation={aggregation} />;
   }
-
-  return (
-    <Stack>
-      <Typography level="h4">{metricName}</Typography>
-      <Line
-        options={chartOptions}
-        data={{
-          labels,
-          datasets: [
-            {
-              label: metricName,
-              data,
-              ...dataset,
-            },
-          ],
-        }}
-      />
-    </Stack>
-  );
+  if (filter) {
+    return <FilterLineChart {...commonProps} filter={filter} />;
+  }
+  return null;
 }

@@ -4,7 +4,8 @@ import { LoginInfo } from '@theniledev/js';
 
 import { Attribute } from '../../lib/SimpleForm/types';
 import { useNile } from '../../context';
-import SimpleForm, { AttributeType } from '../../lib/SimpleForm';
+import SimpleForm from '../../lib/SimpleForm';
+import { AttributeType } from '../../lib/SimpleForm/types';
 
 import { Props, AllowedAny } from './types';
 

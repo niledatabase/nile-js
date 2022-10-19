@@ -2,8 +2,8 @@ import React from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
-import SimpleForm, { Attribute, AttributeType } from '../../lib/SimpleForm';
-
+import SimpleForm from '../../lib/SimpleForm';
+import { Attribute, AttributeType } from '../../lib/SimpleForm/types';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AllowedAny = any;
 
