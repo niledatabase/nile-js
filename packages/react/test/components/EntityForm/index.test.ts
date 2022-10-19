@@ -1,5 +1,5 @@
 import { processFormData } from '../../../src/components/EntityForm/EntityForm';
-import { Attribute, AttributeType } from '../../../src/lib/SimpleForm';
+import { Attribute, AttributeType } from '../../../src/lib/SimpleForm/types';
 
 describe('instance table', () => {
   let fields: Attribute[];
