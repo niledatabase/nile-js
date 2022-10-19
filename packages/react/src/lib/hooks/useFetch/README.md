@@ -38,8 +38,8 @@ function CustomComponent() {
 
   return (
     <Stack>
-      <Button onClick={fetchFromNile}>Do Request from Nile</Button>;
       <Button onClick={fetchFromBackend}>Do Request from backend</Button>;
+      <Button onClick={fetchFromNile}>Do Request from Nile</Button>;
     </Stack>
   );
 }
@@ -96,14 +96,14 @@ export default async function handler(
 
   if (typeof token === 'string') {
     try {
-      const valid = await nile.developers.validateDeveloper({
+      await nile.developers.validateDeveloper({
         token: { token },
       });
       // nile.authToken = token; // use the valid token on the server's client to make requests to nile, if necessary
-      console.log(valid); // undefined means the developer is valid
+      console.log('[INFO]', 'Token has been validated');
       // request for policies you would like to enforce
     } catch (e) {
-      console.log(e.message);
+      console.log('[ERROR]', e.message);
       // developer does not have permission to the workspace
       res.status(403).send();
     }
