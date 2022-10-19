@@ -7,8 +7,6 @@ import { Select, Option, FormLabel, Box, Typography } from '@mui/joy';
 
 import { Attribute, AttributeType } from './types';
 
-export { AttributeType, Attribute } from './types';
-
 type AttrMap = { [key: string]: string | number };
 type DisplayProps = {
   key: string;

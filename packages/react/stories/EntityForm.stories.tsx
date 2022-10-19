@@ -3,7 +3,7 @@ import { Story } from '@storybook/react';
 import { Button } from '@mui/joy';
 
 import EntityForm from '../src/components/EntityForm';
-import { AttributeType } from '../src/lib/SimpleForm';
+import { AttributeType } from '../src/lib/SimpleForm/types';
 import { NileProvider } from '../src/context';
 
 const meta = {

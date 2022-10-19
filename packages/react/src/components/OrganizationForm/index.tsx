@@ -3,7 +3,8 @@ import { CreateOrganizationRequest, Organization } from '@theniledev/js';
 import { useMutation } from '@tanstack/react-query';
 
 import { useNile } from '../../context';
-import SimpleForm, { AttributeType } from '../../lib/SimpleForm';
+import { AttributeType } from '../../lib/SimpleForm/types';
+import SimpleForm from '../../lib/SimpleForm';
 
 import { AllowedAny, Props } from './types';
 

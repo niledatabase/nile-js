@@ -8,11 +8,15 @@ export { default as Queries } from './lib/queries';
 
 export { useInstances } from './lib/hooks/useInstances';
 
-export { AttributeType, Attribute } from './lib/SimpleForm';
+export { AttributeType, Attribute } from './lib/SimpleForm/types';
 
 export {
   MetricsLineChart,
   useFilter,
   useAggregation,
 } from './components/Metrics';
+export {
+  AggregateMetricsRequest,
+  AggregationType,
+} from './components/Metrics/types';
 export { default as OrganizationForm } from './components/OrganizationForm';
