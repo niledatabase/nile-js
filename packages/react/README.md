@@ -139,6 +139,10 @@ function App() {
 }
 ```
 
+## useFetch
+
+When using Nile with multiple webservers, you can piggyback off of Nile to enforce access to your own backend. See the [useFetch](./src/lib/hooks/useFetch/README.md) documetation for more information
+
 ## Available components
 
 [EntityForm](./src/components/EntityForm/README.md)
