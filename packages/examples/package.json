@@ -11,8 +11,8 @@
   },
   "peerDependencies": {
     "@tanstack/react-query": "^4.10.3",
-    "@theniledev/js": "^0.25.2",
-    "@theniledev/react": "^0.25.2",
+    "@theniledev/js": "^0.27.0",
+    "@theniledev/react": "^0.27.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -21,22 +21,22 @@
     "@codemirror/lang-javascript": "^6.1.0",
     "@codemirror/language": "^6.2.1",
     "@codemirror/lint": "^6.0.0",
-    "@codemirror/search": "^6.2.1",
+    "@codemirror/search": "^6.2.2",
     "@codemirror/state": "^6.1.2",
     "@codemirror/theme-one-dark": "^6.1.0",
-    "@codemirror/view": "^6.3.1",
+    "@codemirror/view": "^6.4.0",
     "@lezer/common": "^1.0.1",
     "@uiw/react-codemirror": "^4.12.4",
     "codemirror": "^6.0.1",
     "next": "^12.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.37.0",
+    "react-hook-form": "^7.38.0",
     "url-parse": "^1.5.10"
   },
   "devDependencies": {
     "@babel/runtime": "^7.19.4",
-    "@types/node": "^18.8.2",
+    "@types/node": "^18.11.2",
     "@types/react": "^18.0.21",
     "typescript": "^4.8.4"
   },

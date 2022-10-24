@@ -38,7 +38,6 @@ export default function AggregateLineChart(
   if (isLoading) {
     return null;
   }
-
   return (
     <Line
       options={{

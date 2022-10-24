@@ -70,10 +70,15 @@ describe('index', () => {
         if (k === 'developers') {
           expect(props).toEqual([
             'constructor',
+            'createAccessToken',
             'createDeveloper',
+            'deleteAccessToken',
             'developerGoogleOAuthCallback',
+            'getAccessToken',
+            'listAccessTokens',
             'loginDeveloper',
             'startDeveloperGoogleOAuth',
+            'updateAccessToken',
             'validateDeveloper',
           ]);
         }
