@@ -4,55 +4,55 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1.0-9f4a9bf
+  version: 0.1.0-6b39d53
 servers:
-- url: localhost:8080
+  - url: localhost:8080
 tags:
-- name: access
-  description: |
-    Access policies allow your users to set up access controls for entities in their organization.
+  - name: access
+    description: |
+      Access policies allow your users to set up access controls for entities in their organization.
 
-    All access is determined based on 3 inputs:
-    1. **Subject**: Who is trying to act (think User or ServiceAccount)
-    2. **Resource**: What are they acting on (for now, only custom entities and access policies themselves are supported).
-    All properties on a resource are optional, and any combination of them can be specified when creating a policy.
-    3. **Action**: What are they doing (think Read, Write, Deny)
+      All access is determined based on 3 inputs:
+      1. **Subject**: Who is trying to act (think User or ServiceAccount)
+      2. **Resource**: What are they acting on (for now, only custom entities and access policies themselves are supported).
+      All properties on a resource are optional, and any combination of them can be specified when creating a policy.
+      3. **Action**: What are they doing (think Read, Write, Deny)
 
-    Note that:
+      Note that:
 
-    * The creator of an organization is automatically granted access to all access policies in the organization
-    regardless of the access policies defined.
-    * Once a user creates an access policy their organization defaults to deny-by-default behavior
-    for all users in the organization. Deleting all access policies will revert the organization back to allow-by-default behavior.
+      * The creator of an organization is automatically granted access to all access policies in the organization
+      regardless of the access policies defined.
+      * Once a user creates an access policy their organization defaults to deny-by-default behavior
+      for all users in the organization. Deleting all access policies will revert the organization back to allow-by-default behavior.
 
-    ### Access control for access policies:
+      ### Access control for access policies:
 
-    You might want to control who can create, update, and delete access policies in your organization.
-    You can do this by creating access policies for access policies 🤯:
+      You might want to control who can create, update, and delete access policies in your organization.
+      You can do this by creating access policies for access policies 🤯:
 
-    ```
-    "subject": {
-      "email": "admin@your_org.com"
-    },
-    "resource": {
-        "type": "policy",
-    },
-    "actions": ["read", "write"]
-    ```
+      ```
+      "subject": {
+        "email": "admin@your_org.com"
+      },
+      "resource": {
+          "type": "policy",
+      },
+      "actions": ["read", "write"]
+      ```
 paths:
   /workspaces/{workspace}/orgs/{org}/access/policies:
     get:
       tags:
-      - access
+        - access
       summary: List all access policies
       operationId: listPolicies
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: A list of all access policies in this organization
@@ -61,24 +61,24 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Policy'
+                  $ref: "#/components/schemas/Policy"
     post:
       tags:
-      - access
+        - access
       summary: Create a new access policy
       operationId: createPolicy
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatePolicyRequest'
+              $ref: "#/components/schemas/CreatePolicyRequest"
         required: true
       responses:
         "201":
@@ -86,54 +86,54 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Policy'
+                $ref: "#/components/schemas/Policy"
   /workspaces/{workspace}/orgs/{org}/access/policies/{policyId}:
     get:
       tags:
-      - access
+        - access
       summary: Get an access policy
       operationId: getPolicy
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: policyId
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: The access policy with the specified id
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Policy'
+                $ref: "#/components/schemas/Policy"
     put:
       tags:
-      - access
+        - access
       summary: Update an access policy
       operationId: updatePolicy
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: policyId
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyId
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdatePolicyRequest'
+              $ref: "#/components/schemas/UpdatePolicyRequest"
         required: true
       responses:
         "200":
@@ -141,38 +141,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Policy'
+                $ref: "#/components/schemas/Policy"
     delete:
       tags:
-      - access
+        - access
       summary: Delete an access policy
       operationId: deletePolicy
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: policyId
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Successful instance deletion
   /auth/login:
     post:
       tags:
-      - developers
+        - developers
       summary: Log in a developer to nile
       operationId: loginDeveloper
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/LoginInfo'
+              $ref: "#/components/schemas/LoginInfo"
         required: true
       responses:
         "200":
@@ -180,24 +180,24 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token'
+                $ref: "#/components/schemas/Token"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /auth/validate:
     post:
       tags:
-      - developers
+        - developers
       summary: Validate a developer token
       operationId: validateDeveloper
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/Token'
+              $ref: "#/components/schemas/Token"
         required: true
       responses:
         "204":
@@ -207,32 +207,32 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /auth/oauth/google/callback:
     get:
       tags:
-      - developers
+        - developers
       summary: Developer Google OAuth flow callback
       description: |
         This endpoint is called automatically by Google after the user authenticates successfully.
         It's here for documentation purposes only, and it shouldn't be called directly.
       operationId: developerGoogleOAuthCallback
       parameters:
-      - name: code
-        in: query
-        schema:
-          type: string
-      - name: state
-        in: query
-        schema:
-          type: string
+        - name: code
+          in: query
+          schema:
+            type: string
+        - name: state
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: A successful login/signup for a developer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeveloperGoogleOAuthResponse'
+                $ref: "#/components/schemas/DeveloperGoogleOAuthResponse"
         "302":
           description: |2
              A redirect to the specified `redirect_to` URL after a successful
@@ -242,16 +242,16 @@ paths:
   /auth/oauth/google:
     get:
       tags:
-      - developers
+        - developers
       summary: Start the developer Google OAuth flow
       operationId: startDeveloperGoogleOAuth
       parameters:
-      - name: redirect_to
-        in: query
-        description: An optional URL to redirect to after a successful login/signup.
-        schema:
-          type: string
-          format: uri
+        - name: redirect_to
+          in: query
+          description: An optional URL to redirect to after a successful login/signup.
+          schema:
+            type: string
+            format: uri
       responses:
         "302":
           description: |
@@ -260,19 +260,20 @@ paths:
   /workspaces/{workspace}/auth/login:
     post:
       tags:
-      - users
+        - users
       summary: Log in a user
-      description: "Login a user to Nile. This operation returns a JWT token. Most\
+      description:
+        "Login a user to Nile. This operation returns a JWT token. Most\
         \ Nile operations require authentication and expect this token in the 'Authorization:\
         \ Bearer <token>' header"
       operationId: loginUser
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginInfo'
+              $ref: "#/components/schemas/LoginInfo"
         required: true
       responses:
         "200":
@@ -280,53 +281,55 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token'
+                $ref: "#/components/schemas/Token"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
       x-code-samples:
-      - lang: cURL
-        source: "curl -X POST https://app.thenile.dev:443/auth/login -H 'Content-Type:\
-          \ application/json' -D '{\"email\": \"shaun@colton.demo\",  \"password\"\
-          : \"mycatname\"}"
-      - lang: JS
-        source: |-
-          import Nile from "@theniledev/js";
-          const nile = new Nile({ apiUrl: "http://localhost:8080", workspace: "1" });
+        - lang: cURL
+          source:
+            "curl -X POST https://app.thenile.dev:443/auth/login -H 'Content-Type:\
+            \ application/json' -D '{\"email\": \"shaun@colton.demo\",  \"password\"\
+            : \"mycatname\"}"
+        - lang: JS
+          source: |-
+            import Nile from "@theniledev/js";
+            const nile = new Nile({ apiUrl: "http://localhost:8080", workspace: "1" });
 
-          const body = {
-            workspace: 56,
-            loginInfo: {
-              email: "shaun@colton.demo",
-              password: "mycatname",
-            },
-          };
+            const body = {
+              workspace: 56,
+              loginInfo: {
+                email: "shaun@colton.demo",
+                password: "mycatname",
+              },
+            };
 
-          nile
-            .loginUser(body)
-            .then((data) => {
-              console.log("API called successfully. Returned data: " + data);
-            })
-            .catch((error: any) => console.error(error));
+            nile
+              .loginUser(body)
+              .then((data) => {
+                console.log("API called successfully. Returned data: " + data);
+              })
+              .catch((error: any) => console.error(error));
   /workspaces/{workspace}/auth/validate:
     post:
       tags:
-      - users
+        - users
       summary: Validate a user token
-      description: "Validates a user token. Use this when using Nile authentication\
+      description:
+        "Validates a user token. Use this when using Nile authentication\
         \ to validate access to non-Nile resources. See the [Add Authentication Guide](https://nile-docs.vercel.app/docs/current/guides/how-to/add_signup_authn#decorating-the-endpoint)\
         \ for a full example"
       operationId: validateUser
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Token'
+              $ref: "#/components/schemas/Token"
         required: true
       responses:
         "204":
@@ -336,39 +339,40 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
       x-code-samples:
-      - lang: cURL
-        source: "curl -X POST https://app.thenile.dev:443/auth/validate  -H 'Content-Type:\
-          \ application/json' -D '{\"token\": \"token\"}'"
-      - lang: JS
-        source: |-
-          import Nile from "@theniledev/js";
+        - lang: cURL
+          source:
+            "curl -X POST https://app.thenile.dev:443/auth/validate  -H 'Content-Type:\
+            \ application/json' -D '{\"token\": \"token\"}'"
+        - lang: JS
+          source: |-
+            import Nile from "@theniledev/js";
 
-          const nile = new Nile({ apiUrl: "http://localhost:8080", workspace: "1" });
+            const nile = new Nile({ apiUrl: "http://localhost:8080", workspace: "1" });
 
-          const body = {
-            workspace: 56,
-            token: { token: "token" },
-          };
+            const body = {
+              workspace: 56,
+              token: { token: "token" },
+            };
 
-          nile
-            .validateUserToken(body)
-            .then((data) => {
-              console.log("API called successfully. Returned data: " + data);
-            })
-            .catch((error: any) => console.error(error));
+            nile
+              .validateUserToken(body)
+              .then((data) => {
+                console.log("API called successfully. Returned data: " + data);
+              })
+              .catch((error: any) => console.error(error));
   /developers:
     post:
       tags:
-      - developers
+        - developers
       summary: Create a developer
       operationId: createDeveloper
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/CreateUserRequest'
+              $ref: "#/components/schemas/CreateUserRequest"
         required: true
       responses:
         "201":
@@ -376,15 +380,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
   /workspaces/{workspace}/entities:
     get:
       tags:
-      - entities
+        - entities
       summary: List all entities
       operationId: listEntities
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       responses:
         "200":
           description: list of entities
@@ -393,19 +397,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Entity'
+                  $ref: "#/components/schemas/Entity"
     post:
       tags:
-      - entities
+        - entities
       summary: Create an entity
       operationId: createEntity
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/CreateEntityRequest'
+              $ref: "#/components/schemas/CreateEntityRequest"
         required: true
       responses:
         "200":
@@ -413,44 +417,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Entity'
+                $ref: "#/components/schemas/Entity"
   /workspaces/{workspace}/entities/{type}:
     get:
       tags:
-      - entities
+        - entities
       summary: Get an entity
       operationId: getEntity
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: the entity with the requested type
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Entity'
+                $ref: "#/components/schemas/Entity"
     put:
       tags:
-      - entities
+        - entities
       summary: Update an entity
       operationId: updateEntity
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/UpdateEntityRequest'
+              $ref: "#/components/schemas/UpdateEntityRequest"
         required: true
       responses:
         "200":
@@ -458,20 +462,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Entity'
+                $ref: "#/components/schemas/Entity"
   /workspaces/{workspace}/entities/{type}/openapi:
     get:
       tags:
-      - entities
+        - entities
       summary: Get a yaml OpenAPI description of an entity
       operationId: getOpenAPI
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: The yaml OpenAPI description of the specified entity
@@ -482,29 +486,29 @@ paths:
   /workspaces/{workspace}/events/{type}:
     get:
       tags:
-      - entities
+        - entities
       summary: Get instance events
       operationId: instance.events
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: seq
-        in: query
-        schema:
-          type: integer
-          format: int64
-          default: 0
-      - name: limit
-        in: query
-        schema:
-          maximum: 20
-          type: integer
-          format: int64
-          default: 20
+        - $ref: "#/components/parameters/workspace"
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: seq
+          in: query
+          schema:
+            type: integer
+            format: int64
+            default: 0
+        - name: limit
+          in: query
+          schema:
+            maximum: 20
+            type: integer
+            format: int64
+            default: 20
       responses:
         "200":
           description: Events for the type.
@@ -513,25 +517,25 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InstanceEvent'
+                  $ref: "#/components/schemas/InstanceEvent"
   /workspaces/{workspace}/orgs/{org}/instances/{type}:
     get:
       tags:
-      - entities
-      summary: ' List all instances'
+        - entities
+      summary: " List all instances"
       operationId: listInstances
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: A list of all instances of the specified type under this org
@@ -540,29 +544,29 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Instance'
+                  $ref: "#/components/schemas/Instance"
     post:
       tags:
-      - entities
+        - entities
       summary: Create a new instance
       operationId: createInstance
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JsonSchemaInstance'
+              $ref: "#/components/schemas/JsonSchemaInstance"
         required: true
       responses:
         "201":
@@ -570,64 +574,64 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Instance'
+                $ref: "#/components/schemas/Instance"
   /workspaces/{workspace}/orgs/{org}/instances/{type}/{id}:
     get:
       tags:
-      - entities
+        - entities
       summary: Get an instance
       operationId: getInstance
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: The instance with the specified id
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Instance'
+                $ref: "#/components/schemas/Instance"
     put:
       tags:
-      - entities
+        - entities
       summary: Update an instance
       operationId: updateInstance
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateInstanceRequest'
+              $ref: "#/components/schemas/UpdateInstanceRequest"
         required: true
       responses:
         "200":
@@ -635,45 +639,45 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Instance'
+                $ref: "#/components/schemas/Instance"
     delete:
       tags:
-      - entities
+        - entities
       summary: Delete an instance
       operationId: deleteInstance
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Successful instance deletion
   /workspaces/{workspace}/instances/{type}:
     get:
       tags:
-      - entities
-      summary: ' List all instances'
+        - entities
+      summary: " List all instances"
       operationId: listInstancesInWorkspace
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: A list of all instances of the specified type under this workspace
@@ -682,41 +686,41 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Instance'
+                  $ref: "#/components/schemas/Instance"
   /workspaces/{workspace}/orgs/{org}/invites/{code}/accept:
     post:
       tags:
-      - organizations
+        - organizations
       summary: Accept an invite
       operationId: acceptInvite
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: code
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Successful invite acceptance
   /workspaces/{workspace}/orgs/{org}/invites:
     get:
       tags:
-      - organizations
+        - organizations
       summary: List all Invites
       operationId: listInvites
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: A list of all invites under this org
@@ -725,25 +729,25 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Invite'
+                  $ref: "#/components/schemas/Invite"
   /workspaces/{workspace}/metrics/{metric_name}/aggregate:
     post:
       tags:
-      - metrics
+        - metrics
       summary: "Perform sum, min, max, avg, and percentile aggregations over a metric "
       operationId: aggregateMetrics
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: metric_name
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: metric_name
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AggregationRequest'
+              $ref: "#/components/schemas/AggregationRequest"
         required: true
       responses:
         "200":
@@ -751,20 +755,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AggregationResponse'
+                $ref: "#/components/schemas/AggregationResponse"
   /workspaces/{workspace}/metrics/filter:
     post:
       tags:
-      - metrics
+        - metrics
       summary: List of metrics matching the filter
       operationId: filterMetrics
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Filter'
+              $ref: "#/components/schemas/Filter"
         required: true
       responses:
         "200":
@@ -774,25 +778,25 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Metric'
+                  $ref: "#/components/schemas/Metric"
   /workspaces/{workspace}/metrics/entities/{entity_type}/filter:
     post:
       tags:
-      - metrics
+        - metrics
       summary: List metrics for the entity matching the filter
       operationId: filterMetricsForEntityType
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: entity_type
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: entity_type
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Filter'
+              $ref: "#/components/schemas/Filter"
         required: true
       responses:
         "200":
@@ -802,57 +806,57 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Metric'
+                  $ref: "#/components/schemas/Metric"
   /workspaces/{workspace}/metrics/metric_definitions:
     get:
       tags:
-      - metrics
+        - metrics
       summary: List metric definitions in a workspace
       operationId: listMetricDefinitions
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       responses:
         "200":
           description: A list of metrics definitions for the workspace
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListMetricDefinitionsResponse'
+                $ref: "#/components/schemas/ListMetricDefinitionsResponse"
   /workspaces/{workspace}/metrics/entities/{entity_type}/metric_definitions:
     get:
       tags:
-      - metrics
+        - metrics
       summary: List metric definitions for an entity
       operationId: listMetricDefinitionsForEntityType
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: entity_type
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: entity_type
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: A list of metric definitions for the provided entity
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListMetricDefinitionsResponse'
+                $ref: "#/components/schemas/ListMetricDefinitionsResponse"
   /workspaces/{workspace}/metrics:
     post:
       tags:
-      - metrics
+        - metrics
       summary: Produce a Batch of Metrics
       operationId: produceBatchOfMetrics
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       requestBody:
         content:
           application/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/Metric'
+                $ref: "#/components/schemas/Metric"
         required: true
       responses:
         "204":
@@ -862,20 +866,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /workspaces/{workspace}/orgs/{org}/users:
     get:
       tags:
-      - organizations
+        - organizations
       summary: List users in an organization
       operationId: listUsersInOrg
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: The users in this organization
@@ -884,24 +888,24 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: "#/components/schemas/User"
     post:
       tags:
-      - organizations
+        - organizations
       summary: Add a user to an organization
       operationId: addUserToOrg
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/AddUserToOrgRequest'
+              $ref: "#/components/schemas/AddUserToOrgRequest"
         required: true
       responses:
         "200":
@@ -909,15 +913,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
   /workspaces/{workspace}/orgs:
     get:
       tags:
-      - organizations
+        - organizations
       summary: List all organizations
       operationId: listOrganizations
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       responses:
         "200":
           description: A list of all orgs under this workspace
@@ -926,19 +930,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: "#/components/schemas/Organization"
     post:
       tags:
-      - organizations
+        - organizations
       summary: Create a new organization
       operationId: createOrganization
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/CreateOrganizationRequest'
+              $ref: "#/components/schemas/CreateOrganizationRequest"
         required: true
       responses:
         "201":
@@ -946,44 +950,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: "#/components/schemas/Organization"
   /workspaces/{workspace}/orgs/{org}:
     get:
       tags:
-      - organizations
+        - organizations
       summary: Get an organization by name
       operationId: getOrganization
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: The org with the specified name under this workspace
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: "#/components/schemas/Organization"
     put:
       tags:
-      - organizations
+        - organizations
       summary: Update an organization
       operationId: updateOrganization
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/UpdateOrganizationRequest'
+              $ref: "#/components/schemas/UpdateOrganizationRequest"
         required: true
       responses:
         "200":
@@ -991,45 +995,45 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: "#/components/schemas/Organization"
     delete:
       tags:
-      - organizations
+        - organizations
       summary: Delete an organization by id
       operationId: deleteOrganization
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Successful org deletion
   /workspaces/{workspace}/orgs/{org}/users/{user}:
     put:
       tags:
-      - organizations
+        - organizations
       summary: Update a user in an organization
       operationId: updateUserInOrg
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: user
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/UpdateOrganizationMembershipRequest'
+              $ref: "#/components/schemas/UpdateOrganizationMembershipRequest"
         required: true
       responses:
         "200":
@@ -1037,31 +1041,168 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
     delete:
       tags:
-      - organizations
+        - organizations
       summary: Remove a user from an organization by user id
       operationId: removeUserFromOrg
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: org
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: user
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Successful user removal
+  /workspaces/{workspace}/access-tokens:
+    get:
+      tags:
+        - developers
+      summary: List access tokens in a workspace
+      operationId: listAccessTokens
+      parameters:
+        - $ref: "#/components/parameters/workspace"
+      responses:
+        "200":
+          description: Information about the access token
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AccessTokenInfo"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - developers
+      summary: Create an access token
+      operationId: createAccessToken
+      parameters:
+        - $ref: "#/components/parameters/workspace"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccessTokenRequest"
+        required: true
+      responses:
+        "201":
+          description: The newly created token and metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateAccessTokenResponse"
+  /workspaces/{workspace}/access-tokens/{id}:
+    get:
+      tags:
+        - developers
+      summary: Get access token by id
+      operationId: getAccessToken
+      parameters:
+        - $ref: "#/components/parameters/workspace"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Information about the access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessTokenInfo"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Access token not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - developers
+      summary: Update an access token
+      operationId: updateAccessToken
+      parameters:
+        - $ref: "#/components/parameters/workspace"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          "*/*":
+            schema:
+              $ref: "#/components/schemas/CreateAccessTokenRequest"
+        required: true
+      responses:
+        "200":
+          description: The updated access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessTokenInfo"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Access token not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - developers
+      summary: Delete an access token
+      operationId: deleteAccessToken
+      parameters:
+        - $ref: "#/components/parameters/workspace"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "240":
+          description: Successful token deletion
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateAccessTokenResponse"
   /me:
     get:
       tags:
-      - users
+        - users
       summary: Get information about current authenticated user
       operationId: me
       responses:
@@ -1070,13 +1211,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
   /me/token:
     get:
       tags:
-      - users
+        - users
       summary: Get the auth token of the currently authenticated user
-      description: "Echoes the auth token of the currently authenticated user. This\
+      description:
+        "Echoes the auth token of the currently authenticated user. This\
         \ operation requires that the auth token is passed either as a Bearer token\
         \ in the authorization header or as a cookie named 'token'. When both are\
         \ present, they must match."
@@ -1087,21 +1229,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token'
+                $ref: "#/components/schemas/Token"
         "401":
           description: The current user is not authorized to access this resource
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /workspaces/{workspace}/users:
     get:
       tags:
-      - users
+        - users
       summary: List all users for a workspace
       operationId: listUsers
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       responses:
         "200":
           description: A list of all users under this workspace
@@ -1110,19 +1252,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: "#/components/schemas/User"
     post:
       tags:
-      - users
+        - users
       summary: Create a user
       operationId: createUser
       parameters:
-      - $ref: '#/components/parameters/workspace'
+        - $ref: "#/components/parameters/workspace"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUserRequest'
+              $ref: "#/components/schemas/CreateUserRequest"
         required: true
       responses:
         "201":
@@ -1130,44 +1272,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
   /workspaces/{workspace}/users/{id}:
     get:
       tags:
-      - users
+        - users
       summary: Get a user by id
       operationId: getUser
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: The user with the specified id under this workspace
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
     put:
       tags:
-      - users
+        - users
       summary: Update a user
       operationId: updateUser
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/UpdateUserRequest'
+              $ref: "#/components/schemas/UpdateUserRequest"
         required: true
       responses:
         "200":
@@ -1175,26 +1317,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
     delete:
       tags:
-      - users
+        - users
       summary: Delete a user
       operationId: deleteUser
       parameters:
-      - $ref: '#/components/parameters/workspace'
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - $ref: "#/components/parameters/workspace"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Successful user deletion
   /workspaces:
     get:
       tags:
-      - workspaces
+        - workspaces
       summary: List all workspaces
       operationId: listWorkspaces
       responses:
@@ -1205,17 +1347,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Workspace'
+                  $ref: "#/components/schemas/Workspace"
     post:
       tags:
-      - workspaces
+        - workspaces
       summary: Create a workspace
       operationId: createWorkspace
       requestBody:
         content:
-          '*/*':
+          "*/*":
             schema:
-              $ref: '#/components/schemas/CreateWorkspaceRequest'
+              $ref: "#/components/schemas/CreateWorkspaceRequest"
         required: true
       responses:
         "201":
@@ -1223,22 +1365,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Workspace'
+                $ref: "#/components/schemas/Workspace"
   /workspaces/{workspace}/openapi:
     get:
       tags:
-      - workspaces
+        - workspaces
       summary: Get the OpenAPI specification for all events and entities in this workspace
       operationId: getWorkspaceOpenApi
       parameters:
-      - name: workspace
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: The yaml OpenAPI specification for all events and entities
+          description:
+            The yaml OpenAPI specification for all events and entities
             in this workspace
           content:
             application/yaml:
@@ -1252,18 +1395,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Action:
       minLength: 1
       type: string
-      description: The action to be allowed on the resource if an access policy is
+      description:
+        The action to be allowed on the resource if an access policy is
         matched. The `deny` action is a special action that denies all access.
       enum:
-      - read
-      - write
-      - deny
+        - read
+        - write
+        - deny
     Metadata:
       type: object
       description: Arbitrary metadata.
@@ -1276,8 +1420,8 @@ components:
           last: Doe
     Policy:
       required:
-      - id
-      - type
+        - id
+        - type
       type: object
       properties:
         id:
@@ -1298,20 +1442,20 @@ components:
         type:
           type: string
           enum:
-          - policy
+            - policy
         deleted:
           type: string
           format: date-time
           readOnly: true
         subject:
-          $ref: '#/components/schemas/Subject'
+          $ref: "#/components/schemas/Subject"
         resource:
-          $ref: '#/components/schemas/Resource'
+          $ref: "#/components/schemas/Resource"
         actions:
           uniqueItems: true
           type: array
           items:
-            $ref: '#/components/schemas/Action'
+            $ref: "#/components/schemas/Action"
     Resource:
       type: object
       properties:
@@ -1356,9 +1500,9 @@ components:
         email:
           type: string
         metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: "#/components/schemas/Metadata"
         org_membership:
-          $ref: '#/components/schemas/SubjectOrgMembership'
+          $ref: "#/components/schemas/SubjectOrgMembership"
       description: |2
           A subset of properties of a user to authorize against.
 
@@ -1381,20 +1525,20 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: "#/components/schemas/Metadata"
       example:
         joined: 2022-08-09T10:27:30.956079
         metadata:
           role: admin
     CreatePolicyRequest:
       required:
-      - actions
+        - actions
       type: object
       properties:
         subject:
-          $ref: '#/components/schemas/Subject'
+          $ref: "#/components/schemas/Subject"
         resource:
-          $ref: '#/components/schemas/Resource'
+          $ref: "#/components/schemas/Resource"
         actions:
           minLength: 1
           uniqueItems: true
@@ -1412,16 +1556,16 @@ components:
             action. You can define `deny` access policies to make exceptions in
             your policies that allow access.
           items:
-            $ref: '#/components/schemas/Action'
+            $ref: "#/components/schemas/Action"
     UpdatePolicyRequest:
       required:
-      - actions
+        - actions
       type: object
       properties:
         subject:
-          $ref: '#/components/schemas/Subject'
+          $ref: "#/components/schemas/Subject"
         resource:
-          $ref: '#/components/schemas/Resource'
+          $ref: "#/components/schemas/Resource"
         actions:
           minLength: 1
           uniqueItems: true
@@ -1439,53 +1583,55 @@ components:
             action. You can define `deny` access policies to make exceptions in
             your policies that allow access.
           items:
-            $ref: '#/components/schemas/Action'
+            $ref: "#/components/schemas/Action"
     Token:
       required:
-      - token
+        - token
       type: object
       properties:
         token:
           type: string
-          description: JWT authentication token. Most Nile operations the caller to
+          description:
+            JWT authentication token. Most Nile operations the caller to
             pass a valid token in Authorization HTTP header using Bearer schema
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
     Error:
       required:
-      - error_code
-      - message
-      - status_code
+        - error_code
+        - message
+        - status_code
       type: object
       properties:
         error_code:
           type: string
           enum:
-          - internal_error
-          - bad_request
-          - unauthorized_credentials
-          - user_not_found
-          - org_not_found
-          - workspace_not_found
-          - invite_not_found
-          - duplicate_org_name
-          - duplicate_workspace_name
-          - empty_org_name
-          - empty_workspace_name
-          - duplicate_user_email
-          - user_already_in_org
-          - duplicate_entity_name
-          - entity_not_found
-          - instance_not_found
-          - access_policy_not_found
-          - invalid_entity_schema
-          - invalid_id
-          - invalid_action
-          - empty_actions
-          - invalid_action_combination
-          - invalid_policy_variable
-          - forbidden
-          - metric_not_found
-          - conflict
+            - internal_error
+            - bad_request
+            - unauthorized_credentials
+            - user_not_found
+            - org_not_found
+            - workspace_not_found
+            - invite_not_found
+            - duplicate_org_name
+            - duplicate_workspace_name
+            - empty_org_name
+            - empty_workspace_name
+            - duplicate_user_email
+            - user_already_in_org
+            - duplicate_entity_name
+            - entity_not_found
+            - instance_not_found
+            - access_policy_not_found
+            - invalid_entity_schema
+            - invalid_id
+            - invalid_action
+            - empty_actions
+            - invalid_action_combination
+            - invalid_policy_variable
+            - forbidden
+            - metric_not_found
+            - conflict
+            - access_token_not_found
         message:
           type: string
         status_code:
@@ -1493,8 +1639,8 @@ components:
           format: int32
     LoginInfo:
       required:
-      - email
-      - password
+        - email
+        - password
       type: object
       properties:
         email:
@@ -1509,14 +1655,15 @@ components:
           example: mycatname
     DeveloperGoogleOAuthResponse:
       required:
-      - token
+        - token
       type: object
       properties:
         user:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         token:
           type: string
-          description: JWT authentication token. Most Nile operations the caller to
+          description:
+            JWT authentication token. Most Nile operations the caller to
             pass a valid token in Authorization HTTP header using Bearer schema
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
     OrgMembership:
@@ -1526,15 +1673,15 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: "#/components/schemas/Metadata"
       example:
         joined: 2022-08-03T17:30:00.295581
         metadata:
           position: CEO
     User:
       required:
-      - email
-      - type
+        - email
+        - type
       type: object
       properties:
         id:
@@ -1554,16 +1701,16 @@ components:
         type:
           type: string
           enum:
-          - user
-          - developer
-          - service_account
-          - nile_employee
+            - user
+            - developer
+            - service_account
+            - nile_employee
         metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: "#/components/schemas/Metadata"
         org_memberships:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/OrgMembership'
+            $ref: "#/components/schemas/OrgMembership"
           example:
             org_02qaCO8qNEmfpAcomojhLb:
               joined: 2022-08-09T10:27:30.956079
@@ -1578,8 +1725,8 @@ components:
           format: email
     CreateUserRequest:
       required:
-      - email
-      - password
+        - email
+        - password
       type: object
       properties:
         email:
@@ -1589,13 +1736,13 @@ components:
           minLength: 1
           type: string
         metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: "#/components/schemas/Metadata"
     Entity:
       required:
-      - id
-      - name
-      - schema
-      - type
+        - id
+        - name
+        - schema
+        - type
       type: object
       properties:
         id:
@@ -1616,12 +1763,12 @@ components:
         type:
           type: string
           enum:
-          - entity
+            - entity
         name:
           type: string
           example: clusters
         schema:
-          $ref: '#/components/schemas/JsonSchema'
+          $ref: "#/components/schemas/JsonSchema"
     JsonSchema:
       type: object
       description: A JSON Schema
@@ -1636,27 +1783,27 @@ components:
             type: integer
     CreateEntityRequest:
       required:
-      - name
-      - schema
+        - name
+        - schema
       type: object
       properties:
         name:
           type: string
           example: clusters
         schema:
-          $ref: '#/components/schemas/JsonSchema'
+          $ref: "#/components/schemas/JsonSchema"
     UpdateEntityRequest:
       required:
-      - schema
+        - schema
       type: object
       properties:
         schema:
-          $ref: '#/components/schemas/JsonSchema'
+          $ref: "#/components/schemas/JsonSchema"
     Instance:
       required:
-      - id
-      - properties
-      - type
+        - id
+        - properties
+        - type
       type: object
       properties:
         id:
@@ -1683,10 +1830,10 @@ components:
           format: date-time
           readOnly: true
         properties:
-          $ref: '#/components/schemas/JsonSchemaInstance'
+          $ref: "#/components/schemas/JsonSchemaInstance"
     InstanceEvent:
       required:
-      - timestamp
+        - timestamp
       type: object
       properties:
         id:
@@ -1695,13 +1842,13 @@ components:
         event_type:
           type: string
           enum:
-          - CREATE
-          - UPDATE
-          - DELETE
+            - CREATE
+            - UPDATE
+            - DELETE
         before:
-          $ref: '#/components/schemas/Instance'
+          $ref: "#/components/schemas/Instance"
         after:
-          $ref: '#/components/schemas/Instance'
+          $ref: "#/components/schemas/Instance"
         timestamp:
           type: string
           format: date-time
@@ -1714,17 +1861,17 @@ components:
         cpus: 4
     UpdateInstanceRequest:
       required:
-      - properties
+        - properties
       type: object
       properties:
         properties:
-          $ref: '#/components/schemas/JsonSchemaInstance'
+          $ref: "#/components/schemas/JsonSchemaInstance"
     Invite:
       required:
-      - code
-      - inviter
-      - org
-      - status
+        - code
+        - inviter
+        - org
+        - status
       type: object
       properties:
         code:
@@ -1736,15 +1883,12 @@ components:
         status:
           type: string
           enum:
-          - active
+            - active
     AggregationResponse:
-      type: object
-      properties:
-        buckets:
-          type: array
-          description: The buckets of the aggregation
-          items:
-            $ref: '#/components/schemas/Bucket'
+      type: array
+      description: The buckets of the aggregation
+      items:
+        $ref: "#/components/schemas/Bucket"
     Bucket:
       type: object
       properties:
@@ -1758,9 +1902,9 @@ components:
           description: The size of the bucket
           example: 1h
           enum:
-          - 1h
-          - 1d
-          - 10m
+            - 1h
+            - 1d
+            - 10m
         average:
           type: number
           description: The average of all values in the bucket
@@ -1792,16 +1936,16 @@ components:
       description: The buckets of the aggregation
     AggregationRequest:
       required:
-      - start_time
+        - start_time
       type: object
       properties:
         bucket_size:
           type: string
           description: The size of the bucket
           enum:
-          - 1h
-          - 1d
-          - 10m
+            - 1h
+            - 1d
+            - 10m
         buckets:
           minimum: 1
           type: integer
@@ -1810,7 +1954,8 @@ components:
           default: 3
         start_time:
           type: string
-          description: "An ISO-8601 formatted date-time, i.e., 2018-11-13T20:20:39+00:00,\
+          description:
+            "An ISO-8601 formatted date-time, i.e., 2018-11-13T20:20:39+00:00,\
             \ that the aggregation should start at. This time will be truncated based\
             \ on bucket_size, i.e., if bucket_size is 1h, then the start_time will\
             \ be truncated to the nearest hour."
@@ -1823,14 +1968,15 @@ components:
           description: The optional Nile instance id to aggregate on
     Measurement:
       required:
-      - instance_id
-      - timestamp
-      - value
+        - instance_id
+        - timestamp
+        - value
       type: object
       properties:
         timestamp:
           type: string
-          description: "An ISO-8601 formatted date-time, i.e., 2018-11-13T20:20:39+00:00,\
+          description:
+            "An ISO-8601 formatted date-time, i.e., 2018-11-13T20:20:39+00:00,\
             \ that represents the time the measurement was created."
           format: date-time
           example: 2022-11-13T20:20:39Z
@@ -1841,16 +1987,17 @@ components:
           example: 11.8
         instance_id:
           type: string
-          description: InstanceId of the Nile instance this measurement is related
+          description:
+            InstanceId of the Nile instance this measurement is related
             to
           example: inst_02qwn8bovgrXdNx8XlVzbU
       description: Measurements associated with this metric
     Metric:
       required:
-      - entity_type
-      - measurements
-      - name
-      - type
+        - entity_type
+        - measurements
+        - name
+        - type
       type: object
       properties:
         name:
@@ -1862,8 +2009,8 @@ components:
           description: Type of metric. Currently sum or gauge
           example: sum
           enum:
-          - gauge
-          - sum
+            - gauge
+            - sum
         entity_type:
           type: string
           description: The Nile entity type this metric is related to
@@ -1872,7 +2019,7 @@ components:
           type: array
           description: Measurements associated with this metric
           items:
-            $ref: '#/components/schemas/Measurement'
+            $ref: "#/components/schemas/Measurement"
     Filter:
       type: object
       properties:
@@ -1886,7 +2033,8 @@ components:
           example: inst_02qwn8bovgrXdNx8XlVzbU
         entity_type:
           type: string
-          description: The Nile entity type to filter on. This is ignored if entity_type
+          description:
+            The Nile entity type to filter on. This is ignored if entity_type
             is on a URL param.
           example: cluster
         organization_id:
@@ -1895,7 +2043,8 @@ components:
           example: org_02qwn8bovgrXdNx8XlVzbU
         start_time:
           type: string
-          description: "The ISO-8601 formatted timestamp used to begin searching for\
+          description:
+            "The ISO-8601 formatted timestamp used to begin searching for\
             \ matching metrics, i.e., 2018-11-13T20:20:39+00:00. If not provided the\
             \ range will start from the epoch. Results returned are inclusive of this\
             \ timestamp."
@@ -1903,7 +2052,8 @@ components:
           example: 2021-01-01T00:00:00Z
         duration:
           type: integer
-          description: "The duration is added to from_timestamp to limit the time\
+          description:
+            "The duration is added to from_timestamp to limit the time\
             \ range of the query. i.e., the query will be restricted to metric.timestamp\
             \ >= from_timestamp AND metric.timestamp < from_timestamp + duration.\
             \  If not provided or the duration is <=0 then the end timestamp is set\
@@ -1912,19 +2062,19 @@ components:
           example: 600000
     ListMetricDefinitionsResponse:
       required:
-      - metric_definitions
+        - metric_definitions
       type: object
       properties:
         metric_definitions:
           type: array
           description: The list of metric definitions for a workspace or entity
           items:
-            $ref: '#/components/schemas/MetricDefinition'
+            $ref: "#/components/schemas/MetricDefinition"
     MetricDefinition:
       required:
-      - entity_type
-      - name
-      - type
+        - entity_type
+        - name
+        - type
       type: object
       properties:
         name:
@@ -1936,8 +2086,8 @@ components:
           description: The type of the metric
           example: gauge
           enum:
-          - gauge
-          - sum
+            - gauge
+            - sum
         entity_type:
           type: string
           description: The entity type of the metric
@@ -1945,20 +2095,20 @@ components:
       description: The list of metric definitions for a workspace or entity
     AddUserToOrgRequest:
       required:
-      - email
+        - email
       type: object
       properties:
         email:
           type: string
           format: email
         metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: "#/components/schemas/Metadata"
     Organization:
       required:
-      - creator
-      - id
-      - name
-      - type
+        - creator
+        - id
+        - name
+        - type
       type: object
       properties:
         id:
@@ -1979,9 +2129,9 @@ components:
         type:
           type: string
           enum:
-          - nile
-          - organization
-          - workspace
+            - nile
+            - organization
+            - workspace
         name:
           type: string
         creator:
@@ -1989,7 +2139,7 @@ components:
           description: ID of the user who created this organization
     CreateOrganizationRequest:
       required:
-      - name
+        - name
       type: object
       properties:
         name:
@@ -1997,7 +2147,7 @@ components:
           type: string
     UpdateOrganizationRequest:
       required:
-      - name
+        - name
       type: object
       properties:
         name:
@@ -2007,11 +2157,67 @@ components:
       type: object
       properties:
         metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: "#/components/schemas/Metadata"
+    AccessTokenInfo:
+      required:
+        - id
+        - label
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        label:
+          minLength: 3
+          type: string
+          description: The human-friendly label of the access token
+        description:
+          type: string
+          description: The intended use of the token
+        metadata:
+          type: object
+          description: Arbitrary metadata.
+          example:
+            location: US
+            age: 21
+            active: true
+            name:
+              first: John
+              last: Doe
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+    CreateAccessTokenResponse:
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+          description: The secret key to use for authentication
+          readOnly: true
+        token_info:
+          $ref: "#/components/schemas/AccessTokenInfo"
+    CreateAccessTokenRequest:
+      required:
+        - label
+      type: object
+      properties:
+        label:
+          minLength: 3
+          type: string
+          description: The human-friendly label of the access token
+        description:
+          type: string
+          description: The intended use of the token
+        metadata:
+          $ref: "#/components/schemas/Metadata"
     UpdateUserRequest:
       required:
-      - email
-      - password
+        - email
+        - password
       type: object
       properties:
         email:
@@ -2021,12 +2227,12 @@ components:
           minLength: 1
           type: string
         metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: "#/components/schemas/Metadata"
     Workspace:
       required:
-      - id
-      - name
-      - type
+        - id
+        - name
+        - type
       type: object
       properties:
         id:
@@ -2047,12 +2253,12 @@ components:
         type:
           type: string
           enum:
-          - workspace
+            - workspace
         name:
           type: string
     CreateWorkspaceRequest:
       required:
-      - name
+        - name
       type: object
       properties:
         name:
@@ -2061,7 +2267,8 @@ components:
     workspace:
       name: workspace
       in: path
-      description: The name of the Nile workspace where all the data-plane metadata
+      description:
+        The name of the Nile workspace where all the data-plane metadata
         for this user is stored
       required: true
       schema:

@@ -57,7 +57,11 @@ export const useAggregation = (
   const { updateInterval, aggregation } = props;
   const queryKey = props.queryKey || `aggregation:${aggregation.metricName}`;
 
-  const { data, isLoading, refetch } = useQuery(
+  const {
+    data = [],
+    isLoading,
+    refetch,
+  } = useQuery(
     [Queries.FilterMetrics(queryKey)],
     () => {
       return nile.metrics.aggregateMetrics(aggregation);
@@ -69,7 +73,7 @@ export const useAggregation = (
     refetch();
   }, updateInterval);
 
-  return { isLoading, buckets: data?.buckets ? data.buckets : [] };
+  return { isLoading, buckets: data };
 };
 
 /**
