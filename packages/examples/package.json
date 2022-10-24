@@ -2,7 +2,7 @@
   "name": "@theniledev/examples",
   "license": "MIT",
   "private": true,
-  "version": "0.27.0",
+  "version": "0.27.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
