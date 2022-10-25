@@ -27,8 +27,7 @@ export default function LoginForm(props: Props) {
     {
       onSuccess: (token, data) => {
         if (token) {
-          nile.authToken = token?.token;
-          onSuccess && onSuccess(data);
+          onSuccess && onSuccess(token, data);
         }
       },
       onError: (error) => {
