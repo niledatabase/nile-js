@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.27.2](https://github.com/TheNileDev/nile-js/compare/v0.27.1...v0.27.2) (2022-10-25)
+
+### Bug Fixes
+
+- **react:** pass config props to charts ([b036d2f](https://github.com/TheNileDev/nile-js/commit/b036d2f744baa0a08b37f9ac373688d62105c5d6))
+- **react:** send the token back in the login response ([dc9b467](https://github.com/TheNileDev/nile-js/commit/dc9b4673dff1dac899140e42f62e60a2a5712c93))
+
 ## [0.27.1](https://github.com/TheNileDev/nile-js/compare/v0.27.0...v0.27.1) (2022-10-24)
 
 ### Bug Fixes
