@@ -14,7 +14,7 @@
     "test:react": "yarn workspace @theniledev/react test",
     "build:react": "yarn workspace @theniledev/react build",
     "build:examples": "yarn workspace @theniledev/examples build",
-    "build:react-storybook": "yarn workspace @theniledev/react build-storybook",
+    "build:react-storybook": "yarn build:js-lib && yarn build:react && yarn workspace @theniledev/react build-storybook",
     "lint": "yarn eslint . --max-warnings=0",
     "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
     "publish": "yarn lerna publish",

@@ -52,12 +52,7 @@ export default function MetricsLineChart(
     aggregation?: AggregateMetricsRequest;
   } & MetricsComponentProps
 ): React.ReactElement | null {
-  const { filter, aggregation, queryKey, updateInterval } = props;
-
-  const commonProps = {
-    queryKey,
-    updateInterval,
-  };
+  const { filter, aggregation, ...commonProps } = props;
 
   if (aggregation) {
     return <AggregateLineChart {...commonProps} aggregation={aggregation} />;
