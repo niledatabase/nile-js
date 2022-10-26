@@ -3,8 +3,10 @@
 node_modules
 dist
 docs
-src/generated
+src/client
 spec/output.swagger.json
+# sed things
+*-e
 
 .yarn/*
 !.yarn/patches

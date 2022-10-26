@@ -109,14 +109,12 @@ export class {{classname}} extends runtime.BaseAPI {
      * ```
      */
      
-    async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}> {
+    async {{nickname}}({{#allParams.0}}requestParameters{{^allParams.0.required}}?{{/allParams.0.required}}: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}> {
       
         {{#allParams}}
         {{#required}}
-        if ('{{paramName}}'.localeCompare('workspace') !== 0 && requestParameters) {
-            if (requestParameters.{{paramName}} === null || requestParameters.{{paramName}} === undefined) {
-                throw new runtime.RequiredError('{{paramName}}','Required parameter requestParameters.{{paramName}} was null or undefined when calling {{nickname}}.');
-            }
+        if (requestParameters.{{paramName}} === null || requestParameters.{{paramName}} === undefined) {
+            throw new runtime.RequiredError('{{paramName}}','Required parameter requestParameters.{{paramName}} was null or undefined when calling {{nickname}}.');
         }
 
         {{/required}}
@@ -125,7 +123,7 @@ export class {{classname}} extends runtime.BaseAPI {
 
         {{#queryParams}}
         {{#isArray}}
-        if (requestParameters.{{paramName}}) {
+        if (requestParameters && requestParameters.{{paramName}}) {
             {{#isCollectionFormatMulti}}
             queryParameters['{{baseName}}'] = requestParameters.{{paramName}};
             {{/isCollectionFormatMulti}}
@@ -136,7 +134,7 @@ export class {{classname}} extends runtime.BaseAPI {
 
         {{/isArray}}
         {{^isArray}}
-        if (requestParameters.{{paramName}} !== undefined) {
+        if (requestParameters && requestParameters.{{paramName}} !== undefined) {
             {{#isDateTime}}
             queryParameters['{{baseName}}'] = (requestParameters.{{paramName}} as any).toISOString();
             {{/isDateTime}}

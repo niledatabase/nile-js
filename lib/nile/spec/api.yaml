@@ -2270,7 +2270,7 @@ components:
       description:
         The name of the Nile workspace where all the data-plane metadata
         for this user is stored
-      required: true
+      required: false
       schema:
         minLength: 1
         type: string

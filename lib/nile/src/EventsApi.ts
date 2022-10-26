@@ -1,4 +1,4 @@
-import { EntitiesApi, InstanceEvent } from './generated/openapi/src';
+import { EntitiesApi, InstanceEvent } from './client/src';
 
 export type TimersType = { [key: number]: ReturnType<typeof setTimeout> };
 export type EventListenerOptions = { type: string; seq: number };
