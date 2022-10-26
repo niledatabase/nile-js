@@ -4,13 +4,8 @@ export { NileApi } from './Nile';
 
 export default Nile;
 
-export * from './generated/openapi/src/models';
-export {
-  AggregateMetricsRequest,
-  FilterMetricsForEntityTypeRequest,
-  FilterMetricsRequest,
-  ListMetricDefinitionsForEntityTypeRequest,
-  ListMetricDefinitionsRequest,
-  ProduceBatchOfMetricsRequest,
-} from './generated/openapi/src/apis/MetricsApi';
-export { ConfigurationParameters } from './generated/openapi/src/runtime';
+export * from './client/src/models';
+export * from './client/src/apis';
+export { ConfigurationParameters } from './client/src/runtime';
+export * from './model/DeveloperCredentials';
+export * from './EventsApi';
