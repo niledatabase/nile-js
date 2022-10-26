@@ -51,6 +51,11 @@ const AggregateMetrics = (metricName: ParamType, startTime: Date) => [
   `${Queries.Metrics}/${metricName}/aggregate/${startTime.toISOString()}`,
 ];
 
+const ListAccessTokens = [`${Queries.Workspaces}/access_tokens`];
+const GetToken = (id: ParamType) => [
+  `${Queries.Workspaces}/access_tokens/${id}`,
+];
+
 const queryKeys = {
   ListWorkspaces,
   ListOrganizations,
@@ -71,6 +76,8 @@ const queryKeys = {
   FilterMetrics,
   ListMetrics,
   AggregateMetrics,
+  ListAccessTokens,
+  GetToken,
 };
 
 export default queryKeys;
