@@ -6,7 +6,7 @@ info:
     email: support@thenile.dev
   version: 0.1.0-18eb8aa
 servers:
-  - url: net-lb-prod-6faf2ab-850391211.us-west-2.elb.amazonaws.com
+  - url: localhost:8080
 tags:
   - name: access
     description: |
