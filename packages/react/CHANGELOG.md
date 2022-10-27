@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.28.0](https://github.com/TheNileDev/nile-js/compare/v0.27.2...v0.28.0) (2022-10-27)
+
+### Features
+
+- query keys for workspace access tokens ([dc9afa5](https://github.com/TheNileDev/nile-js/commit/dc9afa50cd7aa0cb370e018a2e923b22cdc27e7b))
+
 ## [0.27.2](https://github.com/TheNileDev/nile-js/compare/v0.27.1...v0.27.2) (2022-10-25)
 
 ### Bug Fixes
