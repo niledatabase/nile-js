@@ -29,9 +29,14 @@ describe('index', () => {
         if (k === 'workspaces') {
           expect(props).toEqual([
             'constructor',
+            'createAccessToken',
             'createWorkspace',
+            'deleteAccessToken',
+            'getAccessToken',
             'getWorkspaceOpenApi',
+            'listAccessTokens',
             'listWorkspaces',
+            'updateAccessToken',
           ]);
         }
         if (k === 'organizations') {
@@ -70,15 +75,10 @@ describe('index', () => {
         if (k === 'developers') {
           expect(props).toEqual([
             'constructor',
-            'createAccessToken',
             'createDeveloper',
-            'deleteAccessToken',
             'developerGoogleOAuthCallback',
-            'getAccessToken',
-            'listAccessTokens',
             'loginDeveloper',
             'startDeveloperGoogleOAuth',
-            'updateAccessToken',
             'validateDeveloper',
           ]);
         }
