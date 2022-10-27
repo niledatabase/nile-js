@@ -10,14 +10,14 @@ import {
   UsersApi,
   WorkspacesApi,
   MetricsApi,
-} from './generated/openapi/src';
-import {
-  Configuration,
-  ConfigurationParameters,
-} from './generated/openapi/src/runtime';
+} from './client/src';
+import { Configuration, ConfigurationParameters } from './client/src/runtime';
 import EventsApi from './EventsApi';
 import { AuthToken, DeveloperCredentials } from './model/DeveloperCredentials';
 
+/**
+ * The base nile class. Pulls together groups of OpenAPI spec into a single class
+ */
 export class NileApi {
   users: UsersApi;
   developers: DevelopersApi;
@@ -38,6 +38,9 @@ export class NileApi {
     this.metrics = new MetricsApi(configuration);
   }
 
+  /**
+   * Sets the workspace. Workspaces are unique for a Nile instance. Set it once and it will be passed in all API calls for convenience
+   */
   set workspace(workspace: void | string) {
     if (workspace) {
       this.users.workspace = workspace;
@@ -50,6 +53,9 @@ export class NileApi {
     }
   }
 
+  /**
+   * @returns the workspace, if it has been set
+   */
   get workspace(): void | string {
     if (this.users.workspace) {
       return this.users.workspace;
@@ -74,6 +80,9 @@ export class NileApi {
     }
   }
 
+  /**
+   * When a token is set, it is shared across all classes
+   */
   set authToken(token: void | string) {
     if (token) {
       this.users.authToken = token;
@@ -86,6 +95,10 @@ export class NileApi {
     }
   }
 
+  /**
+   * For some calls, it may be necessary get then set an auth token to be sure all classes are authenticated
+   * @returns the auth token if it has been set
+   */
   get authToken(): void | string {
     if (this.users.authToken) {
       return this.users.authToken;
@@ -149,6 +162,11 @@ export class NileApi {
   }
 }
 
+/**
+ *
+ * @param config
+ * @returns A Nile instance
+ */
 function ApiImpl(config?: ConfigurationParameters): NileApi {
   if (!config) {
     return new NileApi();
@@ -159,4 +177,5 @@ function ApiImpl(config?: ConfigurationParameters): NileApi {
   nile.workspace = cfg.workspace;
   return nile;
 }
+
 export default ApiImpl;
