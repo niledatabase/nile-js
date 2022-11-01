@@ -4,26 +4,26 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
   TimeScale,
 } from 'chart.js';
 
-import FilterLineChart from './Filter/FilterLineChart';
-import AggregateLineChart from './Aggregate/AggregateLineChart';
+import 'chartjs-adapter-date-fns';
+
+import FilterBarChart from './Filter/FilterBarChart';
+import AggregateBarChart from './Aggregate/AggregateBarChart';
 import {
   AggregateMetricsRequest,
-  MetricsLineChartComponentProps,
+  MetricsBarChartComponentProps,
 } from './types';
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -55,15 +55,15 @@ export default function MetricsLineChart(
   props: {
     filter?: Filter;
     aggregation?: AggregateMetricsRequest;
-  } & MetricsLineChartComponentProps
+  } & MetricsBarChartComponentProps
 ): React.ReactElement | null {
   const { filter, aggregation, ...commonProps } = props;
 
   if (aggregation) {
-    return <AggregateLineChart {...commonProps} aggregation={aggregation} />;
+    return <AggregateBarChart {...commonProps} aggregation={aggregation} />;
   }
   if (filter) {
-    return <FilterLineChart {...commonProps} filter={filter} />;
+    return <FilterBarChart {...commonProps} filter={filter} />;
   }
   return null;
 }

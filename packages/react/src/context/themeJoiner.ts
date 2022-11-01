@@ -5,8 +5,6 @@ import { deepmerge } from '@mui/utils';
 import type {} from '@mui/material/themeCssVarsAugmentation';
 import {
   experimental_extendTheme as extendMuiTheme,
-  PaletteColor,
-  TypeText,
   TypeAction,
   Overlays,
   PaletteColorChannel,
@@ -32,10 +30,7 @@ import colors from '@mui/joy/colors';
 import {
   extendTheme as extendJoyTheme,
   Theme as JoyTheme,
-  ThemeCssVar as JoyThemeCssVar,
 } from '@mui/joy/styles';
-import { CommonColors } from '@mui/material/styles/createPalette';
-import { TypeBackground } from '@mui/material';
 
 // extends Joy theme to include tokens from Material UI
 declare module '@mui/joy/styles' {
@@ -60,13 +55,6 @@ declare module '@mui/joy/styles' {
     TableCell: PaletteTableCell;
     Tooltip: PaletteTooltip;
   }
-  type PalettePrimary = PaletteColor;
-  type PaletteInfo = PaletteColor;
-  type PaletteSuccess = PaletteColor;
-  type PaletteWarning = PaletteColor;
-  type PaletteCommon = CommonColors;
-  type PaletteText = TypeText;
-  type PaletteBackground = TypeBackground;
 
   interface ThemeVars {
     // attach to Joy UI `theme.vars`
@@ -76,16 +64,11 @@ declare module '@mui/joy/styles' {
   }
 }
 
-type MergedThemeCssVar = { [k in JoyThemeCssVar]: true };
-
 declare module '@mui/material/styles' {
   interface Theme {
     // put everything back to Material UI `theme.vars`
     vars: JoyTheme['vars'];
   }
-
-  // makes Material UI theme.getCssVar() sees Joy theme tokens
-  type ThemeCssVarOverrides = MergedThemeCssVar;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

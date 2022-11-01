@@ -14,6 +14,7 @@ export {
   MetricsLineChart,
   useFilter,
   useAggregation,
+  MetricsBarChart,
 } from './components/Metrics';
 export {
   AggregateMetricsRequest,
