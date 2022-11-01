@@ -3,8 +3,9 @@ import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
 import { FilterMetricsRequest } from '@theniledev/js';
 
+import { MetricsLineChartComponentProps } from '../types';
+
 import { useFilter } from './hooks';
-import { MetricsComponentProps } from './types';
 
 type LabelAndData = {
   labels: string[];
@@ -12,7 +13,7 @@ type LabelAndData = {
 };
 
 export default function FilterLineChart(
-  props: FilterMetricsRequest & MetricsComponentProps
+  props: FilterMetricsRequest & MetricsLineChartComponentProps
 ) {
   const { filter, chartOptions, timeFormat = 'HH:mm:ss', dataset } = props;
 
@@ -38,7 +39,6 @@ export default function FilterLineChart(
   if (isLoading) {
     return null;
   }
-
   return (
     <Line
       options={{
