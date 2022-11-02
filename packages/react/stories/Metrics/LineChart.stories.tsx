@@ -12,7 +12,7 @@ import aggregate from './aggregate.json';
 const meta = {
   component: MetricsLineChart,
   parameters: {
-    controls: { expanded: true },
+    controls: { expanded: false },
   },
 };
 
