@@ -59,7 +59,7 @@
     "@storybook/addon-essentials": "^6.5.13",
     "@storybook/addon-info": "^5.3.21",
     "@storybook/addon-links": "^6.5.13",
-    "@storybook/addons": "^6.5.12",
+    "@storybook/addons": "^6.5.13",
     "@storybook/react": "^6.5.13",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
