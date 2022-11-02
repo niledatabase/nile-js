@@ -2,11 +2,17 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
 
+import {
+  AggregateMetricsRequest,
+  MetricsLineChartComponentProps,
+} from '../types';
+
 import { useAggregation } from './hooks';
-import { AggregateMetricsRequest, MetricsComponentProps } from './types';
 
 export default function AggregateLineChart(
-  props: { aggregation: AggregateMetricsRequest } & MetricsComponentProps
+  props: {
+    aggregation: AggregateMetricsRequest;
+  } & MetricsLineChartComponentProps
 ) {
   type LabelAndData = {
     labels: string[];
@@ -54,8 +60,8 @@ export default function AggregateLineChart(
           {
             label: props.aggregation.metricName,
             data,
-            borderColor: 'rgb(111 226 255)',
-            backgroundColor: 'rgb(77, 158, 178)',
+            backgroundColor: 'rgb(111 226 255)',
+            borderColor: 'rgb(77, 158, 178)',
             pointRadius: 0,
             borderWidth: 6,
             cubicInterpolationMode: 'monotone',
