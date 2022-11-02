@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.29.0](https://github.com/TheNileDev/nile-js/compare/v0.28.2...v0.29.0) (2022-11-02)
+
+### Bug Fixes
+
+- **react:** hide controls on charts by default ([f4d443c](https://github.com/TheNileDev/nile-js/commit/f4d443c1b5a7f742f11b0069b66e7c61399a4e26))
+- **react:** set default bar color to nile blue ([33d2e55](https://github.com/TheNileDev/nile-js/commit/33d2e551dd6da743f4f9c52807ee891d3e7ab918))
+
+### Features
+
+- **react:** add bar chart ([9e17eab](https://github.com/TheNileDev/nile-js/commit/9e17eabb2aa2ecf3a8b4fd551a172d116ae62754))
+
 ## [0.28.2](https://github.com/TheNileDev/nile-js/compare/v0.28.1...v0.28.2) (2022-10-27)
 
 **Note:** Version bump only for package @theniledev/packages
