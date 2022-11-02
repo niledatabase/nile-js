@@ -58,9 +58,9 @@ export default function FilterBarChart(
       return {
         label: metricName,
         data: [datum],
+        backgroundColor: 'rgb(111 226 255)',
         borderColor: 'rgb(77, 158, 178)',
         borderSkipped: true,
-        backgroundColor: 'rgb(77, 158, 178)',
         barPercentage: 0.9,
         grouped: true,
         ...dataset,
