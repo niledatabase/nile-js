@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.30.0](https://github.com/TheNileDev/nile-js/compare/v0.29.0...v0.30.0) (2022-11-04)
+
+### Bug Fixes
+
+- use js-yaml not sed ([3a02860](https://github.com/TheNileDev/nile-js/commit/3a02860c9ab6aceb296225426389ca6ac53b054a))
+
+### Features
+
+- upgrade generator and spec ([10c9f9f](https://github.com/TheNileDev/nile-js/commit/10c9f9f314f09cf2aa11f8e4146ce3743302ccd9))
+
 # [0.29.0](https://github.com/TheNileDev/nile-js/compare/v0.28.2...v0.29.0) (2022-11-02)
 
 **Note:** Version bump only for package @theniledev/js
