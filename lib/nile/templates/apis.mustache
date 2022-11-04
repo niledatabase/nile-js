@@ -4,15 +4,19 @@
 
 import * as runtime from '../runtime';
 {{#imports.0}}
+import type {
+  {{#imports}}
+  {{className}},
+  {{/imports}}
+} from '../models';
+{{^withoutRuntimeChecks}}
 import {
     {{#imports}}
-    {{className}},
-    {{^withoutRuntimeChecks}}
     {{className}}FromJSON,
     {{className}}ToJSON,
-    {{/withoutRuntimeChecks}}
     {{/imports}}
 } from '../models';
+{{/withoutRuntimeChecks}}
 {{/imports.0}}
 
 {{#operations}}
@@ -49,7 +53,7 @@ export interface {{classname}}Interface {
      * @throws {RequiredError}
      * @memberof {{classname}}Interface
      */
-    {{nickname}}({{#allParams.0}}requestParameters{{^allParams.0.required}}?{{/allParams.0.required}}: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}>;
+    {{nickname}}({{#allParams.0}}requestParameters{{^allParams.0.required}}?{{/allParams.0.required}}: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}>;
 
 
 {{/operation}}
@@ -109,7 +113,7 @@ export class {{classname}} extends runtime.BaseAPI {
      * ```
      */
      
-    async {{nickname}}({{#allParams.0}}requestParameters{{^allParams.0.required}}?{{/allParams.0.required}}: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}> {
+    async {{nickname}}({{#allParams.0}}requestParameters{{^allParams.0.required}}?{{/allParams.0.required}}: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{^returnType}}void{{/returnType}}> {
       
         {{#allParams}}
         {{#required}}
@@ -135,17 +139,17 @@ export class {{classname}} extends runtime.BaseAPI {
         {{/isArray}}
         {{^isArray}}
         if (requestParameters && requestParameters.{{paramName}} !== undefined) {
-            {{#isDateTime}}
+            {{#isDateTimeType}}
             queryParameters['{{baseName}}'] = (requestParameters.{{paramName}} as any).toISOString();
-            {{/isDateTime}}
-            {{^isDateTime}}
-            {{#isDate}}
+            {{/isDateTimeType}}
+            {{^isDateTimeType}}
+            {{#isDateType}}
             queryParameters['{{baseName}}'] = (requestParameters.{{paramName}} as any).toISOString().substr(0,10);
-            {{/isDate}}
-            {{^isDate}}
+            {{/isDateType}}
+            {{^isDateType}}
             queryParameters['{{baseName}}'] = requestParameters.{{paramName}};
-            {{/isDate}}
-            {{/isDateTime}}
+            {{/isDateType}}
+            {{/isDateTimeType}}
         }
 
         {{/isArray}}
@@ -338,16 +342,16 @@ export class {{classname}} extends runtime.BaseAPI {
         {{/returnTypeIsPrimitive}}
         {{^returnTypeIsPrimitive}}
         {{#isArray}}
-        const request = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}{{/uniqueItems}};
+        const request = new runtime.JSONApiResponse<any>(response{{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}{{/uniqueItems}};
         return await request.value();
         {{/isArray}}
         {{^isArray}}
         {{#isMap}}
-        const request = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
+        const request = new runtime.JSONApiResponse<any>(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
         return await request.value();
         {{/isMap}}
         {{^isMap}}
-        const request = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
+        const request = new runtime.JSONApiResponse<any>(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
         const val = await request.value();
         if ('{{{returnType}}}'.toLowerCase() === 'token' && val && 'token' in val) {
             // @ts-ignore 

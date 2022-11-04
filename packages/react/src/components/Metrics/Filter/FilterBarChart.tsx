@@ -49,7 +49,7 @@ export default function FilterBarChart(
       return [];
     }
     return metrics.map((metric) => {
-      return { y: metric.value, x: metric.timestamp.toISOString() };
+      return { y: metric.value, x: new Date(metric.timestamp).toISOString() };
     });
   }, [metrics]);
 

@@ -24,10 +24,12 @@ export default class EventsApi implements EventsApiInterface {
   static onCounter = 0;
   entities: EntitiesApi;
   timers: TimersType;
+  workspace: string;
 
   constructor(entities: EntitiesApi) {
     this.entities = entities;
     this.timers = {};
+    this.workspace = entities.workspace;
   }
 
   /**
@@ -56,6 +58,7 @@ export default class EventsApi implements EventsApiInterface {
     let seq = options.seq;
     const getEvents = async () => {
       const events = await this.entities.instanceEvents({
+        workspace: this.workspace,
         type: options.type,
         seq,
       });

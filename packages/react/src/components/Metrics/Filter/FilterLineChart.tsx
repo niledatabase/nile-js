@@ -27,7 +27,7 @@ export default function FilterLineChart(
 
     return metrics.reduce(
       (accum: LabelAndData, metric) => {
-        const label: string = format(metric.timestamp, timeFormat);
+        const label: string = format(new Date(metric.timestamp), timeFormat);
         accum.labels.push(label);
         accum.data.push(metric.value);
         return accum;
