@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.1](https://github.com/TheNileDev/nile-js/compare/v0.30.0...v0.30.1) (2022-11-04)
+
+### Bug Fixes
+
+- add generated models back ([e0bf781](https://github.com/TheNileDev/nile-js/commit/e0bf7818f1afafffc1fd859a7fd8a5a94ff84381))
+
 # [0.30.0](https://github.com/TheNileDev/nile-js/compare/v0.29.0...v0.30.0) (2022-11-04)
 
 ### Bug Fixes
