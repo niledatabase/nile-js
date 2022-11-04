@@ -19,9 +19,9 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build && yarn build:types",
-    "prebuild": "yarn build:api:gen && ./scripts/api-cleaner.sh",
+    "prebuild": "yarn build:api:gen && ./scripts/api-cleaner.mjs",
     "build:types": "tsc -d --declarationDir dist --emitDeclarationOnly",
-    "build:api:gen": "yarn openapi-generator-cli generate --skip-validate-spec -t templates -i spec/api.yaml -g typescript-fetch --package-name @theniledev/js -o src/client --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,moduleName=Nile,typescriptThreePlus=true,projectName=@theniledev/js",
+    "build:api:gen": "yarn openapi-generator-cli generate --skip-validate-spec -t templates -i spec/api.yaml -g typescript-fetch --package-name @theniledev/js -o src/client --additional-properties=withoutRuntimeChecks=true,ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,moduleName=Nile,typescriptThreePlus=true,projectName=@theniledev/js",
     "generate-api-docs": "yarn typedoc --out docs/api --plugin typedoc-plugin-markdown --theme markdown --disableSources --excludeProtected --excludePrivate --excludeNotDocumented --hideBreadcrumbs true --hideInPageTOC true ./src/index.ts",
     "generate-event-docs": "yarn typedoc --out docs/event --plugin typedoc-plugin-markdown --theme markdown --disableSources --excludeProtected --excludePrivate --excludeNotDocumented --hideBreadcrumbs true --hideInPageTOC true ./src/EventsApi.ts",
     "generate-nile-docs": "yarn typedoc --out docs/nile --plugin typedoc-plugin-markdown --theme markdown --disableSources --excludeProtected --excludePrivate --excludeNotDocumented --hideBreadcrumbs true --hideInPageTOC true ./src/Nile.ts",
@@ -68,6 +68,7 @@
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",
     "es6-promise": "^4.2.8",
+    "js-yaml": "^4.1.0",
     "node-fetch": "^3.2.10",
     "sade": "^1.8.1"
   }

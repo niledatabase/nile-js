@@ -28,7 +28,7 @@ export default function AggregateLineChart(
       .map((bucket) => {
         return {
           y: Number(bucket[aggregationType]),
-          x: bucket.timestamp?.toISOString() as string,
+          x: new Date(String(bucket.timestamp)).toISOString(),
         };
       })
       .filter(Boolean);
