@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.1](https://github.com/TheNileDev/nile-js/compare/v0.30.0...v0.30.1) (2022-11-04)
+
+**Note:** Version bump only for package @theniledev/react
+
 # [0.30.0](https://github.com/TheNileDev/nile-js/compare/v0.29.0...v0.30.0) (2022-11-04)
 
 ### Features
