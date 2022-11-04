@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import Nile from '..';
-import { LoginInfo } from '../client/src/models/LoginInfo';
+import { LoginInfo } from '../client/src/models';
 
 const userPayload = {
   id: 4,
@@ -68,6 +68,7 @@ describe('index', () => {
             'listEntities',
             'listInstances',
             'listInstancesInWorkspace',
+            'patchInstance',
             'updateEntity',
             'updateInstance',
           ]);
@@ -85,6 +86,7 @@ describe('index', () => {
         if (k === 'users') {
           expect(props).toEqual([
             'constructor',
+            'createDeveloperOwnedUser',
             'createUser',
             'deleteUser',
             'getUser',
