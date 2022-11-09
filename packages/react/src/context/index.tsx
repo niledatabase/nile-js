@@ -4,7 +4,6 @@ import Nile, { NileApi } from '@theniledev/js';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
-import defaultTheme from './themeJoiner';
 import { NileContext, NileProviderProps } from './types';
 
 const queryClient = new QueryClient();
@@ -23,9 +22,7 @@ export const BaseQueryProvider = ({
   children: JSX.Element;
 }): JSX.Element => {
   return (
-    <QueryClientProvider client={queryClient} contextSharing={true}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 };
 
@@ -44,7 +41,7 @@ export const NileProvider = (props: NileProviderProps) => {
 
   return (
     <QueryProvider>
-      <CssVarsProvider theme={theme ?? defaultTheme}>
+      <CssVarsProvider theme={theme}>
         <Provider value={values}>{children}</Provider>
       </CssVarsProvider>
     </QueryProvider>
