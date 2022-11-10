@@ -1,10 +1,9 @@
 import React from 'react';
-import Stack from '@mui/joy/Stack';
-import CircularProgress from '@mui/joy/CircularProgress';
+import { Stack } from '@mui/joy';
 import { DataGrid, GridColDef, DataGridProps } from '@mui/x-data-grid';
 import { Entity, Instance, Organization } from '@theniledev/js';
 
-import { TableWrapper } from '../../lib/table';
+import { TableWrapper, TableSkeleton } from '../../lib/table';
 import { flattenSchema, flatten } from '../../lib/utils/schema';
 
 import { InstanceListProps } from './types';
@@ -149,55 +148,42 @@ const InstanceList = React.memo(function InstanceList(props: Props) {
     [handleRowClick]
   );
 
-  if (isFetching) {
-    return (
-      <Stack
-        sx={{
-          width: '100%',
-          alignItems: 'center',
-          justifyConent: 'center',
-          height: '100%',
-        }}
-      >
-        <CircularProgress />
-      </Stack>
-    );
-  }
-
-  if (flatInstances.length === 0) {
-    return <>{renderEmptyState()}</>;
-  }
-
   return (
-    <Stack spacing={2}>
-      <Stack
-        spacing={1}
-        direction="row"
-        sx={{
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          paddingTop: actionButtons ? 1 : 0,
-        }}
-      >
-        {actionButtons?.map((button, idx) => {
-          return <React.Fragment key={idx}>{button}</React.Fragment>;
-        })}
-      </Stack>
-      {showExpandedView && expandedView && instances ? (
-        expandedView({ instances })
+    <TableSkeleton isFetching={isFetching} numberOfRows={flatInstances.length}>
+      {flatInstances.length === 0 ? (
+        renderEmptyState()
       ) : (
-        <TableWrapper itemCount={flatInstances.length + 1}>
-          <DataGrid
-            sx={styleOverrides}
-            rows={flatInstances}
-            onRowClick={handleRowClick}
-            columns={headerRow}
-            hideFooter={true}
-            {...dataGridProps}
-          />
-        </TableWrapper>
+        <Stack spacing={2}>
+          <Stack
+            spacing={1}
+            direction="row"
+            sx={{
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              paddingTop: actionButtons ? 1 : 0,
+            }}
+          >
+            {actionButtons?.map((button, idx) => {
+              return <React.Fragment key={idx}>{button}</React.Fragment>;
+            })}
+          </Stack>
+          {showExpandedView && expandedView && instances ? (
+            expandedView({ instances })
+          ) : (
+            <TableWrapper itemCount={flatInstances.length + 1}>
+              <DataGrid
+                sx={styleOverrides}
+                rows={flatInstances}
+                onRowClick={handleRowClick}
+                columns={headerRow}
+                hideFooter={true}
+                {...dataGridProps}
+              />
+            </TableWrapper>
+          )}
+        </Stack>
       )}
-    </Stack>
+    </TableSkeleton>
   );
 });
 export default InstanceList;
