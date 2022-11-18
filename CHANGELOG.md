@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.31.0](https://github.com/TheNileDev/nile-js/compare/v0.30.2...v0.31.0) (2022-11-18)
+
+### Features
+
+- **react:** add moving time windows ([0b76e7a](https://github.com/TheNileDev/nile-js/commit/0b76e7ad8d0bf238a15184a7588278f9ff6d270d))
+
 ## [0.30.2](https://github.com/TheNileDev/nile-js/compare/v0.30.1...v0.30.2) (2022-11-08)
 
 **Note:** Version bump only for package @theniledev/packages
