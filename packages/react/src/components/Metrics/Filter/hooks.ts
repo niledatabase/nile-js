@@ -1,11 +1,21 @@
 import React from 'react';
-import { FilterMetricsRequest, Metric } from '@theniledev/js';
+import {
+  Filter,
+  FilterMetricsRequest,
+  Measurement,
+  Metric,
+} from '@theniledev/js';
 import { useQuery } from '@tanstack/react-query';
+import { addMilliseconds } from 'date-fns';
 
+import { useMetricsTime } from '../context';
 import { useNile } from '../../../context';
 import Queries from '../../../lib/queries';
 import { useInterval } from '../../../lib/hooks/useInterval';
 import { UseMetricsProps, UseMetricsReturn } from '../types';
+import { setMinRefresh } from '../utils';
+
+type LabelAndData = { x: Date; y: number }[];
 
 /**
  * @example
@@ -32,7 +42,7 @@ import { UseMetricsProps, UseMetricsReturn } from '../types';
 export const useFilter = (props: UseMetricsProps): UseMetricsReturn => {
   const nile = useNile();
 
-  const updateInterval = props?.updateInterval;
+  const updateInterval = setMinRefresh(props?.updateInterval as number);
   const { filter } = props;
 
   const payload = React.useMemo<FilterMetricsRequest>(() => {
@@ -72,4 +82,35 @@ export const useFilter = (props: UseMetricsProps): UseMetricsReturn => {
   }, updateInterval);
 
   return { isLoading, metrics: flatMetrics };
+};
+
+export const useMinMax = (filter: Filter) => {
+  const { startTime, endTime } = useMetricsTime();
+  return React.useMemo(() => {
+    const min = startTime;
+    const max = endTime;
+
+    if (filter?.duration) {
+      return {
+        min,
+        max: addMilliseconds(filter?.startTime as Date, filter?.duration),
+      };
+    }
+    return {
+      min,
+      max,
+    };
+  }, [endTime, filter?.duration, filter?.startTime, startTime]);
+};
+
+export const useFormatData = (metrics: void | Measurement[]) => {
+  return React.useMemo<LabelAndData>(() => {
+    if (!metrics) {
+      return [];
+    }
+
+    return metrics.map((metric) => {
+      return { y: metric.value, x: metric.timestamp };
+    });
+  }, [metrics]);
 };

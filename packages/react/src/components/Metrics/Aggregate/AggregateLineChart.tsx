@@ -1,46 +1,26 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { format } from 'date-fns';
 
 import {
   AggregateMetricsRequest,
   MetricsLineChartComponentProps,
+  UseAggregationProps,
 } from '../types';
 
-import { useAggregation } from './hooks';
+import { useAggregation, useFormatData, useMinMax } from './hooks';
 
 export default function AggregateLineChart(
   props: {
     aggregation: AggregateMetricsRequest;
   } & MetricsLineChartComponentProps
 ) {
-  type LabelAndData = {
-    labels: string[];
-    data: number[];
-  };
-  const { chartOptions, timeFormat = 'HH:mm:ss', dataset } = props;
-
+  const { chartOptions, dataset } = props;
   const aggregationType = props.aggregation.aggregationType;
-  const { isLoading, buckets } = useAggregation(props);
-
-  const { labels, data } = React.useMemo<LabelAndData>(() => {
-    if (!buckets) {
-      return { labels: [], data: [] };
-    }
-
-    return buckets.reduce(
-      (accum: LabelAndData, bucket) => {
-        if (bucket.timestamp && bucket[aggregationType]) {
-          const label: string = format(new Date(bucket.timestamp), timeFormat);
-          accum.labels.push(label);
-          accum.data.push(Number(bucket[aggregationType]));
-        }
-        return accum;
-      },
-      { labels: [], data: [] }
-    );
-  }, [aggregationType, buckets, timeFormat]);
-
+  const { isLoading, buckets } = useAggregation(
+    props as unknown as UseAggregationProps
+  );
+  const data = useFormatData(buckets, aggregationType);
+  const minMax = useMinMax();
   if (isLoading) {
     return null;
   }
@@ -48,6 +28,13 @@ export default function AggregateLineChart(
     <Line
       options={{
         ...chartOptions,
+        scales: {
+          x: {
+            ...minMax,
+            type: 'time',
+            ...chartOptions?.scales?.x,
+          },
+        },
         plugins: {
           legend: {
             display: false,
@@ -55,10 +42,8 @@ export default function AggregateLineChart(
         },
       }}
       data={{
-        labels,
         datasets: [
           {
-            label: props.aggregation.metricName,
             data,
             backgroundColor: 'rgb(111 226 255)',
             borderColor: 'rgb(77, 158, 178)',

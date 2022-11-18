@@ -7,7 +7,7 @@ export interface NileContext {
 }
 
 export interface NileProviderProps {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
   basePath: string;
   workspace?: string;
   theme?: Theme;

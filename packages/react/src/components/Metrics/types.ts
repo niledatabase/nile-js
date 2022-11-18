@@ -6,8 +6,12 @@ import {
 } from '@theniledev/js';
 import { ChartDataset, ChartOptions } from 'chart.js';
 
+export enum UpdateInterval {
+  ThirtySeconds = 30000,
+  FiveMinutes = 300000,
+}
 export type HookConfig = {
-  updateInterval?: number;
+  updateInterval?: UpdateInterval;
   queryKey?: string;
 };
 
@@ -33,7 +37,10 @@ export enum AggregationType {
   P95 = 'percentile95',
 }
 
-export type AggregateMetricsRequest = NileAggregateMetricsRequest & {
+export type AggregateMetricsRequest = Omit<
+  NileAggregateMetricsRequest['aggregationRequest'],
+  'startTime'
+> & {
   aggregationType: AggregationType;
 };
 

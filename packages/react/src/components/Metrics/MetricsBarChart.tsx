@@ -34,7 +34,7 @@ ChartJS.register(
  *
  * @example
  * ```typescript
- * import { MetricsLineChart, NileProvider } from '@theniledev/react';
+ * import { MetricsBarChart, NileProvider } from '@theniledev/react';
  * function MyChart() {
  *   const filter = {
  *     entityType: 'clusters',
@@ -43,7 +43,7 @@ ChartJS.register(
  *
  *   return (
  *     <NileProvider baseUrl="https://prod.thenile.dev" workspace="clustify">
- *       <MetricsLineChart filter={filter} />
+ *       <MetricsBarChart filter={filter} />
  *     </NileProvider>
  *   );
  * }
@@ -51,7 +51,7 @@ ChartJS.register(
  * @param props configuration for the metrics request and chart.js line
  * @returns a chart.js line
  */
-export default function MetricsLineChart(
+export default function MetricsBarChart(
   props: {
     filter?: Filter;
     aggregation?: AggregateMetricsRequest;
