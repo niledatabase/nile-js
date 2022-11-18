@@ -5,34 +5,24 @@ import {
   AggregateMetricsRequest,
   AggregationType,
   MetricsBarChartComponentProps,
+  UseAggregationProps,
 } from '../types';
 
-import { useAggregation } from './hooks';
+import { useAggregation, useFormatData, useMinMax } from './hooks';
 
-type LabelAndData = { x: string; y: number }[];
-export default function AggregateLineChart(
+export default function AggregateBarChart(
   props: {
     aggregation: AggregateMetricsRequest;
   } & MetricsBarChartComponentProps
 ) {
   const { chartOptions, dataset } = props;
-
   const aggregationType: AggregationType = props.aggregation.aggregationType;
-  const { isLoading, buckets } = useAggregation(props);
-
-  const data = React.useMemo((): LabelAndData => {
-    if (!buckets) {
-      return [];
-    }
-    return buckets
-      .map((bucket) => {
-        return {
-          y: Number(bucket[aggregationType]),
-          x: new Date(String(bucket.timestamp)).toISOString(),
-        };
-      })
-      .filter(Boolean);
-  }, [aggregationType, buckets]);
+  const { isLoading, buckets } = useAggregation(
+    // removed `startTime`, since it is possible to come from `useMetricsTime()`
+    props as unknown as UseAggregationProps
+  );
+  const data = useFormatData(buckets, aggregationType);
+  const minMax = useMinMax();
 
   if (isLoading) {
     return null;
@@ -42,6 +32,17 @@ export default function AggregateLineChart(
     <Bar
       options={{
         ...chartOptions,
+        scales: {
+          x: {
+            ...minMax,
+            type: 'time',
+            ...chartOptions?.scales?.x,
+          },
+          y: {
+            beginAtZero: true,
+            ...chartOptions?.scales?.y,
+          },
+        },
         plugins: {
           legend: {
             display: false,
@@ -51,7 +52,6 @@ export default function AggregateLineChart(
       data={{
         datasets: [
           {
-            label: props.aggregation.metricName,
             data,
             backgroundColor: 'rgb(111 226 255)',
             borderColor: 'rgb(77, 158, 178)',

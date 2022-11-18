@@ -15,9 +15,11 @@ export {
   useFilter,
   useAggregation,
   MetricsBarChart,
+  StartTime,
 } from './components/Metrics';
 export {
   AggregateMetricsRequest,
   AggregationType,
+  UpdateInterval,
 } from './components/Metrics/types';
 export { default as OrganizationForm } from './components/OrganizationForm';

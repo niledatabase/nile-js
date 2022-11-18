@@ -1,48 +1,34 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { format } from 'date-fns';
 import { FilterMetricsRequest } from '@theniledev/js';
 
 import { MetricsLineChartComponentProps } from '../types';
 
-import { useFilter } from './hooks';
-
-type LabelAndData = {
-  labels: string[];
-  data: number[];
-};
+import { useFilter, useFormatData, useMinMax } from './hooks';
 
 export default function FilterLineChart(
   props: FilterMetricsRequest & MetricsLineChartComponentProps
 ) {
-  const { filter, chartOptions, timeFormat = 'HH:mm:ss', dataset } = props;
-
+  const { filter, chartOptions, dataset } = props;
   const { isLoading, metrics } = useFilter(props);
-  const metricName = filter.metricName;
-
-  const { labels, data } = React.useMemo<LabelAndData>(() => {
-    if (!metrics) {
-      return { labels: [], data: [] };
-    }
-
-    return metrics.reduce(
-      (accum: LabelAndData, metric) => {
-        const label: string = format(new Date(metric.timestamp), timeFormat);
-        accum.labels.push(label);
-        accum.data.push(metric.value);
-        return accum;
-      },
-      { labels: [], data: [] }
-    );
-  }, [metrics, timeFormat]);
+  const minMax = useMinMax(filter);
+  const data = useFormatData(metrics);
 
   if (isLoading) {
     return null;
   }
+
   return (
     <Line
       options={{
         ...chartOptions,
+        scales: {
+          x: {
+            ...minMax,
+            type: 'time',
+            ...chartOptions?.scales?.x,
+          },
+        },
         plugins: {
           legend: {
             display: false,
@@ -50,10 +36,8 @@ export default function FilterLineChart(
         },
       }}
       data={{
-        labels,
         datasets: [
           {
-            label: metricName,
             data,
             borderColor: 'rgb(111 226 255)',
             backgroundColor: 'rgb(77, 158, 178)',
