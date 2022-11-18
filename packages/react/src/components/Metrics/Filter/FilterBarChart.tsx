@@ -14,7 +14,7 @@ import {
   BarElement,
 } from 'chart.js';
 
-import { useFilter } from './hooks';
+import { useFilter, useFormatData, useMinMax } from './hooks';
 
 Chart.register(
   CategoryScale,
@@ -34,24 +34,15 @@ export type MetricsComponentProps = {
   chartOptions?: ChartOptions<any>;
   queryKey?: string;
 };
-type LabelAndData = { x: string; y: number }[];
 
 export default function FilterBarChart(
   props: FilterMetricsRequest & MetricsComponentProps
 ) {
   const { filter, chartOptions, dataset } = props;
-
   const { isLoading, metrics } = useFilter(props);
   const metricName = filter.metricName;
-
-  const data = React.useMemo<LabelAndData>((): LabelAndData => {
-    if (!metrics) {
-      return [];
-    }
-    return metrics.map((metric) => {
-      return { y: metric.value, x: new Date(metric.timestamp).toISOString() };
-    });
-  }, [metrics]);
+  const data = useFormatData(metrics);
+  const minMax = useMinMax(filter);
 
   const sets = React.useMemo(() => {
     return data.map((datum) => {
@@ -76,6 +67,18 @@ export default function FilterBarChart(
     <Bar
       options={{
         ...chartOptions,
+        scales: {
+          x: {
+            ...minMax,
+            type: 'time',
+            stacked: true,
+            ...chartOptions?.scales?.x,
+          },
+          y: {
+            beginAtZero: true,
+            ...chartOptions?.scales?.y,
+          },
+        },
         plugins: {
           legend: {
             display: false,

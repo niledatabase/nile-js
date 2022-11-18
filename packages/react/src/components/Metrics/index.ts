@@ -2,3 +2,4 @@ export { useFilter } from './Filter/hooks';
 export { useAggregation } from './Aggregate/hooks';
 export { default as MetricsLineChart } from './MetricsLineChart';
 export { default as MetricsBarChart } from './MetricsBarChart';
+export { StartTime } from './Controls';

@@ -2,12 +2,11 @@ import React from 'react';
 import { Story } from '@storybook/react';
 import { AggregationRequestBucketSizeEnum } from '@theniledev/js';
 
-import { MetricsBarChart } from '../../src/components/Metrics';
+import { MetricsBarChart, StartTime } from '../../src/components/Metrics';
 import { NileProvider } from '../../src/context';
 import { AggregationType } from '../../src/components/Metrics/types';
 
-import filter from './filter.json';
-import aggregate from './aggregate.json';
+import { makeFilter, makeAggregate } from './metricsMaker';
 
 const meta = {
   component: MetricsBarChart,
@@ -18,13 +17,16 @@ const meta = {
 
 export default meta;
 
-const LineChart: Story<null> = () => {
+const filter = makeFilter();
+const aggregate = makeAggregate();
+const BarChart: Story<null> = () => {
   const filter = {
     entityType: 'clusters',
     metricName: 'my.metric',
   };
   return (
     <NileProvider basePath="http://localhost:8080" workspace="workspace">
+      <StartTime />
       <MetricsBarChart filter={filter} />
     </NileProvider>
   );
@@ -32,9 +34,9 @@ const LineChart: Story<null> = () => {
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
 // https://storybook.js.org/docs/react/workflows/unit-testing
-export const FilterLineChart = LineChart.bind({});
+export const FilterBarChart = BarChart.bind({});
 
-FilterLineChart.parameters = {
+FilterBarChart.parameters = {
   mockData: [
     {
       url: 'http://localhost:8080/workspaces/workspace/metrics/filter',
@@ -49,7 +51,6 @@ const AggBarChart: Story<null> = () => {
   const aggregation = {
     aggregationType: AggregationType.Sum,
     aggregationRequest: {
-      startTime: new Date('2022-11-02T13:50:00Z'),
       organizationId: 'myOrganization',
       bucketSize: AggregationRequestBucketSizeEnum._10m,
     },
@@ -57,6 +58,7 @@ const AggBarChart: Story<null> = () => {
   };
   return (
     <NileProvider basePath="http://localhost:8080" workspace="workspace">
+      <StartTime />
       <MetricsBarChart aggregation={aggregation} />
     </NileProvider>
   );
@@ -82,6 +84,7 @@ const StackedBarChart: Story<null> = () => {
   };
   return (
     <NileProvider basePath="http://localhost:8080" workspace="workspace">
+      <StartTime />
       <MetricsBarChart
         filter={filter}
         chartOptions={{
@@ -92,11 +95,9 @@ const StackedBarChart: Story<null> = () => {
             x: {
               // The axis for this scale is determined from the first letter of the id as `'x'`
               // It is recommended to specify `position` and / or `axis` explicitly.
-              type: 'time',
               stacked: true,
             },
             y: {
-              beginAtZero: true,
               stacked: true,
               ticks: {
                 callback: function (value: number) {

@@ -2,21 +2,20 @@ import React from 'react';
 import { Story } from '@storybook/react';
 import { AggregationRequestBucketSizeEnum } from '@theniledev/js';
 
-import { MetricsLineChart } from '../../src/components/Metrics';
+import { MetricsLineChart, StartTime } from '../../src/components/Metrics';
 import { NileProvider } from '../../src/context';
 import { AggregationType } from '../../src/components/Metrics/types';
 
-import filter from './filter.json';
-import aggregate from './aggregate.json';
+import { makeAggregate, makeFilter } from './metricsMaker';
 
 const meta = {
   component: MetricsLineChart,
-  parameters: {
-    controls: { expanded: false },
-  },
 };
 
 export default meta;
+
+const filter = makeFilter();
+const aggregate = makeAggregate();
 
 const LineChart: Story<null> = () => {
   const filter = {
@@ -25,6 +24,7 @@ const LineChart: Story<null> = () => {
   };
   return (
     <NileProvider basePath="http://localhost:8080" workspace="workspace">
+      <StartTime />
       <MetricsLineChart filter={filter} />
     </NileProvider>
   );
@@ -49,7 +49,6 @@ const AggLineChart: Story<null> = () => {
   const aggregation = {
     aggregationType: AggregationType.Sum,
     aggregationRequest: {
-      startTime: new Date('2022-11-02T13:50:00Z'),
       organizationId: 'myOrganization',
       bucketSize: AggregationRequestBucketSizeEnum._10m,
     },
@@ -57,6 +56,7 @@ const AggLineChart: Story<null> = () => {
   };
   return (
     <NileProvider basePath="http://localhost:8080" workspace="workspace">
+      <StartTime />
       <MetricsLineChart
         aggregation={aggregation}
         dataset={{ pointRadius: 10 }}
