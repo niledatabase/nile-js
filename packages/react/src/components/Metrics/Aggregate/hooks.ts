@@ -10,8 +10,7 @@ import {
 import { useInterval } from '../../../lib/hooks/useInterval';
 import { useNile } from '../../../context';
 import Queries from '../../../lib/queries';
-import { useMetricsTime } from '../context';
-import { setMinRefresh } from '../utils';
+import { useMetricsTime, useMetricsUpdateInterval } from '../context';
 
 /**
  * @example
@@ -42,7 +41,7 @@ export const useAggregation = (
 
   const { startTime } = useMetricsTime();
   const { queryKey, aggregation } = props;
-  const updateInterval = setMinRefresh(props?.updateInterval as number);
+  const updateInterval = useMetricsUpdateInterval();
   const qKey = queryKey || `aggregation:${aggregation.metricName}`;
 
   const {

@@ -8,7 +8,7 @@ Metrics come in two flavors, timeseries charts and hooks to handles requesting a
 
 https://storybook.thenile.dev/
 
-## Charts
+## Components
 
 ### MetricsLineChart
 
@@ -19,7 +19,7 @@ The chart renders a single line. Provide either a `filter` object or an `aggrega
 #### Usage
 
 ```typescript
-import { MetricsLineChart, NileProvider, StartTime } from '@theniledev/react';
+import { MetricsLineChart, NileProvider } from '@theniledev/react';
 
 const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
 const WORKSPACE = 'myWorkspace'; // name of the workspace to use
@@ -42,7 +42,6 @@ function App() {
     <NileProvider basePath={API_URL} workspace={WORKSPACE}>
       <h1>🤩Metrics the great🤩</h1>
       <h2>Requests</h2>
-      <StartTime />
       <MetricsLineChart filter={filter} />
       <MetricsLineChart aggregation={aggregation} />
     </NileProvider>
@@ -57,7 +56,7 @@ A timeseries chart renders a bar graph. Useful for viewing build-in metrics. Pro
 #### Usage
 
 ```typescript
-import { StartTime, MetricsBarChart, NileProvider } from '@theniledev/react';
+import { MetricsBarChart, NileProvider } from '@theniledev/react';
 
 const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
 const WORKSPACE = 'myWorkspace'; // name of the workspace to use
@@ -80,7 +79,6 @@ function App() {
     <NileProvider basePath={API_URL} workspace={WORKSPACE}>
       <h1>🤩Metrics the great🤩</h1>
       <h2>Requests</h2>
-      <StartTime />
       <MetricsBarChart filter={filter} />
       <MetricsBarChart aggregation={aggregation} />
     </NileProvider>
@@ -96,13 +94,17 @@ function App() {
 
 This dataset will vary based on the type of chart.
 
-**updateInterval** number
-
-- time in milliseconds to update the graph. The value can not be lower than 30s. An enum is provided in TypeScript for 30s and 5m.
-
 **chartOptions**
 
 - A configuration object to render the graph. Maps to [chartjs chart configuration](https://www.chartjs.org/docs/latest/configuration/#configuration-object-structure)
+
+#### StartTime
+
+If you want to provide users with a time series where they can select a start time to browse metrics, use the `<StartTime />` component. The value set will apply to all charts.
+
+#### IntervalSelect
+
+Auto-refreshing is made possible via an `IntervalSelect` dropdown. By default, refreshing is not enabled. To enable it, include the `<IntervalSelect />` component, which will allow users to set 30s, 1m or 5m refreshing. The default is 1 minute. Just like `<StartTime />` this value is set for all charts.
 
 ## Hooks
 
@@ -116,7 +118,6 @@ Assuming a metric is being produced of uptime 1 being up and 0 being down...
 function MyMetricComponent() {
 
   const { metrics } = useFilter({
-    updateInterval: 30000, // minimum value is 30s
     filter: {
       startTime: new Date(), // start reading metrics from right now
       metricName: 'uptime',

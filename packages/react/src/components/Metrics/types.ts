@@ -8,6 +8,7 @@ import { ChartDataset, ChartOptions } from 'chart.js';
 
 export enum UpdateInterval {
   ThirtySeconds = 30000,
+  OneMinute = 60000,
   FiveMinutes = 300000,
 }
 export type HookConfig = {
