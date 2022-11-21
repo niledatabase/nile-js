@@ -16,6 +16,8 @@ export {
   useAggregation,
   MetricsBarChart,
   StartTime,
+  IntervalSelect,
+  MetricsContext,
 } from './components/Metrics';
 export {
   AggregateMetricsRequest,

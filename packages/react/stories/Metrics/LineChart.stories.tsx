@@ -1,8 +1,14 @@
 import React from 'react';
 import { Story } from '@storybook/react';
 import { AggregationRequestBucketSizeEnum } from '@theniledev/js';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 
-import { MetricsLineChart, StartTime } from '../../src/components/Metrics';
+import {
+  IntervalSelect,
+  MetricsLineChart,
+  StartTime,
+} from '../../src/components/Metrics';
 import { NileProvider } from '../../src/context';
 import { AggregationType } from '../../src/components/Metrics/types';
 
@@ -24,7 +30,13 @@ const LineChart: Story<null> = () => {
   };
   return (
     <NileProvider basePath="http://localhost:8080" workspace="workspace">
-      <StartTime />
+      <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+        <StartTime />
+        <Stack direction="row" sx={{ alignItems: 'center' }} spacing={2}>
+          <Typography level="body3">Refresh</Typography>
+          <IntervalSelect />
+        </Stack>
+      </Stack>
       <MetricsLineChart filter={filter} />
     </NileProvider>
   );
@@ -32,9 +44,9 @@ const LineChart: Story<null> = () => {
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
 // https://storybook.js.org/docs/react/workflows/unit-testing
-export const FilterLineChart = LineChart.bind({});
+export const FilterLineChartWithRefreshControl = LineChart.bind({});
 
-FilterLineChart.parameters = {
+FilterLineChartWithRefreshControl.parameters = {
   mockData: [
     {
       url: 'http://localhost:8080/workspaces/workspace/metrics/filter',
