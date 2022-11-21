@@ -3,13 +3,14 @@ import { Line } from 'react-chartjs-2';
 import { FilterMetricsRequest } from '@theniledev/js';
 
 import { MetricsLineChartComponentProps } from '../types';
+import DefaultEmptyState from '../DefaultEmptyState';
 
 import { useFilter, useFormatData, useMinMax } from './hooks';
 
 export default function FilterLineChart(
   props: FilterMetricsRequest & MetricsLineChartComponentProps
 ) {
-  const { filter, chartOptions, dataset } = props;
+  const { emptyState, filter, chartOptions, dataset } = props;
   const { isLoading, metrics } = useFilter(props);
   const minMax = useMinMax(filter);
   const data = useFormatData(metrics);
@@ -18,6 +19,12 @@ export default function FilterLineChart(
     return null;
   }
 
+  if (metrics && metrics?.length === 0) {
+    if (emptyState) {
+      return <>{emptyState}</>;
+    }
+    return <DefaultEmptyState />;
+  }
   return (
     <Line
       options={{

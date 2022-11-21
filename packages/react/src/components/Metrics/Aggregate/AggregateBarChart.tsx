@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
+import DefaultEmptyState from '../DefaultEmptyState';
 import {
   AggregateMetricsRequest,
   AggregationType,
@@ -15,7 +16,7 @@ export default function AggregateBarChart(
     aggregation: AggregateMetricsRequest;
   } & MetricsBarChartComponentProps
 ) {
-  const { chartOptions, dataset } = props;
+  const { emptyState, chartOptions, dataset } = props;
   const aggregationType: AggregationType = props.aggregation.aggregationType;
   const { isLoading, buckets } = useAggregation(
     // removed `startTime`, since it is possible to come from `useMetricsTime()`
@@ -26,6 +27,13 @@ export default function AggregateBarChart(
 
   if (isLoading) {
     return null;
+  }
+
+  if (buckets && buckets?.length === 0) {
+    if (emptyState) {
+      return <>{emptyState}</>;
+    }
+    return <DefaultEmptyState />;
   }
 
   return (
