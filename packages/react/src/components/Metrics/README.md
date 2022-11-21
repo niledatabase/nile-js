@@ -98,6 +98,10 @@ This dataset will vary based on the type of chart.
 
 - A configuration object to render the graph. Maps to [chartjs chart configuration](https://www.chartjs.org/docs/latest/configuration/#configuration-object-structure)
 
+**emptyState**
+
+- Overrides the default JSX.Element rendered when the chart is empty.
+
 #### StartTime
 
 If you want to provide users with a time series where they can select a start time to browse metrics, use the `<StartTime />` component. The value set will apply to all charts.

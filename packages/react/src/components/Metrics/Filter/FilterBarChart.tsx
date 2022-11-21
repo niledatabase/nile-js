@@ -9,10 +9,11 @@ import {
   Tooltip,
   Legend,
   TimeScale,
-  ChartDataset,
-  ChartOptions,
   BarElement,
 } from 'chart.js';
+
+import DefaultEmptyState from '../DefaultEmptyState';
+import { MetricsBarChartComponentProps } from '../types';
 
 import { useFilter, useFormatData, useMinMax } from './hooks';
 
@@ -26,19 +27,10 @@ Chart.register(
   TimeScale
 );
 
-export type MetricsComponentProps = {
-  timeFormat?: string;
-  dataset?: Omit<ChartDataset<'bar', number[]>, 'data'>;
-  updateInterval?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  chartOptions?: ChartOptions<any>;
-  queryKey?: string;
-};
-
 export default function FilterBarChart(
-  props: FilterMetricsRequest & MetricsComponentProps
+  props: FilterMetricsRequest & MetricsBarChartComponentProps
 ) {
-  const { filter, chartOptions, dataset } = props;
+  const { emptyState, filter, chartOptions, dataset } = props;
   const { isLoading, metrics } = useFilter(props);
   const metricName = filter.metricName;
   const data = useFormatData(metrics);
@@ -61,6 +53,13 @@ export default function FilterBarChart(
 
   if (isLoading) {
     return null;
+  }
+
+  if (metrics && metrics?.length === 0) {
+    if (emptyState) {
+      return <>{emptyState}</>;
+    }
+    return <DefaultEmptyState />;
   }
 
   return (

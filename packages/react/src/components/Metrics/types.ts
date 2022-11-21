@@ -17,7 +17,7 @@ export type HookConfig = {
 };
 
 type MetricsChartCommonProps = HookConfig & {
-  timeFormat?: string;
+  emptyState?: JSX.Element;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   chartOptions?: ChartOptions<any>;
 };
