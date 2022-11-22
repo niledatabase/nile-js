@@ -1,4 +1,5 @@
 export { default as LoginForm } from './components/LoginForm';
+export { default as GoogleLoginButton } from './components/LoginForm/GoogleLoginButton';
 export { default as SignUpForm } from './components/SignUpForm';
 export { default as InstanceList } from './components/InstanceList';
 export { default as EntityForm } from './components/EntityForm';

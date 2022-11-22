@@ -56,6 +56,7 @@ const GetWorkspaceToken = (id: ParamType) => [
   `${Queries.Workspaces}/access_tokens/${id}`,
 ];
 
+const GetWorkspaceSettings = [`${Queries.Workspaces}/settings`];
 const queryKeys = {
   ListWorkspaces,
   ListOrganizations,
@@ -78,6 +79,7 @@ const queryKeys = {
   AggregateMetrics,
   ListWorkspaceTokens,
   GetWorkspaceToken,
+  GetWorkspaceSettings,
 };
 
 export default queryKeys;

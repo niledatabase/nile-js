@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 var path = require('path');
 
+const AppSourceDir = path.join(__dirname, '..', 'src');
+
 module.exports = {
   stories: ['../stories/**/*.stories.@(ts|tsx|js|jsx)'],
   addons: [
@@ -45,6 +47,18 @@ module.exports = {
         },
       ],
       include: path.resolve(__dirname, '../stories'),
+    });
+
+    const svgRule = config.module.rules.find((rule) =>
+      'test.svg'.match(rule.test)
+    );
+    svgRule.exclude = [AppSourceDir];
+
+    // Merge our rule with existing assetLoader rules
+    config.module.rules.unshift({
+      test: /\.svg$/,
+      include: [AppSourceDir],
+      use: ['@svgr/webpack'],
     });
 
     return config;

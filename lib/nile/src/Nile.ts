@@ -19,6 +19,7 @@ import { AuthToken, DeveloperCredentials } from './model/DeveloperCredentials';
  * The base nile class. Pulls together groups of OpenAPI spec into a single class
  */
 export class NileApi {
+  config?: Configuration;
   users: UsersApi;
   developers: DevelopersApi;
   entities: EntitiesApi;
@@ -28,6 +29,7 @@ export class NileApi {
   access: AccessApi;
   metrics: MetricsApi;
   constructor(configuration?: Configuration) {
+    this.config = configuration;
     this.users = new UsersApi(configuration);
     this.developers = new DevelopersApi(configuration);
     this.entities = new EntitiesApi(configuration);
