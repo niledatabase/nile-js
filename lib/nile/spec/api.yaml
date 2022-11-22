@@ -4,9 +4,9 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1.0-199cea8
+  version: 0.1.0-2c6b35f
 servers:
-  - url: net-lb-prod-6faf2ab-850391211.us-west-2.elb.amazonaws.com
+  - url: localhost:8080
 tags:
   - name: access
     description: >
@@ -1110,6 +1110,34 @@ paths:
       responses:
         '204':
           description: Successful org deletion
+  /workspaces/{workspace}/orgs/{org}/oidc/providers/{providerName}/login:
+    get:
+      tags:
+        - organizations
+      summary: Login to an organization with OIDC
+      description: Initiate the OIDC login flow with a redirect for this org and provider
+      operationId: oidcOrganizationLogin
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: providerName
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - GOOGLE
+      responses:
+        '302':
+          description: Redirect to OIDC provider login page
   /workspaces/{workspace}/orgs/{org}/users/{user}:
     put:
       tags:
@@ -1458,6 +1486,31 @@ paths:
       responses:
         '204':
           description: Successful user deletion
+  /workspaces/{workspace}/oidc/providers/{providerName}/login:
+    get:
+      tags:
+        - workspaces
+      summary: Login to a workspace with OIDC
+      description: >-
+        Initiate the OIDC login flow with a redirect for this workspace and
+        provider
+      operationId: oidcWorkspaceLogin
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: providerName
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - GOOGLE
+      responses:
+        '302':
+          description: Redirect to OIDC provider login page
   /workspaces:
     get:
       tags:
@@ -1519,6 +1572,118 @@ paths:
                 type: string
         '401':
           description: The current user is not authorized to access this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /workspaces/{workspace}/settings:
+    get:
+      tags:
+        - workspaces
+      summary: Retrieve workspace settings
+      description: Retrieve supported OIDC providers and other workspace settings
+      operationId: getWorkspaceSettings
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The workspace settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceSettings'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /workspaces/{workspace}/settings/oidc/providers:
+    put:
+      tags:
+        - workspaces
+      summary: Update settings for OIDC providers
+      description: Enable, disable, and configure how OIDC providers are used
+      operationId: updateOIDCProviders
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/WorkspaceOIDCProviderConfig'
+        required: true
+      responses:
+        '200':
+          description: The updated OIDC providers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkspaceOIDCProviderConfig'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /workspaces/{workspace}/settings/oidc/urls:
+    put:
+      tags:
+        - workspaces
+      summary: Update OIDC redirect URLs
+      description: Modify the landing pages for login, sign-up, logout, and error
+      operationId: updateOIDCRedirects
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceOIDCRedirectUrls'
+        required: true
+      responses:
+        '200':
+          description: The updated redirect URLs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceOIDCRedirectUrls'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Workspace not found
           content:
             application/json:
               schema:
@@ -2514,7 +2679,6 @@ components:
     UpdateUserRequest:
       required:
         - email
-        - password
       type: object
       properties:
         email:
@@ -2560,6 +2724,40 @@ components:
       properties:
         name:
           type: string
+    WorkspaceOIDCConfig:
+      type: object
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceOIDCProviderConfig'
+        urls:
+          $ref: '#/components/schemas/WorkspaceOIDCRedirectUrls'
+    WorkspaceOIDCProviderConfig:
+      type: object
+      properties:
+        provider_name:
+          type: string
+          enum:
+            - GOOGLE
+        enabled:
+          type: boolean
+    WorkspaceOIDCRedirectUrls:
+      type: object
+      properties:
+        auth_failure_url:
+          type: string
+        sign_up_success_url:
+          type: string
+        log_in_success_url:
+          type: string
+        sign_out_url:
+          type: string
+    WorkspaceSettings:
+      type: object
+      properties:
+        oidc:
+          $ref: '#/components/schemas/WorkspaceOIDCConfig'
   parameters:
     workspace:
       name: workspace

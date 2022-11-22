@@ -34,9 +34,13 @@ describe('index', () => {
             'deleteAccessToken',
             'getAccessToken',
             'getWorkspaceOpenApi',
+            'getWorkspaceSettings',
             'listAccessTokens',
             'listWorkspaces',
+            'oidcWorkspaceLogin',
             'updateAccessToken',
+            'updateOIDCProviders',
+            'updateOIDCRedirects',
           ]);
         }
         if (k === 'organizations') {
@@ -50,6 +54,7 @@ describe('index', () => {
             'listInvites',
             'listOrganizations',
             'listUsersInOrg',
+            'oidcOrganizationLogin',
             'removeUserFromOrg',
             'updateOrganization',
             'updateUserInOrg',
