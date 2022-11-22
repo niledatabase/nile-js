@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.32.0](https://github.com/TheNileDev/nile-js/compare/v0.31.0...v0.32.0) (2022-11-22)
+
+### Features
+
+- add empty state to the charts ([b3fe2e1](https://github.com/TheNileDev/nile-js/commit/b3fe2e19c62bafa3f094434a7514fea937aa0282))
+- add IntervalSelect and global refresh ([90842ef](https://github.com/TheNileDev/nile-js/commit/90842ef33b13e923038cc44faad6e031c106fa4a))
+
 # [0.31.0](https://github.com/TheNileDev/nile-js/compare/v0.30.2...v0.31.0) (2022-11-18)
 
 ### Features
