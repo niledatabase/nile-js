@@ -1120,7 +1120,7 @@ paths:
       parameters:
         - name: workspace
           in: path
-          required: true
+          required: false
           schema:
             type: string
         - name: org
@@ -1498,7 +1498,7 @@ paths:
       parameters:
         - name: workspace
           in: path
-          required: true
+          required: false
           schema:
             type: string
         - name: providerName
@@ -1555,7 +1555,7 @@ paths:
       parameters:
         - name: workspace
           in: path
-          required: true
+          required: false
           schema:
             type: string
       responses:
@@ -1586,7 +1586,7 @@ paths:
       parameters:
         - name: workspace
           in: path
-          required: true
+          required: false
           schema:
             type: string
       responses:
@@ -1618,7 +1618,7 @@ paths:
       parameters:
         - name: workspace
           in: path
-          required: true
+          required: false
           schema:
             type: string
       requestBody:
@@ -1660,7 +1660,7 @@ paths:
       parameters:
         - name: workspace
           in: path
-          required: true
+          required: false
           schema:
             type: string
       requestBody:
