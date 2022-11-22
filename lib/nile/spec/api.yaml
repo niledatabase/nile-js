@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1.0-2c6b35f
+  version: 0.1.0-29e6372
 servers:
   - url: localhost:8080
 tags:
@@ -2742,6 +2742,19 @@ components:
             - GOOGLE
         enabled:
           type: boolean
+        integration_mode:
+          type: string
+          description: >-
+            Indicates how the OIDC flow is handled:
+
+            * NILE_MANAGED - Nile manages the OIDC flow end-to-end, including
+            the redirect to the provider
+
+            * CALLBACK - The customer manages OAuth setup but redirects to Nile
+            when a customer authenticates
+          enum:
+            - NILE_MANAGED
+            - CALLBACK
     WorkspaceOIDCRedirectUrls:
       type: object
       properties:
