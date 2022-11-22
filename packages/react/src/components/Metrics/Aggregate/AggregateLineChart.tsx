@@ -6,6 +6,7 @@ import {
   MetricsLineChartComponentProps,
   UseAggregationProps,
 } from '../types';
+import DefaultEmptyState from '../DefaultEmptyState';
 
 import { useAggregation, useFormatData, useMinMax } from './hooks';
 
@@ -14,16 +15,25 @@ export default function AggregateLineChart(
     aggregation: AggregateMetricsRequest;
   } & MetricsLineChartComponentProps
 ) {
-  const { chartOptions, dataset } = props;
+  const { chartOptions, dataset, emptyState } = props;
   const aggregationType = props.aggregation.aggregationType;
   const { isLoading, buckets } = useAggregation(
     props as unknown as UseAggregationProps
   );
   const data = useFormatData(buckets, aggregationType);
   const minMax = useMinMax();
+
   if (isLoading) {
     return null;
   }
+
+  if (buckets && buckets?.length === 0) {
+    if (emptyState) {
+      return <>{emptyState}</>;
+    }
+    return <DefaultEmptyState />;
+  }
+
   return (
     <Line
       options={{

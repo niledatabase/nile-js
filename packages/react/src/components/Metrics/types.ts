@@ -8,6 +8,7 @@ import { ChartDataset, ChartOptions } from 'chart.js';
 
 export enum UpdateInterval {
   ThirtySeconds = 30000,
+  OneMinute = 60000,
   FiveMinutes = 300000,
 }
 export type HookConfig = {
@@ -16,7 +17,7 @@ export type HookConfig = {
 };
 
 type MetricsChartCommonProps = HookConfig & {
-  timeFormat?: string;
+  emptyState?: JSX.Element;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   chartOptions?: ChartOptions<any>;
 };

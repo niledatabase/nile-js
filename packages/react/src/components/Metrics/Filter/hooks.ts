@@ -8,12 +8,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { addMilliseconds } from 'date-fns';
 
-import { useMetricsTime } from '../context';
+import { useMetricsTime, useMetricsUpdateInterval } from '../context';
 import { useNile } from '../../../context';
 import Queries from '../../../lib/queries';
 import { useInterval } from '../../../lib/hooks/useInterval';
 import { UseMetricsProps, UseMetricsReturn } from '../types';
-import { setMinRefresh } from '../utils';
 
 type LabelAndData = { x: Date; y: number }[];
 
@@ -40,10 +39,9 @@ type LabelAndData = { x: Date; y: number }[];
  */
 
 export const useFilter = (props: UseMetricsProps): UseMetricsReturn => {
-  const nile = useNile();
-
-  const updateInterval = setMinRefresh(props?.updateInterval as number);
   const { filter } = props;
+  const nile = useNile();
+  const updateInterval = useMetricsUpdateInterval();
 
   const payload = React.useMemo<FilterMetricsRequest>(() => {
     // API does not like this currently

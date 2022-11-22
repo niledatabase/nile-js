@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 
+import { allowedUpdateInterval } from '../../utils/refresh';
 import { useNile } from '../../../context';
 import Queries from '../../queries';
 import { useInterval } from '../useInterval';
@@ -18,6 +20,10 @@ export const useInstances = (
   const nile = useNile();
   const useQueryHook = customUseQuery ?? useQuery;
 
+  const interval = React.useMemo(() => {
+    return allowedUpdateInterval(refreshInterval);
+  }, [refreshInterval]);
+
   const { refetch, data, isFetching } = useQueryHook(
     Queries.ListInstances(orgId, entityType),
     () =>
@@ -27,7 +33,7 @@ export const useInstances = (
       })
   );
 
-  useInterval(refetch, refreshInterval);
+  useInterval(refetch, interval);
 
   return { data, refetch, isFetching };
 };
