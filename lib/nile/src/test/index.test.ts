@@ -8,10 +8,11 @@ const userPayload = {
 };
 describe('index', () => {
   describe('methods', () => {
-    it('has the expected methods', () => {
+    it('has the expected methods/properties', () => {
       const nile = Nile();
       const keys = Object.keys(nile);
       expect(keys).toEqual([
+        'config',
         'users',
         'developers',
         'entities',
@@ -21,6 +22,7 @@ describe('index', () => {
         'access',
         'metrics',
       ]);
+      keys.shift();
       keys.forEach((k) => {
         const props = Object.getOwnPropertyNames(
           // @ts-expect-error testing
