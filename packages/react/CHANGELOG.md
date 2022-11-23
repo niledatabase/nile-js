@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.2](https://github.com/TheNileDev/nile-js/compare/v0.32.1...v0.32.2) (2022-11-23)
+
+### Bug Fixes
+
+- **react:** make basePath optional, set default to prod ([bbf41f8](https://github.com/TheNileDev/nile-js/commit/bbf41f8f550af91352d25d54d8a9db6edc344840))
+
 ## [0.32.1](https://github.com/TheNileDev/nile-js/compare/v0.32.0...v0.32.1) (2022-11-23)
 
 ### Bug Fixes
