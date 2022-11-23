@@ -12,7 +12,11 @@ import { NileContext, NileProviderProps } from './types';
 const queryClient = new QueryClient();
 
 const defaultContext: NileContext = {
-  instance: Nile({ basePath: '', workspace: 'none', credentials: 'include' }),
+  instance: Nile({
+    basePath: 'https://prod.thenile.dev',
+    workspace: 'none',
+    credentials: 'include',
+  }),
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -30,17 +34,23 @@ export const BaseQueryProvider = ({
 };
 
 export const NileProvider = (props: NileProviderProps) => {
-  const { children, theme, QueryProvider = BaseQueryProvider } = props;
+  const {
+    children,
+    theme,
+    workspace,
+    QueryProvider = BaseQueryProvider,
+    basePath = 'https://prod.thenile.dev',
+  } = props;
 
   const values = useMemo<NileContext>(() => {
     return {
       instance: Nile({
-        basePath: props.basePath,
-        workspace: props.workspace,
+        basePath: basePath,
+        workspace: workspace,
         credentials: 'include',
       }),
     };
-  }, [props.basePath, props.workspace]);
+  }, [basePath, workspace]);
 
   return (
     <QueryProvider>
