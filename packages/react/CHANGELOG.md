@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.3](https://github.com/TheNileDev/nile-js/compare/v0.32.2...v0.32.3) (2022-11-23)
+
+### Bug Fixes
+
+- **react:** update AggregateMetricsRequest type ([245c528](https://github.com/TheNileDev/nile-js/commit/245c5288e3f47db1a76a264fb6ddd1874c68f71c))
+
 ## [0.32.2](https://github.com/TheNileDev/nile-js/compare/v0.32.1...v0.32.2) (2022-11-23)
 
 ### Bug Fixes

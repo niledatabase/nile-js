@@ -38,12 +38,18 @@ export enum AggregationType {
   P95 = 'percentile95',
 }
 
-export type AggregateMetricsRequest = Omit<
-  NileAggregateMetricsRequest['aggregationRequest'],
-  'startTime'
-> & {
-  aggregationType: AggregationType;
-};
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+type ChangeFields<T, R> = Omit<T, keyof R> & R;
+
+export type AggregateMetricsRequest = ChangeFields<
+  NileAggregateMetricsRequest,
+  {
+    aggregationRequest: Optional<
+      NileAggregateMetricsRequest['aggregationRequest'],
+      'startTime'
+    >;
+  }
+> & { aggregationType: AggregationType };
 
 export enum DataKeys {
   timestamp = 'timestamp',
