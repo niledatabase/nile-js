@@ -44,14 +44,3 @@ const SSO: Story<null> = () => (
 );
 
 export const SignInWithGoogle = SSO.bind({});
-
-SignInWithGoogle.parameters = {
-  mockData: [
-    {
-      url: 'http://localhost:8080/workspaces/workspace/oidc/providers/GOOGLE/login',
-      method: 'POST',
-      status: 200,
-      response: { url: 'some carbage' },
-    },
-  ],
-};
