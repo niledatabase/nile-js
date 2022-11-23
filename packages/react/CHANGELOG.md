@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.1](https://github.com/TheNileDev/nile-js/compare/v0.32.0...v0.32.1) (2022-11-23)
+
+### Bug Fixes
+
+- add google login button, svgs in storybook, export Nile config ([3ea3ff3](https://github.com/TheNileDev/nile-js/commit/3ea3ff3954441238cdab3b8e49f1db2af1819129))
+
 # [0.32.0](https://github.com/TheNileDev/nile-js/compare/v0.31.0...v0.32.0) (2022-11-22)
 
 ### Features
