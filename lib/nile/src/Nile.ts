@@ -6,14 +6,19 @@ import {
   AccessApi,
   DevelopersApi,
   EntitiesApi,
-  OrganizationsApi,
+  OrganizationsApi as OrgApi,
   UsersApi,
-  WorkspacesApi,
+  WorkspacesApi as WorkspaceApi,
   MetricsApi,
 } from './client/src';
 import { Configuration, ConfigurationParameters } from './client/src/runtime';
 import EventsApi from './EventsApi';
 import { AuthToken, DeveloperCredentials } from './model/DeveloperCredentials';
+import { OrgProviders, organizationProviders } from './OrganizationsOidc';
+import { SpaceProviders, workspaceProviders } from './WorkspaceOidc';
+
+type OrganizationsApi = OrgApi & OrgProviders;
+type WorkspacesApi = WorkspaceApi & SpaceProviders;
 
 /**
  * The base nile class. Pulls together groups of OpenAPI spec into a single class
@@ -30,11 +35,26 @@ export class NileApi {
   metrics: MetricsApi;
   constructor(configuration?: Configuration) {
     this.config = configuration;
+
+    // tack on org oidc
+    const orgsProviders = organizationProviders(
+      this.config?.basePath,
+      this.config?.workspace
+    );
+    this.organizations = new OrgApi(configuration) as OrganizationsApi;
+    this.organizations.oidc = orgsProviders;
+
+    // tack on workspace oidc
+    const worksProviders = workspaceProviders(
+      this.config?.basePath,
+      this.config?.workspace
+    );
+    this.workspaces = new WorkspaceApi(configuration) as WorkspacesApi;
+    this.workspaces.oidc = worksProviders;
+
     this.users = new UsersApi(configuration);
     this.developers = new DevelopersApi(configuration);
     this.entities = new EntitiesApi(configuration);
-    this.workspaces = new WorkspacesApi(configuration);
-    this.organizations = new OrganizationsApi(configuration);
     this.events = new EventsApi(this.entities);
     this.access = new AccessApi(configuration);
     this.metrics = new MetricsApi(configuration);
@@ -45,11 +65,23 @@ export class NileApi {
    */
   set workspace(workspace: void | string) {
     if (workspace) {
+      const orgsProviders = organizationProviders(
+        this.config?.basePath,
+        workspace
+      );
+      this.organizations.oidc = orgsProviders;
+
+      const worksProviders = workspaceProviders(
+        this.config?.basePath,
+        workspace
+      );
+      this.workspaces.oidc = worksProviders;
+
+      this.organizations.workspace = workspace;
       this.users.workspace = workspace;
       this.developers.workspace = workspace;
       this.entities.workspace = workspace;
       this.workspaces.workspace = workspace;
-      this.organizations.workspace = workspace;
       this.access.workspace = workspace;
       this.metrics.workspace = workspace;
     }
