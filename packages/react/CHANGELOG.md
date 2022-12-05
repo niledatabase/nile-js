@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/TheNileDev/nile-js/compare/v0.32.3...v0.33.0) (2022-12-05)
+
+### Bug Fixes
+
+- make theme orange ([329ff3e](https://github.com/TheNileDev/nile-js/commit/329ff3ed54a8c85fff422627ef978d4e7196ccbd))
+
+### Features
+
+- add oidc urls to client ([97b88a3](https://github.com/TheNileDev/nile-js/commit/97b88a397d2c9a092f055a4f816b5b7698152b0e))
+
 ## [0.32.3](https://github.com/TheNileDev/nile-js/compare/v0.32.2...v0.32.3) (2022-11-23)
 
 ### Bug Fixes
