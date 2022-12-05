@@ -46,8 +46,8 @@ export default function FilterLineChart(
         datasets: [
           {
             data,
-            borderColor: 'rgb(111 226 255)',
-            backgroundColor: 'rgb(77, 158, 178)',
+            borderColor: '#ffb96a',
+            backgroundColor: '#ff9c3f',
             pointRadius: 0,
             borderWidth: 6,
             cubicInterpolationMode: 'monotone',

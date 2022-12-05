@@ -61,8 +61,8 @@ export default function AggregateBarChart(
         datasets: [
           {
             data,
-            backgroundColor: 'rgb(111 226 255)',
-            borderColor: 'rgb(77, 158, 178)',
+            borderColor: '#ffb96a',
+            backgroundColor: '#ff9c3f',
             borderSkipped: true,
             barPercentage: 0.9,
             ...dataset,

@@ -13,11 +13,11 @@ describe('index', () => {
       const keys = Object.keys(nile);
       expect(keys).toEqual([
         'config',
+        'organizations',
+        'workspaces',
         'users',
         'developers',
         'entities',
-        'workspaces',
-        'organizations',
         'events',
         'access',
         'metrics',
@@ -29,6 +29,7 @@ describe('index', () => {
           Object.getPrototypeOf(nile[k])
         );
         if (k === 'workspaces') {
+          expect(nile[k].oidc).toBeTruthy();
           expect(props).toEqual([
             'constructor',
             'createAccessToken',
@@ -46,6 +47,7 @@ describe('index', () => {
           ]);
         }
         if (k === 'organizations') {
+          expect(nile[k].oidc).toBeTruthy();
           expect(props).toEqual([
             'constructor',
             'acceptInvite',
@@ -243,5 +245,21 @@ describe('index', () => {
     expect(nile.entities.workspace).toBe('123');
     expect(nile.workspaces.workspace).toBe('123');
     expect(nile.organizations.workspace).toBe('123');
+  });
+
+  describe('oidc', () => {
+    it('sets the correct oidc workspace url', () => {
+      const nile = Nile({ workspace: '123' });
+      expect(nile.workspaces.oidc.GOOGLE()).toEqual(
+        'http://localhost:8080/workspaces/123/oidc/providers/GOOGLE/login'
+      );
+    });
+
+    it('sets the correct oidc organization url', () => {
+      const nile = Nile({ workspace: '123' });
+      expect(nile.organizations.oidc.GOOGLE('myorg')).toEqual(
+        'http://localhost:8080/workspaces/123/orgs/myorg/oidc/providers/GOOGLE/login'
+      );
+    });
   });
 });

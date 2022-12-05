@@ -132,6 +132,7 @@ export class BaseAPI {
             throw new ResponseError(response, message);
         }
 
+        console.error(response);
         throw new ResponseError(response, 'Response returned an error code');
     }
 

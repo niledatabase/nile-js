@@ -26,7 +26,6 @@ import {
   Shadows,
   ZIndex,
 } from '@mui/material/styles';
-import colors from '@mui/joy/colors';
 import {
   extendTheme as extendJoyTheme,
   Theme as JoyTheme,
@@ -71,81 +70,82 @@ declare module '@mui/material/styles' {
   }
 }
 
+const palette = {
+  primary: { main: '#6fe2ff' },
+  secondary: {
+    main: '#ffb96a',
+  },
+  neutral: {
+    main: '#d8d3ff',
+    dark: '#aea4fe',
+    contrastText: '#fff',
+  },
+  background: {
+    paper: '#383742',
+    default: '#0f0f0e',
+  },
+};
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 export const muiTheme = extendMuiTheme({
   cssVarPrefix: 'joy',
   colorSchemes: {
     light: {
-      palette: {
-        primary: {
-          main: colors.blue[500],
-        },
-        grey: colors.grey,
-        error: {
-          main: colors.red[500],
-        },
-        info: {
-          main: colors.purple[500],
-        },
-        success: {
-          main: colors.green[500],
-        },
-        warning: {
-          main: colors.yellow[200],
-        },
-        common: {
-          white: '#FFF',
-          black: '#09090D',
-        },
-        divider: colors.grey[800],
-        text: {
-          primary: colors.grey[800],
-          secondary: colors.grey[600],
-        },
-      },
+      palette,
     },
     dark: {
-      palette: {
-        primary: {
-          main: colors.blue[600],
-        },
-        grey: colors.grey,
-        error: {
-          main: colors.red[600],
-        },
-        info: {
-          main: colors.purple[600],
-        },
-        success: {
-          main: colors.green[600],
-        },
-        warning: {
-          main: colors.yellow[300],
-        },
-        common: {
-          white: '#FFF',
-          black: '#09090D',
-        },
-        divider: colors.grey[200],
-        text: {
-          primary: colors.grey[100],
-          secondary: colors.grey[300],
-        },
-      },
+      palette,
     },
   },
 });
 
 // remove things that break
 // if the theme is being overridden, these need added to the custom theme
-const fixer = extendJoyTheme({
+const joyTheme = extendJoyTheme({
+  cssVarPrefix: 'joy',
   colorSchemes: {
-    dark: { palette: { divider: colors.grey[200], Skeleton: {} } },
-    light: { palette: { divider: colors.grey[800], Skeleton: {} } },
+    light: {
+      palette: {
+        primary: {
+          '50': '#fff3e4',
+          '100': '#ffe1bc',
+          '200': '#ffcd92',
+          '300': '#ffb96a',
+          '400': '#feaa51',
+          '500': '#ff9c3f',
+          '600': '#f9913d',
+          '700': '#f28239',
+          '800': '#eb7435',
+          '900': '#e05c2e',
+        },
+        text: {
+          tertiary: 'rgba(0 0 0 / 0.56)',
+        },
+      },
+    },
+    dark: {
+      palette: {
+        primary: {
+          '50': '#fff3e4',
+          '100': '#ffe1bc',
+          '200': '#ffcd92',
+          '300': '#ffb96a',
+          '400': '#feaa51',
+          '500': '#ff9c3f',
+          '600': '#f9913d',
+          '700': '#f28239',
+          '800': '#eb7435',
+          '900': '#e05c2e',
+        },
+        text: {
+          tertiary: 'rgba(255 255 255 / 0.5)',
+        },
+      },
+    },
   },
 });
 
-const theme = deepmerge(muiTheme, fixer);
+const theme = deepmerge(joyTheme, muiTheme);
 
 export default theme;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Typography, Box, Stack } from '@mui/joy';
-import { OidcWorkspaceLoginProviderNameEnum } from '@theniledev/js';
 
 import { useNile } from '../../context';
 
@@ -11,24 +10,10 @@ import GoogleLogo from './google.svg';
 export default function LogInGoogle() {
   const nile = useNile();
 
-  const href = React.useMemo(
-    () =>
-      [
-        nile.config?.basePath,
-        'workspaces',
-        nile.workspace,
-        'oidc',
-        'providers',
-        OidcWorkspaceLoginProviderNameEnum.Google,
-        'login',
-      ].join('/'),
-    [nile.config?.basePath, nile.workspace]
-  );
-
   return (
     <Box
       component="a"
-      href={href}
+      href={nile.workspaces.oidc.GOOGLE()}
       sx={{ display: 'flex', flex: 1, textDecoration: 'none' }}
     >
       <Button sx={{ padding: 0, textTransform: 'initial', flex: 1 }}>
