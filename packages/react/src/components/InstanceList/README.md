@@ -9,11 +9,9 @@ The default exports transparently handles request and loading state.
 ```typescript
 import { InstanceList, NileProvider } from '@theniledev/react';
 
-const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
-
 function App() {
   return (
-    <NileProvider basePath={API_URL}>
+    <NileProvider>
       <InstanceList entity="myEntity" org="userOrg" />
     </NileProvider>
   );

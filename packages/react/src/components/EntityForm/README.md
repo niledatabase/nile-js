@@ -7,8 +7,6 @@ This provides a generic form for updating entities. By providing `fields`, a for
 ```typescript
 import { EntityForm, NileProvider, AttributeType } from '@theniledev/react';
 
-const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
-
 const fields = [
   { name: 'dbName', label: 'Database name', required: true },
   { name: 'size', label: 'Size', type: AttributeType.Number },
@@ -26,7 +24,7 @@ const fields = [
 
 function App() {
   return (
-    <NileProvider basePath={API_URL}>
+    <NileProvider>
       <EntityForm
         entityType="myEntity"
         onSuccess={() => alert('success!')}

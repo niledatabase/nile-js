@@ -7,11 +7,9 @@ A form for a name of an organization.
 ```typescript
 import { OrganizationForm, NileProvider } from '@theniledev/react';
 
-const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
-
 function App() {
   return (
-    <NileProvider basePath={API_URL}>
+    <NileProvider>
       <h1>🤩 My Great App🤩</h1>
       <h2>Create an organization</h2>
       <OrganizationForm

@@ -7,11 +7,9 @@ A basic email and password login form. After a user has been created or complete
 ```typescript
 import { LoginForm, NileProvider } from '@theniledev/react';
 
-const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
-
 function App() {
   return (
-    <NileProvider basePath={API_URL}>
+    <NileProvider>
       <h1>🤩 My Great App🤩</h1>
       <h2>Sign in</h2>
       <LoginForm
