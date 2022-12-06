@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import Stack from '@mui/joy/Stack';
 
 import LoginForm from '../src/components/LoginForm';
-import GoogleLoginButton from '../src/components/LoginForm/GoogleLoginButton';
+import GoogleLoginButton from '../src/components/GoogleLoginButton';
 import { NileProvider } from '../src/context';
 
 const meta: Meta = {

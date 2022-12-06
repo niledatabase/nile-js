@@ -21,7 +21,6 @@ The chart renders a single line. Provide either a `filter` object or an `aggrega
 ```typescript
 import { MetricsLineChart, NileProvider } from '@theniledev/react';
 
-const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
 const WORKSPACE = 'myWorkspace'; // name of the workspace to use
 
 function App() {
@@ -39,7 +38,7 @@ function App() {
     aggregationType: 'sum',
   };
   return (
-    <NileProvider basePath={API_URL} workspace={WORKSPACE}>
+    <NileProvider workspace={WORKSPACE}>
       <h1>🤩Metrics the great🤩</h1>
       <h2>Requests</h2>
       <MetricsLineChart filter={filter} />
@@ -58,7 +57,6 @@ A timeseries chart renders a bar graph. Useful for viewing build-in metrics. Pro
 ```typescript
 import { MetricsBarChart, NileProvider } from '@theniledev/react';
 
-const API_URL = 'http://localhost:8080'; // location of the Nile endpoint
 const WORKSPACE = 'myWorkspace'; // name of the workspace to use
 
 function App() {
@@ -76,7 +74,7 @@ function App() {
     aggregationType: 'sum',
   };
   return (
-    <NileProvider basePath={API_URL} workspace={WORKSPACE}>
+    <NileProvider workspace={WORKSPACE}>
       <h1>🤩Metrics the great🤩</h1>
       <h2>Requests</h2>
       <MetricsBarChart filter={filter} />

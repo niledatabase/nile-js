@@ -42,7 +42,7 @@ ChartJS.register(
  *   };
  *
  *   return (
- *     <NileProvider baseUrl="https://prod.thenile.dev" workspace="clustify">
+ *     <NileProvider workspace="clustify">
  *       <MetricsBarChart filter={filter} />
  *     </NileProvider>
  *   );

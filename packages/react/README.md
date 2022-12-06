@@ -10,11 +10,10 @@ In the root of your react application, add a Nile provider. This will add a [Que
 
 ```typescript
 import { NileProvider } from '@theniledev/react';
-const API_URL = 'https://localhost:8080'; // location of nile instance
 
 function App() {
   return (
-    <NileProvider basePath={API_URL}>
+    <NileProvider>
       <div>Welcome to my great app</div>
     </NileProvider>
   );
@@ -49,7 +48,7 @@ function MyQueryProvider({ children }) {
 
 function App() {
   return (
-    <NileProvider basePath={API_URL} QueryProvider={MyQueryProvider}>
+    <NileProvider QueryProvider={MyQueryProvider}>
       <div>Welcome to my great app</div>
     </NileProvider>
   );
@@ -65,7 +64,7 @@ A custom theme can be given to the `NileProvider`, which will theme all componen
 ```typescript
 function App() {
   return (
-    <NileProvider basePath={API_URL} theme={theme}>
+    <NileProvider theme={theme}>
       <div>Welcome to my great app</div>
     </NileProvider>
   );
@@ -128,11 +127,9 @@ const customTheme = extendTheme({
   },
 });
 
-const API_URL = 'https://localhost:8080'; // location of nile instance
-
 function App() {
   return (
-    <NileProvider basePath={API_URL} theme={customTheme}>
+    <NileProvider theme={customTheme}>
       <div>Welcome to my great app</div>
     </NileProvider>
   );
