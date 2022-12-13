@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.33.1](https://github.com/TheNileDev/nile-js/compare/v0.33.0...v0.33.1) (2022-12-13)
+
+### Bug Fixes
+
+- **nile-js:** add logout to oidc ([f1fd65e](https://github.com/TheNileDev/nile-js/commit/f1fd65ee466eda4b3523aa7cbb9a0177bed87951))
+- **react:** support org oidc, update docs ([1e3ef0e](https://github.com/TheNileDev/nile-js/commit/1e3ef0e810fa8a2fca126021366e52d28a6d91ca))
+
 # [0.33.0](https://github.com/TheNileDev/nile-js/compare/v0.32.3...v0.33.0) (2022-12-05)
 
 ### Bug Fixes
