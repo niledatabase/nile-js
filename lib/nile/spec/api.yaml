@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1.0-29e6372
+  version: 0.1.0-1b01fa4
 servers:
   - url: localhost:8080
 tags:
@@ -966,6 +966,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /auth/oidc/managed:
+    get:
+      tags:
+        - auth
+      summary: Callback for Nile-managed OIDC
+      operationId: managedOidcCallback
+      parameters:
+        - name: code
+          in: query
+          schema:
+            type: string
+        - name: state
+          in: query
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to the appropriate URL for the workspace
   /workspaces/{workspace}/orgs/{org}/users:
     get:
       tags:
@@ -1110,34 +1128,6 @@ paths:
       responses:
         '204':
           description: Successful org deletion
-  /workspaces/{workspace}/orgs/{org}/oidc/providers/{providerName}/login:
-    get:
-      tags:
-        - organizations
-      summary: Login to an organization with OIDC
-      description: Initiate the OIDC login flow with a redirect for this org and provider
-      operationId: oidcOrganizationLogin
-      parameters:
-        - name: workspace
-          in: path
-          required: false
-          schema:
-            type: string
-        - name: org
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: providerName
-          in: path
-          required: true
-          schema:
-            type: string
-            enum:
-              - GOOGLE
-      responses:
-        '302':
-          description: Redirect to OIDC provider login page
   /workspaces/{workspace}/orgs/{org}/users/{user}:
     put:
       tags:
@@ -1189,6 +1179,35 @@ paths:
       responses:
         '204':
           description: Successful user removal
+  /workspaces/{workspace}/orgs/{org}/oidc/providers/{providerName}/login:
+    get:
+      tags:
+        - organizations
+      summary: Login to an organization with OIDC
+      description: Initiate the OIDC login flow with a redirect for this org and provider
+      operationId: oidcOrganizationLogin
+      parameters:
+        - name: workspace
+          in: path
+          required: false
+          schema:
+            type: string
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: providerName
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - GOOGLE
+              - UNKNOWN
+      responses:
+        '302':
+          description: Redirect to OIDC provider login page
   /workspaces/{workspace}/access_tokens:
     get:
       tags:
@@ -1486,6 +1505,22 @@ paths:
       responses:
         '204':
           description: Successful user deletion
+  /workspaces/{workspace}/oidc/signout:
+    get:
+      tags:
+        - workspaces
+      summary: Sign out of workspace
+      description: Sign out of a workspace
+      operationId: oidcWorkspaceSignOut
+      parameters:
+        - name: workspace
+          in: path
+          required: false
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to OIDC provider sign out page
   /workspaces/{workspace}/oidc/providers/{providerName}/login:
     get:
       tags:
@@ -1508,6 +1543,7 @@ paths:
             type: string
             enum:
               - GOOGLE
+              - UNKNOWN
       responses:
         '302':
           description: Redirect to OIDC provider login page
@@ -1963,6 +1999,25 @@ components:
             - conflict
             - access_token_not_found
             - precondition_failed
+            - provider_not_found
+            - provider_already_exists
+            - provider_config_error
+            - provider_mismatch
+            - provider_update_error
+            - party_not_found
+            - session_state_missing
+            - session_state_mismatch
+            - oidc_code_missing
+            - oidc_attempt_not_found
+            - oidc_unsupported_auth
+            - oidc_token_fetch_error
+            - oidc_client_invalid
+            - oidc_client_unauthorized
+            - oidc_grant_invalid
+            - oidc_grant_unsupported
+            - oidc_scope_invalid
+            - oidc_token_unidentifiable
+            - oidc_redirect_urls_undefined
         message:
           type: string
         status_code:
@@ -2740,6 +2795,7 @@ components:
           type: string
           enum:
             - GOOGLE
+            - UNKNOWN
         enabled:
           type: boolean
         integration_mode:
