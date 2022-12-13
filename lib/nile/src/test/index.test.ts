@@ -41,6 +41,7 @@ describe('index', () => {
             'listAccessTokens',
             'listWorkspaces',
             'oidcWorkspaceLogin',
+            'oidcWorkspaceSignOut',
             'updateAccessToken',
             'updateOIDCProviders',
             'updateOIDCRedirects',
@@ -250,8 +251,14 @@ describe('index', () => {
   describe('oidc', () => {
     it('sets the correct oidc workspace url', () => {
       const nile = Nile({ workspace: '123' });
-      expect(nile.workspaces.oidc.GOOGLE()).toEqual(
+      expect(nile.workspaces.oidc.providers.GOOGLE()).toEqual(
         'http://localhost:8080/workspaces/123/oidc/providers/GOOGLE/login'
+      );
+    });
+    it('has a logout url', () => {
+      const nile = Nile({ workspace: '123' });
+      expect(nile.workspaces.oidc.logout).toEqual(
+        'http://localhost:8080/workspaces/123/oidc/signout'
       );
     });
 

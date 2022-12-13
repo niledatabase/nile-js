@@ -3,7 +3,10 @@ import { OidcWorkspaceLoginProviderNameEnum } from './client/src';
 type ProviderFn = () => string;
 
 export type SpaceProviders = {
-  oidc: WorkspaceIdentityProviders;
+  oidc: {
+    providers: WorkspaceIdentityProviders;
+    logout: string;
+  };
 };
 
 export type WorkspaceIdentityProviders = {
@@ -32,3 +35,13 @@ export const workspaceProviders = (basePath?: string, workspace?: string) =>
     },
     {} as WorkspaceIdentityProviders
   );
+
+/**
+ *
+ * @param basePath the FQDN from the config object
+ * @param workspace the nile workspace
+ * @returns a string to link to remove the session
+ */
+export const workspaceLogout = (basePath?: string, workspace?: string) => {
+  return [basePath, 'workspaces', workspace, 'oidc', 'signout'].join('/');
+};

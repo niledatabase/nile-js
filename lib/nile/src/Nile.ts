@@ -15,7 +15,11 @@ import { Configuration, ConfigurationParameters } from './client/src/runtime';
 import EventsApi from './EventsApi';
 import { AuthToken, DeveloperCredentials } from './model/DeveloperCredentials';
 import { OrgProviders, organizationProviders } from './OrganizationsOidc';
-import { SpaceProviders, workspaceProviders } from './WorkspaceOidc';
+import {
+  SpaceProviders,
+  workspaceLogout,
+  workspaceProviders,
+} from './WorkspaceOidc';
 
 type OrganizationsApi = OrgApi & OrgProviders;
 type WorkspacesApi = WorkspaceApi & SpaceProviders;
@@ -50,7 +54,10 @@ export class NileApi {
       this.config?.workspace
     );
     this.workspaces = new WorkspaceApi(configuration) as WorkspacesApi;
-    this.workspaces.oidc = worksProviders;
+    this.workspaces.oidc = {
+      providers: worksProviders,
+      logout: workspaceLogout(this.config?.basePath, this.config?.workspace),
+    };
 
     this.users = new UsersApi(configuration);
     this.developers = new DevelopersApi(configuration);
@@ -75,7 +82,10 @@ export class NileApi {
         this.config?.basePath,
         workspace
       );
-      this.workspaces.oidc = worksProviders;
+      this.workspaces.oidc = {
+        providers: worksProviders,
+        logout: workspaceLogout(this.config?.basePath, this.config?.workspace),
+      };
 
       this.organizations.workspace = workspace;
       this.users.workspace = workspace;

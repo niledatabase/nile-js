@@ -20,7 +20,7 @@ export default function LogInGoogle(props: LogInGoogleProps) {
     if (org) {
       return nile.organizations.oidc.GOOGLE(org);
     }
-    return nile.workspaces.oidc.GOOGLE();
+    return nile.workspaces.oidc.providers.GOOGLE();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
