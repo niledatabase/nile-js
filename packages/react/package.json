@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/react",
-  "version": "0.33.0",
+  "version": "0.33.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -90,7 +90,7 @@
     "@mui/x-data-grid": "^5.17.14",
     "@mui/x-date-pickers": "^5.0.9",
     "@tanstack/react-query": "^4.19.1",
-    "@theniledev/js": "^0.33.0",
+    "@theniledev/js": "^0.33.1",
     "chart.js": "^3.9.1",
     "chartjs-adapter-date-fns": "^2.0.1",
     "date-fns": "^2.29.3",
