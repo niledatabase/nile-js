@@ -24,8 +24,9 @@ const customFieldAttributes = [
   {
     name: 'cloud',
     label: 'Cloud provider',
-    type: AttributeType.Select,
+    type: AttributeType.Checkbox,
     required: true,
+    allowMultiple: true,
     options: [
       { label: 'Amazon', value: 'aws' },
       { label: 'Google', value: 'gcp' },
@@ -51,12 +52,55 @@ type StoryArgs = {
 };
 
 const Template: Story<StoryArgs> = ({ org, entityType }: StoryArgs) => (
-  <NileProvider basePath="http://localhost:8080">
+  <NileProvider basePath="http://localhost:8080" workspace="my_workspace">
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
       <EntityForm
         entityType={entityType}
         onSuccess={() => alert('success!')}
         fields={customFieldAttributes}
+        org={org}
+        cancelButton={<Button variant="outlined">Cancel</Button>}
+      />
+    </div>
+  </NileProvider>
+);
+
+const enumAttributes = [
+  {
+    name: 'boolean',
+    label: 'Single boolean',
+    type: AttributeType.Checkbox,
+    options: [{ label: 'Amazon', value: 'aws' }],
+  },
+  {
+    name: 'single',
+    label: 'Pick single enum',
+    type: AttributeType.Checkbox,
+    options: [
+      { label: 'Test', value: 'test' },
+      { label: 'Development', value: 'dev' },
+      { label: 'Production', value: 'prod' },
+    ],
+  },
+  {
+    name: 'multi',
+    label: 'Pick multiple enum',
+    type: AttributeType.Checkbox,
+    allowMultiple: true,
+    options: [
+      { label: 'Amazon', value: 'aws' },
+      { label: 'Google', value: 'gcp' },
+      { label: 'Microsoft', value: 'azure' },
+    ],
+  },
+];
+export const Enum: Story<StoryArgs> = ({ org, entityType }: StoryArgs) => (
+  <NileProvider basePath="http://localhost:8080" workspace="my_workspace">
+    <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
+      <EntityForm
+        entityType={entityType}
+        onSuccess={() => alert('success!')}
+        fields={enumAttributes}
         org={org}
         cancelButton={<Button variant="outlined">Cancel</Button>}
       />
