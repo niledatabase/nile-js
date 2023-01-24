@@ -9,7 +9,7 @@ describe('instance table', () => {
       { name: 'precision', type: AttributeType.Float },
       {
         name: 'cloud',
-        type: AttributeType.Select,
+        type: AttributeType.Checkbox,
         options: [
           { label: 'Amazon', value: 'aws' },
           { label: 'Google', value: 'gcp' },
@@ -43,6 +43,24 @@ describe('instance table', () => {
     const formData = processFormData(data, fields);
     expect(formData).toEqual({
       cloud: 'aws',
+      dbName: 'some name',
+      environment: 'test',
+      size: 43,
+      precision: 4.43,
+    });
+  });
+
+  it('converts works with enums', () => {
+    const data = {
+      dbName: 'some name',
+      cloud: ['aws', 'gcp', 'azure'],
+      environment: 'test',
+      size: '43',
+      precision: '4.43',
+    };
+    const formData = processFormData(data, fields);
+    expect(formData).toEqual({
+      cloud: ['aws', 'gcp', 'azure'],
       dbName: 'some name',
       environment: 'test',
       size: 43,

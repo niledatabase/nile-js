@@ -2,6 +2,8 @@
 
 This provides a generic form for updating entities. By providing `fields`, a form will be generated.
 
+See [the storybook](https://storybook.thenile.dev/?path=/story/entityform--default) for examples.
+
 ## Usage
 
 ```typescript
