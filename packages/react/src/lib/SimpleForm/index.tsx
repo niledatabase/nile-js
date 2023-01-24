@@ -1,23 +1,32 @@
 import React from 'react';
 import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import Stack from '@mui/joy/Stack';
 import { Select, Option, FormLabel, Box, Typography } from '@mui/joy';
 
-import { Attribute, AttributeType } from './types';
+import { Attribute, AttributeType, DisplayProps } from './types';
+import CheckGroup from './CheckGroup';
 
-type AttrMap = { [key: string]: string | number };
-type DisplayProps = {
-  key: string;
-  label: string;
-  placeholder: string;
-  helperText?: string;
-  error?: boolean;
-  color?: 'danger';
-};
+type AttrMap = { [key: string]: string | number | string[] | number[] };
+
 type FieldConfig = {
   required?: boolean;
+};
+
+export const getAttributeDefault = (
+  attribute: Attribute
+): string | number | string[] | number[] => {
+  // have to look to see if it is an enum
+  if (attribute.allowMultiple === true) {
+    if (!Array.isArray(attribute.defaultValue) && attribute.defaultValue) {
+      if (typeof attribute.defaultValue === 'number') {
+        return [attribute.defaultValue];
+      }
+      return [String(attribute.defaultValue)];
+    }
+  }
+  return '';
 };
 
 export default function ConfigForm(props: {
@@ -32,21 +41,22 @@ export default function ConfigForm(props: {
   const defaultValues = React.useMemo(
     () =>
       attributes.reduce((accum: AttrMap, attr: Attribute) => {
-        accum[attr.name] = attr.defaultValue ?? '';
+        accum[attr.name] = getAttributeDefault(attr);
         return accum;
       }, {}),
     [attributes]
   );
+
+  const methods = useForm({
+    defaultValues,
+  });
 
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues,
-  });
-
+  } = methods;
   const onSubmit = React.useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (data: any) => {
@@ -56,117 +66,119 @@ export default function ConfigForm(props: {
   );
 
   return (
-    <Stack
-      component="form"
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onSubmit={handleSubmit((data) => onSubmit(data as any))}
-      spacing={2}
-    >
-      {attributes.map((attr: Attribute): React.ReactNode => {
-        const fieldConfig: FieldConfig = {};
-        const display: DisplayProps = {
-          key: attr.name,
-          label: attr.label ?? attr.name,
-          placeholder: attr.placeholder ?? attr.label ?? attr.name,
-          error: Boolean(errors[attr.name]),
-        };
+    <FormProvider {...methods}>
+      <Stack
+        component="form"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onSubmit={handleSubmit((data) => onSubmit(data as any))}
+        spacing={2}
+      >
+        {attributes.map((attr: Attribute): React.ReactNode => {
+          const fieldConfig: FieldConfig = {};
+          const display: DisplayProps = {
+            key: attr.name,
+            label: attr.label ?? attr.name,
+            placeholder: attr.placeholder ?? attr.label ?? attr.name,
+            error: Boolean(errors[attr.name]),
+          };
+          const options = attr.options ?? [];
 
-        const options = attr.options ?? [];
+          if (attr.required) {
+            display.helperText = errors[attr.name] && 'This field is required';
+            fieldConfig.required = true;
+          }
 
-        if (attr.required) {
-          display.helperText = errors[attr.name] && 'This field is required';
-          fieldConfig.required = true;
-        }
-
-        switch (attr.type) {
-          case AttributeType.Select:
-            return (
-              <Stack key={display.key}>
-                <FormLabel htmlFor={`select-field-${attr.name}`}>
-                  {display.label}
-                </FormLabel>
-                <Controller
-                  control={control}
-                  rules={{ required: Boolean(attr.required) }}
-                  name={attr.name}
-                  render={({ field }) => {
-                    const color: { color?: 'danger' } = {};
-                    if (errors[attr.name]) {
-                      color.color = 'danger';
-                    }
-                    return (
-                      <Stack>
-                        <Select
-                          id={`select-field-${attr.name}`}
-                          placeholder={`${display.placeholder}...`}
-                          {...color}
-                          {...field}
-                          onChange={(e) => {
-                            const target = e?.target as HTMLElement;
-                            if (target) {
-                              const option = options.find(
-                                ({ label }) => label === target.innerText
-                              );
-                              if (option) {
-                                field.onChange(option.value);
-                              }
-                            }
-                          }}
-                        >
-                          {options.map((option) => {
-                            return (
-                              <Option key={option.value} value={option.value}>
-                                {option.label}
-                              </Option>
-                            );
-                          })}
-                        </Select>
-                        <Typography
-                          sx={{ color: 'var(--joy-palette-danger-500)' }}
-                          level="body2"
-                        >
-                          {display.helperText}
-                        </Typography>
-                      </Stack>
-                    );
-                  }}
+          switch (attr.type) {
+            case AttributeType.Checkbox:
+              return (
+                <CheckGroup
+                  key={display.key}
+                  attribute={attr}
+                  display={display}
+                  options={options}
                 />
-              </Stack>
-            );
-          case AttributeType.Password:
-            return (
-              <TextField
-                {...display}
-                {...register(attr.name, fieldConfig)}
-                type={AttributeType.Password}
-              />
-            );
-          case AttributeType.Number:
-            return (
-              <TextField
-                {...display}
-                {...register(attr.name, fieldConfig)}
-                type={AttributeType.Number}
-              />
-            );
+              );
+            case AttributeType.Select:
+              return (
+                <Stack key={display.key}>
+                  <FormLabel htmlFor={`select-field-${attr.name}`}>
+                    {display.label}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    rules={{ required: Boolean(attr.required) }}
+                    name={attr.name}
+                    render={({ field }) => {
+                      const color: { color?: 'danger' } = {};
+                      if (errors[attr.name]) {
+                        color.color = 'danger';
+                      }
+                      return (
+                        <Stack>
+                          <Select
+                            id={`select-field-${attr.name}`}
+                            placeholder={`${display.placeholder}...`}
+                            {...color}
+                            {...field}
+                            onChange={(_, newValue) => {
+                              field.onChange(newValue);
+                            }}
+                          >
+                            {options.map((option) => {
+                              return (
+                                <Option key={option.value} value={option.value}>
+                                  {option.label}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                          <Typography
+                            sx={{ color: 'var(--joy-palette-danger-500)' }}
+                            level="body2"
+                          >
+                            {display.helperText}
+                          </Typography>
+                        </Stack>
+                      );
+                    }}
+                  />
+                </Stack>
+              );
+            case AttributeType.Password:
+              return (
+                <TextField
+                  {...display}
+                  {...register(attr.name, fieldConfig)}
+                  type={AttributeType.Password}
+                />
+              );
+            case AttributeType.Number:
+              return (
+                <TextField
+                  {...display}
+                  {...register(attr.name, fieldConfig)}
+                  type={AttributeType.Number}
+                />
+              );
 
-          case AttributeType.Text:
-          default:
-            return (
-              <TextField {...display} {...register(attr.name, fieldConfig)} />
-            );
-        }
-      })}
-      {cancelButton ? (
-        <Stack spacing={2} direction="row">
-          {cancelButton}
-          <Box>
-            <Button type="submit">{buttonText}</Button>
-          </Box>
-        </Stack>
-      ) : (
-        <Button type="submit">{buttonText}</Button>
-      )}
-    </Stack>
+            case AttributeType.Text:
+            default:
+              return (
+                <TextField {...display} {...register(attr.name, fieldConfig)} />
+              );
+          }
+        })}
+        {cancelButton ? (
+          <Stack spacing={2} direction="row">
+            {cancelButton}
+            <Box>
+              <Button type="submit">{buttonText}</Button>
+            </Box>
+          </Stack>
+        ) : (
+          <Button type="submit">{buttonText}</Button>
+        )}
+      </Stack>
+    </FormProvider>
   );
 }
