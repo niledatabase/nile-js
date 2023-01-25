@@ -4,8 +4,6 @@ When SSO is configured on a workspace, this button can be added to a Nile app th
 
 ## Usage
 
-If your app makes requests to Nile directly (a common use case) be sure to include [`useVerifyToken`](../../lib/hooks/useVerifyToken) on the page you redirect users to on login.
-
 ```typescript
 import { GoogleLoginButton, NileProvider } from '@theniledev/react';
 
