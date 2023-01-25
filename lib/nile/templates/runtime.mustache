@@ -4,6 +4,10 @@
 
 export const BASE_PATH = "{{{basePath}}}".replace(/\/+$/, "");
 
+export enum StorageOptions {
+    LocalStorage = 'local'
+};
+
 export interface ConfigurationParameters {
     basePath?: string; // override base path
     fetchApi?: FetchAPI; // override for fetch implementation
@@ -16,6 +20,7 @@ export interface ConfigurationParameters {
     headers?: HTTPHeaders; //header params we want to use on every request
     credentials?: RequestCredentials; //value for the credentials param we want to use on each request
     workspace?: string; // the workspace for the application
+    tokenStorage?: StorageOptions; // use local storage for tokens
 }
 
 export class Configuration {
@@ -36,6 +41,10 @@ export class Configuration {
 
     get basePath(): string {
         return this.configuration.basePath != null ? this.configuration.basePath : BASE_PATH;
+    }
+
+    get tokenStorage(): undefined | StorageOptions {
+        return this.configuration.tokenStorage;
     }
 
     get fetchApi(): FetchAPI | undefined {

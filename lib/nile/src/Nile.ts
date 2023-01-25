@@ -11,7 +11,11 @@ import {
   WorkspacesApi as WorkspaceApi,
   MetricsApi,
 } from './client/src';
-import { Configuration, ConfigurationParameters } from './client/src/runtime';
+import {
+  Configuration,
+  ConfigurationParameters,
+  StorageOptions,
+} from './client/src/runtime';
 import EventsApi from './EventsApi';
 import { AuthToken, DeveloperCredentials } from './model/DeveloperCredentials';
 import { OrgProviders, organizationProviders } from './OrganizationsOidc';
@@ -128,6 +132,15 @@ export class NileApi {
    * When a token is set, it is shared across all classes
    */
   set authToken(token: void | string) {
+    if (this.config?.tokenStorage === StorageOptions.LocalStorage) {
+      if (typeof window !== 'undefined') {
+        if (token) {
+          localStorage.setItem('nileToken', token);
+        } else {
+          localStorage.setItem('nileToken', '');
+        }
+      }
+    }
     if (token) {
       this.users.authToken = token;
       this.developers.authToken = token;
@@ -144,6 +157,14 @@ export class NileApi {
    * @returns the auth token if it has been set
    */
   get authToken(): void | string {
+    if (this.config?.tokenStorage === StorageOptions.LocalStorage) {
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('nileToken');
+        if (token) {
+          return token;
+        }
+      }
+    }
     if (this.users.authToken) {
       return this.users.authToken;
     }
