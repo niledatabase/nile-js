@@ -37,6 +37,7 @@ const customFieldAttributes = [
     name: 'environment',
     label: 'Environment',
     type: AttributeType.Select,
+    defaultValue: 'test',
     options: [
       { label: 'Test', value: 'test' },
       { label: 'Development', value: 'dev' },

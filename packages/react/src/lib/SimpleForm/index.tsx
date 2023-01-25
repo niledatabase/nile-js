@@ -28,7 +28,7 @@ export const getAttributeDefault = (
       return [String(attribute.defaultValue)];
     }
   }
-  return '';
+  return attribute.defaultValue ?? '';
 };
 
 export default function ConfigForm(props: {

@@ -10,4 +10,12 @@ describe('simple form', () => {
     };
     expect(getAttributeDefault(attribute)).toEqual(['gcp']);
   });
+  it('maps default values for not a checkbox', () => {
+    const attribute: Attribute = {
+      name: 'cloud',
+      type: AttributeType.Select,
+      defaultValue: 'gcp',
+    };
+    expect(getAttributeDefault(attribute)).toEqual('gcp');
+  });
 });
