@@ -11,7 +11,7 @@ import {
   TimeScale,
 } from 'chart.js';
 
-import 'chartjs-adapter-date-fns';
+import('chartjs-adapter-date-fns');
 
 import FilterBarChart from './Filter/FilterBarChart';
 import AggregateBarChart from './Aggregate/AggregateBarChart';

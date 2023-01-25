@@ -11,34 +11,34 @@
   },
   "peerDependencies": {
     "@tanstack/react-query": "^4.14.1",
-    "@theniledev/js": "^0.28.2",
-    "@theniledev/react": "^0.28.2",
+    "@theniledev/js": "^0.34.1",
+    "@theniledev/react": "^0.34.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "^6.3.4",
-    "@codemirror/lang-javascript": "^6.1.1",
-    "@codemirror/language": "^6.3.1",
+    "@codemirror/autocomplete": "^6.4.0",
+    "@codemirror/lang-javascript": "^6.1.2",
+    "@codemirror/language": "^6.4.0",
     "@codemirror/lint": "^6.1.0",
     "@codemirror/search": "^6.2.3",
-    "@codemirror/state": "^6.1.4",
+    "@codemirror/state": "^6.2.0",
     "@codemirror/theme-one-dark": "^6.1.0",
-    "@codemirror/view": "^6.6.0",
+    "@codemirror/view": "^6.7.3",
     "@lezer/common": "^1.0.2",
-    "@uiw/react-codemirror": "^4.17.1",
+    "@uiw/react-codemirror": "^4.19.7",
     "codemirror": "^6.0.1",
-    "next": "^13.0.6",
+    "next": "^13.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.40.0",
+    "react-hook-form": "^7.42.1",
     "url-parse": "^1.5.10"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.20.6",
-    "@types/node": "^18.11.11",
-    "@types/react": "^18.0.26",
-    "typescript": "^4.9.3"
+    "@babel/runtime": "^7.20.13",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.27",
+    "typescript": "^4.9.4"
   },
   "repository": {
     "type": "git",
