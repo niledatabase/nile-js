@@ -38,6 +38,7 @@ export const NileProvider = (props: NileProviderProps) => {
     children,
     theme,
     workspace,
+    tokenStorage,
     QueryProvider = BaseQueryProvider,
     basePath = 'https://prod.thenile.dev',
   } = props;
@@ -48,9 +49,10 @@ export const NileProvider = (props: NileProviderProps) => {
         basePath: basePath,
         workspace: workspace,
         credentials: 'include',
+        tokenStorage,
       }),
     };
-  }, [basePath, workspace]);
+  }, [basePath, tokenStorage, workspace]);
 
   return (
     <QueryProvider>
