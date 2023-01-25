@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/TheNileDev/nile-js/compare/v0.33.1...v0.34.0) (2023-01-25)
+
+### Features
+
+- add enum support via checkboxes ([4f3e5f3](https://github.com/TheNileDev/nile-js/commit/4f3e5f38fba3664ca31a770ace828efde71ea0ca))
+- add useVerifyToken ([0b059a3](https://github.com/TheNileDev/nile-js/commit/0b059a35e13c5f73c593d9ab9742aef6e67ecb7f))
+
 ## [0.33.1](https://github.com/TheNileDev/nile-js/compare/v0.33.0...v0.33.1) (2022-12-13)
 
 ### Bug Fixes
