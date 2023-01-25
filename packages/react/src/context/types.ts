@@ -1,4 +1,4 @@
-import { NileApi } from '@theniledev/js';
+import { NileApi, StorageOptions } from '@theniledev/js';
 import { Theme } from '@mui/joy/styles';
 
 export interface NileContext {
@@ -11,5 +11,6 @@ export interface NileProviderProps {
   basePath?: string;
   workspace?: string;
   theme?: Theme;
+  tokenStorage?: StorageOptions;
   QueryProvider?: (props: { children: JSX.Element }) => JSX.Element;
 }
