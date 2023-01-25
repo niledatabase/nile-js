@@ -2,7 +2,7 @@ import React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import TextField from '@mui/joy/TextField';
+import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 
@@ -19,7 +19,7 @@ export default function StarTime() {
           renderInput={(props: any) => {
             const { InputProps, inputRef } = props;
             return (
-              <TextField
+              <Input
                 ref={inputRef}
                 name="startTime"
                 value={startTime.toString() ?? ''}
