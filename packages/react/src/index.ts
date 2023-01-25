@@ -6,6 +6,7 @@ export { default as EntityForm } from './components/EntityForm';
 export { NileProvider, useNile } from './context';
 
 export { default as Queries } from './lib/queries';
+export { useVerifyToken } from './lib/hooks/useVerifyToken';
 
 export { useInstances } from './lib/hooks/useInstances';
 
