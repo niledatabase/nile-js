@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/TheNileDev/nile-js/compare/v0.34.1...v0.35.0) (2023-01-25)
+
+### Features
+
+- **nile-js:** add option for token storage ([7329144](https://github.com/TheNileDev/nile-js/commit/7329144e7c9799e08f1bda44526543bbe5d862e5))
+
 ## [0.34.1](https://github.com/TheNileDev/nile-js/compare/v0.34.0...v0.34.1) (2023-01-25)
 
 **Note:** Version bump only for package @theniledev/js
