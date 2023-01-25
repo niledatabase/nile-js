@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/TheNileDev/nile-js/compare/v0.34.1...v0.35.0) (2023-01-25)
+
+### Bug Fixes
+
+- **react:** use default values correctly ([d020b40](https://github.com/TheNileDev/nile-js/commit/d020b40d06469514fad5bbb21d45c7d16468723e))
+- set authToken after login by default ([de6992a](https://github.com/TheNileDev/nile-js/commit/de6992a6521177ceca8673276c55c5e71bc37928))
+
+### Features
+
+- **nile-js:** add option for token storage ([7329144](https://github.com/TheNileDev/nile-js/commit/7329144e7c9799e08f1bda44526543bbe5d862e5))
+
+### Reverts
+
+- Revert "Revert "fix(react): add success to useVerifyToken"" ([4f4f7ee](https://github.com/TheNileDev/nile-js/commit/4f4f7eea3be054f78e8f22fab1a1e9fd9bb89201))
+
 ## [0.34.1](https://github.com/TheNileDev/nile-js/compare/v0.34.0...v0.34.1) (2023-01-25)
 
 ### Bug Fixes
