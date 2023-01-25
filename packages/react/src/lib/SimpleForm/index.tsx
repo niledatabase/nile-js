@@ -1,9 +1,11 @@
 import React from 'react';
-import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import Stack from '@mui/joy/Stack';
-import { Select, Option, FormLabel, Box, Typography } from '@mui/joy';
+import { Select, Option, FormLabel, Box } from '@mui/joy';
+import Input from '@mui/joy/Input';
+import FormControl from '@mui/joy/FormControl';
+import FormHelperText from '@mui/joy/FormHelperText';
 
 import { Attribute, AttributeType, DisplayProps } from './types';
 import CheckGroup from './CheckGroup';
@@ -100,7 +102,11 @@ export default function ConfigForm(props: {
               );
             case AttributeType.Select:
               return (
-                <Stack key={display.key}>
+                <FormControl
+                  sx={{
+                    '--FormHelperText-color': 'var(--joy-palette-danger-500)',
+                  }}
+                >
                   <FormLabel htmlFor={`select-field-${attr.name}`}>
                     {display.label}
                   </FormLabel>
@@ -132,39 +138,66 @@ export default function ConfigForm(props: {
                               );
                             })}
                           </Select>
-                          <Typography
-                            sx={{ color: 'var(--joy-palette-danger-500)' }}
-                            level="body2"
-                          >
+                          <FormHelperText id={`${attr.name}-helper-text`}>
                             {display.helperText}
-                          </Typography>
+                          </FormHelperText>
                         </Stack>
                       );
                     }}
                   />
-                </Stack>
+                </FormControl>
               );
             case AttributeType.Password:
               return (
-                <TextField
-                  {...display}
-                  {...register(attr.name, fieldConfig)}
-                  type={AttributeType.Password}
-                />
+                <FormControl
+                  sx={{
+                    '--FormHelperText-color': 'var(--joy-palette-danger-500)',
+                  }}
+                >
+                  <FormLabel>{attr.label ?? attr.name}</FormLabel>
+                  <Input
+                    {...display}
+                    {...register(attr.name, fieldConfig)}
+                    type={AttributeType.Password}
+                  />
+                  <FormHelperText id={`${attr.name}-helper-text`}>
+                    {display.helperText}
+                  </FormHelperText>
+                </FormControl>
               );
             case AttributeType.Number:
               return (
-                <TextField
-                  {...display}
-                  {...register(attr.name, fieldConfig)}
-                  type={AttributeType.Number}
-                />
+                <FormControl
+                  sx={{
+                    '--FormHelperText-color': 'var(--joy-palette-danger-500)',
+                  }}
+                >
+                  <FormLabel>{attr.label ?? attr.name}</FormLabel>
+                  <Input
+                    {...display}
+                    {...register(attr.name, fieldConfig)}
+                    type={AttributeType.Number}
+                  />
+                  <FormHelperText id={`${attr.name}-helper-text`}>
+                    {display.helperText}
+                  </FormHelperText>
+                </FormControl>
               );
 
             case AttributeType.Text:
             default:
               return (
-                <TextField {...display} {...register(attr.name, fieldConfig)} />
+                <FormControl
+                  sx={{
+                    '--FormHelperText-color': 'var(--joy-palette-danger-500)',
+                  }}
+                >
+                  <FormLabel>{attr.label ?? attr.name}</FormLabel>
+                  <Input {...display} {...register(attr.name, fieldConfig)} />
+                  <FormHelperText id={`${attr.name}-helper-text`}>
+                    {display.helperText}
+                  </FormHelperText>
+                </FormControl>
               );
           }
         })}
