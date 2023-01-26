@@ -12,13 +12,14 @@ type Props = {
   attribute: Attribute;
   display: DisplayProps;
   options: Options;
+  helperText: string;
 };
 export default function CheckGroup(props: Props) {
-  const { options, attribute, display } = props;
+  const { options, attribute, display, helperText } = props;
   const { watch, control } = useFormContext();
   const currentVals = watch(attribute.name);
   const checkProps: { color?: 'danger'; id?: string } = {};
-  if (display.helperText) {
+  if (helperText) {
     checkProps.color = 'danger';
   }
   return (
@@ -36,7 +37,7 @@ export default function CheckGroup(props: Props) {
               sx={{
                 borderRadius: 'var(--joy-radius-sm)',
                 p: 0.5,
-                border: display.helperText
+                border: helperText
                   ? '1px solid var(--joy-palette-danger-outlinedBorder)'
                   : 'none',
               }}
@@ -95,7 +96,7 @@ export default function CheckGroup(props: Props) {
               sx={{ color: 'var(--joy-palette-danger-500)' }}
               level="body2"
             >
-              {display.helperText}
+              {helperText}
             </Typography>
           </Stack>
         );

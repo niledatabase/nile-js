@@ -21,6 +21,7 @@ describe('index', () => {
         'events',
         'access',
         'metrics',
+        'auth',
       ]);
       keys.shift();
       keys.forEach((k) => {
@@ -127,6 +128,13 @@ describe('index', () => {
             'listMetricDefinitions',
             'listMetricDefinitionsForEntityType',
             'produceBatchOfMetrics',
+          ]);
+        }
+        if (k === 'auth') {
+          expect(props).toEqual([
+            'constructor',
+            'managedOidcCallback',
+            'managedOidcCallback1',
           ]);
         }
       });

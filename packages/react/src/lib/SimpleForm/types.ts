@@ -24,7 +24,6 @@ export type DisplayProps = {
   key: string;
   label: string;
   placeholder: string;
-  helperText?: string;
   error?: boolean;
   color?: 'danger';
 };

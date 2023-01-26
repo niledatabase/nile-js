@@ -10,6 +10,7 @@ import {
   UsersApi,
   WorkspacesApi as WorkspaceApi,
   MetricsApi,
+  AuthApi,
 } from './client/src';
 import {
   Configuration,
@@ -41,6 +42,7 @@ export class NileApi {
   events: EventsApi;
   access: AccessApi;
   metrics: MetricsApi;
+  auth: AuthApi;
   constructor(configuration?: Configuration) {
     this.config = configuration;
 
@@ -69,6 +71,19 @@ export class NileApi {
     this.events = new EventsApi(this.entities);
     this.access = new AccessApi(configuration);
     this.metrics = new MetricsApi(configuration);
+    this.auth = new AuthApi(configuration);
+
+    // this needs to be last because setToken sets all classes
+    if (this.config?.tokenStorage === StorageOptions.LocalStorage) {
+      if (typeof window !== 'undefined') {
+        if (this.config?.tokenStorage === StorageOptions.LocalStorage) {
+          const token = localStorage.getItem('nileToken');
+          if (token) {
+            this.authToken = token;
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -98,6 +113,7 @@ export class NileApi {
       this.workspaces.workspace = workspace;
       this.access.workspace = workspace;
       this.metrics.workspace = workspace;
+      this.auth.workspace = workspace;
     }
   }
 
@@ -126,10 +142,13 @@ export class NileApi {
     if (this.metrics.workspace) {
       return this.metrics.workspace;
     }
+    if (this.auth.workspace) {
+      return this.auth.workspace;
+    }
   }
 
   /**
-   * When a token is set, it is shared across all classes
+   * When a token is set, it is shared across all classes.
    */
   set authToken(token: void | string) {
     if (this.config?.tokenStorage === StorageOptions.LocalStorage) {
@@ -149,6 +168,7 @@ export class NileApi {
       this.organizations.authToken = token;
       this.access.authToken = token;
       this.metrics.authToken = token;
+      this.auth.authToken = token;
     }
   }
 
@@ -185,6 +205,9 @@ export class NileApi {
     }
     if (this.metrics.authToken) {
       return this.metrics.authToken;
+    }
+    if (this.auth.authToken) {
+      return this.auth.authToken;
     }
   }
   /**
