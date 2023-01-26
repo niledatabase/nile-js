@@ -134,7 +134,7 @@ describe('index', () => {
           expect(props).toEqual([
             'constructor',
             'managedOidcCallback',
-            'managedOidcCallback1',
+            'verifyOidcComplete',
           ]);
         }
       });
