@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1.0-6591b7d
+  version: 0.1.0-3b87d34
 servers:
   - url: localhost:8080
 tags:
@@ -988,8 +988,8 @@ paths:
     get:
       tags:
         - auth
-      summary: Callback for Nile-managed OIDC
-      operationId: managedOidcCallback_1
+      summary: Verify authentication completion
+      operationId: verifyOidcComplete
       parameters:
         - name: state
           in: query
@@ -997,13 +997,25 @@ paths:
             type: string
       responses:
         '200':
-          description: The auth token for the current authenticated user
+          description: The user information and auth token for the authenticated user
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Token'
         '401':
           description: The current user is not authorized to access this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Verification has expired or already completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Authentication attempt not found
           content:
             application/json:
               schema:

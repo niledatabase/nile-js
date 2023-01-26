@@ -34,7 +34,7 @@ export const useVerifyToken = (): [boolean, null | string] => {
       setError(null);
       if (token) {
         try {
-          const res = await nile.auth.managedOidcCallback1();
+          const res = await nile.auth.verifyOidcComplete();
           if (res) {
             nile.authToken = res.token;
             setSuccess(true);
