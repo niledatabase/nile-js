@@ -22,7 +22,8 @@ const useOrgQuery = () => {
     const org = orgs?.filter(
       (org: Organization) => org.name === currentUserEmail
     );
-    const [{ id }] = org ?? [{}];
+    const [{ id }] =
+      orgs && orgs?.length > 0 ? (org as Organization[]) : [{ id: '' }];
     return id;
   }, [currentUserEmail, orgs]);
   return [userLoading || orgLoading, orgId];
