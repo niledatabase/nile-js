@@ -34,7 +34,7 @@ export const useVerifyToken = (): [boolean, null | string] => {
       setError(null);
       if (token) {
         try {
-          const res = await nile.auth.verifyOidcComplete();
+          const res = await nile.auth.verifyOidcComplete({ state: token });
           if (res) {
             nile.authToken = res.token;
             setSuccess(true);
