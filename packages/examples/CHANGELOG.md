@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.1](https://github.com/TheNileDev/nile-js/compare/v0.35.0...v0.35.1) (2023-01-26)
+
+### Bug Fixes
+
+- **nile-js:** set token on Nile create ([f1da2e9](https://github.com/TheNileDev/nile-js/commit/f1da2e9dff7e7bd72e18c9d06b5021936bb0a5d0))
+
 # [0.35.0](https://github.com/TheNileDev/nile-js/compare/v0.34.1...v0.35.0) (2023-01-25)
 
 **Note:** Version bump only for package @theniledev/examples
