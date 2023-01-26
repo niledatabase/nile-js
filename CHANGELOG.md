@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.3](https://github.com/TheNileDev/nile-js/compare/v0.35.2...v0.35.3) (2023-01-26)
+
+### Bug Fixes
+
+- add state to oidc verify ([1904e45](https://github.com/TheNileDev/nile-js/commit/1904e4503ca54d6f96500eb82c4a82454ddd2140))
+
 ## [0.35.2](https://github.com/TheNileDev/nile-js/compare/v0.35.1...v0.35.2) (2023-01-26)
 
 ### Bug Fixes
