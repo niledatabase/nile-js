@@ -34,10 +34,11 @@ export const useVerifyToken = (): [boolean, null | string] => {
       setError(null);
       if (token) {
         try {
-          await fetch(
-            `${nile.config?.basePath}/auth/oidc/verify?state=${token}`
-          );
-          setSuccess(true);
+          const res = await nile.auth.managedOidcCallback1();
+          if (res) {
+            nile.authToken = res.token;
+            setSuccess(true);
+          }
         } catch (e) {
           if (e instanceof Error) {
             setError(e.message);
@@ -46,7 +47,7 @@ export const useVerifyToken = (): [boolean, null | string] => {
       }
     }
     doRequest();
-  }, [nile.config?.basePath, token, url]);
+  }, [nile, token, url]);
 
   return [success, error];
 };

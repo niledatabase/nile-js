@@ -84,9 +84,10 @@ export default function ConfigForm(props: {
             error: Boolean(errors[attr.name]),
           };
           const options = attr.options ?? [];
+          let helperText = '';
 
           if (attr.required) {
-            display.helperText = errors[attr.name] && 'This field is required';
+            helperText = errors[attr.name] ? 'This field is required' : '';
             fieldConfig.required = true;
           }
 
@@ -98,11 +99,13 @@ export default function ConfigForm(props: {
                   attribute={attr}
                   display={display}
                   options={options}
+                  helperText={helperText}
                 />
               );
             case AttributeType.Select:
               return (
                 <FormControl
+                  key={display.key}
                   sx={{
                     '--FormHelperText-color': 'var(--joy-palette-danger-500)',
                   }}
@@ -139,7 +142,7 @@ export default function ConfigForm(props: {
                             })}
                           </Select>
                           <FormHelperText id={`${attr.name}-helper-text`}>
-                            {display.helperText}
+                            {helperText}
                           </FormHelperText>
                         </Stack>
                       );
@@ -150,6 +153,7 @@ export default function ConfigForm(props: {
             case AttributeType.Password:
               return (
                 <FormControl
+                  key={display.key}
                   sx={{
                     '--FormHelperText-color': 'var(--joy-palette-danger-500)',
                   }}
@@ -161,13 +165,14 @@ export default function ConfigForm(props: {
                     type={AttributeType.Password}
                   />
                   <FormHelperText id={`${attr.name}-helper-text`}>
-                    {display.helperText}
+                    {helperText}
                   </FormHelperText>
                 </FormControl>
               );
             case AttributeType.Number:
               return (
                 <FormControl
+                  key={display.key}
                   sx={{
                     '--FormHelperText-color': 'var(--joy-palette-danger-500)',
                   }}
@@ -179,7 +184,7 @@ export default function ConfigForm(props: {
                     type={AttributeType.Number}
                   />
                   <FormHelperText id={`${attr.name}-helper-text`}>
-                    {display.helperText}
+                    {helperText}
                   </FormHelperText>
                 </FormControl>
               );
@@ -188,6 +193,7 @@ export default function ConfigForm(props: {
             default:
               return (
                 <FormControl
+                  key={display.key}
                   sx={{
                     '--FormHelperText-color': 'var(--joy-palette-danger-500)',
                   }}
@@ -195,7 +201,7 @@ export default function ConfigForm(props: {
                   <FormLabel>{attr.label ?? attr.name}</FormLabel>
                   <Input {...display} {...register(attr.name, fieldConfig)} />
                   <FormHelperText id={`${attr.name}-helper-text`}>
-                    {display.helperText}
+                    {helperText}
                   </FormHelperText>
                 </FormControl>
               );
