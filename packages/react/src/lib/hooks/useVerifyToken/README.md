@@ -10,7 +10,11 @@ In the Nile administration dashboard OIDC configuration, a page can set for redi
 
 Assume the dashboard is configured to redirect logged in users to `https://app.mysweetapp.io/dashboard` and the login page is `https://app.mysweetapp.io/login`.
 
-> **_NOTE:_** For demonstration purposes, local storage is configured to allow logins to persist across browser refreshes. By default, they are only stored in memory. By opting in to using local storage by passing the Nile provider the `tokenStorage={StorageOptions.LocalStorage}` prop, it opens the application up to cross-site scripting (XSS) attacks, as attackers are able to retrieve stored tokens.
+> ⚠️
+> 
+>  For demonstration purposes, local storage is configured to allow logins to persist across browser refreshes. By default, they are only stored in memory. By opting in to using local storage by passing the Nile provider the `tokenStorage={StorageOptions.LocalStorage}` prop, it opens the application up to cross-site scripting (XSS) attacks, as attackers are able to retrieve stored tokens.
+>  
+>  ⚠️
 
 ##### `pages/_app.tsx` (next.js)
 ```typescript
