@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.4](https://github.com/TheNileDev/nile-js/compare/v0.35.3...v0.35.4) (2023-02-13)
+
+### Bug Fixes
+
+- allow null auth token ([fea2bae](https://github.com/TheNileDev/nile-js/commit/fea2bae9d31dbe0db258e6e9d3437803a9b0953a))
+
 ## [0.35.3](https://github.com/TheNileDev/nile-js/compare/v0.35.2...v0.35.3) (2023-01-26)
 
 ### Bug Fixes
