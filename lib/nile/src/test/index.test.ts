@@ -246,6 +246,29 @@ describe('index', () => {
     expect(nile.workspaces.workspace).toBeTruthy();
     expect(nile.organizations.workspace).toBeTruthy();
   });
+
+  it('sets an auth token', () => {
+    const nile = Nile();
+    nile.authToken = '123';
+    expect(nile.authToken).toEqual('123');
+    expect(nile.users.authToken).toEqual('123');
+    expect(nile.developers.authToken).toEqual('123');
+    expect(nile.entities.authToken).toEqual('123');
+    expect(nile.workspaces.authToken).toEqual('123');
+    expect(nile.organizations.authToken).toEqual('123');
+  });
+
+  it('unsets an auth token', () => {
+    const nile = Nile();
+    nile.authToken = undefined;
+    expect(nile.authToken).toEqual(undefined);
+    expect(nile.users.authToken).toEqual(undefined);
+    expect(nile.developers.authToken).toEqual(undefined);
+    expect(nile.entities.authToken).toEqual(undefined);
+    expect(nile.workspaces.authToken).toEqual(undefined);
+    expect(nile.organizations.authToken).toEqual(undefined);
+  });
+
   it('sets the initial workspace', () => {
     const nile = Nile({ workspace: '123' });
     expect(nile.workspace).toBe('123');

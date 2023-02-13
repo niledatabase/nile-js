@@ -70,7 +70,7 @@ export class {{classname}} extends runtime.BaseAPI implements {{classname}}Inter
 {{^withInterfaces}}
 export class {{classname}} extends runtime.BaseAPI {
 {{/withInterfaces}}
-    public authToken: string;
+    public authToken: string | void;
     public workspace: string;
     
     constructor(protected configuration = new runtime.Configuration()) {
