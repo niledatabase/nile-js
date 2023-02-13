@@ -43,7 +43,7 @@ export default function CheckGroup(props: Props) {
               }}
             >
               <List
-                row
+                orientation="horizontal"
                 wrap
                 sx={{
                   '--List-gap': '8px',
