@@ -160,16 +160,14 @@ export class NileApi {
         }
       }
     }
-    if (token) {
-      this.users.authToken = token;
-      this.developers.authToken = token;
-      this.entities.authToken = token;
-      this.workspaces.authToken = token;
-      this.organizations.authToken = token;
-      this.access.authToken = token;
-      this.metrics.authToken = token;
-      this.auth.authToken = token;
-    }
+    this.users.authToken = token;
+    this.developers.authToken = token;
+    this.entities.authToken = token;
+    this.workspaces.authToken = token;
+    this.organizations.authToken = token;
+    this.access.authToken = token;
+    this.metrics.authToken = token;
+    this.auth.authToken = token;
   }
 
   /**
