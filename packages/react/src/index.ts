@@ -1,5 +1,4 @@
 export { default as LoginForm } from './components/LoginForm';
-export { default as GoogleLoginButton } from './components/GoogleLoginButton';
 export { default as SignUpForm } from './components/SignUpForm';
 export { default as InstanceList } from './components/InstanceList';
 export { default as EntityForm } from './components/EntityForm';
@@ -27,3 +26,6 @@ export {
   UpdateInterval,
 } from './components/Metrics/types';
 export { default as OrganizationForm } from './components/OrganizationForm';
+
+export { default as GoogleLoginButton } from './GoogleLoginButton';
+export * from './GoogleLoginButton';
