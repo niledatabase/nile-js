@@ -146,6 +146,6 @@ const joyTheme = extendJoyTheme({
   },
 });
 
-const theme = deepmerge(joyTheme, muiTheme);
+const theme = deepmerge(muiTheme, joyTheme);
 
 export default theme;
