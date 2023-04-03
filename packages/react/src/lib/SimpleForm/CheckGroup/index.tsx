@@ -2,9 +2,11 @@ import * as React from 'react';
 import Box from '@mui/joy/Box';
 import Checkbox from '@mui/joy/Checkbox';
 import List from '@mui/joy/List';
-import ListItem from '@mui/joy/ListItem';
-import { FormLabel, Stack, Typography } from '@mui/joy';
 import { Controller, useFormContext } from 'react-hook-form';
+import Stack from '@mui/joy/Stack';
+import FormLabel from '@mui/joy/FormLabel';
+import ListItem from '@mui/joy/ListItem';
+import Typography from '@mui/joy/Typography';
 
 import { Attribute, DisplayProps, Options } from '../types';
 
