@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNile } from '@theniledev/react';
 import { LoginInfo, User } from '@theniledev/js';
 import { useForm } from 'react-hook-form';
-import { ComponentList } from 'components/ComponentList';
 import { useQuery } from '@tanstack/react-query';
+
+import { ComponentList } from '../components/ComponentList';
 
 function DeveloperLoginForm(props: { setShowForm: (show: boolean) => void }) {
   const nile = useNile();

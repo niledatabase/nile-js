@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useNile } from '../context';
 
-import GoogleSSOButton from './Button';
+import GoogleSSOButton from './GoogleSSOButton';
 
 type LogInGoogleProps = {
   org?: string;
