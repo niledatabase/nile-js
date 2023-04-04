@@ -1,7 +1,7 @@
 {
-  // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
-  "include": ["src", "types", "../stories/**/*.stories.tsx"],
   "extends": "../../tsconfig",
+  // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
+  "include": ["src/**/*", "types", "stories/**/*.stories.tsx"],
   "compilerOptions": {
     "jsx": "react"
   }

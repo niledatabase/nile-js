@@ -1,12 +1,11 @@
 import React from 'react';
 import { Story } from '@storybook/react';
 import { CssVarsProvider } from '@mui/joy/styles';
-
-import { Button } from '../../src/GoogleLoginButton';
-import defaultTheme from '../../src/context/themeJoiner';
+import { GoogleSSOButton } from '@theniledev/react/GoogleLoginButton';
+import defaultTheme from '@theniledev/react/context/themeJoiner';
 
 const meta = {
-  component: Button,
+  component: GoogleSSOButton,
 };
 
 export default meta;
@@ -14,7 +13,7 @@ export default meta;
 const Template: Story = () => (
   <CssVarsProvider theme={defaultTheme}>
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
-      <Button href="some href" />
+      <GoogleSSOButton href="some href" />
     </div>
   </CssVarsProvider>
 );
