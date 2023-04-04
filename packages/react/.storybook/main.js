@@ -26,14 +26,12 @@ module.exports = {
       type: 'javascript/auto',
     });
 
-    config.resolve.modules = [
-      ...(config.resolve.modules || []),
-      path.resolve(__dirname, '../'),
-    ];
+    config.resolve.modules = [...(config.resolve.modules || [])];
 
     config.resolve.alias = {
       ...config.resolve.alias,
-      '~/lib': path.resolve(__dirname, '../lib'),
+      '@theniledev/react/*': path.resolve(__dirname, '../src/*'),
+      '@theniledev/react': path.resolve(__dirname, '../src/'),
     };
     config.module.rules.push({
       test: /\.css$/,

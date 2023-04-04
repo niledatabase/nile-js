@@ -6,6 +6,7 @@ export default Nile;
 
 export * from './client/src/models';
 export * from './client/src/apis';
-export { ConfigurationParameters, StorageOptions } from './client/src/runtime';
+export type { ConfigurationParameters } from './client/src/runtime';
+export { StorageOptions } from './client/src/runtime';
 export * from './model/DeveloperCredentials';
 export * from './EventsApi';

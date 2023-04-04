@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "./",
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es5",
+    "paths": {
+      "@theniledev/react": ["./packages/react/src"],
+      "@theniledev/react/*": ["./packages/react/src/*"],
+      "@theniledev/js": ["./lib/nile/src"],
+      "@theniledev/js/*": ["./lib/nile/src/*"]
+    }
+  },
+  "exclude": ["**/node_modules", "**/.*/"],
+  "types": ["node", "react", "react-is/next"]
+}

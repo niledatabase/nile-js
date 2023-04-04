@@ -11,6 +11,8 @@ import {
   TimeScale,
 } from 'chart.js';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import('chartjs-adapter-date-fns');
 
 import FilterBarChart from './Filter/FilterBarChart';

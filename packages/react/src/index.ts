@@ -9,8 +9,6 @@ export { useVerifyToken } from './lib/hooks/useVerifyToken';
 
 export { useInstances } from './lib/hooks/useInstances';
 
-export { AttributeType, Attribute } from './lib/SimpleForm/types';
-
 export {
   MetricsLineChart,
   useFilter,
@@ -20,11 +18,7 @@ export {
   IntervalSelect,
   MetricsContext,
 } from './components/Metrics';
-export {
-  AggregateMetricsRequest,
-  AggregationType,
-  UpdateInterval,
-} from './components/Metrics/types';
+
 export { default as OrganizationForm } from './components/OrganizationForm';
 
 export { default as GoogleLoginButton } from './GoogleLoginButton';
