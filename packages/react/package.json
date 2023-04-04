@@ -2,8 +2,7 @@
   "name": "@theniledev/react",
   "version": "0.35.5",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "./src/index.ts",
   "files": [
     "dist",
     "src"
@@ -34,7 +33,6 @@
     "trailingComma": "es5"
   },
   "author": "jrea",
-  "module": "dist/react-lib.esm.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/TheNileDev/nile-js.git",
@@ -86,7 +84,7 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
     "@mui/joy": "5.0.0-alpha.73",
-    "@mui/material": "5.11.6",
+    "@mui/material": "5.11.16",
     "@mui/x-data-grid": "^5.17.20",
     "@mui/x-date-pickers": "^5.0.15",
     "@tanstack/react-query": "^4.23.0",

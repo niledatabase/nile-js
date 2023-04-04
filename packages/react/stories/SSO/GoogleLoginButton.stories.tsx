@@ -1,8 +1,7 @@
 import React from 'react';
 import { Story } from '@storybook/react';
-
-import GoogleLoginButton from '../../src/GoogleLoginButton';
-import { NileProvider } from '../../src/context';
+import GoogleLoginButton from '@theniledev/react/GoogleLoginButton';
+import { NileProvider } from '@theniledev/react/context';
 
 const meta = {
   component: GoogleLoginButton,

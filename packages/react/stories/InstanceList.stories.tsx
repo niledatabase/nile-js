@@ -6,13 +6,16 @@ import {
   OrganizationTypeEnum,
   Organization,
 } from '@theniledev/js';
-import { Box, Button, Stack, Typography } from '@mui/joy';
 import { GridRenderCellParams } from '@mui/x-data-grid';
-import { Add } from '@mui/icons-material';
 import Card from '@mui/joy/Card';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import Button from '@mui/joy/Button';
+import Add from '@mui/icons-material/Add';
+import Box from '@mui/joy/Box';
 
-import InstanceList from '../src/components/InstanceList/InstanceList';
 import { NileProvider } from '../src/context';
+import InstanceList from '../src/components/InstanceList/InstanceList';
 
 const entityData = {
   id: 'ent_02qdzM9QKiB7lzR3HZVVEv',
@@ -53,6 +56,7 @@ const instances: Instance[] = [
     created: new Date(),
     updated: new Date(),
     seq: 13,
+    org: 'somRog',
     type: 'clusters',
     properties: {
       status: 'provisioning',
@@ -197,11 +201,7 @@ const ActionButtons = () => (
       actionButtons={[
         <Button
           variant="solid"
-          startDecorator={
-            <>
-              <Add />
-            </>
-          }
+          startDecorator={<Add />}
           size="sm"
           key="addEntity"
         >
@@ -224,6 +224,7 @@ const Cards = () => (
           id: 'inst_02das43sfDsFDD',
           created: new Date(),
           updated: new Date(),
+          org: 'someOrg',
           seq: 13,
           type: 'clusters',
           properties: {},
