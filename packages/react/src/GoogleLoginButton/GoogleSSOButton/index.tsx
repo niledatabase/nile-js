@@ -6,10 +6,23 @@ import Typography from '@mui/joy/Typography';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import GoogleLogo from './google.svg';
+import GoogleLogo from '../google.svg';
+import { useNileConfig } from '../../context';
 
-export default function GoogleSSOButton(props: { href: string }) {
-  const { href } = props;
+const LOGIN_PATH = 'users/oidc/google/login';
+
+/**
+ * A compponent for a Google login button, according to their design language.
+ * This works when an identity provider is configured in the admin dashboard.
+ * @param props href: a string to override the URL provided by the context
+ * @returns a JSX.Element to render
+ */
+export default function GoogleSSOButton(props: { href?: string }) {
+  const { basePath, workspace, database } = useNileConfig();
+  // workspace and database can be `''`.
+  // let this fail silently for now, and update the context when the time comes
+  const contextHref = `${basePath}/workspaces/${workspace}/databases/${database}/${LOGIN_PATH}`;
+  const href = props?.href ?? contextHref;
   return (
     <Box
       component="a"
