@@ -7,7 +7,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Provider as MetricsProvider } from '../components/Metrics/context';
 
 import defaultTheme from './themeJoiner';
-import { NileContext, NileProviderProps } from './types';
+import { NileContext, NileProviderProps, NileReactConfig } from './types';
 
 const queryClient = new QueryClient();
 
@@ -17,6 +17,9 @@ const defaultContext: NileContext = {
     workspace: 'none',
     credentials: 'include',
   }),
+  workspace: '',
+  database: '',
+  basePath: '',
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -38,12 +41,13 @@ export const NileProvider = (props: NileProviderProps) => {
     children,
     theme,
     workspace,
+    database,
     tokenStorage,
     QueryProvider = BaseQueryProvider,
     basePath = 'https://prod.thenile.dev',
   } = props;
 
-  const values = useMemo<NileContext>(() => {
+  const values = useMemo<NileContext>((): NileContext => {
     return {
       instance: Nile({
         basePath: basePath,
@@ -51,8 +55,11 @@ export const NileProvider = (props: NileProviderProps) => {
         credentials: 'include',
         tokenStorage,
       }),
+      workspace: String(workspace),
+      database: String(database),
+      basePath,
     };
-  }, [basePath, tokenStorage, workspace]);
+  }, [basePath, database, tokenStorage, workspace]);
 
   return (
     <QueryProvider>
@@ -71,4 +78,16 @@ const useNileContext = (): NileContext => {
 
 export const useNile = (): NileApi => {
   return useNileContext().instance;
+};
+
+export const useNileConfig = (): NileReactConfig => {
+  const { database, workspace, basePath } = useNileContext();
+  return React.useMemo(
+    () => ({
+      workspace,
+      database,
+      basePath,
+    }),
+    [basePath, database, workspace]
+  );
 };
