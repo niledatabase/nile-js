@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/TheNileDev/nile-js/compare/v0.36.0...v0.37.0) (2023-05-01)
+
+### Features
+
+- update context and google sso ([08e5ad9](https://github.com/TheNileDev/nile-js/commit/08e5ad9a9275d4373922a9b2ea7aaf6a0d89c9d0))
+
 # [0.36.0](https://github.com/TheNileDev/nile-js/compare/v0.35.5...v0.36.0) (2023-04-04)
 
 ### Features
