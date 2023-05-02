@@ -1,6 +1,7 @@
 {
+  "extends": "../../tsconfig",
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
-  "include": ["src/**/*", "types", "test/*"],
+  "include": ["src/**/*", "test/*"],
   "compilerOptions": {
     "target": "ES6",
     "lib": ["dom", "esnext"],

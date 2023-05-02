@@ -19,3 +19,5 @@ spec/output.swagger.json
 # Documentation here: https://yarnpkg.com/features/zero-installs
 !.yarn/cache
 #.pnp.*
+
+.tsbuildinfo
