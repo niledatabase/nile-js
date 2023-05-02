@@ -11,8 +11,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
-    "build:types": "tsc -p tsconfig.build.json -d --declarationDir dist --emitDeclarationOnly",
+    "build": "tsdx build --tsconfig tsconfig.build.json",
     "test": "tsdx test",
     "lint": "eslint src",
     "size": "size-limit",
