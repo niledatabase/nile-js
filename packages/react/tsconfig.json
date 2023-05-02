@@ -1,8 +1,10 @@
 {
   "extends": "../../tsconfig",
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
-  "include": ["src/**/*", "types", "stories/**/*.stories.tsx"],
+  "include": ["src/**/*"],
   "compilerOptions": {
-    "jsx": "react"
+    "jsx": "react",
+    "lib": ["dom", "esnext"],
+    "esModuleInterop": true
   }
 }

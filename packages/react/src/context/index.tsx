@@ -82,7 +82,7 @@ export const useNile = (): NileApi => {
 
 export const useNileConfig = (): NileReactConfig => {
   const { database, workspace, basePath } = useNileContext();
-  return React.useMemo(
+  return useMemo(
     () => ({
       workspace,
       database,

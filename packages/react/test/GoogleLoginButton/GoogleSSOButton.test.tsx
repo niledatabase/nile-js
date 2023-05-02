@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import { GoogleSSOButton } from '../../src/GoogleLoginButton';
+import GoogleSSOButton from '../../src/GoogleLoginButton/GoogleSSOButton';
 import { NileProvider } from '../../src/context';
 
 jest.mock('../../src/GoogleLoginButton/google.svg', () => 'svg');

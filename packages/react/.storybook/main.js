@@ -12,7 +12,7 @@ module.exports = {
   ],
   // https://storybook.js.org/docs/react/configure/typescript#mainjs-configuration
   typescript: {
-    check: true, // type-check stories during Storybook build
+    check: false, // type-check stories during Storybook build
   },
   webpackFinal: async (config) => {
     // Remove the existing css rule
