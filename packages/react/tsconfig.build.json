@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig",
+  // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "composite": true,
+    "declaration": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true
+  },
+  "references": [{ "path": "../../lib/nile/tsconfig.build.json" }]
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo, Fragment } from 'react';
 import { Stack } from '@mui/joy';
 import { DataGrid, GridColDef, DataGridProps } from '@mui/x-data-grid';
 import { Entity, Instance, Organization } from '@theniledev/js';
@@ -75,7 +75,7 @@ export const generateHeaderRow = (
   return [];
 };
 
-const InstanceList = React.memo(function InstanceList(props: Props) {
+const InstanceList = memo(function InstanceList(props: Props) {
   const {
     isFetching,
     instances,
@@ -93,7 +93,7 @@ const InstanceList = React.memo(function InstanceList(props: Props) {
     dataGridProps = {},
   } = props;
 
-  const flatInstances = React.useMemo(() => {
+  const flatInstances = useMemo(() => {
     if (!instances) {
       return [];
     }
@@ -115,7 +115,7 @@ const InstanceList = React.memo(function InstanceList(props: Props) {
     });
   }, [columns, instances]);
 
-  const headerRow = React.useMemo(
+  const headerRow = useMemo(
     () =>
       generateHeaderRow(
         additionalColumns ?? [],
@@ -136,7 +136,7 @@ const InstanceList = React.memo(function InstanceList(props: Props) {
     return `No ${entity} found`;
   }
 
-  const styleOverrides = React.useMemo(
+  const styleOverrides = useMemo(
     () => ({
       '.MuiDataGrid-cell:focus': {
         outline: typeof handleRowClick === 'function' ? 'none' : null,
@@ -164,7 +164,7 @@ const InstanceList = React.memo(function InstanceList(props: Props) {
             }}
           >
             {actionButtons?.map((button, idx) => {
-              return <React.Fragment key={idx}>{button}</React.Fragment>;
+              return <Fragment key={idx}>{button}</Fragment>;
             })}
           </Stack>
           {showExpandedView && expandedView && instances ? (

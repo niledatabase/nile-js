@@ -1,5 +1,11 @@
-import sub from 'date-fns/sub';
-import React, { useMemo, Dispatch, useCallback } from 'react';
+import { sub } from 'date-fns';
+import React, {
+  useMemo,
+  Dispatch,
+  useCallback,
+  createContext,
+  useContext,
+} from 'react';
 
 import { allowedUpdateInterval } from '../../../lib/utils/refresh';
 
@@ -22,7 +28,7 @@ type State = Times & Interval;
 type DispatchAction = (Times | Interval) & { type: Actions };
 type Reducer = (state: State, action: DispatchAction) => State;
 
-const Context = React.createContext<[State, Dispatch<DispatchAction>]>([
+const Context = createContext<[State, Dispatch<DispatchAction>]>([
   {
     ...oneHourWindow(sub(new Date(), { hours: 1 })),
     updateInterval: undefined,
@@ -62,13 +68,13 @@ export function Provider(props: ProviderProps) {
 }
 
 export const useMetricsTime = () => {
-  const [state] = React.useContext(Context);
+  const [state] = useContext(Context);
   return useMemo(() => state, [state]);
 };
 
 export const useSetMetricsUpdateInterval = () => {
-  const [, dispatch] = React.useContext(Context);
-  return React.useCallback(
+  const [, dispatch] = useContext(Context);
+  return useCallback(
     (updateInterval: number) => {
       const interval = allowedUpdateInterval(updateInterval);
       if (interval) {
@@ -80,13 +86,13 @@ export const useSetMetricsUpdateInterval = () => {
 };
 
 export const useMetricsUpdateInterval = () => {
-  const [state] = React.useContext(Context);
+  const [state] = useContext(Context);
   return useMemo(() => state.updateInterval, [state.updateInterval]);
 };
 
 // probably want to use the helper methods vs this
 export const useSetTimes = () => {
-  const [, dispatch] = React.useContext(Context);
+  const [, dispatch] = useContext(Context);
   return useCallback(
     (times: Times) => dispatch({ type: Actions.SetTimes, ...times }),
     [dispatch]
