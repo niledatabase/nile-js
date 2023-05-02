@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import Nile from '..';
-import { LoginInfo } from '../client/src/models';
+import { LoginInfo } from '../src/client/src/models';
+import Nile from '../src';
 
 const userPayload = {
   id: 4,

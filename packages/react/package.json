@@ -2,10 +2,9 @@
   "name": "@theniledev/react",
   "version": "0.37.0",
   "license": "MIT",
-  "main": "./src/index.ts",
+  "main": "dist/index.js",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=16.0"
