@@ -6,7 +6,6 @@
     "rootDir": "./src",
     "composite": true,
     "declaration": true,
-    "noEmit": false,
     "emitDeclarationOnly": true
   },
   "references": [{ "path": "../../lib/nile/tsconfig.build.json" }]

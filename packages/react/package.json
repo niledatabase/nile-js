@@ -11,8 +11,8 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build && yarn build:types",
-    "build:types": "tsdx build --tsconfig ./tsconfig.build.json",
+    "build": "tsdx build",
+    "build:types": "tsc -p tsconfig.build.json -d --declarationDir dist --emitDeclarationOnly",
     "test": "tsdx test",
     "lint": "eslint src",
     "size": "size-limit",
@@ -43,11 +43,11 @@
   },
   "size-limit": [
     {
-      "path": "dist/react-lib.cjs.production.min.js",
+      "path": "dist/react.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/react-lib.esm.js",
+      "path": "dist/react.esm.js",
       "limit": "10 KB"
     }
   ],
