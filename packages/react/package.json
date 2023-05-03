@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/react",
-  "version": "0.37.2",
+  "version": "0.37.5",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build --tsconfig ./tsconfig.build.json",
+    "build": "tsdx build --tsconfig tsconfig.build.json",
     "test": "tsdx test",
     "lint": "eslint src",
     "size": "size-limit",
@@ -42,11 +42,11 @@
   },
   "size-limit": [
     {
-      "path": "dist/react-lib.cjs.production.min.js",
+      "path": "dist/react.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/react-lib.esm.js",
+      "path": "dist/react.esm.js",
       "limit": "10 KB"
     }
   ],
@@ -87,7 +87,7 @@
     "@mui/x-data-grid": "^5.17.20",
     "@mui/x-date-pickers": "^5.0.15",
     "@tanstack/react-query": "^4.23.0",
-    "@theniledev/js": "^0.37.2",
+    "@theniledev/js": "^0.37.5",
     "chart.js": "^3.9.1",
     "chartjs-adapter-date-fns": "^2.0.1",
     "date-fns": "^2.29.3",

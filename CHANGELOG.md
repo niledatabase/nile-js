@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.37.5](https://github.com/TheNileDev/nile-js/compare/v0.37.4...v0.37.5) (2023-05-02)
+
+### Bug Fixes
+
+- set base url for react package ([7b68a46](https://github.com/TheNileDev/nile-js/commit/7b68a46e84c3cc2a57b5a8097de29a651fe0ebf1))
+
+## [0.37.4](https://github.com/TheNileDev/nile-js/compare/v0.37.3...v0.37.4) (2023-05-02)
+
+**Note:** Version bump only for package @theniledev/packages
+
+## [0.37.3](https://github.com/TheNileDev/nile-js/compare/v0.37.2...v0.37.3) (2023-05-02)
+
+**Note:** Version bump only for package @theniledev/packages
+
 ## [0.37.2](https://github.com/TheNileDev/nile-js/compare/v0.37.1...v0.37.2) (2023-05-02)
 
 **Note:** Version bump only for package @theniledev/packages
