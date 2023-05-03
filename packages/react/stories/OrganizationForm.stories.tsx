@@ -18,7 +18,7 @@ const meta = {
 export default meta;
 
 const Template: Story = () => (
-  <NileProvider basePath="http://localhost:8080">
+  <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
       <OrganizationForm
         onSuccess={() => alert('success!')}
