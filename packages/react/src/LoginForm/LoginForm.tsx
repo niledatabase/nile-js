@@ -2,53 +2,54 @@ import React from 'react';
 import { useMutation } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 
-import UserForm from '../lib/SimpleForm';
-import { Attribute, AttributeType } from '../lib/SimpleForm/types';
+import { Attribute } from '../lib/SimpleForm/types';
 import { useNileConfig } from '../context';
+import SimpleForm from '../lib/SimpleForm';
+import { AttributeType } from '../lib/SimpleForm/types';
 
-import { Props } from './types';
+import { Props, AllowedAny } from './types';
 
-export default function SignUpForm(props: Props) {
-  const { buttonText = 'Sign up', onSuccess, onError, attributes } = props;
+export default function LoginForm(props: Props) {
   const { workspace, database, basePath, allowClientCookies } = useNileConfig();
-  const fetchPath = `${basePath}/workspaces/${workspace}/databases/${database}/users`;
+
+  const { attributes, onSuccess, onError, beforeMutate } = props;
+  const fetchPath = `${basePath}/workspaces/${workspace}/databases/${database}/users/login`;
+
+  const handleMutate =
+    typeof beforeMutate === 'function'
+      ? beforeMutate
+      : (data: AllowedAny): AllowedAny => data;
 
   const mutation = useMutation(
     async (data: { email: string; password: string }) => {
-      const { email, password, ...metadata } = data;
-      if (Object.keys(metadata).length > 0) {
-        // eslint-disable-next-line no-console
-        console.warn('additional metadata not supported yet.');
-      }
-
+      const _data = handleMutate(data);
       const res = await fetch(fetchPath, {
         method: 'POST',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(_data),
         headers: {
           'content-type': 'application/json',
         },
       }).catch((e) => e);
-
       if (res.ok === false) {
         throw new Error(res.status);
       }
-
       try {
-        if (res) {
-          return await res.json();
-        }
+        return await res.json();
       } catch (e) {
         return e;
       }
     },
     {
-      onSuccess: (res, data) => {
-        if (allowClientCookies) {
-          Cookies.set('token', res.token.token, {
-            'max-age': res.token.maxAge,
-          });
+      onSuccess: (token, data) => {
+        if (token) {
+          if (allowClientCookies) {
+            Cookies.set('token', token.token, {
+              'max-age': token.maxAge,
+            });
+          }
+
+          onSuccess && onSuccess(token, data);
         }
-        onSuccess && onSuccess(data);
       },
       onError: (error, data) => {
         onError && onError(error as Error, data);
@@ -80,9 +81,9 @@ export default function SignUpForm(props: Props) {
   }, [attributes]);
 
   return (
-    <UserForm
+    <SimpleForm
       mutation={mutation}
-      buttonText={buttonText}
+      buttonText="Log in"
       attributes={completeAttributes}
     />
   );

@@ -4,19 +4,19 @@ import { NileProvider } from '@theniledev/react';
 import Cookies from 'js-cookie';
 import '../matchMedia.mock';
 
-import SignUpForm from '../../src/SignUpForm/SignUpForm';
+import LoginForm from '../../src/LoginForm/LoginForm';
 import { token } from '../fetch.mock';
 
 jest.mock('js-cookie');
 
-describe('SignUpForm', () => {
+describe('LoginForm', () => {
   it('sets a js cookie by default', async () => {
     const spy = jest.spyOn(Cookies, 'set');
     const onSuccess = jest.fn();
     global.fetch = token;
     render(
       <NileProvider workspace="workspace" database="database">
-        <SignUpForm onSuccess={onSuccess} />
+        <LoginForm onSuccess={onSuccess} />
       </NileProvider>
     );
     const password = screen.getByPlaceholderText('Password');
@@ -25,7 +25,7 @@ describe('SignUpForm', () => {
     const email = screen.getByPlaceholderText('Email');
     fireEvent.change(email, { target: { value: 'squirrel@super.secret' } });
 
-    const button = screen.getByRole('button', { name: 'Sign up' });
+    const button = screen.getByRole('button', { name: 'Log in' });
     fireEvent.click(button);
 
     await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
