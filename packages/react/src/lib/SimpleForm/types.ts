@@ -22,6 +22,7 @@ export type Attribute = {
 
 export type DisplayProps = {
   key: string;
+  id: string;
   label: string;
   placeholder: string;
   error?: boolean;

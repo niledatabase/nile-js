@@ -20,6 +20,7 @@ const defaultContext: NileContext = {
   workspace: '',
   database: '',
   basePath: '',
+  allowClientCookies: true, // totally insecure, but makes it easy for getting started
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -44,6 +45,7 @@ export const NileProvider = (props: NileProviderProps) => {
     database,
     tokenStorage,
     QueryProvider = BaseQueryProvider,
+    allowClientCookies,
     basePath = 'https://prod.thenile.dev',
   } = props;
 
@@ -58,8 +60,9 @@ export const NileProvider = (props: NileProviderProps) => {
       workspace: String(workspace),
       database: String(database),
       basePath,
+      allowClientCookies,
     };
-  }, [basePath, database, tokenStorage, workspace]);
+  }, [basePath, database, tokenStorage, workspace, allowClientCookies]);
 
   return (
     <QueryProvider>
@@ -81,13 +84,15 @@ export const useNile = (): NileApi => {
 };
 
 export const useNileConfig = (): NileReactConfig => {
-  const { database, workspace, basePath } = useNileContext();
+  const { database, workspace, basePath, allowClientCookies } =
+    useNileContext();
   return useMemo(
     () => ({
       workspace,
       database,
       basePath,
+      allowClientCookies,
     }),
-    [basePath, database, workspace]
+    [allowClientCookies, basePath, database, workspace]
   );
 };

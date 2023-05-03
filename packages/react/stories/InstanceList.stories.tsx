@@ -96,7 +96,7 @@ type StoryProps = {
 
 const Template: Story<StoryProps> = (args) => {
   return (
-    <NileProvider basePath="http://localhost:8080">
+    <NileProvider basePath="http://localhost:8080" workspace="workspace">
       <InstanceList
         entity="myEntity"
         isFetching={args.isFetching}
@@ -121,7 +121,7 @@ Default.args = {
 };
 
 const EmptyState = () => (
-  <NileProvider basePath="http://localhost:8080">
+  <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <InstanceList
       entity="myEntity"
       isFetching={false}
@@ -167,7 +167,7 @@ const RenderEventLink = (props: GridRenderCellParams<Instance>) => {
 };
 
 const Columns = () => (
-  <NileProvider basePath="http://localhost:8080">
+  <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <InstanceList
       entity="myEntity"
       isFetching={false}
@@ -191,7 +191,7 @@ const Columns = () => (
 export const FilteredAndCustomColumns = Columns.bind({});
 
 const ActionButtons = () => (
-  <NileProvider basePath="http://localhost:8080">
+  <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <InstanceList
       entity="myEntity"
       isFetching={false}
@@ -215,7 +215,7 @@ const ActionButtons = () => (
 export const TableActionButtons = ActionButtons.bind({});
 
 const Cards = () => (
-  <NileProvider basePath="http://localhost:8080">
+  <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <InstanceList
       entity="myEntity"
       isFetching={false}
