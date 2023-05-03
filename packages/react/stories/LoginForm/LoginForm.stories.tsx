@@ -2,22 +2,12 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import Stack from '@mui/joy/Stack';
 
-import LoginForm from '../src/components/LoginForm';
-import GoogleLoginButton from '../src/GoogleLoginButton';
-import { NileProvider } from '../src/context';
+import LoginForm from '../../src/components/LoginForm';
+import GoogleLoginButton from '../../src/GoogleLoginButton';
+import { NileProvider } from '../../src/context';
 
 const meta: Meta = {
   component: LoginForm,
-  argTypes: {
-    children: {
-      control: {
-        type: 'text',
-      },
-    },
-  },
-  parameters: {
-    controls: { expanded: false },
-  },
 };
 
 export default meta;

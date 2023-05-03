@@ -9,7 +9,7 @@ class FakeResponse {
     });
   }
   json = async () => {
-    return this.payload;
+    return JSON.parse(this.payload);
   };
 }
 
