@@ -44,7 +44,7 @@ export default function LoginForm(props: Props) {
         if (token) {
           if (allowClientCookies) {
             Cookies.set('token', token.token, {
-              'max-age': token.maxAge,
+              'max-age': String(token.maxAge),
             });
           }
 

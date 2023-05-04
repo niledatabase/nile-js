@@ -45,7 +45,7 @@ export default function SignUpForm(props: Props) {
       onSuccess: (res, data) => {
         if (allowClientCookies) {
           Cookies.set('token', res.token.token, {
-            'max-age': res.token.maxAge,
+            'max-age': String(res.token.maxAge),
           });
         }
         onSuccess && onSuccess(data);
