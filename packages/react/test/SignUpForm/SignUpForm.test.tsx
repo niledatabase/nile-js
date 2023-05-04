@@ -7,8 +7,6 @@ import '../matchMedia.mock';
 import SignUpForm from '../../src/SignUpForm/SignUpForm';
 import { token } from '../fetch.mock';
 
-jest.mock('js-cookie');
-
 describe('SignUpForm', () => {
   it('sets a js cookie by default', async () => {
     const spy = jest.spyOn(Cookies, 'set');
