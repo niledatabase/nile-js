@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.2](https://github.com/TheNileDev/nile-js/compare/v0.38.1...v0.38.2) (2023-05-04)
+
+### Bug Fixes
+
+- set cookie params to strings ([3a311c7](https://github.com/TheNileDev/nile-js/commit/3a311c70f3a841d16156ac19cfbe9b25a6e5a5f2))
+
 ## [0.38.1](https://github.com/TheNileDev/nile-js/compare/v0.38.0...v0.38.1) (2023-05-04)
 
 ### Bug Fixes
