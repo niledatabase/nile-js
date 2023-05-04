@@ -31,7 +31,7 @@ export const getAttributeDefault = (
   return attribute.defaultValue ?? '';
 };
 
-export default function ConfigForm(props: {
+export default function SimpleForm(props: {
   buttonText: string;
   cancelButton?: React.ReactNode;
   attributes: Attribute[];
@@ -80,6 +80,7 @@ export default function ConfigForm(props: {
           const display: DisplayProps = {
             key: attr.name,
             label: attr.label ?? attr.name,
+            id: attr.label ?? attr.name,
             placeholder: attr.placeholder ?? attr.label ?? attr.name,
             error: Boolean(errors[attr.name]),
           };
@@ -87,7 +88,7 @@ export default function ConfigForm(props: {
           let helperText = '';
 
           if (attr.required) {
-            helperText = errors[attr.name] ? 'This field is required' : '';
+            helperText = errors[attr.name] ? `${attr.name} is required` : '';
             fieldConfig.required = true;
           }
 
@@ -109,6 +110,7 @@ export default function ConfigForm(props: {
                   sx={{
                     '--FormHelperText-color': 'var(--joy-palette-danger-500)',
                   }}
+                  id={display.id}
                 >
                   <FormLabel htmlFor={`select-field-${attr.name}`}>
                     {display.label}
@@ -157,6 +159,7 @@ export default function ConfigForm(props: {
                   sx={{
                     '--FormHelperText-color': 'var(--joy-palette-danger-500)',
                   }}
+                  id={display.id}
                 >
                   <FormLabel>{attr.label ?? attr.name}</FormLabel>
                   <Input
@@ -176,6 +179,7 @@ export default function ConfigForm(props: {
                   sx={{
                     '--FormHelperText-color': 'var(--joy-palette-danger-500)',
                   }}
+                  id={display.id}
                 >
                   <FormLabel>{attr.label ?? attr.name}</FormLabel>
                   <Input
@@ -197,6 +201,7 @@ export default function ConfigForm(props: {
                   sx={{
                     '--FormHelperText-color': 'var(--joy-palette-danger-500)',
                   }}
+                  id={display.id}
                 >
                   <FormLabel>{attr.label ?? attr.name}</FormLabel>
                   <Input {...display} {...register(attr.name, fieldConfig)} />

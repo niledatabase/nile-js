@@ -1,8 +1,8 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
-import SignUpForm from '../src/components/SignUpForm';
-import { NileProvider } from '../src/context';
+import SignUpForm from '../../src/components/SignUpForm';
+import { NileProvider } from '../../src/context';
 
 const meta: Meta = {
   component: SignUpForm,
@@ -21,7 +21,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<null> = () => (
-  <NileProvider basePath="http://localhost:8080">
+  <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
       <SignUpForm onSuccess={() => alert('success!')} />
     </div>
@@ -29,7 +29,7 @@ const Template: Story<null> = () => (
 );
 
 export const CustomFields: Story<null> = () => (
-  <NileProvider basePath="http://localhost:8080">
+  <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
       <SignUpForm
         onSuccess={() => alert('success!')}
