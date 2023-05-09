@@ -34,6 +34,22 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Install @theniledev/js
+        working-directory: lib/nile
+        run: yarn install --no-lockfile
+
+      - name: Install @theniledev/server
+        working-directory: packages/server
+        run: yarn install --no-lockfile
+
+      - name: Install @theniledev/browser
+        working-directory: packages/browser
+        run: yarn install --no-lockfile
+
+      - name: Install @theniledev/react
+        working-directory: packages/react
+        run: yarn install --no-lockfile
+
       - name: Build @theniledev/packages
         run: yarn build
 

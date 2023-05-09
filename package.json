@@ -6,8 +6,7 @@
   "private": true,
   "workspaces": [
     "lib/*",
-    "packages/*",
-    "examples/*"
+    "packages/*"
   ],
   "scripts": {
     "build": "yarn build:js-lib && yarn build:server && yarn build:browser && yarn build:react",
