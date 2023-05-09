@@ -1,9 +1,7 @@
-import { Token } from '@theniledev/js';
-
 import { Attribute } from '../lib/SimpleForm/types';
 
 type LoginSuccess = (
-  token: Token,
+  token: string,
   LoginInfo: { email: string; password: string }
 ) => void;
 

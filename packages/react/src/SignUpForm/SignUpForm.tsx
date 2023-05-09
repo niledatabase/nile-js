@@ -1,18 +1,15 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import Cookies from 'js-cookie';
 
 import UserForm from '../lib/SimpleForm';
 import { Attribute, AttributeType } from '../lib/SimpleForm/types';
-import { useNileConfig } from '../context';
+import { useNileApi } from '../context';
 
 import { Props } from './types';
 
 export default function SignUpForm(props: Props) {
   const { buttonText = 'Sign up', onSuccess, onError, attributes } = props;
-  const { workspace, database, basePath, allowClientCookies } = useNileConfig();
-  const fetchPath = `${basePath}/workspaces/${workspace}/databases/${database}/users`;
-
+  const api = useNileApi();
   const mutation = useMutation(
     async (data: { email: string; password: string }) => {
       const { email, password, ...metadata } = data;
@@ -20,34 +17,12 @@ export default function SignUpForm(props: Props) {
         // eslint-disable-next-line no-console
         console.warn('additional metadata not supported yet.');
       }
-
-      const res = await fetch(fetchPath, {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-        headers: {
-          'content-type': 'application/json',
-        },
-      }).catch((e) => e);
-
-      if (res.ok === false) {
-        throw new Error(res.status);
-      }
-
-      try {
-        if (res) {
-          return await res.json();
-        }
-      } catch (e) {
-        return e;
-      }
+      return api.users.createUser({
+        createBasicUserRequest: { email, password },
+      });
     },
     {
       onSuccess: (res, data) => {
-        if (allowClientCookies) {
-          Cookies.set('token', res.token.token, {
-            'max-age': String(res.token.maxAge),
-          });
-        }
         onSuccess && onSuccess(data);
       },
       onError: (error, data) => {

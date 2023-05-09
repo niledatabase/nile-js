@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import React, { useMemo, createContext, useContext } from 'react';
 import Nile, { NileApi } from '@theniledev/js';
+import BrowserApi, { Client } from '@theniledev/browser';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
@@ -17,10 +18,15 @@ const defaultContext: NileContext = {
     workspace: 'none',
     credentials: 'include',
   }),
+  api: BrowserApi({
+    basePath: 'https://prod.thenile.dev',
+    workspace: 'none',
+    database: 'none',
+    credentials: 'include',
+  }),
   workspace: '',
   database: '',
   basePath: '',
-  allowClientCookies: true, // totally insecure, but makes it easy for getting started
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -43,10 +49,11 @@ export const NileProvider = (props: NileProviderProps) => {
     theme,
     workspace,
     database,
+    tenantId,
     tokenStorage,
     QueryProvider = BaseQueryProvider,
-    allowClientCookies,
     basePath = 'https://prod.thenile.dev',
+    api,
   } = props;
 
   const values = useMemo<NileContext>((): NileContext => {
@@ -57,16 +64,24 @@ export const NileProvider = (props: NileProviderProps) => {
         credentials: 'include',
         tokenStorage,
       }),
+      api:
+        api ??
+        BrowserApi({
+          basePath,
+          workspace,
+          database,
+          tenantId,
+          credentials: 'include',
+        }),
       workspace: String(workspace),
       database: String(database),
       basePath,
-      allowClientCookies,
     };
-  }, [basePath, database, tokenStorage, workspace, allowClientCookies]);
+  }, [basePath, workspace, tokenStorage, database, tenantId, api]);
 
   return (
     <QueryProvider>
-      <CssVarsProvider theme={theme ?? defaultTheme}>
+      <CssVarsProvider defaultMode="system" theme={theme ?? defaultTheme}>
         <MetricsProvider>
           <Provider value={values}>{children}</Provider>
         </MetricsProvider>
@@ -84,15 +99,17 @@ export const useNile = (): NileApi => {
 };
 
 export const useNileConfig = (): NileReactConfig => {
-  const { database, workspace, basePath, allowClientCookies } =
-    useNileContext();
+  const { database, workspace, basePath } = useNileContext();
   return useMemo(
     () => ({
       workspace,
       database,
       basePath,
-      allowClientCookies,
     }),
-    [allowClientCookies, basePath, database, workspace]
+    [basePath, database, workspace]
   );
+};
+
+export const useNileApi = (): Client => {
+  return useNileContext().api;
 };

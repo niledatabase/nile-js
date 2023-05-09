@@ -1,0 +1,40 @@
+{
+  "post": {
+    "tags": ["authentication"],
+    "summary": "Login a user in a tenant",
+    "description": "Login a user, ensuring that the user is a member of the tenant",
+    "operationId": "login",
+    "requestBody": {
+      "content": {
+        "*/*": {
+          "schema": {
+            "$ref": "../schemas/LoginRequest.json",
+            "required": true
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "User logged in successfully",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "User authentication failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../openapi/responses/APIError.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

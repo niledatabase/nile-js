@@ -9,13 +9,17 @@
     "strict": true,
     "noEmit": true,
     "experimentalDecorators": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "noErrorTruncation": false,
     "allowJs": true,
     "paths": {
       "@theniledev/react": ["./packages/react/src"],
       "@theniledev/react/*": ["./packages/react/src/*"],
+      "@theniledev/browser": ["./packages/browser/src"],
+      "@theniledev/browser/*": ["./packages/browser/src/*"],
+      "@theniledev/server": ["./packages/server/src"],
+      "@theniledev/server/*": ["./packages/server/src/*"],
       "@theniledev/js": ["./lib/nile/src"],
       "@theniledev/js/*": ["./lib/nile/src/*"]
     }

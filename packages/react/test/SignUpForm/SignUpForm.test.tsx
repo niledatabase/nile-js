@@ -1,15 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { NileProvider } from '@theniledev/react';
-import Cookies from 'js-cookie';
 import '../matchMedia.mock';
 
 import SignUpForm from '../../src/SignUpForm/SignUpForm';
 import { token } from '../fetch.mock';
 
 describe('SignUpForm', () => {
-  it('sets a js cookie by default', async () => {
-    const spy = jest.spyOn(Cookies, 'set');
+  it('calls success if successful', async () => {
     const onSuccess = jest.fn();
     global.fetch = token;
     render(
@@ -27,6 +25,5 @@ describe('SignUpForm', () => {
     fireEvent.click(button);
 
     await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
-    expect(spy).toHaveBeenCalledTimes(1);
   });
 });

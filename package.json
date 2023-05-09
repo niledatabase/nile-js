@@ -6,11 +6,14 @@
   "private": true,
   "workspaces": [
     "lib/*",
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
   "scripts": {
-    "build": "yarn build:js-lib && yarn build:react",
+    "build": "yarn build:js-lib && yarn build:server && yarn build:browser && yarn build:react",
     "build:js-lib": "yarn workspace @theniledev/js build",
+    "build:browser": "yarn workspace @theniledev/browser build",
+    "build:server": "yarn workspace @theniledev/server build",
     "test:js-lib": "yarn workspace @theniledev/js test",
     "test:react": "yarn workspace @theniledev/react test",
     "build:react": "yarn workspace @theniledev/react build",

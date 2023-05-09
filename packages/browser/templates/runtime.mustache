@@ -4,10 +4,6 @@
 
 export const BASE_PATH = "{{{basePath}}}".replace(/\/+$/, "");
 
-export enum StorageOptions {
-    LocalStorage = 'local'
-};
-
 export interface ConfigurationParameters {
     basePath?: string; // override base path
     fetchApi?: FetchAPI; // override for fetch implementation
@@ -22,15 +18,10 @@ export interface ConfigurationParameters {
     workspace?: string; // the workspace for the application
     database?: string; // the workspace for the application
     tenantId?: string; // the workspace for the application
-    tokenStorage?: StorageOptions; // use local storage for tokens
 }
 
 export class Configuration {
     constructor(private configuration: ConfigurationParameters = {}) {}
-
-    set config(configuration: Configuration) {
-        this.configuration = configuration;
-    }
 
     set workspace(val: string) {
         this.workspace = val;
@@ -49,12 +40,12 @@ export class Configuration {
         return this.configuration.workspace != null ? this.configuration.workspace : '';
     }
 
-    get basePath(): string {
-        return this.configuration.basePath != null ? this.configuration.basePath : BASE_PATH;
+    set config(configuration: Configuration) {
+        this.configuration = configuration;
     }
 
-    get tokenStorage(): undefined | StorageOptions {
-        return this.configuration.tokenStorage;
+    get basePath(): string {
+        return this.configuration.basePath != null ? this.configuration.basePath : BASE_PATH;
     }
 
     get fetchApi(): FetchAPI | undefined {
@@ -109,12 +100,11 @@ export const DefaultConfig = new Configuration();
  */
 export class BaseAPI {
 
+	 private static readonly jsonRegex = new RegExp('^(:?application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(:?;.*)?$', 'i');
     private middleware: Middleware[];
 
-    public workspace?: string;
     constructor(protected configuration = DefaultConfig) {
         this.middleware = configuration.middleware;
-        this.workspace = configuration.workspace;
     }
 
     withMiddleware<T extends BaseAPI>(this: T, ...middlewares: Middleware[]) {
@@ -133,25 +123,29 @@ export class BaseAPI {
         return this.withMiddleware<T>(...middlewares);
     }
 
+    /**
+     * Check if the given MIME is a JSON MIME.
+     * JSON MIME examples:
+     *   application/json
+     *   application/json; charset=UTF8
+     *   APPLICATION/JSON
+     *   application/vnd.company+json
+     * @param mime - MIME (Multipurpose Internet Mail Extensions)
+     * @return True if the given MIME is JSON, false otherwise.
+     */
+    protected isJsonMime(mime: string | null | undefined): boolean {
+        if (!mime) {
+            return false;
+        }
+        return BaseAPI.jsonRegex.test(mime);
+    }
+
     protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
         const { url, init } = await this.createFetchParams(context, initOverrides);
         const response = await this.fetchApi(url, init);
-        if (response.status >= 200 && response.status < 300) {
+        if (response && (response.status >= 200 && response.status < 300)) {
             return response;
         }
-
-        let res;
-        try {
-            res = await response.json();
-        } catch (e) {
-            /* do the default */
-        }
-        if (res && 'message' in res) {
-            const { message } = res;
-            throw new ResponseError(response, message);
-        }
-
-        console.error(response);
         throw new ResponseError(response, 'Response returned an error code');
     }
 
@@ -179,22 +173,22 @@ export class BaseAPI {
             credentials: this.configuration.credentials,
         };
 
-        const overridedInit: RequestInit = {
+        const overriddenInit: RequestInit = {
             ...initParams,
             ...(await initOverrideFn({
                 init: initParams,
                 context,
             }))
-        }
+        };
 
         const init: RequestInit = {
-            ...overridedInit,
+            ...overriddenInit,
             body:
-                isFormData(overridedInit.body) ||
-                overridedInit.body instanceof URLSearchParams ||
-                isBlob(overridedInit.body)
-                    ? overridedInit.body
-                    : JSON.stringify(overridedInit.body),
+                isFormData(overriddenInit.body) ||
+                overriddenInit.body instanceof URLSearchParams ||
+                isBlob(overriddenInit.body)
+                    ? overriddenInit.body
+                    : JSON.stringify(overriddenInit.body),
         };
 
         return { url, init };
@@ -210,7 +204,29 @@ export class BaseAPI {
                 }) || fetchParams;
             }
         }
-        let response = await (this.configuration.fetchApi || fetch)(fetchParams.url, fetchParams.init);
+        let response: Response | undefined = undefined;
+        try {
+            response = await (this.configuration.fetchApi || fetch)(fetchParams.url, fetchParams.init);
+        } catch (e) {
+            for (const middleware of this.middleware) {
+                if (middleware.onError) {
+                    response = await middleware.onError({
+                        fetch: this.fetchApi,
+                        url: fetchParams.url,
+                        init: fetchParams.init,
+                        error: e,
+                        response: response ? response.clone() : undefined,
+                    }) || response;
+                }
+            }
+            if (response === undefined) {
+              if (e instanceof Error) {
+                throw new FetchError(e, 'The request failed and the interceptors did not return an alternative response');
+              } else {
+                throw e;
+              }
+            }
+        }
         for (const middleware of this.middleware) {
             if (middleware.post) {
                 response = await middleware.post({
@@ -237,16 +253,23 @@ export class BaseAPI {
 };
 
 function isBlob(value: any): value is Blob {
-    return typeof Blob !== 'undefined' && value instanceof Blob
+    return typeof Blob !== 'undefined' && value instanceof Blob;
 }
 
 function isFormData(value: any): value is FormData {
-    return typeof FormData !== "undefined" && value instanceof FormData
+    return typeof FormData !== "undefined" && value instanceof FormData;
 }
 
 export class ResponseError extends Error {
     name: "ResponseError" = "ResponseError";
     constructor(public response: Response, msg?: string) {
+        super(msg);
+    }
+}
+
+export class FetchError extends Error {
+    name: "FetchError" = "FetchError";
+    constructor(public cause: Error, msg?: string) {
         super(msg);
     }
 }
@@ -272,7 +295,7 @@ export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS'
 export type HTTPHeaders = { [key: string]: string };
 export type HTTPQuery = { [key: string]: string | number | null | boolean | Array<string | number | null | boolean> | Set<string | number | null | boolean> | HTTPQuery };
 export type HTTPBody = Json | FormData | URLSearchParams;
-export type HTTPRequestInit = { headers?: HTTPHeaders; method: HTTPMethod; credentials?: RequestCredentials; body?: HTTPBody }
+export type HTTPRequestInit = { headers?: HTTPHeaders; method: HTTPMethod; credentials?: RequestCredentials; body?: HTTPBody };
 export type ModelPropertyNaming = 'camelCase' | 'snake_case' | 'PascalCase' | 'original';
 
 export type InitOverrideFunction = (requestContext: { init: HTTPRequestInit, context: RequestOpts }) => Promise<RequestInit>
@@ -343,7 +366,7 @@ export function canConsumeForm(consumes: Consume[]): boolean {
 }
 
 export interface Consume {
-    contentType: string
+    contentType: string;
 }
 
 export interface RequestContext {
@@ -359,9 +382,18 @@ export interface ResponseContext {
     response: Response;
 }
 
+export interface ErrorContext {
+    fetch: FetchAPI;
+    url: string;
+    init: RequestInit;
+    error: unknown;
+    response?: Response;
+}
+
 export interface Middleware {
     pre?(context: RequestContext): Promise<FetchParams | void>;
     post?(context: ResponseContext): Promise<Response | void>;
+    onError?(context: ErrorContext): Promise<Response | void>;
 }
 
 export interface ApiResponse<T> {
