@@ -1,0 +1,15 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Nile Server REST API",
+    "description": "A Node wrapper around the base Nile API.",
+    "contact": {
+      "email": "support@thenile.dev"
+    }
+  },
+  "paths": {
+    "/login": {
+      "$ref": "../src/login/openapi/paths/login.json"
+    }
+  }
+}

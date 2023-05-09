@@ -72,11 +72,15 @@ export class {{classname}} extends runtime.BaseAPI {
 {{/withInterfaces}}
     public authToken: string | void;
     public workspace: string;
+    public database: string;
+    public tenantId: string;
     
     constructor(protected configuration = new runtime.Configuration()) {
       super(configuration);
       this.authToken = '';
       this.workspace = '';
+      this.database = '';
+      this.tenantId = '';
     }
 
     {{#operation}}
@@ -92,7 +96,7 @@ export class {{classname}} extends runtime.BaseAPI {
      *```typescript
      * import {{moduleName}} from '{{{projectName}}}';
      * 
-     * const nile = {{{moduleName}}}({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace' });
+     * const nile = {{{moduleName}}}({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace', database: 'database', tenantId: 'tenantId' });
      * 
       {{#hasParams}}
      * const body = {
@@ -283,7 +287,7 @@ export class {{classname}} extends runtime.BaseAPI {
         }
         
         {{#hasPathParams}}
-        const requestParams: {{operationIdCamelCase}}Request = ({ ...(requestParameters ? requestParameters : {}), workspace: String(this.workspace) } as {{operationIdCamelCase}}Request);
+        const requestParams: {{operationIdCamelCase}}Request = ({ ...(requestParameters ? requestParameters : {}), workspace: String(this.workspace), workspaceSlug: String(this.workspace), databaseName: String(this.database), tenantId: String(this.tenantId) } as unknown as {{operationIdCamelCase}}Request);
         {{/hasPathParams}}
         const response = await this.request({
             path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(requestParams.{{paramName}}))){{/pathParams}},

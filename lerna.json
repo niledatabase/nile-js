@@ -1,5 +1,10 @@
 {
-  "packages": ["lib/*", "packages/react"],
+  "packages": [
+    "lib/*",
+    "packages/react",
+    "packages/browser",
+    "packages/server"
+  ],
   "version": "0.38.2",
   "npmClient": "yarn",
   "useWorkspaces": true,

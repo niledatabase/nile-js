@@ -1,19 +1,16 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import Cookies from 'js-cookie';
 
 import { Attribute } from '../lib/SimpleForm/types';
-import { useNileConfig } from '../context';
+import { useNileApi } from '../context';
 import SimpleForm from '../lib/SimpleForm';
 import { AttributeType } from '../lib/SimpleForm/types';
 
 import { Props, AllowedAny } from './types';
 
 export default function LoginForm(props: Props) {
-  const { workspace, database, basePath, allowClientCookies } = useNileConfig();
-
   const { attributes, onSuccess, onError, beforeMutate } = props;
-  const fetchPath = `${basePath}/workspaces/${workspace}/databases/${database}/users/login`;
+  const api = useNileApi();
 
   const handleMutate =
     typeof beforeMutate === 'function'
@@ -23,33 +20,13 @@ export default function LoginForm(props: Props) {
   const mutation = useMutation(
     async (data: { email: string; password: string }) => {
       const _data = handleMutate(data);
-      const res = await fetch(fetchPath, {
-        method: 'POST',
-        body: JSON.stringify(_data),
-        headers: {
-          'content-type': 'application/json',
-        },
-      }).catch((e) => e);
-      if (res.ok === false) {
-        throw new Error(res.status);
-      }
-      try {
-        return await res.json();
-      } catch (e) {
-        return e;
-      }
+      return await api.auth.login({
+        loginRequest: _data,
+      });
     },
     {
       onSuccess: (token, data) => {
-        if (token) {
-          if (allowClientCookies) {
-            Cookies.set('token', token.token, {
-              'max-age': String(token.maxAge),
-            });
-          }
-
-          onSuccess && onSuccess(token, data);
-        }
+        onSuccess && onSuccess(token, data);
       },
       onError: (error, data) => {
         onError && onError(error as Error, data);
