@@ -89,6 +89,86 @@
           }
         }
       }
+    },
+    "/sign-up": {
+      "post": {
+        "tags": [
+          "authentication"
+        ],
+        "summary": "Create a new user",
+        "operationId": "signUp",
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "preferredName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "id",
+                    "token"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "required": [
+                        "token",
+                        "type"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        },
+                        "maxAge": {
+                          "minimum": 0,
+                          "type": "integer",
+                          "format": "int32"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "ACCESS_TOKEN",
+                            "REFRESH_TOKEN",
+                            "ID_TOKEN"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -27,7 +27,7 @@ export class FakeResponse {
   };
 }
 
-export const _fetch = (payload: Record<string, Something>) =>
+export const _fetch = (payload?: Record<string, Something>) =>
   (async (config: Config, path: string, opts?: RequestInit) => {
     return new FakeResponse(
       JSON.stringify({

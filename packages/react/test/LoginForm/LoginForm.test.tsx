@@ -15,13 +15,9 @@ describe('LoginForm', () => {
       auth: {
         login: async () => jest.fn(),
       },
-    };
+    } as unknown as Client;
     render(
-      <NileProvider
-        workspace="workspace"
-        database="database"
-        api={api as unknown as Client}
-      >
+      <NileProvider workspace="workspace" database="database" api={api}>
         <LoginForm onSuccess={onSuccess} />
       </NileProvider>
     );

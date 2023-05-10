@@ -12,7 +12,7 @@ export default class Login extends Config {
     )}/databases/${encodeURIComponent(this.database)}/users/login`;
   }
 
-  async login(req: Request, init?: RequestInit): Promise<Response> {
+  login = async (req: Request, init?: RequestInit): Promise<Response> => {
     const body = await new Response(req.body).text();
     const headers = new Headers(req.headers);
     const res = await _fetch(this, this.url, {
@@ -27,5 +27,5 @@ export default class Login extends Config {
     const cookie = `${this.cookieKey}=${token.token}; path=/; samesite=lax; httponly;`;
     headers.set('set-cookie', cookie);
     return new Response(null, { status: 200, headers });
-  }
+  };
 }
