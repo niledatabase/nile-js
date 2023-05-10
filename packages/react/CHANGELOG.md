@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.115](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.114...v1.0.0-alpha.115) (2023-05-10)
+
+**Note:** Version bump only for package @theniledev/react
+
 # [1.0.0-alpha.114](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.113...v1.0.0-alpha.114) (2023-05-10)
 
 **Note:** Version bump only for package @theniledev/react
