@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/react",
-  "version": "1.0.0-alpha.115",
+  "version": "1.0.0-alpha.116",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
@@ -85,8 +85,8 @@
     "@mui/x-data-grid": "^5.17.20",
     "@mui/x-date-pickers": "^5.0.15",
     "@tanstack/react-query": "^4.23.0",
-    "@theniledev/browser": "^1.0.0-alpha.115",
-    "@theniledev/js": "^1.0.0-alpha.115",
+    "@theniledev/browser": "^1.0.0-alpha.116",
+    "@theniledev/js": "^1.0.0-alpha.116",
     "chart.js": "^3.9.1",
     "chartjs-adapter-date-fns": "^2.0.1",
     "date-fns": "^2.29.3",
