@@ -1,15 +1,36 @@
-import { RequestCookie, RequestCookies } from '@edge-runtime/cookies';
-
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
+
+function getToken(headers: Headers, cookieKey: string) {
+  const cookie = headers.get('cookie')?.split('; ');
+  const _cookies: Record<string, string> = {};
+  if (cookie) {
+    for (const parts of cookie) {
+      const cookieParts = parts.split('=');
+      const _cookie = cookieParts.slice(1).join('=');
+      const name = cookieParts[0];
+      _cookies[name] = _cookie;
+    }
+  }
+
+  if (cookie) {
+    for (const parts of cookie) {
+      const cookieParts = parts.split('=');
+      const _cookie = cookieParts.slice(1).join('=');
+      const name = cookieParts[0];
+      _cookies[name] = _cookie;
+    }
+  }
+  return _cookies[cookieKey];
+}
 
 export async function _fetch(config: Config, path: string, opts?: RequestInit) {
   const url = `${config.basePath}${path}`;
   const { cookieKey } = config;
   const headers = new Headers(opts?.headers);
   headers.set('content-type', 'application/json; charset=utf-8');
-  const cookies = new RequestCookies(headers);
-  const token = cookies.get(cookieKey as unknown as RequestCookie)?.value;
+
+  const token = getToken(headers, cookieKey);
 
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);

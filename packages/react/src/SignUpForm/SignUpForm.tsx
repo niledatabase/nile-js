@@ -17,8 +17,8 @@ export default function SignUpForm(props: Props) {
         // eslint-disable-next-line no-console
         console.warn('additional metadata not supported yet.');
       }
-      return api.users.createUser({
-        createBasicUserRequest: { email, password },
+      return api.auth.signUp({
+        signUpRequest: { email, password },
       });
     },
     {

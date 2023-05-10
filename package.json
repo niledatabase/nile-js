@@ -13,6 +13,8 @@
     "build:js-lib": "yarn workspace @theniledev/js build",
     "build:browser": "yarn workspace @theniledev/browser build",
     "build:server": "yarn workspace @theniledev/server build",
+    "test:browser": "yarn workspace @theniledev/browser test",
+    "test:server": "yarn workspace @theniledev/server test",
     "test:js-lib": "yarn workspace @theniledev/js test",
     "test:react": "yarn workspace @theniledev/react test",
     "build:react": "yarn workspace @theniledev/react build",

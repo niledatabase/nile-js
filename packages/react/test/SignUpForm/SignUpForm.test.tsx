@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { NileProvider } from '@theniledev/react';
-import '../matchMedia.mock';
+import { Client } from '@theniledev/browser';
 
+import '../matchMedia.mock';
+import { NileProvider } from '../../src/context';
 import SignUpForm from '../../src/SignUpForm/SignUpForm';
 import { token } from '../fetch.mock';
 
@@ -10,8 +11,13 @@ describe('SignUpForm', () => {
   it('calls success if successful', async () => {
     const onSuccess = jest.fn();
     global.fetch = token;
+    const api = {
+      auth: {
+        signUp: async () => jest.fn(),
+      },
+    } as unknown as Client;
     render(
-      <NileProvider workspace="workspace" database="database">
+      <NileProvider workspace="workspace" database="database" api={api}>
         <SignUpForm onSuccess={onSuccess} />
       </NileProvider>
     );

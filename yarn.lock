@@ -1428,11 +1428,6 @@
   dependencies:
     "@date-io/core" "^2.16.0"
 
-"@edge-runtime/cookies@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@edge-runtime/cookies/-/cookies-3.1.0.tgz#21a9efdb0b38362a546950a6a9ed487cea14754f"
-  integrity sha512-nYoxDMk5a+YoRun8cNGgDXZNjy3/VTzmrIXGMT83cLPJ7eaTA8CKXYIp2n8gKEoH6M2aowC9O8gaU5Ry9vgVmA==
-
 "@emotion/babel-plugin@^11.10.6":
   version "11.10.6"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.10.6.tgz#a68ee4b019d661d6f37dec4b8903255766925ead"
@@ -15828,11 +15823,6 @@ typescript@^3.7.3:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.3.tgz#fe976f0c826a88d0a382007681cbb2da44afdedf"
   integrity sha512-xv8mOEDnigb/tN9PSMTwSEqAnUvkoXMQlicOb0IUVDBSQCgBSaAAROUZYy2IcUy5qU6XajK5jjjO7TMWqBTKZA==
-
-typescript@^5.0.0:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
-  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
 uglify-js@^3.1.4:
   version "3.17.4"

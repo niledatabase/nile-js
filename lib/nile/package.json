@@ -21,7 +21,7 @@
     "generate-event-docs": "yarn typedoc --out docs/event --plugin typedoc-plugin-markdown --theme markdown --disableSources --excludeProtected --excludePrivate --excludeNotDocumented --hideBreadcrumbs true --hideInPageTOC true ./src/EventsApi.ts",
     "generate-nile-docs": "yarn typedoc --out docs/nile --plugin typedoc-plugin-markdown --theme markdown --disableSources --excludeProtected --excludePrivate --excludeNotDocumented --hideBreadcrumbs true --hideInPageTOC true ./src/Nile.ts",
     "test": "tsdx test",
-    "prepare": "yarn prebuild && tsdx build && yarn build:types",
+    "prepare": "yarn prebuild && tsdx build --tsconfig ./tsconfig.build.json && yarn build:types",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
