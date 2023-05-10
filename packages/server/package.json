@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/server",
-  "version": "1.0.0-alpha.129",
+  "version": "1.0.0-alpha.130",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
