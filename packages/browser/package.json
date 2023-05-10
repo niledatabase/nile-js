@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/browser",
-  "version": "1.0.0-alpha.65",
+  "version": "1.0.0-alpha.66",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
