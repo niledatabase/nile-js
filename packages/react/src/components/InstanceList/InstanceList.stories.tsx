@@ -14,8 +14,9 @@ import Button from '@mui/joy/Button';
 import Add from '@mui/icons-material/Add';
 import Box from '@mui/joy/Box';
 
-import { NileProvider } from '../src/context';
-import InstanceList from '../src/components/InstanceList/InstanceList';
+import { NileProvider } from '../../context';
+
+import InstanceList from './InstanceList';
 
 const entityData = {
   id: 'ent_02qdzM9QKiB7lzR3HZVVEv',
@@ -80,9 +81,7 @@ const meta: Meta = {
       },
     },
   },
-  parameters: {
-    controls: { expanded: true },
-  },
+  tags: ['autodocs'],
 };
 
 export default meta;

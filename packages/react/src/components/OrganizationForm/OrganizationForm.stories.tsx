@@ -2,17 +2,16 @@ import React from 'react';
 import { Story } from '@storybook/react';
 import { Button } from '@mui/joy';
 
-import OrganizationForm from '../src/components/OrganizationForm';
-import { NileProvider } from '../src/context';
+import { NileProvider } from '../../context';
+
+import OrganizationForm from '.';
 
 const meta = {
   component: OrganizationForm,
   args: {
     org: 'myOrg',
   },
-  parameters: {
-    controls: { expanded: true },
-  },
+  tags: ['autodocs'],
 };
 
 export default meta;

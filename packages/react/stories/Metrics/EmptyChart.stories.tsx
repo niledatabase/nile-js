@@ -1,6 +1,5 @@
 import React from 'react';
 import { AggregationRequestBucketSizeEnum } from '@theniledev/js';
-import { Story } from '@storybook/react';
 
 import { MetricsBarChart } from '../../src/components/Metrics';
 import { AggregationType } from '../../src/components/Metrics/types';
@@ -15,7 +14,7 @@ const meta = {
 
 export default meta;
 
-const Empty: Story<null> = () => {
+const Empty = () => {
   const aggregation = {
     aggregationType: AggregationType.Sum,
     aggregationRequest: {

@@ -12,10 +12,9 @@ import {
   BarElement,
 } from 'chart.js';
 
-import DefaultEmptyState from '../DefaultEmptyState';
-import { MetricsBarChartComponentProps } from '../types';
-
-import { useFilter, useFormatData, useMinMax } from './hooks';
+import DefaultEmptyState from '../../DefaultEmptyState';
+import { MetricsBarChartComponentProps } from '../../types';
+import { useFilter, useFormatData, useMinMax } from '../hooks';
 
 Chart.register(
   CategoryScale,

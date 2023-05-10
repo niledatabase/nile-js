@@ -2,11 +2,13 @@ import React from 'react';
 import { Story } from '@storybook/react';
 import { Button } from '@mui/joy';
 
-import EntityForm from '../src/components/EntityForm';
-import { AttributeType } from '../src/lib/SimpleForm/types';
-import { NileProvider } from '../src/context';
+import { AttributeType } from '../../lib/SimpleForm/types';
+import { NileProvider } from '../../context';
+
+import EntityForm from './EntityForm';
 
 const meta = {
+  tags: ['autodocs'],
   component: EntityForm,
   args: {
     org: 'myOrg',

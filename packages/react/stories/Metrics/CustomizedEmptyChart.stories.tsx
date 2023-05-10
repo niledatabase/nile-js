@@ -2,7 +2,6 @@
 // @ts-nocheck
 import React from 'react';
 import { AggregationRequestBucketSizeEnum } from '@theniledev/js';
-import { Story } from '@storybook/react';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 
@@ -19,7 +18,7 @@ const meta = {
 
 export default meta;
 
-const Empty: Story<null> = () => {
+const Empty = () => {
   const aggregation = {
     aggregationType: AggregationType.Sum,
     aggregationRequest: {
