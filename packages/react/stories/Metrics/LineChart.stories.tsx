@@ -1,5 +1,4 @@
 import React from 'react';
-import { Story } from '@storybook/react';
 import { AggregationRequestBucketSizeEnum } from '@theniledev/js';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
@@ -23,7 +22,7 @@ export default meta;
 const filter = makeFilter();
 const aggregate = makeAggregate();
 
-const LineChart: Story<null> = () => {
+const LineChart = () => {
   const filter = {
     entityType: 'clusters',
     metricName: 'my.metric',
@@ -57,7 +56,7 @@ FilterLineChartWithRefreshControl.parameters = {
   ],
 };
 
-const AggLineChart: Story<null> = () => {
+const AggLineChart = () => {
   const aggregation = {
     aggregationType: AggregationType.Sum,
     aggregationRequest: {

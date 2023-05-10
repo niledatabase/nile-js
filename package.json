@@ -9,21 +9,21 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn build:js-lib && yarn build:server && yarn build:browser && yarn build:react",
-    "build:js-lib": "yarn workspace @theniledev/js build",
     "build:browser": "yarn workspace @theniledev/browser build",
+    "build:js-lib": "yarn workspace @theniledev/js build",
+    "build:react-storybook": "yarn build && yarn workspace @theniledev/react build-storybook",
+    "build:react": "yarn workspace @theniledev/react build",
     "build:server": "yarn workspace @theniledev/server build",
+    "build": "yarn build:js-lib && yarn build:server && yarn build:browser && yarn build:react",
+    "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
+    "lint": "yarn eslint . --max-warnings=0",
+    "postinstall": "husky install",
+    "prepare": "husky install",
+    "publish": "yarn lerna publish",
     "test:browser": "yarn workspace @theniledev/browser test",
-    "test:server": "yarn workspace @theniledev/server test",
     "test:js-lib": "yarn workspace @theniledev/js test",
     "test:react": "yarn workspace @theniledev/react test",
-    "build:react": "yarn workspace @theniledev/react build",
-    "build:react-storybook": "yarn build:js-lib && yarn build:react && yarn workspace @theniledev/react build-storybook",
-    "lint": "yarn eslint . --max-warnings=0",
-    "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
-    "publish": "yarn lerna publish",
-    "postinstall": "husky install",
-    "prepare": "husky install"
+    "test:server": "yarn workspace @theniledev/server test"
   },
   "devDependencies": {
     "@commitlint/cli": "17.3.0",

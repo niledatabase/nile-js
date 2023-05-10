@@ -15,12 +15,12 @@ import {
 // @ts-ignore
 import('chartjs-adapter-date-fns');
 
-import FilterBarChart from './Filter/FilterBarChart';
-import AggregateBarChart from './Aggregate/AggregateBarChart';
+import FilterBarChart from '../Filter/FilterBarChart/FilterBarChart';
+import AggregateBarChart from '../Aggregate/AggregateBarChart';
 import {
   AggregateMetricsRequest,
   MetricsBarChartComponentProps,
-} from './types';
+} from '../types';
 
 ChartJS.register(
   CategoryScale,

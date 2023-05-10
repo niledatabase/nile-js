@@ -1,26 +1,18 @@
 import React from 'react';
-import { Meta, Story } from '@storybook/react';
+import { Meta } from '@storybook/react';
 
-import SignUpForm from '../../src/components/SignUpForm';
-import { NileProvider } from '../../src/context';
+import { NileProvider } from '../../context';
+
+import SignUpForm from '.';
 
 const meta: Meta = {
   component: SignUpForm,
-  argTypes: {
-    children: {
-      control: {
-        type: 'text',
-      },
-    },
-  },
-  parameters: {
-    controls: { expanded: true },
-  },
+  tags: ['autodocs'],
 };
 
 export default meta;
 
-const Template: Story<null> = () => (
+export const Basic = () => (
   <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
       <SignUpForm onSuccess={() => alert('success!')} />
@@ -28,7 +20,7 @@ const Template: Story<null> = () => (
   </NileProvider>
 );
 
-export const CustomFields: Story<null> = () => (
+export const CustomFields = () => (
   <NileProvider basePath="http://localhost:8080" workspace="workspace">
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
       <SignUpForm
@@ -38,7 +30,3 @@ export const CustomFields: Story<null> = () => (
     </div>
   </NileProvider>
 );
-
-// By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
-// https://storybook.js.org/docs/react/workflows/unit-testing
-export const Default = Template.bind({});
