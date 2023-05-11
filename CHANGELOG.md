@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.163](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.162...v1.0.0-alpha.163) (2023-05-11)
+
+### Bug Fixes
+
+- add sign up ([dd67c3b](https://github.com/TheNileDev/nile-js/commit/dd67c3b3ca90f7cfba7ec1b43ba0333a9f057084))
+- build storybook after build changes ([08ed2de](https://github.com/TheNileDev/nile-js/commit/08ed2defd5edb24ac9483d448d3f260aba7a21f6))
+
 # [1.0.0-alpha.162](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.161...v1.0.0-alpha.162) (2023-05-10)
 
 **Note:** Version bump only for package @theniledev/packages
