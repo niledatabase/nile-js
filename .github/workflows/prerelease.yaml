@@ -1,7 +1,9 @@
 name: Publish @theniledev packages to GitHub Packages
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - master
 jobs:
