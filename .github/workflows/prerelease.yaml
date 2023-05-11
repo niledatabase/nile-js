@@ -3,7 +3,7 @@ name: Publish @theniledev packages to GitHub Packages
 on:
   push:
     branches:
-      - master
+      - none
 jobs:
   build:
     runs-on: ubuntu-latest
