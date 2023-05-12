@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.177](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.176...v1.0.0-alpha.177) (2023-05-12)
+
+### Bug Fixes
+
+- verbosly build, send back REST data ([e680d21](https://github.com/TheNileDev/nile-js/commit/e680d2108c97ee403eb176db562090702d851bdf))
+
 # [1.0.0-alpha.176](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.175...v1.0.0-alpha.176) (2023-05-12)
 
 ### Bug Fixes
