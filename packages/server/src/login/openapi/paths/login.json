@@ -20,7 +20,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "../schemas/LoginResponse.json"
+              "$ref": "../../../openapi/schemas/UserAuthResponse.json"
             }
           }
         }

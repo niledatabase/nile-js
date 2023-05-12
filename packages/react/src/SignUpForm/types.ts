@@ -1,7 +1,12 @@
+import { Login200Response } from '@theniledev/browser';
+
 import { Attribute } from '../lib/SimpleForm/types';
 
 type LoginInfo = { email: string; password: string };
-type SignInSuccess = (loginInfo: LoginInfo) => void;
+type SignInSuccess = (
+  response: Login200Response,
+  formValues: LoginInfo
+) => void;
 
 export interface Props {
   onSuccess: SignInSuccess;
