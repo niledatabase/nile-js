@@ -24,7 +24,11 @@ function getToken(headers: Headers, cookieKey: string) {
   return _cookies[cookieKey];
 }
 
-export async function _fetch(config: Config, path: string, opts?: RequestInit) {
+export async function _fetch(
+  config: Config,
+  path: string,
+  opts?: RequestInit
+): Promise<Response | ResponseError> {
   const url = `${config.basePath}${path}`;
   const { cookieKey } = config;
   const headers = new Headers(opts?.headers);
