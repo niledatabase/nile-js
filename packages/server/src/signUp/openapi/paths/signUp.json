@@ -15,11 +15,21 @@
     },
     "responses": {
       "201": {
-        "description": "User created successfully",
+        "description": "Created user successfully",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "../schemas/CreateUserResponse.json"
+              "$ref": "../../../openapi/schemas/UserAuthResponse.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Authentication failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../openapi/responses/APIError.json"
             }
           }
         }

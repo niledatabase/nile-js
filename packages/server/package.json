@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build:spec": "yarn swagger-cli bundle openapi/index.json --outfile openapi/spec.json",
+    "build:spec": "yarn swagger-cli bundle openapi/index.json --outfile openapi/spec.json -r",
     "build": "yarn build:spec && tsdx build --tsconfig ./tsconfig.build.json",
     "test": "tsdx test",
     "lint": "eslint src",

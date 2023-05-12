@@ -6,7 +6,7 @@
       "type": "string"
     },
     "token": {
-      "$ref": "../../../openapi/schemas/Token.json"
+      "$ref": "./Token.json"
     }
   }
 }

@@ -26,8 +26,8 @@ export default function SignUpForm(props: Props) {
         });
     },
     {
-      onSuccess: (res, data) => {
-        onSuccess && onSuccess(data);
+      onSuccess: (data, formValues) => {
+        data && onSuccess && onSuccess(data, formValues);
       },
       onError: (error, data) => {
         onError && onError(error as Error, data);

@@ -4,7 +4,7 @@ import { Attribute } from '../lib/SimpleForm/types';
 
 type LoginSuccess = (
   response: Login200Response,
-  LoginInfo: { email: string; password: string }
+  formValues: { email: string; password: string }
 ) => void;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
