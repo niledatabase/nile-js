@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.176](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.175...v1.0.0-alpha.176) (2023-05-12)
+
+### Bug Fixes
+
+- es6 fixes, use latest BE ([950b2c3](https://github.com/TheNileDev/nile-js/commit/950b2c3641932116cc5dd4be555d9662220612fd))
+
 # [1.0.0-alpha.175](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.174...v1.0.0-alpha.175) (2023-05-12)
 
 **Note:** Version bump only for package @theniledev/react
