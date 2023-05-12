@@ -20,13 +20,15 @@ export default function LoginForm(props: Props) {
   const mutation = useMutation(
     async (data: { email: string; password: string }) => {
       const _data = handleMutate(data);
-      return await api.auth.login({
-        loginRequest: _data,
-      });
+      return await api.auth
+        .login({
+          loginRequest: _data,
+        })
+        .catch((e) => onError && onError(e, data));
     },
     {
       onSuccess: (token, data) => {
-        onSuccess && onSuccess(token, data);
+        token && onSuccess && onSuccess(token, data);
       },
       onError: (error, data) => {
         onError && onError(error as Error, data);

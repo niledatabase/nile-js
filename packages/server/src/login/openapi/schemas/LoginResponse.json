@@ -1,0 +1,12 @@
+{
+  "required": ["id", "token"],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "token": {
+      "$ref": "../../../openapi/schemas/Token.json"
+    }
+  }
+}

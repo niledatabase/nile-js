@@ -1,6 +1,6 @@
 import { ResponseError } from '../utils/ResponseError';
 import { Config } from '../utils/Config';
-import { _fetch } from '../utils/fetch';
+import Requester from '../utils/Requester';
 
 export default class Login extends Config {
   constructor(config: Config) {
@@ -13,19 +13,16 @@ export default class Login extends Config {
   }
 
   login = async (req: Request, init?: RequestInit): Promise<Response> => {
-    const body = await new Response(req.body).text();
     const headers = new Headers(req.headers);
-    const res = await _fetch(this, this.url, {
-      ...init,
-      body,
-      method: 'POST',
-    });
+    const _requester = new Requester(this, this.url);
+    const res = await _requester.post(req, init);
     if (res instanceof ResponseError) {
-      return res;
+      return res.response;
     }
+
     const token = await res.json();
-    const cookie = `${this.cookieKey}=${token.token}; path=/; samesite=lax; httponly;`;
+    const cookie = `${this.cookieKey}=${token.jwt}; path=/; samesite=lax; httponly;`;
     headers.set('set-cookie', cookie);
-    return new Response(null, { status: 200, headers });
+    return new Response(JSON.stringify(token), { status: 200, headers });
   };
 }

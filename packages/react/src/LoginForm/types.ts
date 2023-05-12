@@ -1,7 +1,9 @@
+import { Login200Response } from '@theniledev/browser';
+
 import { Attribute } from '../lib/SimpleForm/types';
 
 type LoginSuccess = (
-  token: string,
+  response: Login200Response,
   LoginInfo: { email: string; password: string }
 ) => void;
 

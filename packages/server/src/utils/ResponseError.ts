@@ -1,5 +1,6 @@
-export class ResponseError extends Response {
+export class ResponseError {
+  response: Response;
   constructor(body?: BodyInit | null, init?: ResponseInit) {
-    super(body, init);
+    this.response = new Response(body, init);
   }
 }

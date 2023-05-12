@@ -18,9 +18,9 @@
       "200": {
         "description": "User logged in successfully",
         "content": {
-          "text/plain": {
+          "application/json": {
             "schema": {
-              "type": "string"
+              "$ref": "../schemas/LoginResponse.json"
             }
           }
         }

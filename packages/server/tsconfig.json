@@ -19,8 +19,6 @@
     "noUnusedLocals": false,
     // set to false for code generation
     "noUnusedParameters": false,
-    // transpile JSX to React.createElement
-    "jsx": "react",
     // interop between ESM and CJS modules. Recommended by TS
     "esModuleInterop": true,
     // significant perf increase by skipping checking .d.ts files, particularly those in node_modules. Recommended by TS
