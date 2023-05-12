@@ -1,5 +1,6 @@
 import { Config } from '../utils/Config';
 
+import { ResponseError } from './ResponseError';
 import { _fetch } from './fetch';
 
 export default class Requester extends Config {
@@ -19,10 +20,19 @@ export default class Requester extends Config {
       ...init,
       body,
       method,
+      headers: {
+        'content-type': 'application/json; charset=UTF8',
+        ...init?.headers,
+      },
     });
+    if (res instanceof ResponseError) {
+      return res.response;
+    }
     return res;
   }
   post = async (req: Request, init?: RequestInit): Promise<Response> => {
-    return this.request('POST', req, init);
+    const resp = await this.request('POST', req, init);
+    const text = await resp.text();
+    return new Response(text, { status: resp.status, ...init });
   };
 }

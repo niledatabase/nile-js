@@ -1,5 +1,6 @@
-// all of this is generated in the build step
-
+// these files are generated in the build step
+export * from './openapi/src/models';
+export * from './openapi/src/apis';
 import {
   AuthenticationApi,
   Configuration,

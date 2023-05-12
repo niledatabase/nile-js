@@ -38,9 +38,44 @@
           "200": {
             "description": "User logged in successfully",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "required": [
+                    "id",
+                    "token"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "required": [
+                        "maxAge",
+                        "jwt",
+                        "type"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "jwt": {
+                          "type": "string"
+                        },
+                        "maxAge": {
+                          "minimum": 0,
+                          "type": "integer",
+                          "format": "int32"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "ACCESS_TOKEN",
+                            "REFRESH_TOKEN",
+                            "ID_TOKEN"
+                          ]
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -138,29 +173,7 @@
                       "type": "string"
                     },
                     "token": {
-                      "required": [
-                        "token",
-                        "type"
-                      ],
-                      "type": "object",
-                      "properties": {
-                        "token": {
-                          "type": "string"
-                        },
-                        "maxAge": {
-                          "minimum": 0,
-                          "type": "integer",
-                          "format": "int32"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "ACCESS_TOKEN",
-                            "REFRESH_TOKEN",
-                            "ID_TOKEN"
-                          ]
-                        }
-                      }
+                      "$ref": "#/paths/~1login/post/responses/200/content/application~1json/schema/properties/token"
                     }
                   }
                 }

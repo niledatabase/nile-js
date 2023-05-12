@@ -11,7 +11,7 @@ describe('login', () => {
   it('sets a cookie at login', async () => {
     //@ts-expect-error - test
     global.Response = FakeResponse;
-    global.fetch = _fetch({ token: 'adfasdfdsa' });
+    global.fetch = _fetch({ jwt: 'adfasdfdsa' });
     const { login } = new Login(
       new Config({ workspace: 'workspace', database: 'database' })
     );
