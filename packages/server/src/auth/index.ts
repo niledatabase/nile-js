@@ -20,10 +20,14 @@ export default class Auth extends Config {
       return res.response;
     }
 
-    const token = await res.json();
-    const cookie = `${this.api?.cookieKey}=${token.jwt}; path=/; samesite=lax; httponly;`;
-    headers.set('set-cookie', cookie);
-    return new Response(JSON.stringify(token), { status: 200, headers });
+    if (res && res.status >= 200 && res.status < 300) {
+      const token = await res.json();
+      const cookie = `${this.api?.cookieKey}=${token.jwt}; path=/; samesite=lax; httponly;`;
+      headers.set('set-cookie', cookie);
+      return new Response(JSON.stringify(token), { status: 200, headers });
+    }
+    const text = await res.text();
+    return new Response(text, { status: res.status });
   };
 
   get signUpUrl() {

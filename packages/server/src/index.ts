@@ -12,6 +12,7 @@ class Server {
     users: Users;
   };
   db: Knex;
+  _tenantId: string | undefined;
 
   constructor(config: ServerConfig) {
     this.config = new Config(config);
@@ -27,14 +28,17 @@ class Server {
     };
     this.db = knex(dbConfig);
   }
-  get tenantId() {
-    return this.tenantId;
+
+  get tenantId(): string | undefined {
+    return this.config.tenantId;
   }
 
-  set tenantId(tenantId: string) {
-    this.config.tenantId = tenantId;
-    this.api.auth.tenantId = tenantId;
-    this.api.users.tenantId = tenantId;
+  set tenantId(tenantId: string | undefined) {
+    if (tenantId) {
+      this.config.tenantId = tenantId;
+      this.api.auth.tenantId = tenantId;
+      this.api.users.tenantId = tenantId;
+    }
   }
 }
 
