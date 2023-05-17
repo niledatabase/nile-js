@@ -20,7 +20,10 @@
           "content": {
             "*/*": {
               "schema": {
-                "required": true,
+                "required": [
+                  "password",
+                  "email"
+                ],
                 "type": "object",
                 "properties": {
                   "email": {
@@ -32,7 +35,8 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -45,6 +49,7 @@
                     "token"
                   ],
                   "type": "object",
+                  "additionalProperties": true,
                   "properties": {
                     "id": {
                       "type": "string"
@@ -91,6 +96,7 @@
                     "statusCode"
                   ],
                   "type": "object",
+                  "additionalProperties": true,
                   "properties": {
                     "errorCode": {
                       "type": "string",
@@ -168,6 +174,7 @@
                     "token"
                   ],
                   "type": "object",
+                  "additionalProperties": true,
                   "properties": {
                     "id": {
                       "type": "string"
@@ -214,6 +221,7 @@
                     "statusCode"
                   ],
                   "type": "object",
+                  "additionalProperties": true,
                   "properties": {
                     "errorCode": {
                       "type": "string",
@@ -246,6 +254,104 @@
             }
           }
         }
+      }
+    },
+    "/{tenantId}/create-user": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create a user in a tenant",
+        "description": "Create a new user and associate the user with a tenant",
+        "operationId": "createTenantUser",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "preferredName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "id",
+                    "token"
+                  ],
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "required": [
+                        "maxAge",
+                        "jwt",
+                        "type"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "jwt": {
+                          "type": "string"
+                        },
+                        "maxAge": {
+                          "minimum": 0,
+                          "type": "integer",
+                          "format": "int32"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "ACCESS_TOKEN",
+                            "REFRESH_TOKEN",
+                            "ID_TOKEN"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "jwtBearerAuth": []
+          }
+        ]
       }
     }
   }

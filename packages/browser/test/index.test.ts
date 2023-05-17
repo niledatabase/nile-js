@@ -4,7 +4,7 @@ describe('nile db', () => {
   it('has expected methods', () => {
     const nile = new RestAPI({});
     const keys = Object.keys(nile);
-    expect(keys).toEqual(['auth']);
+    expect(keys).toEqual(['auth', 'users']);
     keys.forEach((k) => {
       const props = Object.getOwnPropertyNames(
         // @ts-expect-error testing
@@ -17,6 +17,13 @@ describe('nile db', () => {
           'login',
           'signUpRaw',
           'signUp',
+        ]);
+      }
+      if (k === 'users') {
+        expect(props).toEqual([
+          'constructor',
+          'createTenantUserRaw',
+          'createTenantUser',
         ]);
       }
     });

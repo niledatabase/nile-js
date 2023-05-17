@@ -1,6 +1,7 @@
 {
   "required": ["errorCode", "message", "statusCode"],
   "type": "object",
+  "additionalProperties": true,
   "properties": {
     "errorCode": {
       "type": "string",

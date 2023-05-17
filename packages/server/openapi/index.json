@@ -9,10 +9,13 @@
   },
   "paths": {
     "/login": {
-      "$ref": "../src/login/openapi/paths/login.json"
+      "$ref": "../src/auth/login/openapi/paths/login.json"
     },
     "/sign-up": {
-      "$ref": "../src/signUp/openapi/paths/signUp.json"
+      "$ref": "../src/auth/signUp/openapi/paths/signUp.json"
+    },
+    "/{tenantId}/create-user": {
+      "$ref": "../src/users/createTenantUser/openapi/paths/createTenantUser.json"
     }
   }
 }

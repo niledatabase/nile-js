@@ -1,6 +1,7 @@
 {
   "required": ["id", "token"],
   "type": "object",
+  "additionalProperties": true,
   "properties": {
     "id": {
       "type": "string"

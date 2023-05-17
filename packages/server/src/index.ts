@@ -1,19 +1,40 @@
+import knex, { Knex } from 'knex';
+
 import { ServerConfig } from './types';
 import { Config } from './utils/Config';
-import Login from './login';
-import SignUp from './signUp';
+import Auth from './auth';
+import Users from './users';
 
 class Server {
   config: Config;
-  login: Login['login'];
-  signUp: SignUp['post'];
+  api: {
+    auth: Auth;
+    users: Users;
+  };
+  db: Knex;
 
   constructor(config: ServerConfig) {
     this.config = new Config(config);
-    const _login = new Login(this.config);
-    const _signUp = new SignUp(this.config);
-    this.login = _login.login;
-    this.signUp = _signUp.post;
+    const auth = new Auth(this.config);
+    const users = new Users(this.config);
+    this.api = {
+      auth,
+      users,
+    };
+    const dbConfig = {
+      ...this.config.db,
+      client: 'pg',
+    };
+    this.db = knex(dbConfig);
+  }
+  get tenantId() {
+    return this.tenantId;
+  }
+
+  set tenantId(tenantId: string) {
+    this.config.tenantId = tenantId;
+    this.api.auth.tenantId = tenantId;
+    this.api.users.tenantId = tenantId;
   }
 }
 
