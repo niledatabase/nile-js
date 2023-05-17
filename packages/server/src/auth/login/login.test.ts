@@ -1,9 +1,8 @@
-import { Config } from '../utils/Config';
-import { FakeResponse, _fetch } from '../../test/fetch.mock';
+import { Config } from '../../utils/Config';
+import { FakeResponse, _fetch } from '../../../test/fetch.mock';
+import Auth from '../';
 
-import Login from './login';
-
-jest.mock('../utils/ResponseError', () => ({
+jest.mock('../../utils/ResponseError', () => ({
   ResponseError: jest.fn(),
 }));
 
@@ -12,7 +11,7 @@ describe('login', () => {
     //@ts-expect-error - test
     global.Response = FakeResponse;
     global.fetch = _fetch({ jwt: 'adfasdfdsa' });
-    const { login } = new Login(
+    const { login } = new Auth(
       new Config({ workspace: 'workspace', database: 'database' })
     );
     const params = {
@@ -25,10 +24,10 @@ describe('login', () => {
   });
 
   it('goes to the right url', () => {
-    const login = new Login(
+    const auth = new Auth(
       new Config({ workspace: 'workspace', database: 'database' })
     );
-    expect(login.url).toEqual(
+    expect(auth.loginUrl).toEqual(
       '/workspaces/workspace/databases/database/users/login'
     );
   });

@@ -1,7 +1,27 @@
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
 
-function getToken(headers: Headers, cookieKey: string) {
+export function handleTenantId(
+  headers: Headers,
+  config: Config
+): ResponseError | void {
+  // already set, no need to try and figure it out
+  if (config.tenantId) {
+    return;
+  }
+  const from = headers.get('referer');
+  if (from) {
+    const { searchParams } = new URL(from);
+    const tenantId = searchParams.get('tenantId');
+    if (tenantId) {
+      config.tenantId = tenantId;
+      return;
+    }
+  }
+  return new ResponseError(null, { status: 400 });
+}
+
+function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
   const cookie = headers.get('cookie')?.split('; ');
   const _cookies: Record<string, string> = {};
   if (cookie) {
@@ -21,7 +41,10 @@ function getToken(headers: Headers, cookieKey: string) {
       _cookies[name] = _cookie;
     }
   }
-  return _cookies[cookieKey];
+  if (cookieKey) {
+    return _cookies[cookieKey];
+  }
+  return null;
 }
 
 export async function _fetch(
@@ -29,18 +52,27 @@ export async function _fetch(
   path: string,
   opts?: RequestInit
 ): Promise<Response | ResponseError> {
-  const url = `${config.basePath}${path}`;
-  const { cookieKey } = config;
+  const url = `${config.api?.basePath}${path}`;
+  const cookieKey = config.api?.cookieKey;
   const headers = new Headers(opts?.headers);
   headers.set('content-type', 'application/json; charset=utf-8');
+  const authHeader = headers.get('Authorization');
+  if (!authHeader) {
+    if (config.api?.token) {
+      headers.set('Authorization', `Bearer ${config.api?.token}`);
+    } else {
+      const token = getTokenFromCookie(headers, cookieKey);
 
-  const token = getToken(headers, cookieKey);
-
-  if (token) {
-    headers.set('Authorization', `Bearer ${token}`);
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+    }
   }
 
-  const response = await fetch(url, opts);
+  const response = await fetch(url, {
+    ...opts,
+    headers,
+  });
 
   if (response.status >= 200 && response.status < 300) {
     return response;

@@ -8,11 +8,11 @@
       "content": {
         "*/*": {
           "schema": {
-            "$ref": "../schemas/LoginRequest.json",
-            "required": true
+            "$ref": "../schemas/LoginRequest.json"
           }
         }
-      }
+      },
+      "required": true
     },
     "responses": {
       "200": {
@@ -20,7 +20,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "../../../openapi/schemas/UserAuthResponse.json"
+              "$ref": "../../../../openapi/schemas/UserAuthResponse.json"
             }
           }
         }
@@ -30,7 +30,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "../../../openapi/responses/APIError.json"
+              "$ref": "../../../../openapi/responses/APIError.json"
             }
           }
         }

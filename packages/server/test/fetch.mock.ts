@@ -27,6 +27,8 @@ export class FakeResponse {
   };
 }
 
+export class FakeRequest {}
+
 export const _fetch = (payload?: Record<string, Something>) =>
   (async (config: Config, path: string, opts?: RequestInit) => {
     return new FakeResponse(
