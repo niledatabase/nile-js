@@ -1,5 +1,5 @@
 import { api } from '@/nile/Server';
 
 export async function POST(req: Request) {
-  return await api.signUp(req);
+  return await api.auth.signUp(req);
 }
