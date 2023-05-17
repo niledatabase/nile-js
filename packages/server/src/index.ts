@@ -12,7 +12,6 @@ class Server {
     users: Users;
   };
   db: Knex;
-  _tenantId: string | undefined;
 
   constructor(config: ServerConfig) {
     this.config = new Config(config);
