@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.180](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.179...v1.0.0-alpha.180) (2023-05-18)
+
+### Bug Fixes
+
+- handle invalid creds on login ([f18cec6](https://github.com/TheNileDev/nile-js/commit/f18cec609c76804ccc43080d998a62cd34305d76))
+
 # [1.0.0-alpha.179](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.178...v1.0.0-alpha.179) (2023-05-17)
 
 ### Bug Fixes
