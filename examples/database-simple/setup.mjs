@@ -20,13 +20,14 @@ const serverConfig = {
   workspace: config.NEXT_PUBLIC_WORKSPACE,
   database: config.NEXT_PUBLIC_DATABASE,
   api: {
-    basePath: 'https://dev.khnum.thenile.dev',
+    basePath: config.BASE_PATH,
     token: config.NILE_TOKEN,
   },
   db: {
     connection: {
       user: config.NILE_USER,
       password: config.NILE_PASSWORD,
+      host: config.NILE_HOST,
     },
   },
 };
