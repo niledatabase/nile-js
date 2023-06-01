@@ -1,6 +1,6 @@
 import base from 'base-x';
 
-type Prefix = 'usr_';
+type Prefix = 'usr_' | 'ten_';
 
 const base62 = base(
   // order matters with these values

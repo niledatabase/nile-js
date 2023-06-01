@@ -4,12 +4,14 @@ import { ServerConfig } from './types';
 import { Config } from './utils/Config';
 import Auth from './auth';
 import Users from './users';
+import Tenants from './tenants';
 
 class Server {
   config: Config;
   api: {
     auth: Auth;
     users: Users;
+    tenants: Tenants;
   };
   db: Knex;
 
@@ -17,9 +19,11 @@ class Server {
     this.config = new Config(config);
     const auth = new Auth(this.config);
     const users = new Users(this.config);
+    const tenants = new Tenants(this.config);
     this.api = {
       auth,
       users,
+      tenants,
     };
     const dbConfig = {
       ...this.config.db,

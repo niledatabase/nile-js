@@ -1,0 +1,60 @@
+{
+  "post": {
+    "tags": ["tenants"],
+    "summary": "Create a tenant",
+    "description": "Create a new tenant in a database",
+    "operationId": "createTenant",
+    "requestBody": {
+      "content": {
+        "*/*": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": true
+    },
+    "responses": {
+      "201": {
+        "description": "Tenant created",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../openapi/schemas/Tenant.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../openapi/responses/APIError.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Database not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../openapi/responses/APIError.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "jwtBearerAuth": []
+      }
+    ]
+  }
+}
