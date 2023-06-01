@@ -8,6 +8,7 @@ const { db } = new Server({
   database: String(process.env.NILE_DATABASE),
   db: {
     connection: {
+      host: process.env.NILE_HOST,
       user: process.env.NILE_USER,
       password: process.env.NILE_PASSWORD,
     },
@@ -24,6 +25,7 @@ async function get(team: string) {
         'pit_stop_times'
       );
     })
+    .select('c.tenant_id')
     .select('name')
     .select(db.raw('("end" - start) / 1000 AS pit_duration'))
     .select(
@@ -35,9 +37,15 @@ async function get(team: string) {
     `)
     )
     .from('pit_stop_times')
-    .join('circuits AS c', 'pit_stop_times.circuit_id', 'c.id')
+    .join('circuits AS c', function() {
+      this.on('pit_stop_times.circuit_id', '=', 'c.id').andOn(
+        'pit_stop_times.tenant_id',
+        '=',
+        'c.tenant_id'
+      );
+    })
     .crossJoin(db.raw('averages'))
-    .where('tenant_id', tenant.id);
+    .where(db.raw(`pit_stop_times.tenant_id = '${tenant.id}'`));
 
   const pitStops = rawStops.reduce((all, next) => {
     const { name, ...remaining } = next;

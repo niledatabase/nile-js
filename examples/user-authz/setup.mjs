@@ -51,7 +51,7 @@ const { db, api } = nile;
     t.increments();
     t.float('start');
     t.float('end');
-    t.integer('circuit_id');
+    t.integer('circuit_id').notNullable();
     t.uuid('tenant_id').references('tenants.id')
     t.primary(['id', 'tenant_id']); // must be constrained with any tenant table
     t.foreign(['circuit_id', 'tenant_id']).references(['circuits.id', 'circuits.tenant_id']);
@@ -81,9 +81,7 @@ const { db, api } = nile;
 
     const stopTimes = makePitStopTimes(circuitIds, nile.tenantId);
     const sql = generateInsertSQL(stopTimes);
-    console.log(sql)
     const result = await db.raw(sql);
-    console.log(JSON.stringify(result, null, 2));
 
   }
   // seed stop times for the races
@@ -155,7 +153,7 @@ const circuits = [
 ];
 
 function makePitStopTimes(circuitIds, tenant_id) {
-  return circuitIds.flatMap(({ id: circuit_id }) => {
+  return circuitIds.flatMap(circuit_id => {
     const numberOfStops = Math.floor(Math.random() * (4 - 1) + 1);
     let startTime = Math.random() * (7200000 - 2000) + 2000;
 
