@@ -1,5 +1,5 @@
 import { Config } from '../../utils/Config';
-import { FakeResponse, _fetch } from '../../../test/fetch.mock';
+import { FakeRequest, FakeResponse, _fetch } from '../../../test/fetch.mock';
 import Auth from '../';
 
 jest.mock('../../utils/ResponseError', () => ({
@@ -10,14 +10,14 @@ describe('login', () => {
   it('sets a cookie at login', async () => {
     //@ts-expect-error - test
     global.Response = FakeResponse;
+    //@ts-expect-error - test
+    global.Request = FakeRequest;
     global.fetch = _fetch({ jwt: 'adfasdfdsa' });
     const { login } = new Auth(
       new Config({ workspace: 'workspace', database: 'database' })
     );
-    const params = {
-      body: { email: 'email', password: 'password' },
-    } as unknown as Request;
-    const resp = (await login(params)) as unknown as FakeResponse;
+    const params = { email: 'email', password: 'password' };
+    const resp = await login(params);
     const headers = new Headers(resp.headers);
     const cookie = headers.get('set-cookie');
     expect(cookie).toEqual('token=adfasdfdsa; path=/; samesite=lax; httponly;');

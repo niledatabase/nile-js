@@ -1,24 +1,17 @@
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
+import { NileRequest } from './Requester';
 
 export function handleTenantId(
-  headers: Headers,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  req: NileRequest<any>,
   config: Config
 ): ResponseError | void {
   // already set, no need to try and figure it out
   if (config.tenantId) {
     return;
   }
-  const from = headers.get('referer');
-  if (from) {
-    const { searchParams } = new URL(from);
-    const tenantId = searchParams.get('tenantId');
-    if (tenantId) {
-      config.tenantId = tenantId;
-      return;
-    }
-  }
-  return new ResponseError(null, { status: 400 });
+  return new ResponseError('tenant id needs to be set', { status: 400 });
 }
 
 function getTokenFromCookie(headers: Headers, cookieKey: void | string) {

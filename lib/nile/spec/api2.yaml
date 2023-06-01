@@ -4,7 +4,7 @@ info:
   description: Making SaaS chill.
   contact:
     email: support@thenile.dev
-  version: 0.1.0-01c2fab
+  version: 0.1.0-48d6417
 servers:
   - url: localhost:8080
 paths:
@@ -618,7 +618,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateUserResponse'
+                $ref: '#/components/schemas/LoginUserResponse'
       security:
         - jwtBearerAuth: []
   /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/users/{userId}:
@@ -703,9 +703,9 @@ paths:
         '200':
           description: User logged in successfully
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/LoginUserResponse'
         '401':
           description: User authentication failed
           content:
@@ -741,7 +741,51 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateUserResponse'
+                $ref: '#/components/schemas/LoginUserResponse'
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Get a user
+      description: Get a user by id
+      operationId: getUser
+      parameters:
+        - name: workspaceSlug
+          in: path
+          required: false
+          schema:
+            type: string
+        - name: databaseName
+          in: path
+          required: false
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+        - jwtBearerAuth: []
   /workspaces/{workspaceSlug}/databases/{databaseName}/users/oidc/callback:
     get:
       tags:
@@ -803,9 +847,9 @@ paths:
         '200':
           description: User logged in successfully
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/LoginUserResponse'
         '401':
           description: User authentication failed
           content:
@@ -1073,7 +1117,7 @@ components:
           type: string
         name:
           type: string
-    CreateUserResponse:
+    LoginUserResponse:
       required:
         - id
         - token
@@ -1085,11 +1129,11 @@ components:
           $ref: '#/components/schemas/Token'
     Token:
       required:
-        - token
+        - jwt
         - type
       type: object
       properties:
-        token:
+        jwt:
           type: string
         maxAge:
           minimum: 0
@@ -1123,11 +1167,8 @@ components:
           type: array
           items:
             type: string
-        emails:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
+        email:
+          type: string
         preferredName:
           type: string
     CreateWorkspaceRequest:

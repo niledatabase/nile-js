@@ -20,12 +20,8 @@ describe('createUser', () => {
     global.fetch = _fetch();
     const { createTenantUser } = new Users(new Config(config));
 
-    const headers = new Headers();
-    headers.set('referer', 'http://localhost:8080?tenantId=tenant');
-    const params = {
-      body: { email: 'email', password: 'password' },
-      headers,
-    } as unknown as Request;
+    const params = { email: 'email', password: 'password' };
+
     const res = await createTenantUser(params);
     //@ts-expect-error - test
     expect(res.config).toEqual(

@@ -13,3 +13,6 @@ export * from './EventsApi';
 
 export { default as RestAPI } from './RestApi';
 export { DatabaseRestAPI } from './RestApi';
+
+export * as RestModels from './client2/src/models';
+export * as RestAPIs from './client2/src/apis';

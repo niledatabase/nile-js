@@ -27,7 +27,18 @@ export class FakeResponse {
   };
 }
 
-export class FakeRequest {}
+export class FakeRequest {
+  [key: string]: Something;
+  constructor(url: string, config?: RequestInit) {
+    this.payload = config?.body;
+  }
+  json = async () => {
+    return JSON.parse(this.payload);
+  };
+  text = async () => {
+    return this.payload;
+  };
+}
 
 export const _fetch = (payload?: Record<string, Something>) =>
   (async (config: Config, path: string, opts?: RequestInit) => {
