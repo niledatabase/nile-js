@@ -10,7 +10,7 @@ export async function POST(req: Request) {
 
     try {
       const [tenant] = await db('tenant_users')
-        .withSchema('user')
+        .withSchema('users')
         .as('tenant_users')
         .leftJoin(
           db('tenants').withSchema('public').as('tenants'),

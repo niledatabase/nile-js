@@ -73,6 +73,7 @@ const { db, api } = nile;
       circuitIds.push(circuitId);
     }
 
+    console.log(`creating user for ${email}`)
     //allow team principals to log in
     await api.users.createTenantUser({
       email,
@@ -81,8 +82,7 @@ const { db, api } = nile;
 
     const stopTimes = makePitStopTimes(circuitIds, nile.tenantId);
     const sql = generateInsertSQL(stopTimes);
-    const result = await db.raw(sql);
-
+    await db.raw(sql);
   }
   // seed stop times for the races
   /*
