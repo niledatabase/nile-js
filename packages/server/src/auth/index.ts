@@ -1,5 +1,7 @@
+import { RestModels } from '@theniledev/js';
+
 import { Config } from '../utils/Config';
-import Requester from '../utils/Requester';
+import Requester, { NileRequest, NileResponse } from '../utils/Requester';
 import { ResponseError } from '../utils/ResponseError';
 
 export default class Auth extends Config {
@@ -12,10 +14,14 @@ export default class Auth extends Config {
     )}/databases/${encodeURIComponent(this.database)}/users/login`;
   }
 
-  login = async (req: Request, init?: RequestInit): Promise<Response> => {
-    const headers = new Headers(req.headers);
+  login = async (
+    req: NileRequest<RestModels.CreateBasicUserRequest>,
+    init?: RequestInit
+  ): NileResponse<RestModels.LoginUserResponse> => {
+    const headers =
+      req instanceof Request ? new Headers(req.headers) : new Headers();
     const _requester = new Requester(this);
-    const res = await _requester.post(req, this.loginUrl, init);
+    const res = await _requester.post(req as Request, this.loginUrl, init);
     if (res instanceof ResponseError) {
       return res.response;
     }
@@ -36,7 +42,10 @@ export default class Auth extends Config {
     )}/databases/${encodeURIComponent(this.database)}/users`;
   }
 
-  signUp = async (req: Request, init?: RequestInit): Promise<Response> => {
+  signUp = async (
+    req: NileRequest<RestModels.CreateBasicUserRequest>,
+    init?: RequestInit
+  ): NileResponse<RestModels.LoginUserResponse> => {
     const _requester = new Requester(this);
     return _requester.post(req, this.signUpUrl, init);
   };

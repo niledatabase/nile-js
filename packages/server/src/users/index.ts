@@ -1,10 +1,12 @@
+import { RestModels } from '@theniledev/js';
+
 import { Config } from '../utils/Config';
-import Requester from '../utils/Requester';
+import Requester, { NileRequest, NileResponse } from '../utils/Requester';
 import { ResponseError } from '../utils/ResponseError';
 import { handleTenantId } from '../utils/fetch';
 import { UUID, decode, encode } from '../utils/uuid';
 
-export default class Auth extends Config {
+export default class Users extends Config {
   uuid: UUID;
   constructor(config: Config) {
     super(config);
@@ -22,19 +24,11 @@ export default class Auth extends Config {
   }
 
   createTenantUser = async (
-    req: Request | { email: string; password: string },
+    req: NileRequest<RestModels.CreateBasicUserRequest & { tenantId?: string }>,
     init?: RequestInit
-  ): Promise<Response> => {
+  ): NileResponse<RestModels.LoginUserResponse> => {
     const _requester = new Requester(this);
-    if (!(req instanceof Request)) {
-      return _requester.rawRequest(
-        'POST',
-        this.createTenantUserUrl,
-        JSON.stringify(req),
-        init
-      );
-    }
-    const error = handleTenantId(new Headers(req.headers), this);
+    const error = await handleTenantId(req, this);
     if (error instanceof ResponseError) {
       return error.response;
     }

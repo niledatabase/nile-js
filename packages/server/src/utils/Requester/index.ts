@@ -1,9 +1,10 @@
-import { Config } from '../utils/Config';
+import { Config } from '../Config';
+import { ResponseError } from '../ResponseError';
+import { _fetch } from '../fetch';
 
-import { ResponseError } from './ResponseError';
-import { _fetch } from './fetch';
+export { NileResponse, NileRequest } from './types';
 
-export default class Requester extends Config {
+export default class Requester<T> extends Config {
   constructor(config: Config) {
     super(config);
   }
@@ -33,20 +34,17 @@ export default class Requester extends Config {
   protected async request(
     method: 'POST' | 'GET',
     url: string,
-    req: Request,
+    req: T,
     init?: RequestInit
   ): Promise<Response> {
-    const body = await new Response(req.body).text();
-    return this.rawRequest(method, url, body, init);
+    if (req instanceof Request) {
+      const body = await new Response(req.body).text();
+      return this.rawRequest(method, url, body, init);
+    }
+    return this.rawRequest('POST', url, JSON.stringify(req), init);
   }
 
-  post = async (
-    req: Request,
-    url: string,
-    init?: RequestInit
-  ): Promise<Response> => {
-    const resp = await this.request('POST', url, req, init);
-    const text = await resp.text();
-    return new Response(text, { status: resp.status, ...init });
+  post = async (req: T, url: string, init?: RequestInit): Promise<Response> => {
+    return await this.request('POST', url, req, init);
   };
 }

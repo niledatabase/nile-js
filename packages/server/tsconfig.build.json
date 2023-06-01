@@ -2,7 +2,7 @@
   "extends": "./tsconfig",
   "include": ["src/**/*"],
   "compilerOptions": {
-    "rootDir": "./src"
+    "baseUrl": "./src"
   },
   "exclude": ["**/*test.ts", "openapi"]
 }
