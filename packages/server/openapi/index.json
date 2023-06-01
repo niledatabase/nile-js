@@ -16,6 +16,9 @@
     },
     "/{tenantId}/create-user": {
       "$ref": "../src/users/createTenantUser/openapi/paths/createTenantUser.json"
+    },
+    "/tenants": {
+      "$ref": "../src/tenants/createTenant/openapi/paths/createTenant.json"
     }
   }
 }
