@@ -1,7 +1,8 @@
 import Server from '@theniledev/server';
 import Link from 'next/link';
-
+import { api } from '@/nile/Server';
 import TeamDashboard from '@/nile/ui/TeamDashboard';
+import {cookies} from "next/headers";
 
 const { db } = new Server({
   workspace: String(process.env.NILE_WORKSPACE),
@@ -17,17 +18,21 @@ const { db } = new Server({
 
 // in this example, team name will map to tenant (imagine name uniqueness is enforced in the tenant table)
 async function get(team: string) {
-  console.log(`team: ${team}`);
   const name = team.split('-').join(' ');
-  console.log(`name: ${name}`);
   await db.raw('RESET nile.user_id');
   await db.raw('RESET nile.tenant_id');
   const [tenant] = (
     await db.raw(`SELECT * from tenants where name ILIKE '${name}'`)
   ).rows;
-  console.log(`tenant: ${JSON.stringify(tenant)}`);
+  // TODO: Use `/me` endpoint
+  const tokenVal = cookies().get('token').value;
+  const decodedTokenVal = JSON.parse(
+    Buffer.from(tokenVal.split('.')[1], 'base64').toString()
+  );
+  const userId = api.users.uuid.decode(decodedTokenVal.sub);
+  console.log(`user: ${userId}`);
   await db.raw(`SET nile.tenant_id = '${tenant.id}'`);
-  await db.raw(`SET nile.user_id = '018878ca-9a22-7c2a-82ec-fd7c25de8578'`);
+  await db.raw(`SET nile.user_id = '${userId}'`);
   const rawStops = await db
     .with('averages', (qb) => {
       qb.select(db.raw('AVG("end" - start) AS avg_duration')).from(
