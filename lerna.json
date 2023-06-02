@@ -5,7 +5,7 @@
     "packages/browser",
     "packages/server"
   ],
-  "version": "1.0.0-alpha.183",
+  "version": "1.0.0-alpha.184",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {

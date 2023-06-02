@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.184](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.183...v1.0.0-alpha.184) (2023-06-02)
+
+### Bug Fixes
+
+- fix token setting from updated api ([c7b0e03](https://github.com/TheNileDev/nile-js/commit/c7b0e038af869fd6f826c2a4a13f987c4f79f180))
+
 # [1.0.0-alpha.183](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.182...v1.0.0-alpha.183) (2023-06-02)
 
 ### Features
