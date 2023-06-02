@@ -21,14 +21,14 @@ export default class Auth extends Config {
     const headers =
       req instanceof Request ? new Headers(req.headers) : new Headers();
     const _requester = new Requester(this);
-    const res = await _requester.post(req as Request, this.loginUrl, init);
+    const res = await _requester.post(req, this.loginUrl, init);
     if (res instanceof ResponseError) {
       return res.response;
     }
 
     if (res && res.status >= 200 && res.status < 300) {
-      const token = await res.json();
-      const cookie = `${this.api?.cookieKey}=${token.jwt}; path=/; samesite=lax; httponly;`;
+      const token: RestModels.LoginUserResponse = await res.json();
+      const cookie = `${this.api?.cookieKey}=${token.token.jwt}; path=/; samesite=lax; httponly;`;
       headers.set('set-cookie', cookie);
       return new Response(JSON.stringify(token), { status: 200, headers });
     }
