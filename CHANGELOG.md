@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.183](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.182...v1.0.0-alpha.183) (2023-06-02)
+
+### Features
+
+- **server:** add tenant create ([9344e08](https://github.com/TheNileDev/nile-js/commit/9344e08226756e6c8368861a5c7b9aa4cd285a2a))
+
 # [1.0.0-alpha.182](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.181...v1.0.0-alpha.182) (2023-06-01)
 
 ### Bug Fixes
