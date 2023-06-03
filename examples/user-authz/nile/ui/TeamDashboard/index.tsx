@@ -7,6 +7,7 @@ import Typography from '@mui/joy/Typography';
 import { useState } from 'react';
 
 import NileContext from '@/nile/ui/NileContext';
+import Alert from '@mui/joy/Alert';
 
 type Props = {
   pitStops: {
@@ -16,10 +17,14 @@ type Props = {
     }>;
   };
   teamName: string;
+  error?: string;
 };
 export default function TeamDashboard(props: Props) {
   const [showStops, setShowStops] = useState<Array<string>>([]);
-  const { teamName, pitStops } = props;
+  const { teamName, pitStops, error } = props;
+  if (error) {
+    return <Alert>{error}</Alert>;
+  }
   return (
     <NileContext>
       <Box sx={{ py: 12, px: 30 }} gap={3}>
