@@ -1,21 +1,8 @@
-import Server from '@theniledev/server';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 
 import TeamDashboard from '@/nile/ui/TeamDashboard';
-import { api } from '@/nile/Server';
-
-const { db } = new Server({
-  workspace: String(process.env.NILE_WORKSPACE),
-  database: String(process.env.NILE_DATABASE),
-  db: {
-    connection: {
-      host: process.env.NILE_HOST,
-      user: process.env.NILE_USER,
-      password: process.env.NILE_PASSWORD,
-    },
-  },
-});
+import { db, api } from '@/nile/Server';
 
 // in this example, team name will map to tenant (imagine name uniqueness is enforced in the tenant table)
 async function get(team: string) {
