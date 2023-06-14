@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.186](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.185...v1.0.0-alpha.186) (2023-06-14)
+
+### Features
+
+- add user list example ([ccdc421](https://github.com/TheNileDev/nile-js/commit/ccdc421eb90c2bf4360d749e95f47ddde4cc2472))
+
 # [1.0.0-alpha.185](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.184...v1.0.0-alpha.185) (2023-06-14)
 
 ### Features
