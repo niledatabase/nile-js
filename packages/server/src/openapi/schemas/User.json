@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "tenants": {
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "email": {
+      "type": "string"
+    },
+    "preferredName": {
+      "type": "string"
+    }
+  }
+}

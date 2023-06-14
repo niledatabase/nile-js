@@ -1,45 +1,33 @@
 {
-  "post": {
-    "tags": ["users"],
-    "summary": "Create a user in a tenant",
-    "description": "Create a new user and associate the user with a tenant",
-    "operationId": "createTenantUser",
-    "parameters": [
-      {
-        "name": "tenantId",
-        "in": "path",
-        "required": false,
+  "tags": ["users"],
+  "summary": "Create a user in a tenant",
+  "description": "Create a new user and associate the user with a tenant",
+  "operationId": "createTenantUser",
+  "requestBody": {
+    "content": {
+      "*/*": {
         "schema": {
-          "type": "string"
+          "$ref": "../../../../openapi/schemas/CreateBasicUserRequest.json"
         }
       }
-    ],
-    "requestBody": {
+    },
+    "required": true
+  },
+  "responses": {
+    "201": {
+      "description": "User created",
       "content": {
-        "*/*": {
+        "application/json": {
           "schema": {
-            "$ref": "../../../../openapi/schemas/CreateBasicUserRequest.json"
-          }
-        }
-      },
-      "required": true
-    },
-    "responses": {
-      "201": {
-        "description": "User created",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../../../../openapi/schemas/UserAuthResponse.json"
-            }
+            "$ref": "../../../../openapi/schemas/UserAuthResponse.json"
           }
         }
       }
-    },
-    "security": [
-      {
-        "jwtBearerAuth": []
-      }
-    ]
-  }
+    }
+  },
+  "security": [
+    {
+      "jwtBearerAuth": []
+    }
+  ]
 }

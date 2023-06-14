@@ -12,7 +12,7 @@ describe('login', () => {
     global.Response = FakeResponse;
     //@ts-expect-error - test
     global.Request = FakeRequest;
-    global.fetch = _fetch({ jwt: 'adfasdfdsa' });
+    global.fetch = _fetch({ token: { jwt: 'adfasdfdsa' } });
     const { login } = new Auth(
       new Config({ workspace: 'workspace', database: 'database' })
     );

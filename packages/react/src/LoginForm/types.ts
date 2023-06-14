@@ -2,10 +2,8 @@ import { Login200Response } from '@theniledev/browser';
 
 import { Attribute } from '../lib/SimpleForm/types';
 
-type LoginSuccess = (
-  response: Login200Response,
-  formValues: { email: string; password: string }
-) => void;
+export type LoginInfo = { email: string; password: string };
+type LoginSuccess = (response: Login200Response, formValues: LoginInfo) => void;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;

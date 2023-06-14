@@ -75,6 +75,7 @@ export const NileProvider = (props: NileProviderProps) => {
         }),
       workspace: String(workspace),
       database: String(database),
+      tenantId: String(tenantId),
       basePath,
     };
   }, [basePath, workspace, tokenStorage, database, tenantId, api]);
@@ -99,14 +100,15 @@ export const useNile = (): NileApi => {
 };
 
 export const useNileConfig = (): NileReactConfig => {
-  const { database, workspace, basePath } = useNileContext();
+  const { database, workspace, basePath, tenantId } = useNileContext();
   return useMemo(
     () => ({
       workspace,
       database,
+      tenantId,
       basePath,
     }),
-    [basePath, database, workspace]
+    [basePath, database, workspace, tenantId]
   );
 };
 

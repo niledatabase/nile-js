@@ -1,0 +1,62 @@
+{
+  "tags": ["users"],
+  "summary": "List tenant users",
+  "description": "List users in a tenant",
+  "operationId": "listTenantUsers",
+  "parameters": [
+    {
+      "name": "workspaceSlug",
+      "in": "path",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "databaseName",
+      "in": "path",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "tenantId",
+      "in": "path",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Users found",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "../../../../openapi/schemas/User.json"
+            }
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../../../openapi/responses/APIError.json"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "jwtBearerAuth": []
+    }
+  ]
+}

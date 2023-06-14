@@ -1,3 +1,5 @@
+import { RestModels } from '@theniledev/js';
+
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';
 import { UUID, decode, encode } from '../utils/uuid';
@@ -20,7 +22,7 @@ export default class Tenants extends Config {
   createTenant = async (
     req: NileRequest<{ name: string }>,
     init?: RequestInit
-  ): NileResponse<void> => {
+  ): NileResponse<RestModels.Tenant> => {
     const _requester = new Requester(this);
 
     return _requester.post(req, this.tenantUrl, init);

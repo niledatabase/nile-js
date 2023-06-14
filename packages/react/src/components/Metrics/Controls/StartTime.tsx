@@ -16,7 +16,7 @@ export default function StarTime() {
       <Stack direction="row" sx={{ alignItems: 'center' }} spacing={1}>
         <DateTimePicker
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          renderInput={(props: any) => {
+          slots={(props: any) => {
             const { InputProps, inputRef } = props;
             return (
               <Input

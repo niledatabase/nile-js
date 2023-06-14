@@ -1,6 +1,7 @@
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
 import { NileRequest } from './Requester';
+import { updateTenantId } from './Event';
 
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,32 +49,46 @@ export async function _fetch(
   const url = `${config.api?.basePath}${path}`;
   const cookieKey = config.api?.cookieKey;
   const headers = new Headers(opts?.headers);
-  headers.set('content-type', 'application/json; charset=utf-8');
+  const basicHeaders = new Headers();
+  basicHeaders.set('content-type', 'application/json; charset=utf-8');
   const authHeader = headers.get('Authorization');
   if (!authHeader) {
     if (config.api?.token) {
-      headers.set('Authorization', `Bearer ${config.api?.token}`);
+      basicHeaders.set('Authorization', `Bearer ${config.api?.token}`);
     } else {
       const token = getTokenFromCookie(headers, cookieKey);
 
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+        basicHeaders.set('Authorization', `Bearer ${token}`);
       }
     }
   }
 
-  const response = await fetch(url, {
+  const tenantId = config.tenantId ?? headers?.get('x-nile-tenantId');
+  updateTenantId(tenantId);
+
+  if (url.includes('{tenantId}') && !tenantId) {
+    return new ResponseError('tenantId is not set for request', {
+      status: 400,
+    });
+  }
+  const useableUrl = url.replace('{tenantId}', String(tenantId));
+
+  const response = await fetch(useableUrl, {
     ...opts,
-    headers,
+    headers: basicHeaders,
+  }).catch((e) => {
+    // eslint-disable-next-line no-console
+    console.log(e);
   });
 
-  if (response.status >= 200 && response.status < 300) {
+  if (response && response.status >= 200 && response.status < 300) {
     return response;
   }
 
   let res;
   try {
-    res = await response.json();
+    res = await (response as Response)?.json();
   } catch (e) {
     /* do the default */
   }
@@ -81,6 +96,14 @@ export async function _fetch(
     const { message } = res;
     return new ResponseError(message, { status: 400 });
   }
+  if (res && 'errors' in res) {
+    const {
+      errors: [message],
+    } = res;
+    return new ResponseError(message, { status: 400 });
+  }
 
-  return new ResponseError(null, { status: response.status });
+  return new ResponseError(null, {
+    status: (response as Response)?.status ?? 500,
+  });
 }
