@@ -17,6 +17,8 @@ enum Commands {
   alter = 'ALTER',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Any = any;
 // a result set that comes from the node pg
 type ResultSet =
   | null
@@ -25,8 +27,8 @@ type ResultSet =
       command: Commands;
       rowCount: number;
       oid: number;
-      rows: any[];
-      fields: any[];
+      rows: Any[];
+      fields: Any[];
       RowCtor: null;
       rowAsArray: boolean;
     };
@@ -41,7 +43,7 @@ const parseResults = (
   const fields = resultSet?.fields;
   const items = resultSet?.rows;
 
-  const mapRows = (row: any, idx: number) => {
+  const mapRows = (row: Any, idx: number) => {
     if (Array.isArray(row)) {
       return row.map((row, id) => ({ ...row, id: `${idx}-${id}` }));
     }
@@ -60,7 +62,7 @@ const parseResults = (
 
   const existentCols: { [key: string]: number } = {};
 
-  const mapCols = (col: any) => {
+  const mapCols = (col: Any) => {
     const width = getColumnSize(col, rows, ctx);
     const name = col.name.slice();
     // add spaces to the end of column names so they are not duplicated in the UI

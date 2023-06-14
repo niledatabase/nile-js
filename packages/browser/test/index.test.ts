@@ -24,6 +24,10 @@ describe('nile db', () => {
           'constructor',
           'createTenantUserRaw',
           'createTenantUser',
+          'identifyUserRaw',
+          'identifyUser',
+          'listTenantUsersRaw',
+          'listTenantUsers',
         ]);
       }
     });
