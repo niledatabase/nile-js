@@ -1,16 +1,39 @@
 import { KnexConfig, PgConnectionConfig, ServerConfig } from '../types';
 
+class ApiConfig {
+  public cookieKey?: string;
+  public basePath?: string;
+  private _token?: string;
+  constructor({
+    basePath,
+    cookieKey,
+    token,
+  }: {
+    basePath: string;
+    cookieKey: string;
+    token: string | undefined;
+  }) {
+    this.basePath = basePath;
+    this.cookieKey = cookieKey;
+    this._token = token;
+  }
+
+  public get token(): string | undefined {
+    return this._token;
+  }
+
+  public set token(value: string | undefined) {
+    this._token = value;
+  }
+}
+
 export class Config {
   database: string;
   workspace: string;
 
   db: KnexConfig;
 
-  api?: {
-    cookieKey?: string;
-    basePath?: string;
-    token?: string;
-  };
+  api: ApiConfig;
 
   private _tenantId?: string | undefined;
 
@@ -24,13 +47,13 @@ export class Config {
 
   constructor(_config: ServerConfig) {
     this.database = _config.database;
-    this.tenantId = _config.tenantId;
+    this._tenantId = _config.tenantId;
     this.workspace = _config.workspace;
-    this.api = {
+    this.api = new ApiConfig({
       basePath: _config.api?.basePath ?? 'https://prod.thenile.dev',
       cookieKey: _config.api?.cookieKey ?? 'token',
       token: _config.api?.token,
-    };
+    });
 
     const host: string =
       _config.db &&

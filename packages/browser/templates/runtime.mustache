@@ -16,8 +16,8 @@ export interface ConfigurationParameters {
     headers?: HTTPHeaders; //header params we want to use on every request
     credentials?: RequestCredentials; //value for the credentials param we want to use on each request
     workspace?: string; // the workspace for the application
-    database?: string; // the workspace for the application
-    tenantId?: string; // the workspace for the application
+    database?: string; // the database for the application
+    tenantId?: string; // the tenantId for the application
 }
 
 export class Configuration {
@@ -28,11 +28,11 @@ export class Configuration {
     }
 
     set database(val: string) {
-        this.workspace = val;
+        this.database = val;
     }
 
     set tenantId(val: string) {
-        this.workspace = val;
+        this.tenantId = val;
     }   
 
     get workspace(): string {
@@ -146,6 +146,28 @@ export class BaseAPI {
         if (response && (response.status >= 200 && response.status < 300)) {
             return response;
         }
+        const res = await response.text();
+        let json;
+        try {
+            json = JSON.parse(res);
+        } catch (e) {
+            /* do nothing, see what's there */
+        }
+        if (json && 'message' in json) {
+            const { message } = json;
+            throw new ResponseError(response, message);
+        }
+        if (json && 'errors' in json) {
+            const {
+              errors: [message],
+            } = json;
+            throw new ResponseError(response, message);
+        }
+
+        if (res) {
+            throw new ResponseError(response, res);
+        }
+
         throw new ResponseError(response, 'Response returned an error code');
     }
 

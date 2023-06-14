@@ -4,10 +4,12 @@ import Users from '.';
 
 const baseConfig = [
   '_tenantId',
-  'database',
   'api',
-  'db',
   'createTenantUser',
+  'database',
+  'db',
+  'listTenantUsers',
+  'me',
   'uuid',
   'workspace',
 ];

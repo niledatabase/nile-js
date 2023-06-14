@@ -1,0 +1,45 @@
+{
+  "get": {
+    "tags": ["users"],
+    "summary": "Identify the user",
+    "description": "Identify the user associated with the token provided",
+    "operationId": "identifyUser",
+    "responses": {
+      "200": {
+        "description": "User found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../openapi/schemas/User.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../openapi/responses/APIError.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "User not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../openapi/responses/APIError.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "jwtBearerAuth": []
+      }
+    ]
+  }
+}

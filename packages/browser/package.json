@@ -13,7 +13,7 @@
     "start": "tsdx watch",
     "build": "yarn build:move && yarn build:api:gen && tsdx build --tsconfig ./tsconfig.build.json",
     "build:move": "node ./scripts/move.mjs",
-    "build:api:gen": "yarn openapi-generator-cli generate --skip-validate-spec -t templates -i src/spec.json -g typescript-fetch --package-name @theniledev/client -o src/openapi --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,moduleName=NileClient,typescriptThreePlus=true,projectName=@theniledev/client",
+    "build:api:gen": "yarn openapi-generator-cli generate --skip-validate-spec -t templates -i src/spec.json -g typescript-fetch --package-name @theniledev/client -o src/openapi --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,moduleName=NileClient,typescriptThreePlus=true,projectName=@theniledev/browser",
     "test": "tsdx test",
     "lint": "eslint src",
     "size": "size-limit",

@@ -14,8 +14,17 @@
     "/sign-up": {
       "$ref": "../src/auth/signUp/openapi/paths/signUp.json"
     },
-    "/{tenantId}/create-user": {
-      "$ref": "../src/users/createTenantUser/openapi/paths/createTenantUser.json"
+
+    "/{tenantId}/users": {
+      "get": {
+        "$ref": "../src/users/listTenantUsers/openapi/paths/listTenantUsers.json"
+      },
+      "post": {
+        "$ref": "../src/users/createTenantUser/openapi/paths/createTenantUser.json"
+      }
+    },
+    "/me": {
+      "$ref": "../src/users/me/openapi/paths/me.json"
     },
     "/tenants": {
       "$ref": "../src/tenants/createTenant/openapi/paths/createTenant.json"

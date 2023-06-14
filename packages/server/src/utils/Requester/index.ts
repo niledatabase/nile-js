@@ -1,3 +1,6 @@
+import isEmpty from 'lodash/isEmpty';
+import { isObject } from 'lodash';
+
 import { Config } from '../Config';
 import { ResponseError } from '../ResponseError';
 import { _fetch } from '../fetch';
@@ -12,39 +15,78 @@ export default class Requester<T> extends Config {
   async rawRequest(
     method: 'POST' | 'GET',
     url: string,
-    body: string,
-    init?: RequestInit
+    init: RequestInit,
+    body?: string
   ): Promise<Response> {
     const _init = {
       ...init,
       body,
       method,
-      headers: {
-        'content-type': 'application/json; charset=UTF8',
-        ...init?.headers,
-      },
     };
+
     const res = await _fetch(this, url, _init);
+
     if (res instanceof ResponseError) {
       return res.response;
     }
+
     return res;
   }
 
+  /**
+   * three optios here
+   * 1) pass in headers for a server side request
+   * 2) pass in the payload that matches the api
+   * 3) pass in the request object sent by a browser
+   * @param method
+   * @param url
+   * @param req
+   * @param init
+   * @returns
+   */
   protected async request(
     method: 'POST' | 'GET',
     url: string,
-    req: T,
+    req: T | Headers,
     init?: RequestInit
   ): Promise<Response> {
-    if (req instanceof Request) {
-      const body = await new Response(req.body).text();
-      return this.rawRequest(method, url, body, init);
+    // set the headers
+    const _init = init ?? {};
+    if (req instanceof Headers) {
+      _init.headers = req;
+    } else if (req instanceof Request) {
+      _init.headers = new Headers(req?.headers);
     }
-    return this.rawRequest('POST', url, JSON.stringify(req), init);
+    // default the body - may be the actual payload for the API
+    let body: string | undefined = JSON.stringify(req);
+
+    // comes from next/some server
+    if (req instanceof Request) {
+      body = await new Response(req.body).text();
+    } else if (
+      // is just headers for a GET request
+      req instanceof Headers ||
+      isEmpty(req) ||
+      (isObject(req) && Object.values(req).length === 0)
+    ) {
+      body = undefined;
+    }
+    return await this.rawRequest(method, url, _init, body);
   }
 
-  post = async (req: T, url: string, init?: RequestInit): Promise<Response> => {
+  post = async (
+    req: T | Headers,
+    url: string,
+    init?: RequestInit
+  ): Promise<Response> => {
     return await this.request('POST', url, req, init);
+  };
+
+  get = async (
+    req: T | Headers,
+    url: string,
+    init?: RequestInit
+  ): Promise<Response> => {
+    return await this.request('GET', url, req, init);
   };
 }

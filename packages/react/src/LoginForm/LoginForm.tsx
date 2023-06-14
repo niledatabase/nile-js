@@ -6,23 +6,19 @@ import { useNileApi } from '../context';
 import SimpleForm from '../lib/SimpleForm';
 import { AttributeType } from '../lib/SimpleForm/types';
 
-import { Props, AllowedAny } from './types';
+import { Props, LoginInfo } from './types';
 
 export default function LoginForm(props: Props) {
   const { attributes, onSuccess, onError, beforeMutate } = props;
   const api = useNileApi();
 
-  const handleMutate =
-    typeof beforeMutate === 'function'
-      ? beforeMutate
-      : (data: AllowedAny): AllowedAny => data;
-
   const mutation = useMutation(
-    async (data: { email: string; password: string }) => {
-      const _data = handleMutate(data);
+    async (_data: LoginInfo) => {
+      const possibleData = beforeMutate && beforeMutate(_data);
+      const data = possibleData ?? _data;
       return await api.auth
         .login({
-          loginRequest: _data,
+          loginRequest: data,
         })
         .catch((e) => onError && onError(e, data));
     },

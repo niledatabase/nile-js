@@ -2,8 +2,6 @@ import { RestModels } from '@theniledev/js';
 
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';
-import { ResponseError } from '../utils/ResponseError';
-import { handleTenantId } from '../utils/fetch';
 import { UUID, decode, encode } from '../utils/uuid';
 
 export default class Users extends Config {
@@ -15,24 +13,41 @@ export default class Users extends Config {
       encode: (input: string) => encode(input, 'usr_'),
     };
   }
-  get createTenantUserUrl() {
+  get tenantUsersUrl() {
     return `/workspaces/${encodeURIComponent(
       this.workspace
     )}/databases/${encodeURIComponent(this.database)}/tenants/${
-      this.tenantId
+      this.tenantId ?? '{tenantId}'
     }/users`;
   }
 
   createTenantUser = async (
-    req: NileRequest<RestModels.CreateBasicUserRequest & { tenantId?: string }>,
+    req: NileRequest<RestModels.CreateBasicUserRequest>,
     init?: RequestInit
   ): NileResponse<RestModels.LoginUserResponse> => {
     const _requester = new Requester(this);
-    const error = await handleTenantId(req, this);
-    if (error instanceof ResponseError) {
-      return error.response;
-    }
+    return await _requester.post(req, this.tenantUsersUrl, init);
+  };
 
-    return _requester.post(req, this.createTenantUserUrl, init);
+  listTenantUsers = async (
+    req: NileRequest<void> | Headers,
+    init?: RequestInit
+  ): NileResponse<RestModels.User[]> => {
+    const _requester = new Requester(this);
+    return await _requester.get(req, this.tenantUsersUrl, init);
+  };
+
+  get meUrl() {
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/users/me`;
+  }
+
+  me = async (
+    req: NileRequest<void>,
+    init?: RequestInit
+  ): NileResponse<RestModels.User> => {
+    const _requester = new Requester(this);
+    return await _requester.get(req, this.meUrl, init);
   };
 }
