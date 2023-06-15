@@ -1,4 +1,4 @@
-import nile, { api, db } from '@/nile/Server';
+import nile, {api, db} from '@/nile/Server';
 
 export async function POST(req: Request) {
   // be sure to set the header when redirecting
