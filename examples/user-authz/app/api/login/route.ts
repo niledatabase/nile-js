@@ -9,26 +9,16 @@ export async function POST(req: Request) {
     try {
       nile.token = body.token.jwt;
       const userResponse = await api.users.me();
-      if (userResponse.status === 401) {
-        return new Response(
-          'Token not valid for user, remove your token and try again',
-          { status: 401 }
-        );
-      }
-      if (userResponse.status < 300) {
-        const { tenants } = await userResponse.json();
-        const vals = tenants?.values();
-        const tenantId = vals?.next().value;
-        const tenantName = await getTenantName(tenantId);
-        return new Response(
-          JSON.stringify({
-            slug: encodeURIComponent(
-              tenantName.replace(' ', '-').toLowerCase()
-            ),
-          }),
-          { headers }
-        );
-      }
+      const { tenants } = await userResponse.json();
+      const vals = tenants?.values();
+      const tenantId = vals?.next().value;
+      const tenantName = await getTenantName(tenantId);
+      return new Response(
+        JSON.stringify({
+          slug: encodeURIComponent(tenantName.replace(' ', '-').toLowerCase()),
+        }),
+        { headers }
+      );
     } catch (e) {
       console.log(e);
     }
