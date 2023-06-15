@@ -1,6 +1,6 @@
 import Server from '@theniledev/server';
 
-export const { api, db } = new Server({
+const nile = new Server({
   workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
   database: String(process.env.NEXT_PUBLIC_DATABASE),
   api: {
@@ -14,3 +14,7 @@ export const { api, db } = new Server({
     },
   },
 });
+
+export default nile;
+export const db = nile.db;
+export const api = nile.api;

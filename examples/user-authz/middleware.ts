@@ -6,7 +6,7 @@ import middleware from '@theniledev/edge';
 export default async function doMiddleware(request: NextRequest) {
   const response = NextResponse.next();
   const tenantId = await getTenantId(request);
-  middleware(request, response, tenantId);
+  // middleware(request, response, tenantId);
 }
 
 async function getTenantId(request: NextRequest): Promise<string> {
@@ -18,6 +18,5 @@ async function getTenantId(request: NextRequest): Promise<string> {
 }
 
 export const config = {
-  // api/*tenantId
   matcher: ['/teams/:team*'],
 };

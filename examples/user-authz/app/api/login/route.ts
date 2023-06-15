@@ -1,4 +1,4 @@
-import { api, db } from '@/nile/Server';
+import nile, { api, db } from '@/nile/Server';
 
 export async function POST(req: Request) {
   // be sure to set the header when redirecting
@@ -6,28 +6,38 @@ export async function POST(req: Request) {
   if (loginResp && loginResp.status >= 200 && loginResp.status < 300) {
     const headers = new Headers(loginResp.headers);
     const body = await new Response(loginResp.body).json();
-    const uuid = api.users.uuid.decode(body.id);
-
     try {
-      const [tenant] = await db('tenant_users')
-        .withSchema('users')
-        .as('tenant_users')
-        .leftJoin(
-          db('tenants').withSchema('public').as('tenants'),
-          'tenants.id',
-          'tenant_users.tenant_id'
-        )
-        .where('user_id', uuid);
-      const { name } = tenant;
-      return new Response(
-        JSON.stringify({
-          slug: encodeURIComponent(name.replace(' ', '-').toLowerCase()),
-        }),
-        { headers }
-      );
+      nile.token = body.token.jwt;
+      const userResponse = await api.users.me();
+      if (userResponse.status === 401) {
+        return new Response(
+          'Token not valid for user, remove your token and try again',
+          { status: 401 }
+        );
+      }
+      if (userResponse.status < 300) {
+        const { tenants } = await userResponse.json();
+        const vals = tenants?.values();
+        const tenantId = vals?.next().value;
+        const tenantName = await getTenantName(tenantId);
+        return new Response(
+          JSON.stringify({
+            slug: encodeURIComponent(
+              tenantName.replace(' ', '-').toLowerCase()
+            ),
+          }),
+          { headers }
+        );
+      }
     } catch (e) {
       console.log(e);
     }
   }
   return loginResp;
+}
+
+// This will be a Nile API call.
+async function getTenantName(tenantId: string): Promise<string> {
+  const [result] = await db('tenants').select('name').where('id', api.tenants.uuid.decode(tenantId));
+  return result.name;
 }
