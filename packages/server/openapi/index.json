@@ -28,6 +28,9 @@
     },
     "/tenants": {
       "$ref": "../src/tenants/createTenant/openapi/paths/createTenant.json"
+    },
+    "/tenants/{tenantId}": {
+      "$ref": "../src/tenants/getTenant/openapi/paths/getTenant.json"
     }
   }
 }

@@ -10,7 +10,7 @@ const nile = new Server({
     connection: {
       user: process.env.NILE_USER,
       password: process.env.NILE_PASSWORD,
-      host: process.env.NILE_HOST
+      host: process.env.NILE_HOST,
     },
   },
 });

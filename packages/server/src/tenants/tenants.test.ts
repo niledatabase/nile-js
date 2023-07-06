@@ -6,6 +6,7 @@ const baseConfig = [
   '_tenantId',
   'api',
   'createTenant',
+  'getTenant',
   'database',
   'db',
   'uuid',
