@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import UserForm from '../lib/SimpleForm';
 import { Attribute, AttributeType } from '../lib/SimpleForm/types';
-import { useNileApi } from '../context';
+import { useApi } from '../context';
 
 import { Props, LoginInfo } from './types';
 
@@ -15,7 +15,7 @@ export default function SignUpForm(props: Props) {
     attributes,
     beforeMutate,
   } = props;
-  const api = useNileApi();
+  const api = useApi();
   const mutation = useMutation(
     async (_data: LoginInfo) => {
       const possibleData = beforeMutate && beforeMutate(_data);

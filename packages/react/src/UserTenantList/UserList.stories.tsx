@@ -22,7 +22,7 @@ const users = [
 ];
 export function Basic() {
   return (
-    <NileProvider workspace="workspace" database="database" tenantId="tenantId">
+    <NileProvider tenantId="tenantId">
       <UserList data={users} />
     </NileProvider>
   );

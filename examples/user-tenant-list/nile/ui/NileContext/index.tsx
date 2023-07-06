@@ -2,7 +2,10 @@
 
 import { NileProvider } from '@theniledev/react';
 
-export default function NileContext(props: { children: JSX.Element | JSX.Element[], tenantId?: null | string }) {
+export default function NileContext(props: {
+  children: JSX.Element | JSX.Element[];
+  tenantId?: null | string;
+}) {
   return (
     <NileProvider
       workspace={String(process.env.NEXT_PUBLIC_WORKSPACE)}

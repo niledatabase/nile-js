@@ -17,7 +17,7 @@ describe('SignUpForm', () => {
       },
     } as unknown as Client;
     render(
-      <NileProvider workspace="workspace" database="database" api={api}>
+      <NileProvider api={api}>
         <SignUpForm onSuccess={onSuccess} />
       </NileProvider>
     );

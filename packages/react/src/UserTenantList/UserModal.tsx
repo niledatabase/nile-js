@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { Login200Response, SignUpRequest } from '@theniledev/browser';
 
-import { useNileApi } from '../context';
+import { useApi } from '../context';
 
 export type UserFormProps = {
   open: boolean;
@@ -23,7 +23,7 @@ export type UserFormProps = {
 
 export default function AddUser(props: UserFormProps) {
   const { open, setOpen, refetch } = props;
-  const api = useNileApi();
+  const api = useApi();
   const [errorText, setErrorText] = React.useState<void | string>();
   const { watch, register, handleSubmit } = useForm<SignUpRequest>();
   const email = watch('email');

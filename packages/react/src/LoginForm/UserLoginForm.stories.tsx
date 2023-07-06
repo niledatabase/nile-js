@@ -14,7 +14,7 @@ export default meta;
 
 export function Basic() {
   return (
-    <NileProvider database="database" workspace="workspace">
+    <NileProvider>
       <Stack sx={{ maxWidth: '20rem', margin: '0 auto' }} spacing={2}>
         <LoginForm onSuccess={() => alert('success!')} />
       </Stack>
