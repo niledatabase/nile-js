@@ -2,7 +2,7 @@ import React from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 import { Attribute } from '../lib/SimpleForm/types';
-import { useNileApi } from '../context';
+import { useApi } from '../context';
 import SimpleForm from '../lib/SimpleForm';
 import { AttributeType } from '../lib/SimpleForm/types';
 
@@ -10,7 +10,7 @@ import { Props, LoginInfo } from './types';
 
 export default function LoginForm(props: Props) {
   const { attributes, onSuccess, onError, beforeMutate } = props;
-  const api = useNileApi();
+  const api = useApi();
 
   const mutation = useMutation(
     async (_data: LoginInfo) => {

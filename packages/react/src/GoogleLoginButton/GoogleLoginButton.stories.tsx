@@ -5,10 +5,9 @@ import { NileProvider } from '../context';
 import defaultTheme from '../context/themeJoiner';
 
 import GoogleLoginButton from './GoogleLoginButton';
-import GoogleSSOButton from './GoogleSSOButton';
 
 const meta = {
-  title: 'SSO/Google',
+  title: 'Social/Google',
   component: GoogleLoginButton,
   tags: ['autodocs'],
 };
@@ -17,7 +16,7 @@ export default meta;
 
 export function Basic() {
   return (
-    <NileProvider database="database" workspace="my_workspace">
+    <NileProvider>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <GoogleLoginButton />
       </div>
@@ -28,7 +27,7 @@ export function AlphaVersionWithOutProvider() {
   return (
     <CssVarsProvider theme={defaultTheme}>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
-        <GoogleSSOButton href="some href" />
+        <GoogleLoginButton href="some href" />
       </div>
     </CssVarsProvider>
   );
@@ -36,9 +35,9 @@ export function AlphaVersionWithOutProvider() {
 
 export function AlphaVersionWithProvider() {
   return (
-    <NileProvider database="database" workspace="workspace">
+    <NileProvider>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
-        <GoogleSSOButton />
+        <GoogleLoginButton />
       </div>
     </NileProvider>
   );

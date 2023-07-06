@@ -17,7 +17,7 @@ describe('LoginForm', () => {
       },
     } as unknown as Client;
     render(
-      <NileProvider workspace="workspace" database="database" api={api}>
+      <NileProvider api={api}>
         <LoginForm onSuccess={onSuccess} />
       </NileProvider>
     );

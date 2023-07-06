@@ -1,8 +1,8 @@
+import { headers } from 'next/headers';
+
 import nile, { api } from '@/nile/Server';
 import NileContext from '@/nile/ui/NileContext';
 import UserList from '@/nile/ui/UserList';
-
-import { headers } from "next/headers";
 
 export default async function TenantUsers() {
   const res = await api.users.listTenantUsers(new Headers(headers()));

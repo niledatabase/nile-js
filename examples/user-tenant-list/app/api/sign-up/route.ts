@@ -1,5 +1,6 @@
+import { cookies } from 'next/headers';
+
 import nile, { api } from '@/nile/Server';
-import { cookies } from "next/headers";
 
 /**
  * A basic login + signup, for easy of usage/trying out
@@ -15,27 +16,35 @@ export async function POST(req: Request) {
     nile.token = existing?.value;
     const userResponse = await api.users.me();
     if (userResponse.status === 401) {
-      return new Response('Token not valid for user, remove your token and try again', {status: 401});
+      return new Response(
+        'Token not valid for user, remove your token and try again',
+        { status: 401 }
+      );
     }
     if (userResponse.status < 300) {
       const { tenants } = await userResponse.json();
       const vals = tenants?.values();
       const tenantId = vals?.next();
-      return new Response(JSON.stringify({ tenantId: tenantId?.value }), {status: 200});
+      return new Response(JSON.stringify({ tenantId: tenantId?.value }), {
+        status: 200,
+      });
     }
   }
-
 
   const body = await req.json();
   // do sign up and login all at once
   const signUpResponse = await api.auth.signUp(body);
 
   if (signUpResponse.status === 500) {
-    return new Response('A REST error occured. Try again later', { status: 500 });
+    return new Response('A REST error occured. Try again later', {
+      status: 500,
+    });
   }
 
   if (signUpResponse.status > 300) {
-    return new Response('User already signed up, create a new user', { status: 400 });
+    return new Response('User already signed up, create a new user', {
+      status: 400,
+    });
   }
 
   const token = await signUpResponse.json();
@@ -46,16 +55,21 @@ export async function POST(req: Request) {
   headers.set('set-cookie', cookie);
 
   // set the api token
-  nile.token = token.token.jwt; 
+  nile.token = token.token.jwt;
 
-  // by default, a user does not belong to a tenant. 
+  // by default, a user does not belong to a tenant.
   // This creates a tenant with the same name, and adds them to it.
-  const createTenantResponse = await api.tenants.createTenant({ name: body.email });
+  const createTenantResponse = await api.tenants.createTenant({
+    name: body.email,
+  });
   const tenant = await createTenantResponse.json();
-  
+
   // set the tenant id
   nile.tenantId = tenant.id;
   await api.users.createTenantUser(body);
 
-  return new Response(JSON.stringify({ tenantId: tenant.id }), { status: 200, headers });
+  return new Response(JSON.stringify({ tenantId: tenant.id }), {
+    status: 200,
+    headers,
+  });
 }

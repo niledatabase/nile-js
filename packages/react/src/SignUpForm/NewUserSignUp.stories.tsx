@@ -14,7 +14,7 @@ export default meta;
 
 export function Basic() {
   return (
-    <NileProvider workspace="workspace" database="database">
+    <NileProvider>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <SignUpForm onSuccess={() => alert('success!')} />
       </div>
