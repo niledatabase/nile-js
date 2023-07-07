@@ -13,10 +13,17 @@ export default class Tenants extends Config {
       encode: (input: string) => encode(input, 'ten_'),
     };
   }
-  get tenantUrl() {
+  get tenantsUrl() {
     return `/workspaces/${encodeURIComponent(
       this.workspace
     )}/databases/${encodeURIComponent(this.database)}/tenants`;
+  }
+  get tenantUrl() {
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/tenants/${
+      this.tenantId ?? '{tenantId}'
+    }`;
   }
 
   createTenant = async (
@@ -25,6 +32,14 @@ export default class Tenants extends Config {
   ): NileResponse<RestModels.Tenant> => {
     const _requester = new Requester(this);
 
-    return _requester.post(req, this.tenantUrl, init);
+    return _requester.post(req, this.tenantsUrl, init);
+  };
+
+  getTenant = async (
+    req: NileRequest<void>,
+    init?: RequestInit
+  ): NileResponse<RestModels.Tenant> => {
+    const _requester = new Requester(this);
+    return _requester.get(req, this.tenantUrl, init);
   };
 }
