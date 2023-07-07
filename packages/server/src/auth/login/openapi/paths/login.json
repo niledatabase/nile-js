@@ -8,7 +8,7 @@
       "content": {
         "*/*": {
           "schema": {
-            "$ref": "../schemas/LoginRequest.json"
+            "$ref": "../../../../../openapi/index.json#/components/schemas/LoginRequest"
           }
         }
       },
@@ -20,7 +20,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "../../../../openapi/schemas/UserAuthResponse.json"
+              "$ref": "../../../../../openapi/index.json#/components/schemas/LoginRequest"
             }
           }
         }
@@ -30,7 +30,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "../../../../openapi/responses/APIError.json"
+              "$ref": "../../../../../openapi/index.json#/components/schemas/APIError"
             }
           }
         }

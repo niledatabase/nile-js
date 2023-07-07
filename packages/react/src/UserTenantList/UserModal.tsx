@@ -11,14 +11,14 @@ import {
 } from '@mui/joy';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { Login200Response, SignUpRequest } from '@theniledev/browser';
+import { SignUp201Response, SignUpRequest } from '@theniledev/browser';
 
 import { useApi } from '../context';
 
 export type UserFormProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  refetch?: (user: Login200Response) => void;
+  refetch?: (user: SignUp201Response) => void;
 };
 
 export default function AddUser(props: UserFormProps) {
