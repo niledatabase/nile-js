@@ -1,7 +1,7 @@
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import Stack from '@mui/joy/Stack';
-import { IdentifyUser200Response, Login200Response } from '@theniledev/browser';
+import { IdentifyUser200Response, LoginRequest } from '@theniledev/browser';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Theme } from '@mui/system/createTheme';
 
@@ -14,7 +14,7 @@ type Props = {
   data: void | IdentifyUser200Response[];
   allowCreation?: boolean;
   buttonText?: string;
-  onUserCreateSuccess?: (user: Login200Response) => void;
+  onUserCreateSuccess?: (user: LoginRequest) => void;
   slots?: {
     dataGrid?: SxProps<Theme>;
   };

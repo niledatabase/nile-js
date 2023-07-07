@@ -1,10 +1,10 @@
-import { Login200Response } from '@theniledev/browser';
+import { SignUp201Response } from '@theniledev/browser';
 
 import { Attribute } from '../lib/SimpleForm/types';
 
-export type LoginInfo = { email: string; password: string };
+export type LoginInfo = SignUp201Response;
 type SignInSuccess = (
-  response: Login200Response,
+  response: SignUp201Response,
   formValues: LoginInfo
 ) => void;
 
