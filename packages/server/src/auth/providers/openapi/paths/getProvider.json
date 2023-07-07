@@ -1,0 +1,38 @@
+{
+  "tags": ["authentication"],
+  "summary": "Get SSO provider",
+  "description": "Get SSO provider by name",
+  "operationId": "getSSOProvider",
+  "parameters": [
+    {
+      "name": "providerName",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "OIDC provider",
+      "content": {
+        "*/*": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/SSOProvider"
+          }
+        }
+      }
+    },
+    "404": {
+      "description": "OIDC provider not found",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../../../openapi/responses/APIError.json"
+          }
+        }
+      }
+    }
+  }
+}

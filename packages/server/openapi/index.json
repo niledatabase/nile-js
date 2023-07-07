@@ -14,15 +14,6 @@
     "/sign-up": {
       "$ref": "../src/auth/signUp/openapi/paths/signUp.json"
     },
-
-    "/{tenantId}/users": {
-      "get": {
-        "$ref": "../src/users/listTenantUsers/openapi/paths/listTenantUsers.json"
-      },
-      "post": {
-        "$ref": "../src/users/createTenantUser/openapi/paths/createTenantUser.json"
-      }
-    },
     "/me": {
       "$ref": "../src/users/me/openapi/paths/me.json"
     },
@@ -31,6 +22,94 @@
     },
     "/tenants/{tenantId}": {
       "$ref": "../src/tenants/getTenant/openapi/paths/getTenant.json"
+    },
+    "/{tenantId}/users": {
+      "get": {
+        "$ref": "../src/users/listTenantUsers/openapi/paths/listTenantUsers.json"
+      },
+      "post": {
+        "$ref": "../src/users/createTenantUser/openapi/paths/createTenantUser.json"
+      }
+    },
+    "/providers/{providerName}": {
+      "get": {
+        "$ref": "../src/auth/providers/openapi/paths/getProvider.json"
+      },
+      "put": {
+        "$ref": "../src/auth/providers/openapi/paths/updateProvider.json"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SSOProvider": {
+        "required": ["clientId", "configUrl", "provider", "redirectURI"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "provider": {
+            "type": "string"
+          },
+          "configUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "clientId": {
+            "type": "string"
+          },
+          "redirectURI": {
+            "type": "string",
+            "format": "uri"
+          },
+          "emailDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RegisterSSO": {
+        "required": [
+          "clientId",
+          "clientSecret",
+          "configUrl",
+          "emailDomains",
+          "redirectURI"
+        ],
+        "type": "object",
+        "properties": {
+          "configUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "clientId": {
+            "type": "string"
+          },
+          "clientSecret": {
+            "type": "string"
+          },
+          "redirectURI": {
+            "type": "string",
+            "format": "uri"
+          },
+          "emailDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      }
     }
   }
 }

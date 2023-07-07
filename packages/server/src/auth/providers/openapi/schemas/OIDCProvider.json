@@ -1,0 +1,29 @@
+{
+  "OIDCProvider": {
+    "required": ["authType", "name"],
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "authType": {
+        "type": "string",
+        "enum": ["SSO", "SOCIAL"]
+      },
+      "configUrl": {
+        "type": "string",
+        "format": "uri"
+      },
+      "enabled": {
+        "type": "boolean"
+      },
+      "config": {
+        "type": "object"
+      },
+      "ttl_sec": {
+        "type": "integer",
+        "format": "int32"
+      }
+    }
+  }
+}

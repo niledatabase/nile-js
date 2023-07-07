@@ -1,4 +1,5 @@
 import { RestModels } from '@theniledev/js';
+import isObject from 'lodash/isObject';
 
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';
@@ -48,5 +49,34 @@ export default class Auth extends Config {
   ): NileResponse<RestModels.LoginUserResponse> => {
     const _requester = new Requester(this);
     return _requester.post(req, this.signUpUrl, init);
+  };
+
+  providerUrl(providerName: string) {
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/tenants/${
+      this.tenantId ? encodeURIComponent(this.tenantId) : '{tenantId}'
+    }/auth/oidc/providers/${encodeURIComponent(providerName)}`;
+  }
+
+  updateProvider = async (
+    req: NileRequest<RestModels.RegisterTenantSSORequest>,
+    init?: RequestInit
+  ): NileResponse<RestModels.TenantSSORegistration> => {
+    const _requester = new Requester(this);
+    const providerName = 'okta';
+    return _requester.put(req, this.providerUrl(providerName), init);
+  };
+
+  getProvider = async (
+    req: NileRequest<void | string>,
+    init?: RequestInit
+  ): NileResponse<RestModels.TenantSSORegistration> => {
+    const _requester = new Requester(this);
+    let providerName = isObject(req) ? req.url.split('/').reverse() : '';
+    if (typeof req === 'string') {
+      providerName = [req];
+    }
+    return _requester.get(req, this.providerUrl(providerName[0]), init);
   };
 }

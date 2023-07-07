@@ -11,3 +11,6 @@ export { default as UserLoginForm } from './LoginForm';
 
 export * from './UserTenantList';
 export { default as UserTenantList } from './UserTenantList';
+
+export * from './SSO';
+export { default as SSOForm } from './SSO';

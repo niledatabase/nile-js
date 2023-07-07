@@ -8,8 +8,10 @@ const baseConfig = [
   'database',
   'workspace',
   'db',
+  'getProvider',
   'login',
   'signUp',
+  'updateProvider',
 ];
 it('has expected methods', () => {
   const auth = new Auth(

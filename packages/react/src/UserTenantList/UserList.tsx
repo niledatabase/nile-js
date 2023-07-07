@@ -1,10 +1,7 @@
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import Stack from '@mui/joy/Stack';
-import {
-  ListTenantUsers200ResponseInner,
-  Login200Response,
-} from '@theniledev/browser';
+import { IdentifyUser200Response, Login200Response } from '@theniledev/browser';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Theme } from '@mui/system/createTheme';
 
@@ -14,7 +11,7 @@ import useDataParser from './useDataParser';
 type ColumnNames = string;
 
 type Props = {
-  data: void | ListTenantUsers200ResponseInner[];
+  data: void | IdentifyUser200Response[];
   allowCreation?: boolean;
   buttonText?: string;
   onUserCreateSuccess?: (user: Login200Response) => void;
