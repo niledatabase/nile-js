@@ -18,6 +18,8 @@ export type Attribute = {
   label?: string;
   required?: boolean;
   placeholder?: string;
+  helpText?: string;
+  disabled?: boolean;
 };
 
 export type DisplayProps = {
@@ -27,4 +29,5 @@ export type DisplayProps = {
   placeholder: string;
   error?: boolean;
   color?: 'danger';
+  disabled?: boolean;
 };

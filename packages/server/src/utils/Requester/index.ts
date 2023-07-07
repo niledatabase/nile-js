@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import { isObject } from 'lodash';
+import isObject from 'lodash/isObject';
 
 import { Config } from '../Config';
 import { ResponseError } from '../ResponseError';
@@ -7,13 +7,14 @@ import { _fetch } from '../fetch';
 
 export { NileResponse, NileRequest } from './types';
 
+type Methods = 'POST' | 'GET' | 'PUT';
 export default class Requester<T> extends Config {
   constructor(config: Config) {
     super(config);
   }
 
   async rawRequest(
-    method: 'POST' | 'GET',
+    method: Methods,
     url: string,
     init: RequestInit,
     body?: string
@@ -45,7 +46,7 @@ export default class Requester<T> extends Config {
    * @returns
    */
   protected async request(
-    method: 'POST' | 'GET',
+    method: Methods,
     url: string,
     req: T | Headers,
     init?: RequestInit
@@ -88,5 +89,13 @@ export default class Requester<T> extends Config {
     init?: RequestInit
   ): Promise<Response> => {
     return await this.request('GET', url, req, init);
+  };
+
+  put = async (
+    req: T | Headers,
+    url: string,
+    init?: RequestInit
+  ): Promise<Response> => {
+    return await this.request('PUT', url, req, init);
   };
 }
