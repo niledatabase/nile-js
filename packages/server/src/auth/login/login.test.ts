@@ -6,6 +6,7 @@ jest.mock('../../utils/ResponseError', () => ({
   ResponseError: jest.fn(),
 }));
 
+const config = { workspace: 'workspace', database: 'database' };
 describe('login', () => {
   it('sets a cookie at login', async () => {
     //@ts-expect-error - test
@@ -13,9 +14,8 @@ describe('login', () => {
     //@ts-expect-error - test
     global.Request = FakeRequest;
     global.fetch = _fetch({ token: { jwt: 'adfasdfdsa' } });
-    const { login } = new Auth(
-      new Config({ workspace: 'workspace', database: 'database' })
-    );
+    const _config = new Config(config);
+    const { login } = new Auth(_config);
     const params = { email: 'email', password: 'password' };
     const resp = await login(params);
     const headers = new Headers(resp.headers);
@@ -24,9 +24,8 @@ describe('login', () => {
   });
 
   it('goes to the right url', () => {
-    const auth = new Auth(
-      new Config({ workspace: 'workspace', database: 'database' })
-    );
+    const _config = new Config(config);
+    const auth = new Auth(_config);
     expect(auth.loginUrl).toEqual(
       '/workspaces/workspace/databases/database/users/login'
     );

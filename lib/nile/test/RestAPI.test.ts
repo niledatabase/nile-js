@@ -19,6 +19,7 @@ describe('nile db', () => {
           'getTenantUser',
           'getUser',
           'handleOIDCCallback',
+          'handleTenantAuthCallback',
           'identifyDeveloper',
           'identifyUser',
           'listTenantUsers',

@@ -3,7 +3,7 @@ import isObject from 'lodash/isObject';
 
 import { Config } from '../Config';
 import { ResponseError } from '../ResponseError';
-import { _fetch } from '../fetch';
+import { X_NILE_TENANT, _fetch } from '../fetch';
 
 export { NileResponse, NileRequest } from './types';
 
@@ -52,17 +52,27 @@ export default class Requester<T> extends Config {
     init?: RequestInit
   ): Promise<Response> {
     // set the headers
-    const _init = init ?? {};
+    const headers = new Headers();
     if (req instanceof Headers) {
-      _init.headers = req;
+      const tenantId = req.get(X_NILE_TENANT);
+      if (tenantId) {
+        headers.set(X_NILE_TENANT, tenantId);
+      }
     } else if (req instanceof Request) {
-      _init.headers = new Headers(req?.headers);
+      // pass back the X_NILE_TENANT
+      const _headers = new Headers(req?.headers);
+      const tenantId = _headers.get(X_NILE_TENANT);
+      if (tenantId) {
+        headers.set(X_NILE_TENANT, tenantId);
+      }
     }
     // default the body - may be the actual payload for the API
     let body: string | undefined = JSON.stringify(req);
 
     // comes from next/some server
-    if (req instanceof Request) {
+    if (method === 'GET') {
+      body = undefined;
+    } else if (req instanceof Request) {
       body = await new Response(req.body).text();
     } else if (
       // is just headers for a GET request
@@ -72,6 +82,12 @@ export default class Requester<T> extends Config {
     ) {
       body = undefined;
     }
+
+    const _init = {
+      ...init,
+      headers: new Headers({ ...headers, ...init?.headers }),
+    };
+
     return await this.rawRequest(method, url, _init, body);
   }
 

@@ -4,6 +4,15 @@
     "summary": "Login a user in a tenant",
     "description": "Login a user, ensuring that the user is a member of the tenant",
     "operationId": "login",
+    "parameters": [
+      {
+        "name": "sso",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    ],
     "requestBody": {
       "content": {
         "*/*": {

@@ -50,7 +50,7 @@ export class Config {
     this._tenantId = _config.tenantId;
     this.workspace = _config.workspace;
     this.api = new ApiConfig({
-      basePath: _config.api?.basePath ?? 'https://prod.thenile.dev',
+      basePath: _config.api?.basePath ?? 'https://dev.khnum.thenile.dev',
       cookieKey: _config.api?.cookieKey ?? 'token',
       token: _config.api?.token,
     });

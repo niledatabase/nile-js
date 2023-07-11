@@ -18,14 +18,16 @@ describe('createUser', () => {
     //@ts-expect-error - test
     global.Request = FakeRequest;
     global.fetch = _fetch();
-    const { createTenantUser } = new Users(new Config(config));
+    const _config = new Config(config);
+    const { createTenantUser } = new Users(_config);
 
     const params = { email: 'email', password: 'password' };
 
     const res = await createTenantUser(params);
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      'https://prod.thenile.dev/workspaces/workspace/databases/database/tenants/tenant/users'
+      _config.api.basePath +
+        '/workspaces/workspace/databases/database/tenants/tenant/users'
     );
   });
 });

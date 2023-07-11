@@ -1,13 +1,20 @@
 {
   "tags": ["authentication"],
-  "summary": "Get SSO provider",
+  "summary": "Get SSO providers",
   "description": "Get SSO provider by name",
-  "operationId": "getSSOProvider",
+  "operationId": "getSSOProviders",
   "parameters": [
     {
       "name": "providerName",
       "in": "path",
       "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "email",
+      "in": "query",
       "schema": {
         "type": "string"
       }

@@ -16,6 +16,15 @@
         "summary": "Login a user in a tenant",
         "description": "Login a user, ensuring that the user is a member of the tenant",
         "operationId": "login",
+        "parameters": [
+          {
+            "name": "sso",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "*/*": {
@@ -860,14 +869,21 @@
         "tags": [
           "authentication"
         ],
-        "summary": "Get SSO provider",
+        "summary": "Get SSO providers",
         "description": "Get SSO provider by name",
-        "operationId": "getSSOProvider",
+        "operationId": "getSSOProviders",
         "parameters": [
           {
             "name": "providerName",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -883,13 +899,17 @@
                     "clientId",
                     "configUrl",
                     "provider",
-                    "redirectURI"
+                    "redirectURI",
+                    "tenantId"
                   ],
                   "type": "object",
                   "properties": {
                     "id": {
                       "type": "string",
                       "readOnly": true
+                    },
+                    "tenantId": {
+                      "type": "string"
                     },
                     "provider": {
                       "type": "string"
@@ -1033,13 +1053,17 @@
                     "clientId",
                     "configUrl",
                     "provider",
-                    "redirectURI"
+                    "redirectURI",
+                    "tenantId"
                   ],
                   "type": "object",
                   "properties": {
                     "id": {
                       "type": "string",
                       "readOnly": true
+                    },
+                    "tenantId": {
+                      "type": "string"
                     },
                     "provider": {
                       "type": "string"
@@ -1383,13 +1407,17 @@
           "clientId",
           "configUrl",
           "provider",
-          "redirectURI"
+          "redirectURI",
+          "tenantId"
         ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
             "readOnly": true
+          },
+          "tenantId": {
+            "type": "string"
           },
           "provider": {
             "type": "string"

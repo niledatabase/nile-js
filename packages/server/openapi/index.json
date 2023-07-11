@@ -166,12 +166,21 @@
         }
       },
       "SSOProvider": {
-        "required": ["clientId", "configUrl", "provider", "redirectURI"],
+        "required": [
+          "clientId",
+          "configUrl",
+          "provider",
+          "redirectURI",
+          "tenantId"
+        ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
             "readOnly": true
+          },
+          "tenantId": {
+            "type": "string"
           },
           "provider": {
             "type": "string"
