@@ -18,12 +18,13 @@ describe('me', () => {
     //@ts-expect-error - test
     global.Request = FakeRequest;
     global.fetch = _fetch();
-    const { me } = new Users(new Config(config));
+    const _config = new Config(config);
+    const { me } = new Users(_config);
 
     const res = await me();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      'https://prod.thenile.dev/workspaces/workspace/databases/database/users/me'
+      _config.api.basePath + '/workspaces/workspace/databases/database/users/me'
     );
   });
 });

@@ -2,11 +2,15 @@ import { LoginRequest } from '@theniledev/browser';
 
 import { Attribute } from '../lib/SimpleForm/types';
 
-export type LoginInfo = { email: string; password: string };
-type LoginSuccess = (response: LoginRequest, formValues: LoginInfo) => void;
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
+
+export type LoginInfo = { email: string; password: string };
+type LoginSuccess = (
+  response: LoginRequest,
+  formValues: LoginInfo,
+  ...args: AllowedAny
+) => void;
 
 export interface Props {
   beforeMutate?: (data: AllowedAny) => AllowedAny;

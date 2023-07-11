@@ -5,6 +5,7 @@ import Auth from '../';
 jest.mock('../../utils/ResponseError', () => ({
   ResponseError: jest.fn(),
 }));
+const config = { workspace: 'workspace', database: 'database' };
 
 describe('signUp', () => {
   it('does a post', async () => {
@@ -13,14 +14,13 @@ describe('signUp', () => {
     //@ts-expect-error - test
     global.Request = FakeRequest;
     global.fetch = _fetch();
-    const { signUp } = new Auth(
-      new Config({ workspace: 'workspace', database: 'database' })
-    );
+    const _config = new Config(config);
+    const { signUp } = new Auth(new Config(_config));
 
     const res = await signUp({ email: 'email', password: 'password' });
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      'https://prod.thenile.dev/workspaces/workspace/databases/database/users'
+      _config.api.basePath + '/workspaces/workspace/databases/database/users'
     );
   });
 });

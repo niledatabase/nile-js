@@ -3,6 +3,7 @@ import { Config } from './Config';
 import { NileRequest } from './Requester';
 import { updateTenantId } from './Event';
 
+export const X_NILE_TENANT = 'x-nile-tenantId';
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   req: NileRequest<any>,
@@ -64,7 +65,7 @@ export async function _fetch(
     }
   }
 
-  const tenantId = config.tenantId ?? headers?.get('x-nile-tenantId');
+  const tenantId = config.tenantId ?? headers?.get(X_NILE_TENANT);
   updateTenantId(tenantId);
 
   if (url.includes('{tenantId}') && !tenantId) {

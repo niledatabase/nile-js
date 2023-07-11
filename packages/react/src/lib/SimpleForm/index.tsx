@@ -55,7 +55,7 @@ export default function SimpleForm(props: {
   cancelButton?: React.ReactNode;
   attributes: Attribute[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mutation: { mutate: (data: any) => void };
+  mutation: any;
 }) {
   const { mutation, buttonText, attributes, cancelButton } = props;
 

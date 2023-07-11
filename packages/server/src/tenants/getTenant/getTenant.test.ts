@@ -18,12 +18,14 @@ describe('getTenant', () => {
     //@ts-expect-error - test
     global.Request = FakeRequest;
     global.fetch = _fetch();
-    const { getTenant } = new Tenants(new Config(config));
+    const _config = new Config(config);
+    const { getTenant } = new Tenants(_config);
 
     const res = await getTenant();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      'https://prod.thenile.dev/workspaces/workspace/databases/database/tenants/123'
+      _config.api.basePath +
+        '/workspaces/workspace/databases/database/tenants/123'
     );
   });
 });

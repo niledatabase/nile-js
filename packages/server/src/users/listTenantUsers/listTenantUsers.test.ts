@@ -18,12 +18,14 @@ describe('listTenantUsers', () => {
     //@ts-expect-error - test
     global.Request = FakeRequest;
     global.fetch = _fetch();
-    const { listTenantUsers } = new Users(new Config(config));
+    const _config = new Config(config);
+    const { listTenantUsers } = new Users(_config);
 
     const res = await listTenantUsers();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      'https://prod.thenile.dev/workspaces/workspace/databases/database/tenants/tenant/users'
+      _config.api.basePath +
+        '/workspaces/workspace/databases/database/tenants/tenant/users'
     );
   });
 });

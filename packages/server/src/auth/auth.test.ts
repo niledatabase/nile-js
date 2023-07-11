@@ -8,8 +8,10 @@ const baseConfig = [
   'database',
   'workspace',
   'db',
-  'getProvider',
+  'getProviders',
   'login',
+  'loginSSO',
+  'loginSSOUrl',
   'signUp',
   'updateProvider',
 ];
