@@ -55,15 +55,23 @@ export default class Requester<T> extends Config {
     const headers = new Headers(init ? init?.headers : {});
     if (req instanceof Headers) {
       const tenantId = req.get(X_NILE_TENANT);
+      const cookie = req.get('cookie');
       if (tenantId) {
         headers.set(X_NILE_TENANT, tenantId);
+      }
+      if (cookie) {
+        headers.set('cookie', cookie);
       }
     } else if (req instanceof Request) {
       // pass back the X_NILE_TENANT
       const _headers = new Headers(req?.headers);
       const tenantId = _headers.get(X_NILE_TENANT);
+      const cookie = _headers.get('cookie');
       if (tenantId) {
         headers.set(X_NILE_TENANT, tenantId);
+      }
+      if (cookie) {
+        headers.set('cookie', cookie);
       }
     }
     // default the body - may be the actual payload for the API

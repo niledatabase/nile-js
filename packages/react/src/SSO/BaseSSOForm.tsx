@@ -1,14 +1,16 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { UpdateSSOProviderRequest } from '@theniledev/browser';
+import { UpdateProviderRequest } from '@theniledev/browser';
 
 import SimpleForm from '../lib/SimpleForm';
 import { useApi } from '../context';
 import { Attribute, AttributeType } from '../lib/SimpleForm/types';
 
-import { Props } from './types';
+import { OktaProps } from './types';
 
-export default function BaseSSOForm(props: Props & { providerName: string }) {
+export default function BaseSSOForm(
+  props: OktaProps & { providerName: string }
+) {
   const api = useApi();
   const { config, providerName, onSuccess, onError, allowEdit = true } = props;
   const attributes = React.useMemo(() => {
@@ -26,6 +28,8 @@ export default function BaseSSOForm(props: Props & { providerName: string }) {
         label: 'Config url',
         type: AttributeType.Text,
         defaultValue: config?.configUrl ?? '',
+        helpText:
+          'The URL of the .well-known/openid-configuration for the identity provider',
         required: true,
         disabled: !allowEdit,
       },
@@ -33,7 +37,8 @@ export default function BaseSSOForm(props: Props & { providerName: string }) {
         name: 'redirectURI',
         label: 'Redirect URI',
         type: AttributeType.Text,
-        helpText: 'Where users should be redirected to upon login',
+        helpText:
+          'Where users should be redirected to after a successful login',
         defaultValue: config?.redirectURI ?? '',
         required: true,
         disabled: !allowEdit,
@@ -44,7 +49,8 @@ export default function BaseSSOForm(props: Props & { providerName: string }) {
         type: AttributeType.Text,
         defaultValue: config?.emailDomains?.join(', ') ?? '',
         required: true,
-        helpText: 'A comma seperated list of email domains to be used',
+        helpText:
+          'A comma seperated list of email domains (@yourDomain.com) to be used',
         disabled: !allowEdit,
       },
     ];
@@ -68,11 +74,19 @@ export default function BaseSSOForm(props: Props & { providerName: string }) {
   ]);
 
   const mutation = useMutation(
-    (ssoRequest: UpdateSSOProviderRequest) => {
-      return api.auth.updateSSOProvider({
+    (ssoRequest: UpdateProviderRequest & { emailDomains: string }) => {
+      const payload = {
         providerName: providerName.toLowerCase(),
-        updateSSOProviderRequest: ssoRequest,
-      });
+        updateProviderRequest: {
+          ...ssoRequest,
+          emailDomains: ssoRequest.emailDomains.split(','),
+        },
+      };
+      if (config != null) {
+        return api.auth.updateProvider(payload);
+      } else {
+        return api.auth.createProvider(payload);
+      }
     },
     {
       onSuccess,

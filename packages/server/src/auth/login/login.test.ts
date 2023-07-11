@@ -13,14 +13,27 @@ describe('login', () => {
     global.Response = FakeResponse;
     //@ts-expect-error - test
     global.Request = FakeRequest;
-    global.fetch = _fetch({ token: { jwt: 'adfasdfdsa' } });
+    global.fetch = _fetch({
+      token: { jwt: 'adfasdfdsa' },
+      tenants: {
+        values: () => {
+          return {
+            next: () => ({
+              value: 'adfdsafdsf',
+            }),
+          };
+        },
+      },
+    });
     const _config = new Config(config);
     const { login } = new Auth(_config);
     const params = { email: 'email', password: 'password' };
     const resp = await login(params);
     const headers = new Headers(resp.headers);
     const cookie = headers.get('set-cookie');
-    expect(cookie).toEqual('token=adfasdfdsa; path=/; samesite=lax; httponly;');
+    expect(cookie).toEqual(
+      'token=adfasdfdsa; path=/; samesite=lax; httponly;, tenantId=adfdsafdsf; path=/; httponly;'
+    );
   });
 
   it('goes to the right url', () => {

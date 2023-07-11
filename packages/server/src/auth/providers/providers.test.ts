@@ -11,7 +11,7 @@ const config = {
   database: 'database',
   tenantId: 'tenantId',
 };
-describe('getProviders', () => {
+describe('listProviders', () => {
   it('does a get', async () => {
     //@ts-expect-error - test
     global.Response = FakeResponse;
@@ -19,9 +19,9 @@ describe('getProviders', () => {
     global.Request = FakeRequest;
     global.fetch = _fetch();
     const _config = new Config(config);
-    const { getProviders } = new Auth(_config);
+    const { listProviders } = new Auth(_config);
 
-    const res = await getProviders();
+    const res = await listProviders();
     //@ts-expect-error - test
     expect(res.config).toEqual(
       _config.api.basePath +

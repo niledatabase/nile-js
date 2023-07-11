@@ -13,10 +13,11 @@ describe('nile db', () => {
       if (k === 'auth') {
         expect(props).toEqual([
           'constructor',
+          'createProvider',
           'getSSOProviders',
           'login',
           'signUp',
-          'updateSSOProvider',
+          'updateProvider',
         ]);
       }
       if (k === 'users') {
