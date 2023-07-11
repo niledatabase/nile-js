@@ -52,7 +52,7 @@ export default class Requester<T> extends Config {
     init?: RequestInit
   ): Promise<Response> {
     // set the headers
-    const headers = new Headers();
+    const headers = new Headers(init ? init?.headers : {});
     if (req instanceof Headers) {
       const tenantId = req.get(X_NILE_TENANT);
       if (tenantId) {
@@ -85,7 +85,7 @@ export default class Requester<T> extends Config {
 
     const _init = {
       ...init,
-      headers: new Headers({ ...headers, ...init?.headers }),
+      headers,
     };
 
     return await this.rawRequest(method, url, _init, body);
