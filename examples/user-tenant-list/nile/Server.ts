@@ -1,8 +1,8 @@
 import Server from '@theniledev/server';
 
 const nile = new Server({
-  workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
-  database: String(process.env.NEXT_PUBLIC_DATABASE),
+  workspace: String(process.env.NILE_WORKSPACE),
+  database: String(process.env.NILE_DATABASE),
   api: {
     basePath: String(process.env.BASE_PATH),
   },
@@ -10,7 +10,6 @@ const nile = new Server({
     connection: {
       user: process.env.NILE_USER,
       password: process.env.NILE_PASSWORD,
-      host: process.env.NILE_HOST,
     },
   },
 });
