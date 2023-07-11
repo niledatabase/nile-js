@@ -15,30 +15,10 @@ export interface ConfigurationParameters {
     accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string | Promise<string>); // parameter for oauth2 security
     headers?: HTTPHeaders; //header params we want to use on every request
     credentials?: RequestCredentials; //value for the credentials param we want to use on each request
-    workspace?: string; // the workspace for the application
-    database?: string; // the database for the application
-    tenantId?: string; // the tenantId for the application
 }
 
 export class Configuration {
     constructor(private configuration: ConfigurationParameters = {}) {}
-
-    set workspace(val: string) {
-        this.workspace = val;
-    }
-
-    set database(val: string) {
-        this.database = val;
-    }
-
-    set tenantId(val: string) {
-        this.tenantId = val;
-    }   
-
-    get workspace(): string {
-        // It is rare to query without a workspace, but it is possible when initially starting
-        return this.configuration.workspace != null ? this.configuration.workspace : '';
-    }
 
     set config(configuration: Configuration) {
         this.configuration = configuration;

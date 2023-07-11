@@ -73,7 +73,10 @@ export async function _fetch(
       status: 400,
     });
   }
-  const useableUrl = url.replace('{tenantId}', String(tenantId));
+  const useableUrl = url.replace(
+    '{tenantId}',
+    encodeURIComponent(String(tenantId))
+  );
 
   const response = await fetch(useableUrl, {
     ...opts,

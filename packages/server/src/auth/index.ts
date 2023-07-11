@@ -131,7 +131,7 @@ export default class Auth extends Config {
   ): NileResponse<RestModels.TenantSSORegistration> => {
     const _requester = new Requester(this);
     const providerName = 'okta';
-    return _requester.put(req, this.updateProviderUrl(providerName), init);
+    return _requester.post(req, this.updateProviderUrl(providerName), init);
   };
 
   providerUrl(email?: undefined | string) {
