@@ -54,18 +54,17 @@ export async function _fetch(
   basicHeaders.set('content-type', 'application/json; charset=utf-8');
   const authHeader = headers.get('Authorization');
   if (!authHeader) {
-    if (config.api?.token) {
-      basicHeaders.set('Authorization', `Bearer ${config.api?.token}`);
+    const token = getTokenFromCookie(headers, cookieKey);
+    if (token) {
+      basicHeaders.set('Authorization', `Bearer ${token}`);
     } else {
-      const token = getTokenFromCookie(headers, cookieKey);
-
-      if (token) {
-        basicHeaders.set('Authorization', `Bearer ${token}`);
-      }
+      basicHeaders.set('Authorization', `Bearer ${config.api?.token}`);
     }
   }
 
-  const tenantId = config.tenantId ?? headers?.get(X_NILE_TENANT);
+  const cookieTenant = getTokenFromCookie(headers, 'tenantId');
+  const tenantId =
+    cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config.tenantId;
   updateTenantId(tenantId);
 
   if (url.includes('{tenantId}') && !tenantId) {

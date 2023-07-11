@@ -13,7 +13,7 @@ describe('Okta', () => {
     global.fetch = token;
     const api = {
       auth: {
-        updateSSOProvider: async () => jest.fn(),
+        createProvider: async () => jest.fn(),
       },
     } as unknown as Client;
     render(

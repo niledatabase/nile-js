@@ -5,10 +5,12 @@ import Auth from './';
 const baseConfig = [
   '_tenantId',
   'api',
+  'createProvider',
   'database',
   'workspace',
   'db',
-  'getProviders',
+  'listProviders',
+  'listTenantProviders',
   'login',
   'loginSSO',
   'loginSSOUrl',

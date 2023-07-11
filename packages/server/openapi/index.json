@@ -37,6 +37,9 @@
       },
       "put": {
         "$ref": "../src/auth/providers/openapi/paths/updateProvider.json"
+      },
+      "post": {
+        "$ref": "../src/auth/providers/openapi/paths/createProvider.json"
       }
     }
   },

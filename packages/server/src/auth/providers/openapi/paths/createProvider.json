@@ -1,8 +1,8 @@
 {
   "tags": ["authentication"],
-  "summary": "Update SSO provider",
-  "description": "Update SSO provider by name",
-  "operationId": "updateProvider",
+  "summary": "Create SSO provider",
+  "description": "Create an SSO provider by name",
+  "operationId": "createProvider",
   "parameters": [
     {
       "name": "providerName",
