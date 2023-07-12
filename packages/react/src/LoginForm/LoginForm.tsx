@@ -1,5 +1,7 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
+import Alert from '@mui/joy/Alert';
+import Stack from '@mui/joy/Stack';
 
 import { Attribute } from '../lib/SimpleForm/types';
 import { useApi } from '../context';
@@ -9,26 +11,22 @@ import { AttributeType } from '../lib/SimpleForm/types';
 import { Props, LoginInfo } from './types';
 
 export default function LoginForm(props: Props) {
+  const [error, setError] = React.useState<string | void>();
   const { attributes, onSuccess, onError, beforeMutate } = props;
   const api = useApi();
 
   const mutation = useMutation(
     async (_data: LoginInfo) => {
+      setError(undefined);
       const possibleData = beforeMutate && beforeMutate(_data);
       const data = possibleData ?? _data;
-      return await api.auth
-        .login({
-          loginRequest: data,
-        })
-        .catch((e) => onError && onError(e, data));
+      return await api.auth.login({
+        loginRequest: data,
+      });
     },
     {
-      onSuccess: (token, data) => {
-        token && onSuccess && onSuccess(token, data);
-      },
-      onError: (error, data) => {
-        onError && onError(error as Error, data);
-      },
+      onSuccess,
+      onError,
     }
   );
 
@@ -56,10 +54,13 @@ export default function LoginForm(props: Props) {
   }, [attributes]);
 
   return (
-    <SimpleForm
-      mutation={mutation}
-      buttonText="Log in"
-      attributes={completeAttributes}
-    />
+    <Stack gap={2}>
+      {error ? <Alert color="danger">{error}</Alert> : null}
+      <SimpleForm
+        mutation={mutation}
+        buttonText="Log in"
+        attributes={completeAttributes}
+      />
+    </Stack>
   );
 }

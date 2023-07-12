@@ -4,7 +4,7 @@ import { Attribute } from '../lib/SimpleForm/types';
 
 export type LoginInfo = SignUp201Response;
 type SignInSuccess = (
-  response: SignUp201Response,
+  response: void | SignUp201Response,
   formValues: LoginInfo
 ) => void;
 

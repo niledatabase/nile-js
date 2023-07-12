@@ -76,7 +76,6 @@ export async function _fetch(
     '{tenantId}',
     encodeURIComponent(String(tenantId))
   );
-
   const response = await fetch(useableUrl, {
     ...opts,
     headers: basicHeaders,
@@ -86,6 +85,21 @@ export async function _fetch(
   });
 
   if (response && response.status >= 200 && response.status < 300) {
+    // const _res = response.clone();
+    // const { headers: _, body: _b, ...everythingElse } = response;
+    // const headers = new Headers(response.headers);
+    // if (_res) {
+    //   const length = Buffer.byteLength(
+    //     await new Response(_res.body).text(),
+    //     'utf-8'
+    //   );
+    //   headers.set('content-length', String(length));
+    // }
+    // const res = new Response(_b, {
+    //   headers,
+    //   ...everythingElse,
+    // });
+    // return res;
     return response;
   }
 

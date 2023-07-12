@@ -41,7 +41,11 @@ export default function SingleSignOnForm(
       onSuccess: (token, data) => {
         setButtonText(loginButtonText);
         if (token) {
-          onSuccess(token, data);
+          if (token?.redirectURI) {
+            window.location.href = token.redirectURI;
+          } else {
+            onSuccess && onSuccess(token, data);
+          }
         }
       },
       onError: (error, data) => {

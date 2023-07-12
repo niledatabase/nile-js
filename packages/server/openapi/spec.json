@@ -40,6 +40,9 @@
                   },
                   "password": {
                     "type": "string"
+                  },
+                  "redirectURI": {
+                    "type": "string"
                   }
                 }
               }
@@ -63,6 +66,9 @@
                       "type": "string"
                     },
                     "password": {
+                      "type": "string"
+                    },
+                    "redirectURI": {
                       "type": "string"
                     }
                   }
@@ -1643,6 +1649,9 @@
             "type": "string"
           },
           "password": {
+            "type": "string"
+          },
+          "redirectURI": {
             "type": "string"
           }
         }
