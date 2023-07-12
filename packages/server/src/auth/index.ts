@@ -53,7 +53,13 @@ export default class Auth extends Config {
             'set-cookie',
             `tenantId=${providers[0].tenantId}; path=/; httponly;`
           );
-          await this.loginSSO(req);
+          // const ssoResp = await this.loginSSO(req);
+          return new Response(
+            JSON.stringify({
+              redirectURI: `${this.api.basePath}/${this.loginSSOUrl('okta')}`,
+            }),
+            { status: 200 }
+          );
           // make it a client side redirect, because of the headers
           // return Response.redirect(redirectUrl, 302);
           // if there is no provider, require a password.
@@ -73,7 +79,6 @@ export default class Auth extends Config {
       const token: RestModels.LoginUserResponse = await res.json();
       const cookie = `${this.api?.cookieKey}=${token.token.jwt}; path=/; samesite=lax; httponly;`;
       headers.append('set-cookie', cookie);
-      // const hasTenantId = headers.get(X_NILE_TENANT);
       const { tenants } = token;
       const tenant = tenants?.values();
       const tenantId = tenant?.next().value;
@@ -90,15 +95,7 @@ export default class Auth extends Config {
       this.workspace
     )}/databases/${encodeURIComponent(this.database)}/tenants/${
       this.tenantId ?? '{tenantId}'
-    }/auth/oidc/${provider}/login`;
-  };
-
-  loginSSO = async (
-    req: NileRequest<RestModels.CreateBasicUserRequest>,
-    init?: RequestInit
-  ) => {
-    const _requester = new Requester(this);
-    return _requester.get(req, this.loginSSOUrl('okta'), init);
+    }/auth/oidc/providers/${provider}/login`;
   };
 
   get signUpUrl() {

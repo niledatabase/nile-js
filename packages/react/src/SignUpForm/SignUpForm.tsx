@@ -1,5 +1,7 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
+import Stack from '@mui/joy/Stack';
+import Alert from '@mui/joy/Alert';
 
 import UserForm from '../lib/SimpleForm';
 import { Attribute, AttributeType } from '../lib/SimpleForm/types';
@@ -8,6 +10,7 @@ import { useApi } from '../context';
 import { Props, LoginInfo } from './types';
 
 export default function SignUpForm(props: Props) {
+  const [error, setError] = React.useState<string | void>();
   const {
     buttonText = 'Sign up',
     onSuccess,
@@ -18,6 +21,7 @@ export default function SignUpForm(props: Props) {
   const api = useApi();
   const mutation = useMutation(
     async (_data: LoginInfo) => {
+      setError(undefined);
       const possibleData = beforeMutate && beforeMutate(_data);
       const data = possibleData ?? _data;
       const { email, password, ...metadata } = data;
@@ -25,20 +29,15 @@ export default function SignUpForm(props: Props) {
         // eslint-disable-next-line no-console
         console.warn('additional metadata not supported yet.');
       }
-      return api.auth
-        .signUp({
-          signUpRequest: { email, password },
-        })
-        .catch((e) => {
-          onError && onError(e, data);
-        });
+      return api.auth.signUp({
+        signUpRequest: { email, password },
+      });
     },
     {
-      onSuccess: (data, formValues) => {
-        data && onSuccess && onSuccess(data, formValues);
-      },
-      onError: (error, data) => {
-        onError && onError(error as Error, data);
+      onSuccess,
+      onError: (e: Error, vars) => {
+        setError(e.message);
+        onError && onError(e as Error, vars);
       },
     }
   );
@@ -67,10 +66,13 @@ export default function SignUpForm(props: Props) {
   }, [attributes]);
 
   return (
-    <UserForm
-      mutation={mutation}
-      buttonText={buttonText}
-      attributes={completeAttributes}
-    />
+    <Stack gap={2}>
+      {error ? <Alert color="danger">{error}</Alert> : null}
+      <UserForm
+        mutation={mutation}
+        buttonText={buttonText}
+        attributes={completeAttributes}
+      />
+    </Stack>
   );
 }
