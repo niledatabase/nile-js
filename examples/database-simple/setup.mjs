@@ -17,8 +17,8 @@ const config = envVars
 
 // config for setting up API and DB communication
 const serverConfig = {
-  workspace: config.NEXT_PUBLIC_WORKSPACE,
-  database: config.NEXT_PUBLIC_DATABASE,
+  workspace: config.NILE_WORKSPACE,
+  database: config.NILE_DATABASE,
   api: {
     basePath: config.BASE_PATH,
     token: config.NILE_TOKEN,
@@ -27,7 +27,6 @@ const serverConfig = {
     connection: {
       user: config.NILE_USER,
       password: config.NILE_PASSWORD,
-      host: config.NILE_HOST,
     },
   },
 };
