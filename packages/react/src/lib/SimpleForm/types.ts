@@ -5,10 +5,12 @@ export enum AttributeType {
   Number = 'number',
   Float = 'float',
   Checkbox = 'checkbox',
+  Switch = 'switch',
 }
 type NumberOrString = number | string;
 
-export type Options = { label: string; value: NumberOrString }[];
+// possibly no value for `<Switch/>`
+export type Options = { label: string; value?: NumberOrString }[];
 export type Attribute = {
   name: string;
   type?: AttributeType;

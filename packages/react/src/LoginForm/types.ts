@@ -17,4 +17,5 @@ export interface Props {
   onSuccess: LoginSuccess;
   onError?: (error: Error, data: AllowedAny) => void;
   attributes?: Attribute[];
+  disableSSO?: boolean;
 }

@@ -3,7 +3,7 @@ import { RestModels } from '@theniledev/js';
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';
 import { ResponseError } from '../utils/ResponseError';
-import { X_NILE_TENANT } from '../utils/fetch';
+import { X_NILE_TENANT, getTenantFromHttp } from '../utils/fetch';
 
 export default class Auth extends Config {
   constructor(config: Config) {
@@ -29,7 +29,7 @@ export default class Auth extends Config {
 
     const sso = params.get('sso');
 
-    if (sso) {
+    if (sso === 'true') {
       const providerRes = await this.listProviders(
         (req as Request).clone(),
         init
@@ -56,7 +56,7 @@ export default class Auth extends Config {
           // const ssoResp = await this.loginSSO(req);
           return new Response(
             JSON.stringify({
-              redirectURI: `${this.api.basePath}/${this.loginSSOUrl('okta')}`,
+              redirectURI: `${this.api.basePath}${this.loginSSOUrl('okta')}`,
             }),
             { status: 200 }
           );
@@ -90,6 +90,7 @@ export default class Auth extends Config {
     return new Response(text, { status: res.status });
   };
 
+  // 'http://localhost:8080/workspaces/cheerful_flower/databases/dutiful_pliers/tenants/018950bd-440d-7058-8637-35ea224b270e/auth/oidc/callback'
   loginSSOUrl = (provider: string) => {
     return `/workspaces/${encodeURIComponent(
       this.workspace
@@ -172,8 +173,19 @@ export default class Auth extends Config {
     let body: { email: string } | undefined;
     // this is a get. Get the email from the response body so the request is filtered.
     if (req && 'body' in req) {
-      body = await new Response(req.body as BodyInit).json();
+      // body = await new Response(req.body as BodyInit).json();
     }
     return _requester.get(req, this.providerUrl(body?.email), init);
+  };
+
+  getSSOCallbackUrl = (param: Headers | string) => {
+    let tenantId;
+    if (typeof tenantId === 'string') {
+      tenantId = param;
+    } else if (param instanceof Headers) {
+      tenantId = getTenantFromHttp(param, this);
+    }
+
+    return `${this.api.basePath}/workspaces/${this.workspace}/databases/${this.database}/tenants/${tenantId}/auth/oidc/callback`;
   };
 }

@@ -12,7 +12,6 @@ const queryClient = new QueryClient();
 const defaultContext: NileContext = {
   api: BrowserApi({
     basePath: 'https://prod.thenile.dev',
-    database: 'none',
     credentials: 'include',
   }),
   basePath: '',
@@ -48,7 +47,6 @@ export const NileProvider = (props: NileProviderProps) => {
         api ??
         BrowserApi({
           basePath,
-          tenantId,
           credentials: 'include',
         }),
       tenantId: String(tenantId),

@@ -11,6 +11,7 @@ import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Box from '@mui/joy/Box';
 import Tooltip from '@mui/joy/Tooltip';
+import { Switch } from '@mui/joy';
 
 import CheckGroup from './CheckGroup';
 import { Attribute, AttributeType, DisplayProps } from './types';
@@ -116,6 +117,51 @@ export default function SimpleForm(props: {
           }
 
           switch (attr.type) {
+            case AttributeType.Switch:
+              return (
+                <FormControl
+                  key={display.key}
+                  id={display.id}
+                  orientation="horizontal"
+                  sx={{ alignItems: 'center' }}
+                >
+                  <Box>
+                    <Labler error={error} attr={attr} />
+                    <FormHelperText id={`${attr.name}-helper-text`}>
+                      {helperText}
+                    </FormHelperText>
+                  </Box>
+                  <Controller
+                    control={control}
+                    rules={{ required: Boolean(attr.required) }}
+                    name={attr.name}
+                    render={({ field }) => {
+                      const color: { color?: 'danger' } = {};
+                      if (errors[attr.name]) {
+                        color.color = 'danger';
+                      }
+                      return (
+                        <Switch
+                          id={`switch-field-${attr.name}`}
+                          {...color}
+                          {...field}
+                          checked={Boolean(field.value)}
+                          onChange={(event) => {
+                            field.onChange(event.target.checked);
+                          }}
+                          color={field.value ? 'success' : 'neutral'}
+                          endDecorator={
+                            field.value ? options[0].label : options[1].label
+                          }
+                          sx={{
+                            '--Switch-thumbSize': '28px',
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </FormControl>
+              );
             case AttributeType.Checkbox:
               return (
                 <CheckGroup

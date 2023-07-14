@@ -22,34 +22,41 @@ export default function SingleSignOnForm(
     beforeMutate,
     nextButtonText = 'Next',
     loginButtonText = 'Log in',
+    disableSSO = true,
   } = props;
   const api = useApi();
-  const [buttonText, setButtonText] = React.useState(nextButtonText);
+  const [buttonText, setButtonText] = React.useState(
+    disableSSO ? loginButtonText : nextButtonText
+  );
 
   const mutation = useMutation(
     async (_data: LoginInfo) => {
       const possibleData = beforeMutate && beforeMutate(_data);
       const data = possibleData ?? _data;
-      return await api.auth
-        .login({
-          loginRequest: { email: data.email, password: data.password },
-          sso: true,
-        })
-        .catch((e) => onError && onError(e, data));
+      return await api.auth.login({
+        loginRequest: { email: data.email, password: data.password },
+        sso: !disableSSO,
+      });
     },
     {
       onSuccess: (token, data) => {
-        setButtonText(loginButtonText);
         if (token) {
           if (token?.redirectURI) {
             window.location.href = token.redirectURI;
+          } else if (buttonText !== loginButtonText) {
+            setButtonText(loginButtonText);
           } else {
             onSuccess && onSuccess(token, data);
           }
         }
       },
       onError: (error, data) => {
-        onError && onError(error as Error, data);
+        // it is possible SSO failed, so only show errors on if the password is available
+        if (buttonText === loginButtonText) {
+          onError && onError(error as Error, data);
+        } else {
+          setButtonText(loginButtonText);
+        }
       },
     }
   );
@@ -77,8 +84,6 @@ export default function SingleSignOnForm(
       return mainAttributes.concat(attributes);
     }
     return mainAttributes;
-    // don't care of `loginMutation` changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attributes, buttonText, loginButtonText]);
 
   return (

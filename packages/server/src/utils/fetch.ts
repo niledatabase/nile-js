@@ -41,6 +41,10 @@ function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
   }
   return null;
 }
+export function getTenantFromHttp(headers: Headers, config: Config) {
+  const cookieTenant = getTokenFromCookie(headers, 'tenantId');
+  return cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config.tenantId;
+}
 
 export async function _fetch(
   config: Config,
@@ -62,9 +66,7 @@ export async function _fetch(
     }
   }
 
-  const cookieTenant = getTokenFromCookie(headers, 'tenantId');
-  const tenantId =
-    cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config.tenantId;
+  const tenantId = getTenantFromHttp(headers, config);
   updateTenantId(tenantId);
 
   if (url.includes('{tenantId}') && !tenantId) {
