@@ -9,6 +9,7 @@ const baseConfig = [
   'database',
   'workspace',
   'db',
+  'getSSOCallbackUrl',
   'listProviders',
   'listTenantProviders',
   'login',
