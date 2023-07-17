@@ -7,6 +7,7 @@ import CopyAll from '@mui/icons-material/CopyAll';
 import { Theme } from '@mui/joy/styles';
 import Tooltip from '@mui/joy/Tooltip';
 import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
+import { SSOProvider } from '@theniledev/browser';
 
 import BaseSSOForm from './BaseSSOForm';
 import { OktaProps } from './types';
@@ -81,11 +82,12 @@ function ConfigGuide({ callbackUrl }: { callbackUrl: string }) {
 }
 
 export default function Okta(props: OktaProps) {
-  const { callbackUrl, ...remaining } = props;
-
+  const { callbackUrl, providers, ...remaining } = props;
+  const config = providers?.find((provider) => provider.provider === 'okta');
   return (
     <BaseSSOForm
       {...remaining}
+      config={config as SSOProvider}
       providerName="Okta"
       configurationGuide={<ConfigGuide callbackUrl={callbackUrl} />}
     />

@@ -1,7 +1,7 @@
-import { GetSSOProviders200Response } from '@theniledev/browser';
+import { SSOProvider } from '@theniledev/browser';
 
 export type OktaProps = {
-  config: GetSSOProviders200Response;
+  providers: SSOProvider[];
   callbackUrl: string;
   onSuccess?: (data: unknown, variables: unknown) => void;
   onError?: (e: Error) => void;

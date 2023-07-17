@@ -90,7 +90,27 @@ export default class Auth extends Config {
     return new Response(text, { status: res.status });
   };
 
-  // 'http://localhost:8080/workspaces/cheerful_flower/databases/dutiful_pliers/tenants/018950bd-440d-7058-8637-35ea224b270e/auth/oidc/callback'
+  loginSSO = (redirectUrl: string) => {
+    const ssoLogin = async (
+      req: NileRequest<unknown>
+    ): NileResponse<RestModels.TenantSSORegistration[]> => {
+      const headers = new Headers();
+      const body = await (req as Request).formData();
+      const accessToken = (await body.get('access_token')) as string;
+      const tenantId = (await body.get('tenantId')) as string;
+      const cookie = `${this.api?.cookieKey}=${accessToken}; path=/; samesite=lax; httponly;`;
+      headers.append('set-cookie', cookie);
+      headers.set(X_NILE_TENANT, tenantId);
+      headers.append('set-cookie', `tenantId=${tenantId}; path=/; httponly;`);
+      headers.set('Location', redirectUrl);
+      return new Response(null, {
+        headers,
+        status: 303,
+      });
+    };
+    return ssoLogin;
+  };
+
   loginSSOUrl = (provider: string) => {
     return `/workspaces/${encodeURIComponent(
       this.workspace

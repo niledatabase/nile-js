@@ -13,6 +13,7 @@ const baseConfig = [
   'listProviders',
   'listTenantProviders',
   'login',
+  'loginSSO',
   'loginSSOUrl',
   'signUp',
   'updateProvider',
