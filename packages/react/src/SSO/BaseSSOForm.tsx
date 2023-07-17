@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { UpdateProviderRequest } from '@theniledev/browser';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import { SSOProvider } from '@theniledev/browser';
 
 import SimpleForm from '../lib/SimpleForm';
 import { useApi } from '../context';
@@ -18,9 +19,10 @@ type SSOFormRequest = Omit<
   enabled: string;
 };
 export default function BaseSSOForm(
-  props: Omit<OktaProps, 'callbackUrl'> & {
+  props: Omit<OktaProps, 'callbackUrl' | 'providers'> & {
     providerName: string;
     configurationGuide: JSX.Element;
+    config: SSOProvider;
   }
 ) {
   const api = useApi();

@@ -18,7 +18,11 @@ describe('Okta', () => {
     } as unknown as Client;
     render(
       <NileProvider api={api}>
-        <Okta onSuccess={onSuccess} />
+        <Okta
+          onSuccess={onSuccess}
+          callbackUrl="http://localhost:8080/workspaces/workspace/databases/database/tenants/tenantId/auth/oidc/callback"
+          providers={[]}
+        />
       </NileProvider>
     );
     const clientId = screen.getByLabelText('Client id');

@@ -22,7 +22,7 @@ export default function SingleSignOnForm(
     beforeMutate,
     nextButtonText = 'Next',
     loginButtonText = 'Log in',
-    disableSSO = true,
+    disableSSO = false,
   } = props;
   const api = useApi();
   const [buttonText, setButtonText] = React.useState(
