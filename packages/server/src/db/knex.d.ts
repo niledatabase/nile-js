@@ -8,6 +8,7 @@ declare module 'knex' {
     export interface QueryBuilder {
       withTenant(param: IdParam): Knex.SchemaBuilder;
       withUser(param: IdParam): Knex.SchemaBuilder;
+      client: Knex.Client;
     }
   }
 }
