@@ -47,18 +47,18 @@ export class Config {
     this._tenantId = value;
   }
 
-  constructor(_config: ServerConfig) {
-    this.database = _config.database;
-    this._tenantId = _config.tenantId;
-    this.workspace = _config.workspace;
+  constructor(_config?: ServerConfig) {
+    this.database = String(_config?.database);
+    this._tenantId = _config?.tenantId;
+    this.workspace = String(_config?.workspace);
     this.api = new ApiConfig({
-      basePath: _config.api?.basePath ?? `https://${niledatabase_ur}`,
-      cookieKey: _config.api?.cookieKey ?? 'token',
-      token: _config.api?.token,
+      basePath: _config?.api?.basePath ?? `https://${niledatabase_ur}`,
+      cookieKey: _config?.api?.cookieKey ?? 'token',
+      token: _config?.api?.token,
     });
 
     const host: string =
-      _config.db &&
+      _config?.db &&
       _config.db.connection &&
       typeof _config.db?.connection !== 'string' &&
       'host' in _config.db.connection
@@ -66,7 +66,7 @@ export class Config {
         : niledatabase_ur;
 
     const port: number =
-      _config.db?.connection &&
+      _config?.db?.connection &&
       typeof _config.db?.connection !== 'string' &&
       'port' in _config.db.connection
         ? Number(_config.db?.connection?.port)
@@ -75,14 +75,14 @@ export class Config {
     const connection = {
       host,
       port,
-      database: _config.database,
-      ...(typeof _config.db?.connection === 'object'
+      database: _config?.database,
+      ...(typeof _config?.db?.connection === 'object'
         ? _config.db.connection
         : {}),
     } as PgConnectionConfig;
 
     this.db = {
-      ..._config.db,
+      ..._config?.db,
       connection,
     };
   }

@@ -5,8 +5,8 @@ import NileDB, { handleWithUser, handleWithTenant } from './index';
 
 describe('db', () => {
   it('is actually knex', () => {
-    const db = new NileDB({});
-    expect(String(db.knex)).toContain('knex');
+    const db = NileDB({ client: 'pg' });
+    expect(String(db)).toContain('knex');
   });
 
   it('sets and resets tenant', async () => {

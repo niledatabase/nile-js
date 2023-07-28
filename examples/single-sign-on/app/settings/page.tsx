@@ -6,7 +6,8 @@ import { api } from '@/nile/Server';
 
 async function getProviders() {
   const _headers = headers() as Headers;
-  return await api.auth.listTenantProviders(_headers);
+  const providers = await api.auth.listTenantProviders(_headers);
+  return await new Response(providers.body).json();
 }
 
 export default async function SSOSettings() {
