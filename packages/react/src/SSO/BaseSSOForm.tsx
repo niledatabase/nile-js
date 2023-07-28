@@ -70,16 +70,6 @@ export default function BaseSSOForm(
         disabled: !allowEdit,
       },
       {
-        name: 'redirectURI',
-        label: 'Redirect URI',
-        type: AttributeType.Text,
-        helpText:
-          'Where users should be redirected to after a successful login',
-        defaultValue: config?.redirectURI ?? '',
-        required: true,
-        disabled: !allowEdit,
-      },
-      {
         name: 'emailDomains',
         label: 'Email domains',
         type: AttributeType.Text,
@@ -107,7 +97,6 @@ export default function BaseSSOForm(
     config?.configUrl,
     config?.emailDomains,
     config?.enabled,
-    config?.redirectURI,
   ]);
 
   const mutation = useMutation(

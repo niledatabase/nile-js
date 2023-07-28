@@ -233,10 +233,6 @@
           "clientSecret": {
             "type": "string"
           },
-          "redirectURI": {
-            "type": "string",
-            "format": "uri"
-          },
           "emailDomains": {
             "type": "array",
             "items": {
