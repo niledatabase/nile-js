@@ -1,4 +1,4 @@
-import knex, { Knex } from 'knex';
+import { Knex } from 'knex';
 
 import { ServerConfig } from './types';
 import { Config } from './utils/Config';
@@ -6,6 +6,7 @@ import Auth from './auth';
 import Users from './users';
 import Tenants from './tenants';
 import { watchTenantId } from './utils/Event';
+import NileDB from './db';
 
 class Server {
   config: Config;
@@ -26,11 +27,8 @@ class Server {
       users,
       tenants,
     };
-    const dbConfig = {
-      ...this.config.db,
-      client: 'pg',
-    };
-    this.db = knex(dbConfig);
+
+    this.db = new NileDB(this.config.db).knex;
     watchTenantId((tenantId) => {
       this.tenantId = tenantId;
     });
