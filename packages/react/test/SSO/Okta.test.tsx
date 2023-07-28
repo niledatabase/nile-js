@@ -34,9 +34,6 @@ describe('Okta', () => {
     const configUrl = screen.getByLabelText('Config url');
     fireEvent.change(configUrl, { target: { value: 'configUrl' } });
 
-    const redirectURI = screen.getByLabelText('Redirect URI');
-    fireEvent.change(redirectURI, { target: { value: 'redirectURI' } });
-
     const emailDomains = screen.getByLabelText('Email domains');
     fireEvent.change(emailDomains, { target: { value: 'emailDomains' } });
 
