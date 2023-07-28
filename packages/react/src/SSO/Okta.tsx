@@ -83,6 +83,9 @@ function ConfigGuide({ callbackUrl }: { callbackUrl: string }) {
 
 export default function Okta(props: OktaProps) {
   const { callbackUrl, providers, ...remaining } = props;
+  if (!providers) {
+    return null;
+  }
   const config = providers?.find((provider) => provider.provider === 'okta');
   return (
     <BaseSSOForm

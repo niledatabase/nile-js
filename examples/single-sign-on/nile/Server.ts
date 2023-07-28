@@ -1,6 +1,6 @@
 import Server from '@theniledev/server';
 
-const nile = new Server({
+const nile = Server({
   workspace: String(process.env.WORKSPACE),
   database: String(process.env.DATABASE),
   api: {
