@@ -6,7 +6,7 @@ import { KnexConfig } from '../types';
 type IdParam = null | void | string | { [key: string]: any; id: string };
 
 export async function handleWithTenant(
-  context: Knex.QueryBuilder<any, any>,
+  context: Knex.QueryBuilder,
   tenantId: IdParam
 ) {
   await context.client.raw('RESET nile.tenant_id');
@@ -18,7 +18,7 @@ export async function handleWithTenant(
 }
 
 export async function handleWithUser(
-  context: Knex.QueryBuilder<any, any>,
+  context: Knex.QueryBuilder,
   userId: IdParam
 ) {
   await context.client.raw('RESET nile.user_id');

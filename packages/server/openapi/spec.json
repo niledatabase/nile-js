@@ -1030,10 +1030,6 @@
                   "clientSecret": {
                     "type": "string"
                   },
-                  "redirectURI": {
-                    "type": "string",
-                    "format": "uri"
-                  },
                   "emailDomains": {
                     "type": "array",
                     "items": {
@@ -1274,10 +1270,6 @@
                   },
                   "clientSecret": {
                     "type": "string"
-                  },
-                  "redirectURI": {
-                    "type": "string",
-                    "format": "uri"
                   },
                   "emailDomains": {
                     "type": "array",
@@ -1717,10 +1709,6 @@
           },
           "clientSecret": {
             "type": "string"
-          },
-          "redirectURI": {
-            "type": "string",
-            "format": "uri"
           },
           "emailDomains": {
             "type": "array",
