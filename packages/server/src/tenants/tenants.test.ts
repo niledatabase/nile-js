@@ -9,7 +9,6 @@ const baseConfig = [
   'getTenant',
   'database',
   'db',
-  'uuid',
   'workspace',
 ];
 const config = {

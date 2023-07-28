@@ -5,8 +5,6 @@ export async function POST(req: Request) {
   const loginResp = await api.auth.login(req);
   if (loginResp && loginResp.status >= 200 && loginResp.status < 300) {
     const headers = new Headers(loginResp.headers);
-    const body = await new Response(loginResp.body).json();
-    const uuid = api.users.uuid.decode(body.id);
 
     const [tenant] = await db('tenant_users')
       .withSchema('user')
@@ -14,8 +12,7 @@ export async function POST(req: Request) {
         db('tenants').withSchema('public').as('tenants'),
         'tenants.id',
         'tenant_users.tenant_id'
-      )
-      .where('user_id', uuid);
+      );
     const { name } = tenant;
     return new Response(
       JSON.stringify({
