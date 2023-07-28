@@ -2,16 +2,10 @@ import { RestModels } from '@theniledev/js';
 
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';
-import { UUID, decode, encode } from '../utils/uuid';
 
 export default class Users extends Config {
-  uuid: UUID;
   constructor(config: Config) {
     super(config);
-    this.uuid = {
-      decode: (input: string) => decode(input),
-      encode: (input: string) => encode(input, 'usr_'),
-    };
   }
   get tenantUsersUrl() {
     return `/workspaces/${encodeURIComponent(
