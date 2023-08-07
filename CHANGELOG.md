@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.187](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.186...v1.0.0-alpha.187) (2023-08-07)
+
+### Bug Fixes
+
+- add storage for tenantId ([d5435f6](https://github.com/niledatabase/nile-js/commit/d5435f6de0fed20a87533831e385461165d2eea4))
+- enable SSO by default, add sso login function ([28f6ced](https://github.com/niledatabase/nile-js/commit/28f6ced41d4e1c5ab722e34816af0f631cd41a46))
+- error states on login/signup, redirecturi ([7a2163d](https://github.com/niledatabase/nile-js/commit/7a2163d9491d5f0ec1b019dbd00bd149ef2112dc))
+- fix build to use better types ([28785ae](https://github.com/niledatabase/nile-js/commit/28785ae31699ed5219074c202ff38eee862f244d))
+- more descriptions, cookie tokens ([a145947](https://github.com/niledatabase/nile-js/commit/a1459473591a4f2cd8ef352424de2c86eda2eeff))
+- only extend once, allow full config mutation ([9f464df](https://github.com/niledatabase/nile-js/commit/9f464dff0f69870ae1e87532f0b27b88307e8d70))
+- remove redirecturl from base SSO config ([037395e](https://github.com/niledatabase/nile-js/commit/037395e531f14cb5ecfe405e715d30720ee0da73))
+- update spec, add sso login ([f28327b](https://github.com/niledatabase/nile-js/commit/f28327b3e33caaf01c95970fc95946fdbb007316))
+- update sso form ([5e4f984](https://github.com/niledatabase/nile-js/commit/5e4f984d2cfaed9405974fb876d3bcfd4544168b))
+
+### Features
+
+- add get tenant by id endpoint ([8eb7fe2](https://github.com/niledatabase/nile-js/commit/8eb7fe252cfd18dbfd930a936356e1d1fc3a9f65))
+- add okta example ([b7e8a69](https://github.com/niledatabase/nile-js/commit/b7e8a6991238c293ef8e80d5cac69b87a9986c3b))
+- add okta rest and form ([1431cb5](https://github.com/niledatabase/nile-js/commit/1431cb571787b70f50c83d1bf657c64a89d759a8))
+- extend knex withUser and withTenant ([81aa72a](https://github.com/niledatabase/nile-js/commit/81aa72a4026584fd108977bda8e8cb70c63891ce))
+
 # [1.0.0-alpha.186](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.185...v1.0.0-alpha.186) (2023-06-14)
 
 ### Features

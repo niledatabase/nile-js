@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.187](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.186...v1.0.0-alpha.187) (2023-08-07)
+
+### Bug Fixes
+
+- update spec, add sso login ([f28327b](https://github.com/TheNileDev/nile-js/commit/f28327b3e33caaf01c95970fc95946fdbb007316))
+
+### Features
+
+- add okta rest and form ([1431cb5](https://github.com/TheNileDev/nile-js/commit/1431cb571787b70f50c83d1bf657c64a89d759a8))
+
 # [1.0.0-alpha.186](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.185...v1.0.0-alpha.186) (2023-06-14)
 
 **Note:** Version bump only for package @theniledev/js

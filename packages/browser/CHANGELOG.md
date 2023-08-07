@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.187](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.186...v1.0.0-alpha.187) (2023-08-07)
+
+### Bug Fixes
+
+- add storage for tenantId ([d5435f6](https://github.com/TheNileDev/nile-js/commit/d5435f6de0fed20a87533831e385461165d2eea4))
+- more descriptions, cookie tokens ([a145947](https://github.com/TheNileDev/nile-js/commit/a1459473591a4f2cd8ef352424de2c86eda2eeff))
+- update spec, add sso login ([f28327b](https://github.com/TheNileDev/nile-js/commit/f28327b3e33caaf01c95970fc95946fdbb007316))
+
+### Features
+
+- add okta rest and form ([1431cb5](https://github.com/TheNileDev/nile-js/commit/1431cb571787b70f50c83d1bf657c64a89d759a8))
+
 # [1.0.0-alpha.186](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.185...v1.0.0-alpha.186) (2023-06-14)
 
 ### Features
