@@ -22,3 +22,5 @@ spec/output.swagger.json
 #.pnp.*
 
 .tsbuildinfo
+
+yarn.lock

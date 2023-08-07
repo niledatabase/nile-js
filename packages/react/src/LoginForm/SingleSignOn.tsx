@@ -10,9 +10,9 @@ import { Props, LoginInfo } from './types';
 
 export default function SingleSignOnForm(
   props: Props & {
-    nextButtonText: string;
-    loginButtonText: string;
-    onSuccess?: () => void;
+    nextButtonText?: string;
+    loginButtonText?: string;
+    onSuccess: () => void;
   }
 ) {
   const {

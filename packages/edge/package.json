@@ -12,7 +12,6 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build --tsconfig ./tsconfig.build.json",
-    "test": "tsdx test",
     "lint": "eslint src",
     "size": "size-limit",
     "analyze": "size-limit --why"
