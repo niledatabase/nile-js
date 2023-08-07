@@ -2,7 +2,7 @@ import React from 'react';
 import { CssVarsProvider } from '@mui/joy/styles';
 
 import { NileProvider } from '../context';
-import defaultTheme from '../context/themeJoiner';
+import defaultTheme from '../context/theme';
 
 import GoogleLoginButton from './GoogleLoginButton';
 

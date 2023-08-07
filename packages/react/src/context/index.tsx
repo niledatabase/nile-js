@@ -4,7 +4,7 @@ import BrowserApi, { Client } from '@theniledev/browser';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
-import defaultTheme from './themeJoiner';
+import defaultTheme from './theme';
 import { NileContext, NileProviderProps, NileReactConfig } from './types';
 
 const queryClient = new QueryClient();

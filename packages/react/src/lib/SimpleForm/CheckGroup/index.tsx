@@ -96,7 +96,7 @@ export default function CheckGroup(props: Props) {
             </Box>
             <Typography
               sx={{ color: 'var(--joy-palette-danger-500)' }}
-              level="body2"
+              level="body-sm"
             >
               {helperText}
             </Typography>

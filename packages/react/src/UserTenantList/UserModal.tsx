@@ -64,7 +64,7 @@ export default function AddUser(props: UserFormProps) {
     <Modal open={open}>
       <ModalDialog>
         <Stack spacing={2}>
-          <Typography level="h5">Create user</Typography>
+          <Typography level="h4">Create user</Typography>
           <>
             {errorText && <Typography color="danger">{errorText}</Typography>}
           </>

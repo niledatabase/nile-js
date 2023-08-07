@@ -1,34 +1,49 @@
-const config = {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { join, dirname } from 'node:path';
+
+import type { StorybookConfig } from '@storybook/react-webpack5';
+
+/**
+ * This function is used to resolve the absolute path of a package.
+ * It is needed in projects that use Yarn PnP or are set up within a monorepo.
+ */
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, 'package.json')));
+}
+const config: StorybookConfig = {
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    'storybook-addon-mock',
+    getAbsolutePath('@storybook/addon-links'),
+    getAbsolutePath('@storybook/addon-essentials'),
+    getAbsolutePath('@storybook/addon-onboarding'),
+    getAbsolutePath('@storybook/addon-interactions'),
   ],
   framework: {
-    name: '@storybook/react-webpack5',
+    name: getAbsolutePath('@storybook/react-webpack5'),
     options: {},
   },
   docs: {
     autodocs: 'tag',
   },
   webpackFinal: async (config) => {
-    if (config.module?.rules) {
-      // This modifies the existing image rule to exclude .svg files
-      // since you want to handle those files with @svgr/webpack
-      const imageRule = config.module.rules.find((rule) =>
-        rule.test.test('.svg')
-      );
-      imageRule.exclude = /\.svg$/;
+    const imageRule = config.module?.rules?.find((rule) => {
+      const test = (rule as { test: RegExp }).test;
 
-      // Configure .svg files to be loaded with @svgr/webpack
-      config.module.rules.push({
-        test: /\.svg$/,
-        use: ['@svgr/webpack'],
-      });
-    }
+      if (!test) {
+        return false;
+      }
 
+      return test.test('.svg');
+    }) as { [key: string]: any };
+
+    imageRule.exclude = /\.svg$/;
+
+    config.module?.rules?.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+
+    return config;
     return config;
   },
 };
