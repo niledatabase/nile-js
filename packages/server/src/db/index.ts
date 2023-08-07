@@ -10,7 +10,7 @@ export async function handleWithTenant(
   await context.client.raw('RESET nile.tenant_id');
   if (tenantId) {
     const id = typeof tenantId === 'string' ? tenantId : tenantId.id;
-    await context.client?.raw(`SET nile.tenant_id = '${id}'`);
+    await context.client.raw(`SET nile.tenant_id = '${id}'`);
   }
   return context;
 }
@@ -22,7 +22,7 @@ export async function handleWithUser(
   await context.client.raw('RESET nile.user_id');
   if (userId) {
     const id = typeof userId === 'string' ? userId : userId.id;
-    await context.client?.raw(`SET nile.user_id = '${id}'`);
+    await context.client.raw(`SET nile.user_id = '${id}'`);
   }
   return context;
 }
