@@ -4,7 +4,7 @@ const nile = Server({
   workspace: String(process.env.WORKSPACE),
   database: String(process.env.DATABASE),
   api: {
-    basePath: 'http://localhost:8080',
+    basePath: String(process.env.NILE_BASE_PATH),
   },
 });
 
