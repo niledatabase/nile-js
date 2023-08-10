@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/edge",
-  "version": "1.0.0-alpha.187",
+  "version": "1.0.0-alpha.188",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [

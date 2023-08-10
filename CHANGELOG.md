@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.188](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.187...v1.0.0-alpha.188) (2023-08-10)
+
+### Bug Fixes
+
+- include example .env file ([01bbf5f](https://github.com/niledatabase/nile-js/commit/01bbf5f76273e9be5229c26b76f855dcc779d94a))
+- use environment var for nile base path ([f928714](https://github.com/niledatabase/nile-js/commit/f9287143738984b1bc99ab58181c7c29ea5f7d96))
+
 # [1.0.0-alpha.187](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.186...v1.0.0-alpha.187) (2023-08-07)
 
 ### Bug Fixes
