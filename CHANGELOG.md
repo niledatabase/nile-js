@@ -822,6 +822,46 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - add server/browser ([e858d3d](https://github.com/TheNileDev/nile-js/commit/e858d3d93f1edd55a3efaa7ce37a8a3b359ffec2))
 
+## [0.39.0](https://github.com/niledatabase/nile-js/compare/v0.38.2...v0.39.0) (2023-08-11)
+
+
+### Features
+
+* add edge and user list ([96e081e](https://github.com/niledatabase/nile-js/commit/96e081ea6ad4a1f2b3e2d735db8a23f912f8f8ca))
+* add get tenant by id endpoint ([8eb7fe2](https://github.com/niledatabase/nile-js/commit/8eb7fe252cfd18dbfd930a936356e1d1fc3a9f65))
+* add okta example ([b7e8a69](https://github.com/niledatabase/nile-js/commit/b7e8a6991238c293ef8e80d5cac69b87a9986c3b))
+* add okta rest and form ([1431cb5](https://github.com/niledatabase/nile-js/commit/1431cb571787b70f50c83d1bf657c64a89d759a8))
+* add server/browser ([e858d3d](https://github.com/niledatabase/nile-js/commit/e858d3d93f1edd55a3efaa7ce37a8a3b359ffec2))
+* add user list example ([ccdc421](https://github.com/niledatabase/nile-js/commit/ccdc421eb90c2bf4360d749e95f47ddde4cc2472))
+* extend knex withUser and withTenant ([81aa72a](https://github.com/niledatabase/nile-js/commit/81aa72a4026584fd108977bda8e8cb70c63891ce))
+* **server:** add tenant create ([9344e08](https://github.com/niledatabase/nile-js/commit/9344e08226756e6c8368861a5c7b9aa4cd285a2a))
+
+
+### Bug Fixes
+
+* add edge dependency to sso example ([589d7c3](https://github.com/niledatabase/nile-js/commit/589d7c3bb9f3f05b281e00902364aabbeac99279))
+* add sign up ([dd67c3b](https://github.com/niledatabase/nile-js/commit/dd67c3b3ca90f7cfba7ec1b43ba0333a9f057084))
+* add storage for tenantId ([d5435f6](https://github.com/niledatabase/nile-js/commit/d5435f6de0fed20a87533831e385461165d2eea4))
+* build storybook after build changes ([08ed2de](https://github.com/niledatabase/nile-js/commit/08ed2defd5edb24ac9483d448d3f260aba7a21f6))
+* enable SSO by default, add sso login function ([28f6ced](https://github.com/niledatabase/nile-js/commit/28f6ced41d4e1c5ab722e34816af0f631cd41a46))
+* error states on login/signup, redirecturi ([7a2163d](https://github.com/niledatabase/nile-js/commit/7a2163d9491d5f0ec1b019dbd00bd149ef2112dc))
+* es6 fixes, use latest BE ([950b2c3](https://github.com/niledatabase/nile-js/commit/950b2c3641932116cc5dd4be555d9662220612fd))
+* fix build to use better types ([28785ae](https://github.com/niledatabase/nile-js/commit/28785ae31699ed5219074c202ff38eee862f244d))
+* fix token setting from updated api ([c7b0e03](https://github.com/niledatabase/nile-js/commit/c7b0e038af869fd6f826c2a4a13f987c4f79f180))
+* handle invalid creds on login ([f18cec6](https://github.com/niledatabase/nile-js/commit/f18cec609c76804ccc43080d998a62cd34305d76))
+* include example .env file ([01bbf5f](https://github.com/niledatabase/nile-js/commit/01bbf5f76273e9be5229c26b76f855dcc779d94a))
+* more descriptions, cookie tokens ([a145947](https://github.com/niledatabase/nile-js/commit/a1459473591a4f2cd8ef352424de2c86eda2eeff))
+* more tests, request correctly ([e382e75](https://github.com/niledatabase/nile-js/commit/e382e75424e01b1f4a28bb8427adf5ee2091600c))
+* only extend once, allow full config mutation ([9f464df](https://github.com/niledatabase/nile-js/commit/9f464dff0f69870ae1e87532f0b27b88307e8d70))
+* remove redirecturl from base SSO config ([037395e](https://github.com/niledatabase/nile-js/commit/037395e531f14cb5ecfe405e715d30720ee0da73))
+* **server:** type things better ([2eee417](https://github.com/niledatabase/nile-js/commit/2eee41789c6df717f0ff88c6167033468e11c94e))
+* update spec, add sso login ([f28327b](https://github.com/niledatabase/nile-js/commit/f28327b3e33caaf01c95970fc95946fdbb007316))
+* update sso form ([5e4f984](https://github.com/niledatabase/nile-js/commit/5e4f984d2cfaed9405974fb876d3bcfd4544168b))
+* use environment var for nile base path ([f928714](https://github.com/niledatabase/nile-js/commit/f9287143738984b1bc99ab58181c7c29ea5f7d96))
+* use the email filter for listing providers ([fcf15fb](https://github.com/niledatabase/nile-js/commit/fcf15fb0f0f2d3bcc9a5c25df9f07e5886049262))
+* uuid, code structure, create tenant api ([eb61189](https://github.com/niledatabase/nile-js/commit/eb61189303aea7d8029f3ce2ae0ae87589b68326))
+* verbosly build, send back REST data ([e680d21](https://github.com/niledatabase/nile-js/commit/e680d2108c97ee403eb176db562090702d851bdf))
+
 ## [0.38.2](https://github.com/TheNileDev/nile-js/compare/v0.38.1...v0.38.2) (2023-05-04)
 
 ### Bug Fixes
