@@ -44,7 +44,7 @@ export default class Auth extends Config {
         if (providers.length > 0) {
           if (providers.length > 1) {
             return new Response(JSON.stringify(providers), { status: 200 });
-            // someone has to do somethig about this
+            // a user has to make a choice
           }
 
           // is there a way to do this? probably not.
@@ -61,7 +61,6 @@ export default class Auth extends Config {
             { status: 200 }
           );
           // make it a client side redirect, because of the headers
-          // return Response.redirect(redirectUrl, 302);
           // if there is no provider, require a password.
         }
       }
@@ -193,7 +192,7 @@ export default class Auth extends Config {
     let body: { email: string } | undefined;
     // this is a get. Get the email from the response body so the request is filtered.
     if (req && 'body' in req) {
-      // body = await new Response(req.body as BodyInit).json();
+      body = await new Response(req.body as BodyInit).json();
     }
     return _requester.get(req, this.providerUrl(body?.email), init);
   };
