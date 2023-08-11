@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.189](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.188...v1.0.0-alpha.189) (2023-08-11)
+
+### Bug Fixes
+
+- add edge dependency to sso example ([589d7c3](https://github.com/niledatabase/nile-js/commit/589d7c3bb9f3f05b281e00902364aabbeac99279))
+
 # [1.0.0-alpha.188](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.187...v1.0.0-alpha.188) (2023-08-10)
 
 ### Bug Fixes
