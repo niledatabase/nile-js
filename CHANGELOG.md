@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.191](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.190...v1.0.0-alpha.191) (2023-08-11)
+
+### Bug Fixes
+
+- use the email filter for listing providers ([fcf15fb](https://github.com/niledatabase/nile-js/commit/fcf15fb0f0f2d3bcc9a5c25df9f07e5886049262))
+
 # [1.0.0-alpha.190](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.189...v1.0.0-alpha.190) (2023-08-11)
 
 **Note:** Version bump only for package @theniledev/packages
