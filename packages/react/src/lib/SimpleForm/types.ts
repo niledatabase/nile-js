@@ -7,14 +7,14 @@ export enum AttributeType {
   Checkbox = 'checkbox',
   Switch = 'switch',
 }
-type NumberOrString = number | string;
+type SimplePrimitive = number | string | boolean;
 
 // possibly no value for `<Switch/>`
-export type Options = { label: string; value?: NumberOrString }[];
+export type Options = { label: string; value?: SimplePrimitive }[];
 export type Attribute = {
   name: string;
   type?: AttributeType;
-  defaultValue?: NumberOrString;
+  defaultValue?: SimplePrimitive;
   options?: Options;
   allowMultiple?: boolean;
   label?: string;

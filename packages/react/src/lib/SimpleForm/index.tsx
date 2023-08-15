@@ -16,7 +16,9 @@ import { Switch } from '@mui/joy';
 import CheckGroup from './CheckGroup';
 import { Attribute, AttributeType, DisplayProps } from './types';
 
-type AttrMap = { [key: string]: string | number | string[] | number[] };
+type AttrMap = {
+  [key: string]: string | number | boolean | string[] | number[];
+};
 
 type FieldConfig = {
   required?: boolean;
@@ -24,7 +26,7 @@ type FieldConfig = {
 
 export const getAttributeDefault = (
   attribute: Attribute
-): string | number | string[] | number[] => {
+): string | number | boolean | string[] | number[] => {
   // have to look to see if it is an enum
   if (attribute.allowMultiple === true) {
     if (!Array.isArray(attribute.defaultValue) && attribute.defaultValue) {
@@ -198,7 +200,10 @@ export default function SimpleForm(props: {
                           >
                             {options.map((option) => {
                               return (
-                                <Option key={option.value} value={option.value}>
+                                <Option
+                                  key={String(option.value ?? '')}
+                                  value={option.value}
+                                >
                                   {option.label}
                                 </Option>
                               );
