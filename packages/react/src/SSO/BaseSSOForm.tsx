@@ -36,7 +36,7 @@ export default function BaseSSOForm(
         name: 'enabled',
         label: 'Allow Okta logins',
         type: AttributeType.Switch,
-        defaultValue: String(config?.enabled) ?? '',
+        defaultValue: config?.enabled === true,
         options: [
           {
             label: 'Enabled',
