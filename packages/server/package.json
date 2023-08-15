@@ -1,6 +1,6 @@
 {
   "name": "@theniledev/server",
-  "version": "1.0.0-alpha.191",
+  "version": "1.0.0-alpha.192",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
@@ -61,7 +61,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@theniledev/js": "^1.0.0-alpha.191",
+    "@theniledev/js": "^1.0.0-alpha.192",
     "knex": "^2.4.2",
     "pg": "^8.10.0"
   }

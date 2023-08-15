@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.192](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.191...v1.0.0-alpha.192) (2023-08-15)
+
+### Bug Fixes
+
+- allow boolean attributes, read configured boolean ([a38b661](https://github.com/niledatabase/nile-js/commit/a38b661be0772ced44fa054df8e083341cd1882c))
+- track enabled state as boolean, not string ([4ef2cfe](https://github.com/niledatabase/nile-js/commit/4ef2cfe700e3a4f30e6bfb0896aa3652d6e3d4a0))
+
 # [1.0.0-alpha.191](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.190...v1.0.0-alpha.191) (2023-08-11)
 
 ### Bug Fixes
