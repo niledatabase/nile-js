@@ -11,12 +11,8 @@ import { Attribute, AttributeType } from '../lib/SimpleForm/types';
 
 import { OktaProps } from './types';
 
-type SSOFormRequest = Omit<
-  UpdateProviderRequest,
-  'emailDomains' | 'enabled'
-> & {
+type SSOFormRequest = Omit<UpdateProviderRequest, 'emailDomains'> & {
   emailDomains: string;
-  enabled: string;
 };
 export default function BaseSSOForm(
   props: Omit<OktaProps, 'callbackUrl' | 'providers'> & {
@@ -106,7 +102,6 @@ export default function BaseSSOForm(
         updateProviderRequest: {
           ...ssoRequest,
           emailDomains: ssoRequest.emailDomains.split(','),
-          enabled: ssoRequest.enabled === 'true' ? true : false,
         },
       };
       if (config != null) {
