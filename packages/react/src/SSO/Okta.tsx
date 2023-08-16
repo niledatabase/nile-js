@@ -56,22 +56,32 @@ function ConfigGuide({ callbackUrl }: { callbackUrl: string }) {
         readOnly={true}
         endDecorator={
           <Tooltip title="Copy Okta redirect URL">
-            <Box position="relative" width="24px" height="24px">
-              <Box position="absolute" top="0" left="0">
-                <CopyAll
-                  sx={{
-                    opacity: copied ? 0 : 1,
-                    transition: 'opacity 300ms',
-                  }}
-                />
+            <Box
+              position="relative"
+              width={copied ? '82px' : '24px'}
+              height="24px"
+            >
+              <Box
+                position="absolute"
+                top="0"
+                left="0"
+                sx={{
+                  opacity: copied ? 0 : 1,
+                  transition: 'opacity 300ms',
+                }}
+              >
+                <CopyAll />
               </Box>
-              <Box position="absolute" top="0" left="0">
-                <CheckCircleOutlined
-                  sx={{
-                    opacity: !copied ? 0 : 1,
-                    transition: 'opacity 300ms',
-                  }}
-                />
+              <Box
+                position="absolute"
+                top="0"
+                left="0"
+                sx={{ opacity: !copied ? 0 : 1, transition: 'opacity 300ms' }}
+              >
+                <Stack direction="row" gap={1}>
+                  <CheckCircleOutlined />
+                  <Typography color="primary">Copied!</Typography>
+                </Stack>
               </Box>
             </Box>
           </Tooltip>
