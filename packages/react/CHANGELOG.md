@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.193](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.192...v1.0.0-alpha.193) (2023-08-16)
+
+### Bug Fixes
+
+- ignore json errors on initial post ([3fd3206](https://github.com/TheNileDev/nile-js/commit/3fd3206a70e4c99a6ccdfc1754356d65c724e561))
+
 # [1.0.0-alpha.192](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.191...v1.0.0-alpha.192) (2023-08-15)
 
 ### Bug Fixes
