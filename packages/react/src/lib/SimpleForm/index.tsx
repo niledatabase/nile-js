@@ -46,7 +46,7 @@ function Labler(props: { error?: string; attr: Attribute }) {
       <Tooltip title={error} color="danger" sx={{ cursor: 'pointer' }}>
         <FormLabel>
           {attr.label ?? attr.name}
-          <Error color="error" sx={{ ml: 0.5 }} />
+          <Error sx={{ ml: 0.5, '--Icon-color': '#c41c1c' }} fontSize="small" />
         </FormLabel>
       </Tooltip>
     );
@@ -59,8 +59,17 @@ export default function SimpleForm(props: {
   attributes: Attribute[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mutation: any;
+  loading?: boolean;
+  successMessage?: JSX.Element;
 }) {
-  const { mutation, buttonText, attributes, cancelButton } = props;
+  const {
+    mutation,
+    buttonText,
+    attributes,
+    cancelButton,
+    loading,
+    successMessage,
+  } = props;
 
   const defaultValues = React.useMemo(
     () =>
@@ -269,7 +278,12 @@ export default function SimpleForm(props: {
           </Stack>
         ) : (
           <Box>
-            <Button type="submit">{buttonText}</Button>
+            <Stack direction="row" gap={2}>
+              <Button type="submit" loading={loading}>
+                {buttonText}
+              </Button>
+              {successMessage}
+            </Stack>
           </Box>
         )}
       </Stack>
