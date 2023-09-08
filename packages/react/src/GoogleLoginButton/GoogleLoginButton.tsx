@@ -26,10 +26,12 @@ export default function GoogleSSOButton(props: {
 }) {
   const { workspace, database, newTenantName } = props;
   const { basePath } = useNileConfig();
-  // workspace and database can be `''`.
-  // let this fail silently for now, and update the context when the time comes
-  const contextHref = `${basePath}/workspaces/${workspace}/databases/${database}/${LOGIN_PATH}`;
-  const query = newTenantName ? '?newTenant=' + newTenantName : '';
+  const encodedWorkspace = encodeURIComponent(workspace ?? '');
+  const encodedDatabase = encodeURIComponent(database ?? '');
+  const contextHref = `${basePath}/workspaces/${encodedWorkspace}/databases/${encodedDatabase}/${LOGIN_PATH}`;
+  const query = newTenantName
+    ? '?newTenant=' + encodeURIComponent(newTenantName)
+    : '';
   const href = (props?.href ?? contextHref) + query;
   return (
     <Box
