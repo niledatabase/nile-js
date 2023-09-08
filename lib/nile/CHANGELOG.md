@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.194](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.193...v1.0.0-alpha.194) (2023-09-08)
+
+**Note:** Version bump only for package @theniledev/js
+
 # [1.0.0-alpha.193](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.192...v1.0.0-alpha.193) (2023-08-16)
 
 **Note:** Version bump only for package @theniledev/js

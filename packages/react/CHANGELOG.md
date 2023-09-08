@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.194](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.193...v1.0.0-alpha.194) (2023-09-08)
+
+### Bug Fixes
+
+- encode URI components in google login url ([4cee80c](https://github.com/TheNileDev/nile-js/commit/4cee80c9ab20ab2d1d853568d3aa1c7bc40a4ebc))
+
+### Features
+
+- support new tenant query param in google login button ([f77b320](https://github.com/TheNileDev/nile-js/commit/f77b320e52f6fbbfd1391fb1326e983c992595de))
+
 # [1.0.0-alpha.193](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.192...v1.0.0-alpha.193) (2023-08-16)
 
 ### Bug Fixes
