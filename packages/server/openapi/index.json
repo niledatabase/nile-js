@@ -121,6 +121,9 @@
           },
           "preferredName": {
             "type": "string"
+          },
+          "newTenant": {
+            "type": "string"
           }
         }
       },

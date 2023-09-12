@@ -14,3 +14,8 @@ export { default as UserTenantList } from './UserTenantList';
 
 export * from './SSO';
 export { default as SSOForm } from './SSO';
+
+export {
+  Attribute as FormAttribute,
+  AttributeType as FormAttributeType,
+} from './lib/SimpleForm/types';

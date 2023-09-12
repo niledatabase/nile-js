@@ -24,13 +24,13 @@ export default function SignUpForm(props: Props) {
       setError(undefined);
       const possibleData = beforeMutate && beforeMutate(_data);
       const data = possibleData ?? _data;
-      const { email, password, ...metadata } = data;
+      const { email, password, preferredName, newTenant, ...metadata } = data;
       if (Object.keys(metadata).length > 0) {
         // eslint-disable-next-line no-console
         console.warn('additional metadata not supported yet.');
       }
       return api.auth.signUp({
-        signUpRequest: { email, password },
+        signUpRequest: { email, password, preferredName, newTenant },
       });
     },
     {
