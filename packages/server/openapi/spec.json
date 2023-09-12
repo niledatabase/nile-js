@@ -147,6 +147,9 @@
                   },
                   "preferredName": {
                     "type": "string"
+                  },
+                  "newTenant": {
+                    "type": "string"
                   }
                 }
               }
@@ -807,6 +810,9 @@
                     "type": "string"
                   },
                   "preferredName": {
+                    "type": "string"
+                  },
+                  "newTenant": {
                     "type": "string"
                   }
                 }
@@ -1590,6 +1596,9 @@
             "type": "string"
           },
           "preferredName": {
+            "type": "string"
+          },
+          "newTenant": {
             "type": "string"
           }
         }
