@@ -27,7 +27,7 @@ class ApiConfig {
   }
 }
 
-const niledatabase_ur = 'dev.khnum.thenile.dev';
+const niledatabase_url = 'db.thenile.dev';
 
 export class Config {
   database: string;
@@ -52,7 +52,7 @@ export class Config {
     this._tenantId = _config?.tenantId;
     this.workspace = String(_config?.workspace);
     this.api = new ApiConfig({
-      basePath: _config?.api?.basePath ?? `https://${niledatabase_ur}`,
+      basePath: _config?.api?.basePath ?? `https://${niledatabase_url}`,
       cookieKey: _config?.api?.cookieKey ?? 'token',
       token: _config?.api?.token,
     });
@@ -63,7 +63,7 @@ export class Config {
       typeof _config.db?.connection !== 'string' &&
       'host' in _config.db.connection
         ? String(_config.db.connection.host)
-        : niledatabase_ur;
+        : niledatabase_url;
 
     const port: number =
       _config?.db?.connection &&

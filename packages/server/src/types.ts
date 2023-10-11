@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import 'knex';
+
 import { ConnectionOptions } from 'tls';
 import stream from 'node:stream';
 

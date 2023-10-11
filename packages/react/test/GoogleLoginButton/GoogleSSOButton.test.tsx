@@ -21,7 +21,7 @@ describe('google sso button', () => {
     );
     screen.getByText('Continue with Google');
     expect(screen.getByRole('link').getAttribute('href')).toEqual(
-      'https://prod.thenile.dev/workspaces/workspace/databases/database/users/oidc/google/login'
+      'https://api.thenile.dev/workspaces/workspace/databases/database/users/oidc/google/login'
     );
   });
 });

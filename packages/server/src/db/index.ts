@@ -17,8 +17,10 @@ export async function handleWithTenant(
 
 export async function handleWithUser(
   context: Knex.QueryBuilder,
+  tenantId: IdParam,
   userId: IdParam
 ) {
+  await handleWithTenant(context, tenantId);
   await context.client.raw('RESET nile.user_id');
   if (userId) {
     const id = typeof userId === 'string' ? userId : userId.id;
@@ -27,11 +29,11 @@ export async function handleWithUser(
   return context;
 }
 
-// can't extend twice, so... this thing
-let extended = false;
 export function extendKnex() {
-  if (extended !== true) {
-    extended = true;
+  try {
+    /*
+     * takes a tenant id and sets the context
+     */
     knex.QueryBuilder.extend(
       'withTenant',
       async function withTenant(id: IdParam) {
@@ -39,9 +41,17 @@ export function extendKnex() {
       }
     );
 
-    knex.QueryBuilder.extend('withUser', async function withUser(id: IdParam) {
-      return await handleWithUser(this, id);
-    });
+    /*
+     * takes a tenant id and user id and sets the context
+     */
+    knex.QueryBuilder.extend(
+      'withUser',
+      async function withUser(tenantId: IdParam, userId: IdParam) {
+        return await handleWithUser(this, tenantId, userId);
+      }
+    );
+  } catch (e) {
+    // let this fail silently, we have already added these methods - probably in dev mode
   }
 }
 
