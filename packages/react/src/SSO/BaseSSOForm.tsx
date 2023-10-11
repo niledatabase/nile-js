@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { UpdateProviderRequest, SSOProvider } from '@theniledev/browser';
+import { UpdateProviderRequest, SSOProvider } from '@niledatabase/browser';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Alert from '@mui/joy/Alert';

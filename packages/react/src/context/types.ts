@@ -1,4 +1,4 @@
-import { Client } from '@theniledev/browser';
+import { Client } from '@niledatabase/browser';
 import { Theme } from '@mui/joy/styles';
 
 export interface NileReactConfig {

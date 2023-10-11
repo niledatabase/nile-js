@@ -1,9 +1,9 @@
 'use client';
 
-import { Login200Response } from '@theniledev/browser';
+import { Login200Response } from '@niledatabase/browser';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
-import { UserTenantList } from '@theniledev/react';
+import { UserTenantList } from '@niledatabase/react';
 
 type Props = {
   data: Login200Response[];

@@ -5,8 +5,8 @@ When SSO is configured on a workspace, this button can be added to handle SSO lo
 ## Usage
 
 ```typescript
-import { NileProvider } from '@theniledev/react';
-import GoogleSSOButton from '@theniledev/react/GoogleSSOButton';
+import { NileProvider } from '@niledatabase/react';
+import GoogleSSOButton from '@niledatabase/react/GoogleSSOButton';
 
 function App() {
   return (

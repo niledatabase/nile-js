@@ -14,14 +14,14 @@
     "noErrorTruncation": false,
     "allowJs": true,
     "paths": {
-      "@theniledev/react": ["./packages/react/src"],
-      "@theniledev/react/*": ["./packages/react/src/*"],
-      "@theniledev/browser": ["./packages/browser/src"],
-      "@theniledev/browser/*": ["./packages/browser/src/*"],
-      "@theniledev/server": ["./packages/server/src"],
-      "@theniledev/server/*": ["./packages/server/src/*"],
-      "@theniledev/js": ["./lib/nile/src"],
-      "@theniledev/js/*": ["./lib/nile/src/*"]
+      "@niledatabase/react": ["./packages/react/src"],
+      "@niledatabase/react/*": ["./packages/react/src/*"],
+      "@niledatabase/browser": ["./packages/browser/src"],
+      "@niledatabase/browser/*": ["./packages/browser/src/*"],
+      "@niledatabase/server": ["./packages/server/src"],
+      "@niledatabase/server/*": ["./packages/server/src/*"],
+      "@niledatabase/js": ["./lib/nile/src"],
+      "@niledatabase/js/*": ["./lib/nile/src/*"]
     }
   },
   "exclude": ["**/node_modules", "**/.*/"],

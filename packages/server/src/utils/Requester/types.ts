@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { RestModels } from '@theniledev/js';
+import { RestModels } from '@niledatabase/js';
 
 // taken from ts lib dom
 interface NileBody<R, B> {

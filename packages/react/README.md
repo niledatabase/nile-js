@@ -1,4 +1,4 @@
-# @theniledev/react
+# @niledatabase/react
 
 ## Storybook
 
@@ -9,7 +9,7 @@
 In the root of your react application, add a Nile provider. This will add a [QueryClientProvider](https://tanstack.com/query/v4/docs/quick-start) and a [CssVarsProvider](https://mui.com/joy-ui/getting-started/usage/) to your application.
 
 ```typescript
-import { NileProvider } from '@theniledev/react';
+import { NileProvider } from '@niledatabase/react';
 
 function App() {
   return (
@@ -73,7 +73,7 @@ function App() {
 
 ### useNile
 
-A method exposing the `@theniledev/js` instance created in `<NileProvider />`. The methods on the instance can be found in [the client src readme](../../lib/nile/src/README.md), or found in the auto-complete of visual studio code.
+A method exposing the `@niledatabase/js` instance created in `<NileProvider />`. The methods on the instance can be found in [the client src readme](../../lib/nile/src/README.md), or found in the auto-complete of visual studio code.
 
 ### Making requests
 
@@ -81,7 +81,7 @@ A method exposing the `@theniledev/js` instance created in `<NileProvider />`. T
 
 ```typescript
 import React, { useEffect } from 'react';
-import { useNile, Queries } from '@theniledev/react';
+import { useNile, Queries } from '@niledatabase/react';
 import { useQuery } from '@tanstack/react-query';
 
 export default function UserTable() {
@@ -109,7 +109,7 @@ For theming and display, A combination of [mui joy](https://mui.com/joy-ui/getti
 For details on theming, see their [theming documentation](https://mui.com/joy-ui/customization/approaches/). You can pass a custom `theme` object to the `NileProvider` and it will merge it with the combined material and joy themes in the `<NileProvider />`.
 
 ```typescript
-import { NileProvider } from '@theniledev/react';
+import { NileProvider } from '@niledatabase/react';
 import { extendTheme } from '@mui/joy/styles';
 const customTheme = extendTheme({
   colorSchemes: {

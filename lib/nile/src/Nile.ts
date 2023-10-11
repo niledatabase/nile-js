@@ -212,7 +212,7 @@ export class NileApi {
    * Creates a NileApi instance and connects using the provided credentials.
    * @example
    * ```typescript
-   * import Nile from '@theniledev/js';
+   * import Nile from '@niledatabase/js';
    *
    * const authToken = '2asdafsW4adaas.asdfas3asdadfsad';
    *

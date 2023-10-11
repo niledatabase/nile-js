@@ -11,7 +11,7 @@ import {
 } from '@mui/joy';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { SignUp201Response, SignUpRequest } from '@theniledev/browser';
+import { SignUp201Response, SignUpRequest } from '@niledatabase/browser';
 
 import { useApi } from '../context';
 

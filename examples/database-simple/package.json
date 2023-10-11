@@ -10,8 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@theniledev/react": "latest",
-    "@theniledev/server": "latest",
+    "@niledatabase/react": "latest",
+    "@niledatabase/server": "latest",
     "next": "13.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"

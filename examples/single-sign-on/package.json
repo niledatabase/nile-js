@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@theniledev/react": "latest",
-    "@theniledev/server": "latest",
-    "@theniledev/edge": "latest",
+    "@niledatabase/react": "latest",
+    "@niledatabase/server": "latest",
+    "@niledatabase/edge": "latest",
     "@types/node": "20.4.0",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",

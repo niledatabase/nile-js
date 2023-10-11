@@ -7,7 +7,7 @@ import CopyAll from '@mui/icons-material/CopyAll';
 import { Theme } from '@mui/joy/styles';
 import Tooltip from '@mui/joy/Tooltip';
 import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
-import { SSOProvider } from '@theniledev/browser';
+import { SSOProvider } from '@niledatabase/browser';
 
 import BaseSSOForm from './BaseSSOForm';
 import { OktaProps } from './types';

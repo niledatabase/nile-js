@@ -11,7 +11,7 @@ Accept an invite
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -44,7 +44,7 @@ nile.organizations
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -78,7 +78,7 @@ Create Entity
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -120,7 +120,7 @@ Create a new Instance
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -159,7 +159,7 @@ Create a new Organization
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -191,7 +191,7 @@ nile.organizations
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -227,7 +227,7 @@ nile.users
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -264,7 +264,7 @@ Delete an organization by id
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -297,7 +297,7 @@ Delete a user
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -330,7 +330,7 @@ Get Entity
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -363,7 +363,7 @@ Get an openapi description of an entity
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -394,7 +394,7 @@ nile.entities
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -431,7 +431,7 @@ Get information about current authenticated user
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -459,7 +459,7 @@ Get an organization by id
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -492,7 +492,7 @@ Get a user by id
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -525,7 +525,7 @@ List all Entities
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -556,7 +556,7 @@ List of all instances
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -591,7 +591,7 @@ List all Invites
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -624,7 +624,7 @@ List all Organizations
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -655,7 +655,7 @@ List all users for an org
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -686,7 +686,7 @@ List all workspaces
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -714,7 +714,7 @@ Create a workspace
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -746,7 +746,7 @@ login a developer to nile
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -781,7 +781,7 @@ login a user to nile
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -816,7 +816,7 @@ nile.users
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -856,7 +856,7 @@ Update an Entity
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -896,7 +896,7 @@ Update an organization
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -932,7 +932,7 @@ validate a developer token
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",
@@ -962,7 +962,7 @@ validate a user token
 **`example`**
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = new Nile({
   apiUrl: "http://localhost:8080",

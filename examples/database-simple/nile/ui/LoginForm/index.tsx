@@ -1,6 +1,6 @@
 'use client';
 
-import { UserLoginForm } from '@theniledev/react';
+import { UserLoginForm } from '@niledatabase/react';
 import Stack from '@mui/joy/Stack';
 import Alert from '@mui/joy/Alert';
 import Typography from '@mui/joy/Typography';

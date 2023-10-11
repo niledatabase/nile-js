@@ -461,19 +461,19 @@
     "@tanstack/query-core" "4.29.11"
     use-sync-external-store "^1.2.0"
 
-"@theniledev/browser@^1.0.0-alpha.185":
+"@niledatabase/browser@^1.0.0-alpha.185":
   version "1.0.0-alpha.185"
-  resolved "https://registry.yarnpkg.com/@theniledev/browser/-/browser-1.0.0-alpha.185.tgz#7a1573516d1727266e339da8681bc635ff41ce5f"
+  resolved "https://registry.yarnpkg.com/@niledatabase/browser/-/browser-1.0.0-alpha.185.tgz#7a1573516d1727266e339da8681bc635ff41ce5f"
   integrity sha512-16KEL3Q//bIT7quzsUjao4RlTi1aI/Nf+MqdNDb/YI4nkTX6SsgV09fvFnqVCpeJCfnMOITvvQRT4KrpoLG5Wg==
 
-"@theniledev/edge@latest":
+"@niledatabase/edge@latest":
   version "1.0.0-alpha.185"
-  resolved "https://registry.yarnpkg.com/@theniledev/edge/-/edge-1.0.0-alpha.185.tgz#16d90abece2c10bef0b769c72bc2f6a6a8c5d3d6"
+  resolved "https://registry.yarnpkg.com/@niledatabase/edge/-/edge-1.0.0-alpha.185.tgz#16d90abece2c10bef0b769c72bc2f6a6a8c5d3d6"
   integrity sha512-v+aSMbEV22ZiprAMh9znDo4xm+6D8qSnEGeyn2dBa7X0vbbJJx5/9sSvRss/sFPOL0jPaePn4oV4YDUrSJEzcw==
 
-"@theniledev/js@^1.0.0-alpha.185":
+"@niledatabase/js@^1.0.0-alpha.185":
   version "1.0.0-alpha.185"
-  resolved "https://registry.yarnpkg.com/@theniledev/js/-/js-1.0.0-alpha.185.tgz#0342e35a0179346c68ccbc1d1725299aa07c72ae"
+  resolved "https://registry.yarnpkg.com/@niledatabase/js/-/js-1.0.0-alpha.185.tgz#0342e35a0179346c68ccbc1d1725299aa07c72ae"
   integrity sha512-eBWBt8HpCG6ysoPWgPwBda+kCF6FhBRuSrgL0BbQXX454NX7RaTXi8FLmoO9PFDzghuz/BzDk+LRjamRQRyuXw==
   dependencies:
     es6-promise "^4.2.8"
@@ -481,9 +481,9 @@
     node-fetch "^3.3.0"
     sade "^1.8.1"
 
-"@theniledev/react@latest":
+"@niledatabase/react@latest":
   version "1.0.0-alpha.185"
-  resolved "https://registry.yarnpkg.com/@theniledev/react/-/react-1.0.0-alpha.185.tgz#2d857279a1b276a4c9a23a6a246faa11548fc1da"
+  resolved "https://registry.yarnpkg.com/@niledatabase/react/-/react-1.0.0-alpha.185.tgz#2d857279a1b276a4c9a23a6a246faa11548fc1da"
   integrity sha512-BdhYytgzwGowyr7GLjZFPaZ0WhwktJnn84qzDrF2X4dIryrlj2Od7NHOff2jAf8uKLSq8AaMyj0fSJ7oGIUkoA==
   dependencies:
     "@emotion/react" "^11.10.5"
@@ -494,8 +494,8 @@
     "@mui/x-data-grid" "^6.6.0"
     "@mui/x-date-pickers" "^6.6.0"
     "@tanstack/react-query" "^4.23.0"
-    "@theniledev/browser" "^1.0.0-alpha.185"
-    "@theniledev/js" "^1.0.0-alpha.185"
+    "@niledatabase/browser" "^1.0.0-alpha.185"
+    "@niledatabase/js" "^1.0.0-alpha.185"
     chart.js "^3.9.1"
     chartjs-adapter-date-fns "^2.0.1"
     date-fns "^2.29.3"
@@ -505,12 +505,12 @@
     react-hook-form "^7.42.1"
     react-is "^18.2.0"
 
-"@theniledev/server@latest":
+"@niledatabase/server@latest":
   version "1.0.0-alpha.185"
-  resolved "https://registry.yarnpkg.com/@theniledev/server/-/server-1.0.0-alpha.185.tgz#ebda8dc31146e7666381df2df0c05515f6c89a61"
+  resolved "https://registry.yarnpkg.com/@niledatabase/server/-/server-1.0.0-alpha.185.tgz#ebda8dc31146e7666381df2df0c05515f6c89a61"
   integrity sha512-vXyUChGu3UlTHHElSEBH3DwKPAwi31jKhGpcGJqBucVPWODzn2YGxGFe6xxZg5lKdhiLo8SaQzUXwVBFW53Ucw==
   dependencies:
-    "@theniledev/js" "^1.0.0-alpha.185"
+    "@niledatabase/js" "^1.0.0-alpha.185"
     base-x "^4.0.0"
     knex "^2.4.2"
     pg "^8.10.0"

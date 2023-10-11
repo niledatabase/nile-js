@@ -326,7 +326,7 @@ paths:
             "password": "mycatname"}
         - lang: JS
           source: >-
-            import Nile from "@theniledev/js";
+            import Nile from "@niledatabase/js";
 
             const nile = new Nile({ apiUrl: "http://localhost:8080", workspace:
             "1" });
@@ -382,7 +382,7 @@ paths:
             'Content-Type: application/json' -D '{"token": "token"}'
         - lang: JS
           source: >-
-            import Nile from "@theniledev/js";
+            import Nile from "@niledatabase/js";
 
 
             const nile = new Nile({ apiUrl: "http://localhost:8080", workspace:

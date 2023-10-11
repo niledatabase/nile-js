@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import React, { useMemo, createContext, useContext } from 'react';
-import BrowserApi, { Client } from '@theniledev/browser';
+import BrowserApi, { Client } from '@niledatabase/browser';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
