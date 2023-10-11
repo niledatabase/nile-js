@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.195](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.194...v1.0.0-alpha.195) (2023-10-11)
+
+### Features
+
+- reflect optional params in signup request ([7693eff](https://github.com/TheNileDev/nile-js/commit/7693effd98585107819d3dfcbddc40a0bff5dd4e))
+
 # [1.0.0-alpha.194](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.193...v1.0.0-alpha.194) (2023-09-08)
 
 ### Bug Fixes
