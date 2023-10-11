@@ -20,8 +20,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Nile server
 
-In `app/api` there are `login` and `sign-up` routes. These are simple wrappers around `@theniledev/server`, which handle making REST requests to the Nile backend.
+In `app/api` there are `login` and `sign-up` routes. These are simple wrappers around `@niledatabase/server`, which handle making REST requests to the Nile backend.
 
 ## Nile UI
 
-In `nile/iu` there are `LoginForm`, `SignUpForm`. They are client side components and work with `@theniledev/react` and `@theniledev/browser` to communicate to the example server.
+In `nile/iu` there are `LoginForm`, `SignUpForm`. They are client side components and work with `@niledatabase/react` and `@niledatabase/browser` to communicate to the example server.

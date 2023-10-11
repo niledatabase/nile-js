@@ -1,5 +1,5 @@
 {
-  "name": "@theniledev/edge",
+  "name": "@niledatabase/edge",
   "version": "1.0.0-alpha.194",
   "license": "MIT",
   "main": "dist/index.js",

@@ -1,4 +1,4 @@
-name: Publish @theniledev packages to GitHub Packages
+name: Publish @niledatabase packages to GitHub Packages
 
 on:
   pull_request:
@@ -29,33 +29,33 @@ jobs:
           node-version: "lts/*"
           # registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
-          # scope: '@theniledev'
+          # scope: '@niledatabase'
       - name: Authenticate to npm
         run: |
-          echo "@theniledev:wq:registry=https://registry.npmjs.org/" 
+          echo "@niledatabase:wq:registry=https://registry.npmjs.org/" 
           echo "registry=https://registry.npmjs.org/" >> .npmrc
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           npm whoami
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Install @theniledev/js
+      - name: Install @niledatabase/js
         working-directory: lib/nile
         run: yarn install --no-lockfile
 
-      - name: Install @theniledev/server
+      - name: Install @niledatabase/server
         working-directory: packages/server
         run: yarn install --no-lockfile
 
-      - name: Install @theniledev/browser
+      - name: Install @niledatabase/browser
         working-directory: packages/browser
         run: yarn install --no-lockfile
 
-      - name: Install @theniledev/react
+      - name: Install @niledatabase/react
         working-directory: packages/react
         run: yarn install --no-lockfile
 
-      - name: Build @theniledev/packages
+      - name: Build @niledatabase/packages
         run: yarn build
 
       - name: Version

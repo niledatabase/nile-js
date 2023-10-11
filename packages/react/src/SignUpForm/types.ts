@@ -1,4 +1,4 @@
-import { SignUp201Response } from '@theniledev/browser';
+import { SignUp201Response } from '@niledatabase/browser';
 
 import { Attribute } from '../lib/SimpleForm/types';
 

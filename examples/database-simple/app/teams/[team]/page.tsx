@@ -1,4 +1,4 @@
-import Server from '@theniledev/server';
+import Server from '@niledatabase/server';
 import Link from 'next/link';
 
 import TeamDashboard from '@/nile/ui/TeamDashboard';

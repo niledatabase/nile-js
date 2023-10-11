@@ -1,5 +1,5 @@
 {
-  "name": "@theniledev/packages",
+  "name": "@niledatabase/packages",
   "packageManager": "yarn@3.2.0",
   "license": "MIT",
   "version": "0.0.2",
@@ -9,22 +9,22 @@
     "packages/*"
   ],
   "scripts": {
-    "build:browser": "yarn workspace @theniledev/browser build",
-    "build:js-lib": "yarn workspace @theniledev/js build",
-    "build:react-storybook": "yarn build && yarn workspace @theniledev/react build-storybook",
-    "build:react": "yarn workspace @theniledev/react build",
-    "build:server": "yarn workspace @theniledev/server build",
-    "build:edge": "yarn workspace @theniledev/edge build",
+    "build:browser": "yarn workspace @niledatabase/browser build",
+    "build:js-lib": "yarn workspace @niledatabase/js build",
+    "build:react-storybook": "yarn build && yarn workspace @niledatabase/react build-storybook",
+    "build:react": "yarn workspace @niledatabase/react build",
+    "build:server": "yarn workspace @niledatabase/server build",
+    "build:edge": "yarn workspace @niledatabase/edge build",
     "build": "yarn build:js-lib && yarn build:server && yarn build:edge && yarn build:browser && yarn build:react",
-    "buildDocs": "yarn workspace @theniledev/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
+    "buildDocs": "yarn workspace @niledatabase/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "husky install",
     "prepare": "husky install",
     "publish": "yarn lerna publish",
-    "test:browser": "yarn workspace @theniledev/browser test",
-    "test:js-lib": "yarn workspace @theniledev/js test",
-    "test:react": "yarn workspace @theniledev/react test",
-    "test:server": "yarn workspace @theniledev/server test"
+    "test:browser": "yarn workspace @niledatabase/browser test",
+    "test:js-lib": "yarn workspace @niledatabase/js test",
+    "test:react": "yarn workspace @niledatabase/react test",
+    "test:server": "yarn workspace @niledatabase/server test"
   },
   "devDependencies": {
     "@commitlint/cli": "17.3.0",

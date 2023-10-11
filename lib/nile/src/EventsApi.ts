@@ -36,7 +36,7 @@ export default class EventsApi implements EventsApiInterface {
    * Listen for Nile events
    * @example
    * ```typescript
-   * import Nile from '@theniledev/js';
+   * import Nile from '@niledatabase/js';
    * const nile = new Nile({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace' });
    *
    * const listenerOptions = {
@@ -85,7 +85,7 @@ export default class EventsApi implements EventsApiInterface {
    * Remove and cancel a running timer
    * @example
    * ```typescript
-   * import Nile from '@theniledev/js';
+   * import Nile from '@niledatabase/js';
    * const nile = new Nile({ apiUrl: 'http://localhost:8080', workspace: 'myWorkspace' });
    *
    * const listenerOptions = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { Client } from '@theniledev/browser';
+import { Client } from '@niledatabase/browser';
 
 import '../matchMedia.mock';
 import { NileProvider } from '../../src/context';

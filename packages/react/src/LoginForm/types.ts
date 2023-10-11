@@ -1,4 +1,4 @@
-import { LoginRequest } from '@theniledev/browser';
+import { LoginRequest } from '@niledatabase/browser';
 
 import { Attribute } from '../lib/SimpleForm/types';
 

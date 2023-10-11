@@ -1,4 +1,4 @@
-import { RestModels } from '@theniledev/js';
+import { RestModels } from '@niledatabase/js';
 
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';

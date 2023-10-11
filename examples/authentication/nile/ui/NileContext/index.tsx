@@ -1,6 +1,6 @@
 'use client';
 
-import { NileProvider } from '@theniledev/react';
+import { NileProvider } from '@niledatabase/react';
 
 export default function NileContext(props: { children: JSX.Element }) {
   return (

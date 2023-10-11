@@ -3,7 +3,7 @@ import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import { useState } from 'react';
 import Add from '@mui/icons-material/Add';
-import { SignUp201Response } from '@theniledev/browser';
+import { SignUp201Response } from '@niledatabase/browser';
 
 import UserModal from './UserModal';
 

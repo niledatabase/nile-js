@@ -1,4 +1,4 @@
-# @theniledev/server
+# @niledatabase/server
 
 Consolidates the API and DB for working with Nile.
 

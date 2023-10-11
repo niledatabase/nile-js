@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import { IdentifyUser200Response } from '@theniledev/browser';
+import { IdentifyUser200Response } from '@niledatabase/browser';
 
 import getColumnSize from '../utils/getColumnSize';
 import useTextSizer from '../hooks/useTextSizer';

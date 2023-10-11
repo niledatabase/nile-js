@@ -1,4 +1,4 @@
-import { SSOProvider } from '@theniledev/browser';
+import { SSOProvider } from '@niledatabase/browser';
 
 export type OktaProps = {
   providers: SSOProvider[];

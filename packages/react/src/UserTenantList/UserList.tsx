@@ -4,7 +4,7 @@ import Stack from '@mui/joy/Stack';
 import {
   IdentifyUser200Response,
   SignUp201Response,
-} from '@theniledev/browser';
+} from '@niledatabase/browser';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Theme } from '@mui/system/createTheme';
 

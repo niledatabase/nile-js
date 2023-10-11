@@ -1,6 +1,6 @@
 ## Connect to Nile
 
-Built on top of nextjs, this implements a REST API for `@theniledev/react` components to use.
+Built on top of nextjs, this implements a REST API for `@niledatabase/react` components to use.
 
 ## Getting Started
 
