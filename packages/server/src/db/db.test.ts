@@ -46,9 +46,10 @@ describe('db', () => {
     };
     await handleWithUser(
       context as unknown as Knex.QueryBuilder<any, any>,
+      'tenantId',
       'userId'
     );
-    expect(context.client.raw).toBeCalledTimes(2);
+    expect(context.client.raw).toBeCalledTimes(4);
     expect(context.client.raw).toBeCalledWith('RESET nile.user_id');
     expect(context.client.raw).toBeCalledWith("SET nile.user_id = 'userId'");
   });
@@ -60,9 +61,10 @@ describe('db', () => {
     };
     await handleWithUser(
       context as unknown as Knex.QueryBuilder<any, any>,
+      undefined,
       undefined
     );
-    expect(context.client.raw).toBeCalledTimes(1);
+    expect(context.client.raw).toBeCalledTimes(2);
     expect(context.client.raw).toBeCalledWith('RESET nile.user_id');
   });
 });

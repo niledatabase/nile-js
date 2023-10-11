@@ -6,13 +6,14 @@ import Auth from './auth';
 import Users from './users';
 import Tenants from './tenants';
 import { watchTenantId } from './utils/Event';
-import _knex from './db';
+import _knex, { extendKnex } from './db';
 
 type Api = {
   auth: Auth;
   users: Users;
   tenants: Tenants;
 };
+
 const init = (config: Config): [Api, Knex] => {
   const auth = new Auth(config);
   const users = new Users(config);
@@ -41,6 +42,7 @@ class Server {
     const [api, knex] = init(this.config);
     this.api = api;
     this.db = knex;
+    extendKnex();
 
     watchTenantId((tenantId) => {
       this.tenantId = tenantId;
@@ -54,7 +56,6 @@ class Server {
     const [api, knex] = init(cfg);
     this.api = api;
     this.db = knex;
-
     this.config = cfg;
   }
 
