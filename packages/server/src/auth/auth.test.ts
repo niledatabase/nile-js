@@ -4,6 +4,7 @@ import Auth from './';
 
 const baseConfig = [
   '_tenantId',
+  '_userId',
   'api',
   'createProvider',
   'database',

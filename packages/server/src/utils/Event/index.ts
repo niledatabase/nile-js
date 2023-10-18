@@ -1,5 +1,10 @@
 type BusValues = undefined | null | string;
 type EventFn = (params: BusValues) => void;
+enum Events {
+  User = 'userId',
+  Tenant = 'tenantId',
+  Token = 'token',
+}
 class Eventer {
   events: { [key: string]: EventFn[] };
   constructor() {
@@ -29,10 +34,23 @@ class Eventer {
 }
 
 // tenantId manager
-const tenantEvent = new Eventer();
+const eventer = new Eventer();
+
 export const updateTenantId = (tenantId: BusValues) => {
-  tenantEvent.publish('tenantId', tenantId);
+  eventer.publish(Events.Tenant, tenantId);
 };
 
 export const watchTenantId = (cb: EventFn) =>
-  tenantEvent.subscribe('tenantId', cb);
+  eventer.subscribe(Events.Tenant, cb);
+
+export const updateUserId = (userId: BusValues) => {
+  eventer.publish(Events.User, userId);
+};
+
+export const watchUserId = (cb: EventFn) => eventer.subscribe(Events.User, cb);
+
+export const updateToken = (val: BusValues) => {
+  eventer.publish(Events.Token, val);
+};
+
+export const watchToken = (cb: EventFn) => eventer.subscribe(Events.Token, cb);

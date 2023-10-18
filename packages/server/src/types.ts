@@ -13,7 +13,8 @@ export type Opts = {
 
 export type ServerConfig = {
   database: string;
-  tenantId?: string;
+  tenantId?: string | null | undefined;
+  userId?: string | null | undefined;
   workspace: string;
   db?: Knex.Config;
   api?: {
@@ -23,7 +24,7 @@ export type ServerConfig = {
   };
 };
 
-export type KnexConfig = Knex.Config;
+export type NileDb = Knex & { tenantId?: string };
 
 // Config object for pg: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/pg/index.d.ts
 export type PgConnectionConfig = {

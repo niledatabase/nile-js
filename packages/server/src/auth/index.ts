@@ -3,7 +3,12 @@ import { RestModels } from '@niledatabase/js';
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';
 import { ResponseError } from '../utils/ResponseError';
-import { X_NILE_TENANT, getTenantFromHttp } from '../utils/fetch';
+import {
+  X_NILE_TENANT,
+  X_NILE_USER_ID,
+  getTenantFromHttp,
+} from '../utils/fetch';
+import { updateToken, updateUserId } from '../utils/Event';
 
 export default class Auth extends Config {
   constructor(config: Config) {
@@ -83,6 +88,8 @@ export default class Auth extends Config {
       const tenantId = tenant?.next().value;
       headers.set(X_NILE_TENANT, tenantId);
       headers.append('set-cookie', `tenantId=${tenantId}; path=/; httponly;`);
+      updateToken(token.token.jwt);
+
       return new Response(JSON.stringify(token), { status: 200, headers });
     }
     const text = await res.text();
@@ -98,6 +105,7 @@ export default class Auth extends Config {
       const accessToken = (await body.get('access_token')) as string;
       const tenantId = (await body.get('tenantId')) as string;
       const cookie = `${this.api?.cookieKey}=${accessToken}; path=/; samesite=lax; httponly;`;
+      updateToken(accessToken);
       headers.append('set-cookie', cookie);
       headers.set(X_NILE_TENANT, tenantId);
       headers.append('set-cookie', `tenantId=${tenantId}; path=/; httponly;`);
@@ -128,8 +136,29 @@ export default class Auth extends Config {
     req: NileRequest<RestModels.CreateBasicUserRequest>,
     init?: RequestInit
   ): NileResponse<RestModels.LoginUserResponse> => {
+    const headers = new Headers();
     const _requester = new Requester(this);
-    return _requester.post(req, this.signUpUrl, init);
+    const res = await _requester.post(req, this.signUpUrl, init).catch((e) => {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      return e;
+    });
+    if (res instanceof ResponseError) {
+      return res.response;
+    }
+    if (res && res.status >= 200 && res.status < 300) {
+      const token: RestModels.LoginUserResponse = await res.json();
+      const cookie = `${this.api?.cookieKey}=${token.token?.jwt}; path=/; samesite=lax; httponly;`;
+      headers.append('set-cookie', cookie);
+      const { id } = token;
+      updateToken(token.token?.jwt);
+      updateUserId(id);
+      headers.set(X_NILE_USER_ID, id);
+      headers.append('set-cookie', `userId=${id}; path=/; httponly;`);
+      return new Response(JSON.stringify(token), { status: 201, headers });
+    }
+    const text = await res.text();
+    return new Response(text, { status: res.status });
   };
 
   updateProviderUrl(providerName: string) {
