@@ -1,9 +1,13 @@
+import { decodeJwt } from 'jose';
+
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
 import { NileRequest } from './Requester';
-import { updateTenantId } from './Event';
+import { updateTenantId, updateUserId } from './Event';
 
 export const X_NILE_TENANT = 'x-nile-tenantId';
+export const X_NILE_USER_ID = 'x-nile-userId';
+
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   req: NileRequest<any>,
@@ -46,6 +50,15 @@ export function getTenantFromHttp(headers: Headers, config: Config) {
   return cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config.tenantId;
 }
 
+export function getUserFromHttp(headers: Headers, config: Config) {
+  const token = getTokenFromCookie(headers, config.api.cookieKey);
+  if (token) {
+    const jwt = decodeJwt(token);
+    return jwt.sub;
+  }
+  return headers?.get(X_NILE_USER_ID) ?? config.userId;
+}
+
 export async function _fetch(
   config: Config,
   path: string,
@@ -61,23 +74,23 @@ export async function _fetch(
     const token = getTokenFromCookie(headers, cookieKey);
     if (token) {
       basicHeaders.set('Authorization', `Bearer ${token}`);
-    } else {
+    } else if (config.api?.token) {
       basicHeaders.set('Authorization', `Bearer ${config.api?.token}`);
     }
   }
 
   const tenantId = getTenantFromHttp(headers, config);
   updateTenantId(tenantId);
-
+  const userId = getUserFromHttp(headers, config);
+  updateUserId(userId);
   if (url.includes('{tenantId}') && !tenantId) {
     return new ResponseError('tenantId is not set for request', {
       status: 400,
     });
   }
-  const useableUrl = url.replace(
-    '{tenantId}',
-    encodeURIComponent(String(tenantId))
-  );
+  const useableUrl = url
+    .replace('{tenantId}', encodeURIComponent(String(tenantId)))
+    .replace('{userId}', encodeURIComponent(String(userId)));
   const response = await fetch(useableUrl, {
     ...opts,
     headers: basicHeaders,

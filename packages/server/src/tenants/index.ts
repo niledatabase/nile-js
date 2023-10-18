@@ -25,7 +25,6 @@ export default class Tenants extends Config {
     init?: RequestInit
   ): NileResponse<RestModels.Tenant> => {
     const _requester = new Requester(this);
-
     return _requester.post(req, this.tenantsUrl, init);
   };
 

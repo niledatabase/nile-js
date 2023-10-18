@@ -4,6 +4,7 @@ import Users from '.';
 
 const baseConfig = [
   '_tenantId',
+  '_userId',
   'api',
   'createTenantUser',
   'database',

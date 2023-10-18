@@ -1,4 +1,4 @@
-import { KnexConfig, PgConnectionConfig, ServerConfig } from '../types';
+import { PgConnectionConfig, ServerConfig } from '../types';
 
 class ApiConfig {
   public cookieKey?: string;
@@ -27,43 +27,64 @@ class ApiConfig {
   }
 }
 
-const niledatabase_url = 'db.thenile.dev';
+const niledatabase_url = 'thenile.dev';
 
+type DBConfig = {
+  connection: PgConnectionConfig;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  pool?: undefined | { afterCreate?: Function };
+};
 export class Config {
   database: string;
   workspace: string;
 
-  db: KnexConfig;
+  db: DBConfig;
 
   api: ApiConfig;
 
-  private _tenantId?: string | undefined;
+  private _tenantId?: string | undefined | null;
+  private _userId?: string | undefined | null;
 
-  public get tenantId(): string | undefined {
+  public get tenantId(): string | undefined | null {
     return this._tenantId;
   }
 
-  public set tenantId(value: string | undefined) {
+  public set tenantId(value: string | undefined | null) {
     this._tenantId = value;
   }
 
+  public get userId(): string | undefined | null {
+    return this._userId;
+  }
+
+  public set userId(value: string | undefined | null) {
+    this._userId = value;
+  }
+
   constructor(_config?: ServerConfig) {
+    // always provided
     this.database = String(_config?.database);
-    this._tenantId = _config?.tenantId;
     this.workspace = String(_config?.workspace);
+
+    // set the context
+    this._tenantId = _config?.tenantId;
+    this._userId = _config?.userId;
+
+    // api config
     this.api = new ApiConfig({
-      basePath: _config?.api?.basePath ?? `https://${niledatabase_url}`,
+      basePath: _config?.api?.basePath ?? `https://api.${niledatabase_url}`,
       cookieKey: _config?.api?.cookieKey ?? 'token',
       token: _config?.api?.token,
     });
 
+    // db config
     const host: string =
       _config?.db &&
       _config.db.connection &&
       typeof _config.db?.connection !== 'string' &&
       'host' in _config.db.connection
         ? String(_config.db.connection.host)
-        : niledatabase_url;
+        : `db.${niledatabase_url}`;
 
     const port: number =
       _config?.db?.connection &&
