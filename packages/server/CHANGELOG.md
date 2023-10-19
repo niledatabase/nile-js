@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.196](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.195...v1.0.0-alpha.196) (2023-10-19)
+
+### Bug Fixes
+
+- allow tenant_id and user_id context to be set ([d2aa140](https://github.com/TheNileDev/nile-js/commit/d2aa140e36303befbf4c67102846546550b645cf))
+- tenant isolation ([8eb1e96](https://github.com/TheNileDev/nile-js/commit/8eb1e96cfb4aa024799abee0924c4abb2e680f44))
+
 # [1.0.0-alpha.195](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.194...v1.0.0-alpha.195) (2023-10-11)
 
 ### Features
