@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.197](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.196...v1.0.0-alpha.197) (2023-10-20)
+
+### Bug Fixes
+
+- support multiple instances of niledatabase ([f2fa404](https://github.com/TheNileDev/nile-js/commit/f2fa40411e036137343291db146dd8a4fb3d4ca9))
+
 # [1.0.0-alpha.196](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.195...v1.0.0-alpha.196) (2023-10-19)
 
 ### Bug Fixes
