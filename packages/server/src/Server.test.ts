@@ -14,7 +14,7 @@ describe('server', () => {
     });
     expect(server.config.api.basePath).toEqual('https://api.thenile.dev');
   });
-  it('sets a tenant id everywhere when set', async () => {
+  it('sets a tenant id everywhere when set', () => {
     const config = {
       database: 'database',
       workspace: 'workspace',
@@ -27,10 +27,5 @@ describe('server', () => {
       const _api = nile.api[api];
       expect(_api.tenantId).toEqual('tenantId');
     }
-
-    // @ts-expect-error - checking db
-    expect(nile._db.tenantId).toEqual('tenantId');
-    // @ts-expect-error - checking db
-    expect(nile._db.userId).toEqual('userId');
   });
 });

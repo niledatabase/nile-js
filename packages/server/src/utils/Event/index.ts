@@ -4,6 +4,7 @@ enum Events {
   User = 'userId',
   Tenant = 'tenantId',
   Token = 'token',
+  EvictPool = 'EvictPool',
 }
 class Eventer {
   events: { [key: string]: EventFn[] };
@@ -54,3 +55,9 @@ export const updateToken = (val: BusValues) => {
 };
 
 export const watchToken = (cb: EventFn) => eventer.subscribe(Events.Token, cb);
+
+export const watchEvictPool = (cb: EventFn) =>
+  eventer.subscribe(Events.EvictPool, cb);
+export const evictPool = (val: BusValues) => {
+  eventer.publish(Events.EvictPool, val);
+};
