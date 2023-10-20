@@ -4,7 +4,8 @@ import Auth from './auth';
 import Users from './users';
 import Tenants from './tenants';
 import { watchTenantId, watchToken, watchUserId } from './utils/Event';
-import NileDatabase, { NileDatabaseI } from './db';
+import DbManager, { NileDatabaseI } from './db';
+import DBManager from './db/DBManager';
 
 type Api = {
   auth: Auth;
@@ -12,31 +13,29 @@ type Api = {
   tenants: Tenants;
 };
 
-const init = (config: Config): [Api, NileDatabase] => {
+const init = (config: Config): [Api] => {
   const auth = new Auth(config);
   const users = new Users(config);
   const tenants = new Tenants(config);
-  const db = new NileDatabase(config);
   return [
     {
       auth,
       users,
       tenants,
     },
-    db,
   ];
 };
 
 class Server {
   config: Config;
   api: Api;
-  private _db: NileDatabase;
+  private manager: DbManager;
 
   constructor(config?: ServerConfig) {
     this.config = new Config(config);
-    const [api, knex] = init(this.config);
+    const [api] = init(this.config);
     this.api = api;
-    this._db = knex;
+    this.manager = new DBManager(this.config);
 
     watchTenantId((tenantId) => {
       this.tenantId = tenantId;
@@ -50,15 +49,7 @@ class Server {
   }
 
   setConfig(cfg: Config) {
-    if (cfg.db.connection) {
-      this.config.db.connection = cfg.db.connection;
-    }
-    if (cfg.database && this.database !== cfg.workspace) {
-      this.database = cfg.database;
-    }
-    if (cfg.workspace && this.workspace !== cfg.workspace) {
-      this.workspace = cfg.workspace;
-    }
+    this.config = new Config(cfg);
   }
 
   set database(val: string | void) {
@@ -89,9 +80,6 @@ class Server {
 
     this.config.userId = userId;
 
-    // update the db with config values
-    this._db.setConfig(this.config);
-
     if (this.api) {
       this.api.auth.userId = this.config.userId;
       this.api.users.userId = this.config.userId;
@@ -106,8 +94,6 @@ class Server {
   set tenantId(tenantId: string | undefined | null) {
     this.database = this.config.database;
     this.config.tenantId = tenantId;
-    // update the db with config values
-    this._db.setConfig(this.config);
 
     if (this.api) {
       this.api.auth.tenantId = tenantId;
@@ -133,13 +119,13 @@ class Server {
   get db(): NileDatabaseI {
     // only need to interact with the knex object
     //@ts-expect-error - because that's where it is in the proxy
-    return this._db.db.db;
+    return this.manager.getConnection(this.config).knex;
   }
 }
 
 // export default Server;
 export default function Nile(config: ServerConfig) {
-  const server = new Server();
+  const server = new Server(config);
   server.setConfig(new Config(config as ServerConfig));
   return server;
 }

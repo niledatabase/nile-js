@@ -1,6 +1,6 @@
 import NileDB from './index';
 
-const properties = ['knex', 'tenantId', 'userId', 'db', 'config'];
+const properties = ['connections'];
 describe('db', () => {
   it('has expected properties', () => {
     const db = new NileDB({
