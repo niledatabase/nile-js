@@ -12,6 +12,7 @@ class NileDatabase {
   userId?: undefined | null | string;
   id: string;
   config: any;
+  timer: NodeJS.Timeout | undefined;
 
   constructor(config: Config, id: string) {
     this.id = id;
@@ -73,10 +74,16 @@ class NileDatabase {
     this.startTimeout();
 
     this.knex = knex(knexConfig);
+    this.knex.on('query', () => {
+      this.startTimeout();
+    });
   }
 
   startTimeout() {
-    setTimeout(() => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    this.timer = setTimeout(() => {
       this.knex.destroy();
       evictPool(this.id);
     }, this.config.db.pool.idleTimeoutMillis ?? 30000);
