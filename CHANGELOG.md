@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.198](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.197...v1.0.0-alpha.198) (2023-10-23)
+
+### Bug Fixes
+
+- clear unneccessary pool timeouts ([d3dd2f6](https://github.com/niledatabase/nile-js/commit/d3dd2f623699b1e52e814a6ed9cf1a052d60703a))
+
 # [1.0.0-alpha.197](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.196...v1.0.0-alpha.197) (2023-10-20)
 
 ### Bug Fixes
