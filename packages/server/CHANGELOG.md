@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.199](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.198...v1.0.0-alpha.199) (2023-10-27)
+
+### Features
+
+- **server:** add get instance ([5c597b4](https://github.com/TheNileDev/nile-js/commit/5c597b4470bedda0deb8fbb44c7bb54e901b251b))
+
 # [1.0.0-alpha.198](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.197...v1.0.0-alpha.198) (2023-10-23)
 
 ### Bug Fixes
