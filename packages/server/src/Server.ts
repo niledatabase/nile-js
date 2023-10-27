@@ -1,4 +1,4 @@
-import { ServerConfig } from './types';
+import { InstanceConfig, ServerConfig } from './types';
 import { Config } from './utils/Config';
 import Auth from './auth';
 import Users from './users';
@@ -6,6 +6,7 @@ import Tenants from './tenants';
 import { watchTenantId, watchToken, watchUserId } from './utils/Event';
 import DbManager, { NileDatabaseI } from './db';
 import DBManager from './db/DBManager';
+import { getServerId, makeServerId } from './utils/Server';
 
 type Api = {
   auth: Auth;
@@ -30,9 +31,11 @@ class Server {
   config: Config;
   api: Api;
   private manager: DbManager;
+  private servers: Map<string, Server>;
 
   constructor(config?: ServerConfig) {
     this.config = new Config(config);
+    this.servers = new Map();
     const [api] = init(this.config);
     this.api = api;
     this.manager = new DBManager(this.config);
@@ -120,6 +123,27 @@ class Server {
     // only need to interact with the knex object
     //@ts-expect-error - because that's where it is in the proxy
     return this.manager.getConnection(this.config).knex;
+  }
+
+  /**
+   * A utility function if you want to manage different NileDB instances yourself
+   * returns the global Server object, an existing server that's already been configured,
+   * or a new one if the config isn't in the cache
+   */
+
+  getInstance(config: InstanceConfig): Server {
+    const _config = { ...this.config, ...config };
+    const serverId = getServerId(_config);
+    const currentServerId = makeServerId(this.config);
+    if (serverId === currentServerId) {
+      return this;
+    }
+    const existing = this.servers.get(serverId);
+    if (existing) {
+      return existing;
+    }
+    this.servers.set(serverId, new Server(_config));
+    return this.servers.get(serverId) as unknown as Server;
   }
 }
 

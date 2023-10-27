@@ -28,4 +28,27 @@ describe('server', () => {
       expect(_api.tenantId).toEqual('tenantId');
     }
   });
+  it('manages instances', () => {
+    const config = {
+      database: 'database',
+      workspace: 'workspace',
+    };
+    const nile = Nile(config);
+
+    const another = nile.getInstance({ database: 'somethingelse?!' });
+    const theSameOne = nile.getInstance(config);
+
+    // in this case, we change the base object tenant id
+    theSameOne.tenantId = 'tenantId2';
+    expect(nile.config.tenantId).toEqual('tenantId2');
+
+    nile.tenantId = 'tenantId4';
+    another.tenantId = 'tenantId1';
+
+    expect(nile.config).not.toEqual(another?.config);
+    expect(nile.config).toEqual(theSameOne?.config);
+
+    //@ts-expect-error - test
+    expect(nile.servers.size).toEqual(1);
+  });
 });

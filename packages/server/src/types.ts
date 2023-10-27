@@ -24,6 +24,18 @@ export type ServerConfig = {
   };
 };
 
+export type InstanceConfig = {
+  database?: string;
+  tenantId?: string | null | undefined;
+  userId?: string | null | undefined;
+  workspace?: string;
+  db?: Knex.Config;
+  api?: {
+    basePath?: string;
+    cookieKey?: string;
+    token?: string;
+  };
+};
 export type NileDb = Knex & { tenantId?: string };
 
 // Config object for pg: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/pg/index.d.ts
