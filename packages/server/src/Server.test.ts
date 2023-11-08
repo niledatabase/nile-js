@@ -51,4 +51,26 @@ describe('server', () => {
     //@ts-expect-error - test
     expect(nile.servers.size).toEqual(1);
   });
+
+  it('ensures existing configs get updated with provided configs', () => {
+    const config = {
+      database: 'database',
+      workspace: 'workspace',
+    };
+    const nile = Nile(config);
+
+    const another = nile.getInstance({
+      database: 'somethingelse?!',
+      tenantId: null,
+    });
+    expect(another.tenantId).toEqual(null);
+    another.tenantId = 'something else';
+    expect(another.tenantId).toEqual('something else');
+
+    const sameOne = nile.getInstance({
+      database: 'somethingelse?!',
+      tenantId: null,
+    });
+    expect(sameOne.tenantId).toEqual(null);
+  });
 });

@@ -3,6 +3,7 @@ import knex, { Knex } from 'knex';
 
 import { Config } from '../utils/Config';
 import { evictPool } from '../utils/Event';
+import { AfterCreate, PgConnectionConfig, PoolConfig } from '../types';
 
 // doing this now, to provide flexibility later
 class NileDatabase {
@@ -16,14 +17,11 @@ class NileDatabase {
 
   constructor(config: Config, id: string) {
     this.id = id;
-    let poolConfig = {};
-    const afterCreate = (
-      conn: {
-        on: any;
-        query: (query: string, cb: (err: unknown) => void) => void;
-      },
-      done: (err: unknown, conn: unknown) => void
-    ) => {
+    let poolConfig: PoolConfig = {
+      min: 0,
+      ...config.db.pool,
+    };
+    const afterCreate: AfterCreate = (conn, done) => {
       const query = [`SET nile.tenant_id = '${config.tenantId}'`];
       if (config.userId) {
         if (!config.tenantId) {
@@ -62,8 +60,10 @@ class NileDatabase {
       db: {
         ...config.db,
         connection: {
-          ...config.db.connection,
-          database: config.db.connection.database ?? config.database,
+          ...(config.db.connection as PgConnectionConfig),
+          database:
+            (config.db.connection as PgConnectionConfig)?.database ??
+            config.database,
         },
         pool: poolConfig,
       },
@@ -83,8 +83,8 @@ class NileDatabase {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    this.timer = setTimeout(() => {
-      this.knex.destroy();
+    this.timer = setTimeout(async () => {
+      await this.knex.destroy();
       evictPool(this.id);
     }, this.config.db.pool.idleTimeoutMillis ?? 30000);
   }

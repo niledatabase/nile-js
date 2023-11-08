@@ -59,3 +59,32 @@ export type PgConnectionConfig = {
   options?: string;
   expirationChecker?(): boolean;
 };
+
+export type AfterCreate = (
+  conn: {
+    on: any;
+    query: (query: string, cb: (err: unknown) => void) => void;
+  },
+  done: (err: unknown, conn: unknown) => void
+) => void;
+
+export type PoolConfig = {
+  name?: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  afterCreate?: Function;
+  min?: number;
+  max?: number;
+  refreshIdle?: boolean;
+  idleTimeoutMillis?: number;
+  reapIntervalMillis?: number;
+  returnToHead?: boolean;
+  priorityRange?: number;
+  log?: (message: string, logLevel: string) => void;
+
+  // tarn configs
+  propagateCreateError?: boolean;
+  createRetryIntervalMillis?: number;
+  createTimeoutMillis?: number;
+  destroyTimeoutMillis?: number;
+  acquireTimeoutMillis?: number;
+};
