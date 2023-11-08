@@ -1,4 +1,4 @@
-import { PgConnectionConfig, ServerConfig } from '../types';
+import { PgConnectionConfig, PoolConfig, ServerConfig } from '../types';
 
 class ApiConfig {
   public cookieKey?: string;
@@ -28,11 +28,9 @@ class ApiConfig {
 }
 
 const niledatabase_url = 'thenile.dev';
-
 type DBConfig = {
   connection: PgConnectionConfig;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  pool?: undefined | { afterCreate?: Function };
+  pool?: PoolConfig;
 };
 export class Config {
   database: string;

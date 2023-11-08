@@ -1,4 +1,4 @@
-import { InstanceConfig, ServerConfig } from './types';
+import { InstanceConfig, PgConnectionConfig, ServerConfig } from './types';
 import { Config } from './utils/Config';
 import Auth from './auth';
 import Users from './users';
@@ -58,7 +58,7 @@ class Server {
   set database(val: string | void) {
     if (val) {
       this.config.database = val;
-      this.config.db.connection.database = val;
+      (this.config.db.connection as PgConnectionConfig).database = val;
       this.api.auth.database = val;
       this.api.users.database = val;
       this.api.tenants.database = val;
@@ -139,9 +139,20 @@ class Server {
       return this;
     }
     const existing = this.servers.get(serverId);
+
     if (existing) {
+      // be sure the config is up to date
+      const updatedConfig = new Config(_config);
+      existing.setConfig(updatedConfig);
+      // propagage special config items
+      existing.tenantId = updatedConfig.tenantId;
+      existing.userId = updatedConfig.userId;
+      existing.token = updatedConfig.api.token;
+      existing.workspace = updatedConfig.workspace;
+      existing.database = updatedConfig.database;
       return existing;
     }
+
     this.servers.set(serverId, new Server(_config));
     return this.servers.get(serverId) as unknown as Server;
   }
