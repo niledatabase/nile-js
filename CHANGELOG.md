@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.200](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.199...v1.0.0-alpha.200) (2023-11-08)
+
+### Bug Fixes
+
+- propagage configs on db instances ([c267b9f](https://github.com/niledatabase/nile-js/commit/c267b9f256b7cbec9c1e59f1a90980dcee618253))
+
 # [1.0.0-alpha.199](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.198...v1.0.0-alpha.199) (2023-10-27)
 
 ### Features

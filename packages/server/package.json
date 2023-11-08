@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/server",
-  "version": "1.0.0-alpha.199",
+  "version": "1.0.0-alpha.200",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
@@ -61,7 +61,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@niledatabase/js": "^1.0.0-alpha.199",
+    "@niledatabase/js": "^1.0.0-alpha.200",
     "jose": "^4.15.4",
     "knex": "^2.4.2",
     "pg": "^8.10.0"
