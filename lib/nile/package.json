@@ -42,16 +42,16 @@
     }
   ],
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.2",
-    "@size-limit/preset-small-lib": "^8.1.0",
-    "@types/jest": "^29.2.4",
-    "@types/node": "^18.11.11",
-    "size-limit": "^8.1.0",
+    "@openapitools/openapi-generator-cli": "^2.7.0",
+    "@size-limit/preset-small-lib": "^8.2.6",
+    "@types/jest": "^29.5.9",
+    "@types/node": "^18.18.11",
+    "size-limit": "^8.2.6",
     "tsdx": "^0.14.1",
-    "tslib": "^2.4.1",
-    "typedoc": "^0.23.21",
-    "typedoc-plugin-markdown": "^3.14.0",
-    "typescript": "^4.9.3"
+    "tslib": "^2.6.2",
+    "typedoc": "^0.25.3",
+    "typedoc-plugin-markdown": "^3.17.1",
+    "typescript": "^4.9.5"
   },
   "repository": {
     "type": "git",
@@ -64,7 +64,7 @@
   "dependencies": {
     "es6-promise": "^4.2.8",
     "js-yaml": "^4.1.0",
-    "node-fetch": "^3.3.0",
+    "node-fetch": "^3.3.2",
     "sade": "^1.8.1"
   }
 }
