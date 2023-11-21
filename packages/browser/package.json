@@ -10,11 +10,11 @@
     "node": ">=16.0"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "yarn build:move && yarn build:api:gen && tsdx build --tsconfig ./tsconfig.build.json",
+    "start": "dts watch",
+    "build": "yarn build:move && yarn build:api:gen && dts build --tsconfig ./tsconfig.build.json",
     "build:move": "node ./scripts/move.mjs",
     "build:api:gen": "yarn openapi-generator-cli generate --skip-validate-spec -t templates -i src/spec.json -g typescript-fetch --package-name @niledatabase/client -o src/openapi --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,moduleName=NileClient,typescriptThreePlus=true,projectName=@niledatabase/browser",
-    "test": "tsdx test",
+    "test": "dts test",
     "lint": "eslint src",
     "size": "size-limit",
     "analyze": "size-limit --why"
@@ -28,7 +28,7 @@
   "author": "jrea",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TheNileDev/nile-js.git",
+    "url": "https://github.com/niledatabsae/nile-js.git",
     "directory": "packages/browser"
   },
   "publishConfig": {
@@ -45,13 +45,15 @@
     }
   ],
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.2",
-    "@size-limit/preset-small-lib": "^8.1.0",
-    "@types/jest": "^29.2.4",
-    "@types/node": "^18.11.11",
-    "size-limit": "^8.1.0",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.4.1",
-    "typescript": "^4.9.3"
+    "@openapitools/openapi-generator-cli": "^2.7.0",
+    "@size-limit/preset-small-lib": "^8.2.6",
+    "@types/jest": "^29.5.9",
+    "@types/node": "^18.18.11",
+    "size-limit": "^8.2.6",
+    "tslib": "^2.6.2",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "dts-cli": "^2.0.3"
   }
 }

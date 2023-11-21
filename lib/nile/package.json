@@ -8,54 +8,35 @@
     "dist"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build --tsconfig ./tsconfig.build.json && yarn build:types",
+    "start": "dts watch",
+    "build": "dts build --tsconfig ./tsconfig.build.json && yarn build:types",
     "prebuild": "./scripts/api-cleaner.mjs && ./scripts/rest-cleaner.mjs && yarn build:api:gen2 && yarn build:api:gen",
     "build:types": "tsc -p tsconfig.build.json -d --declarationDir dist --emitDeclarationOnly",
     "build:api:gen": "yarn openapi-generator-cli generate --skip-validate-spec -t templates -i spec/api.yaml -g typescript-fetch --package-name @niledatabase/js -o src/client --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,moduleName=Nile,typescriptThreePlus=true,projectName=@niledatabase/js",
     "build:api:gen2": "yarn openapi-generator-cli generate --skip-validate-spec -t templates -i spec/api2.yaml -g typescript-fetch --package-name @niledatabase/js -o src/client2 --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,moduleName=Nile,typescriptThreePlus=true,projectName=@niledatabase/js",
-    "generate-api-docs": "yarn typedoc --out docs/api --plugin typedoc-plugin-markdown --theme markdown --disableSources --excludeProtected --excludePrivate --excludeNotDocumented --hideBreadcrumbs true --hideInPageTOC true ./src/index.ts",
-    "generate-event-docs": "yarn typedoc --out docs/event --plugin typedoc-plugin-markdown --theme markdown --disableSources --excludeProtected --excludePrivate --excludeNotDocumented --hideBreadcrumbs true --hideInPageTOC true ./src/EventsApi.ts",
-    "generate-nile-docs": "yarn typedoc --out docs/nile --plugin typedoc-plugin-markdown --theme markdown --disableSources --excludeProtected --excludePrivate --excludeNotDocumented --hideBreadcrumbs true --hideInPageTOC true ./src/Nile.ts",
-    "test": "tsdx test",
-    "prepare": "yarn prebuild && tsdx build --tsconfig ./tsconfig.build.json && yarn build:types",
-    "size": "size-limit",
-    "analyze": "size-limit --why"
-  },
-  "bin": {
-    "nile": "./bin/nile.mjs"
+    "test": "dts test",
+    "prepare": "yarn prebuild && dts build --tsconfig ./tsconfig.build.json && yarn build:types"
   },
   "name": "@niledatabase/js",
   "author": "jrea",
   "module": "dist/js.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/js.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/js.esm.js",
-      "limit": "10 KB"
-    }
-  ],
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.2",
-    "@size-limit/preset-small-lib": "^8.1.0",
-    "@types/jest": "^29.2.4",
-    "@types/node": "^18.11.11",
-    "size-limit": "^8.1.0",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.4.1",
-    "typedoc": "^0.23.21",
-    "typedoc-plugin-markdown": "^3.14.0",
-    "typescript": "^4.9.3"
+    "@openapitools/openapi-generator-cli": "^2.7.0",
+    "@size-limit/preset-small-lib": "^8.2.6",
+    "@types/jest": "^29.5.9",
+    "@types/node": "^18.18.11",
+    "dts-cli": "^2.0.3",
+    "tslib": "^2.6.2",
+    "typedoc": "^0.25.3",
+    "typedoc-plugin-markdown": "^3.17.1",
+    "typescript": "^4.9.5"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TheNileDev/nile-js.git",
+    "url": "https://github.com/niledatabase/nile-js.git",
     "directory": "lib/nile"
   },
   "publishConfig": {
@@ -64,7 +45,7 @@
   "dependencies": {
     "es6-promise": "^4.2.8",
     "js-yaml": "^4.1.0",
-    "node-fetch": "^3.3.0",
+    "node-fetch": "^3.3.2",
     "sade": "^1.8.1"
   }
 }

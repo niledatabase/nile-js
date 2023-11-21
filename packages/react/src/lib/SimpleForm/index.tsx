@@ -196,6 +196,7 @@ export default function SimpleForm(props: {
                       if (errors[attr.name]) {
                         color.color = 'danger';
                       }
+                      const value = String(field.value);
                       return (
                         <Stack>
                           <Select
@@ -203,6 +204,7 @@ export default function SimpleForm(props: {
                             placeholder={`${display.placeholder}...`}
                             {...color}
                             {...field}
+                            value={value}
                             onChange={(_, newValue) => {
                               field.onChange(newValue);
                             }}

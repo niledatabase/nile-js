@@ -198,7 +198,7 @@ export class NileApi {
     if (this.organizations.authToken) {
       return this.organizations.authToken;
     }
-    if (this.access.authToken) {
+    if (this.access?.authToken) {
       return this.access.authToken;
     }
     if (this.metrics.authToken) {

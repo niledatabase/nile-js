@@ -12,7 +12,7 @@ import { SSOProvider } from '@niledatabase/browser';
 import BaseSSOForm from './BaseSSOForm';
 import { OktaProps } from './types';
 
-function ConfigGuide({ callbackUrl }: { callbackUrl: string }) {
+function ConfigGuide({ callbackUrl }: { callbackUrl?: string }) {
   const [copied, setCopied] = React.useState(false);
 
   const timer = React.useRef<NodeJS.Timeout>();
@@ -38,8 +38,10 @@ function ConfigGuide({ callbackUrl }: { callbackUrl: string }) {
       </Typography>
       <Input
         onClick={async () => {
-          await navigator.clipboard.writeText(callbackUrl);
-          setCopied(true);
+          if (callbackUrl) {
+            await navigator.clipboard.writeText(callbackUrl);
+            setCopied(true);
+          }
         }}
         sx={(theme: Theme) => ({
           input: {
