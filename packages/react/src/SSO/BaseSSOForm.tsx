@@ -18,8 +18,8 @@ type SSOFormRequest = Omit<UpdateProviderRequest, 'emailDomains'> & {
 export default function BaseSSOForm(
   props: Omit<OktaProps, 'callbackUrl' | 'providers'> & {
     providerName: string;
-    configurationGuide: JSX.Element;
-    config: SSOProvider;
+    configurationGuide?: JSX.Element;
+    config?: SSOProvider;
   }
 ) {
   const {
@@ -34,7 +34,9 @@ export default function BaseSSOForm(
   const api = useApi();
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-  const [optimisticConfig, setConfig] = React.useState<SSOProvider>(config);
+  const [optimisticConfig, setConfig] = React.useState<SSOProvider | void>(
+    config
+  );
   const timer = React.useRef<NodeJS.Timeout>();
   const attributes = React.useMemo(() => {
     const attributes: Attribute[] = [

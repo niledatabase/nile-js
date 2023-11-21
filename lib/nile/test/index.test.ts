@@ -145,8 +145,13 @@ describe('index', () => {
 
     describe('Nile.connect', () => {
       it('takes a string', () => {
+        const error = jest
+          .spyOn(console, 'error')
+          .mockImplementation(() => 'fetch not defined');
         const nile = Nile().connect('my sweet auth token');
         expect(nile).toBeTruthy();
+        expect(error).not.toHaveBeenCalled();
+        error.mockReset();
       });
       it('takes a username/password', async () => {
         // suppress the error from fetch
@@ -157,12 +162,8 @@ describe('index', () => {
           email: 'patrick@underthesea.com',
           password: 'nothisispatrick',
         });
-        expect(nile).toMatchObject(
-          Nile().connect({
-            email: 'patrick@underthesea.com',
-            password: 'nothisispatrick',
-          })
-        );
+        expect(nile).toBeTruthy();
+        expect(error).toHaveBeenCalled();
         error.mockReset();
       });
     });
