@@ -7,12 +7,19 @@ export default class Users extends Config {
   constructor(config: Config) {
     super(config);
   }
-  get tenantUsersUrl() {
+
+  get baseUrl() {
     return `/workspaces/${encodeURIComponent(
       this.workspace
-    )}/databases/${encodeURIComponent(this.database)}/tenants/${
-      this.tenantId ?? '{tenantId}'
-    }/users`;
+    )}/databases/${encodeURIComponent(this.database)}`;
+  }
+
+  get usersUrl() {
+    return `${this.baseUrl}/users`;
+  }
+
+  get tenantUsersUrl() {
+    return `${this.baseUrl}/tenants/${this.tenantId ?? '{tenantId}'}/users`;
   }
 
   createTenantUser = async (
@@ -21,6 +28,23 @@ export default class Users extends Config {
   ): NileResponse<RestModels.LoginUserResponse> => {
     const _requester = new Requester(this);
     return await _requester.post(req, this.tenantUsersUrl, init);
+  };
+
+  listUsers = async (
+    req: NileRequest<void> | Headers,
+    init?: RequestInit
+  ): NileResponse<RestModels.User[]> => {
+    const _requester = new Requester(this);
+    return await _requester.get(req, this.usersUrl, init);
+  };
+
+  updateUser = async (
+    userId: string,
+    req: NileRequest<RestModels.UpdateUserRequest>,
+    init?: RequestInit
+  ): NileResponse<RestModels.User> => {
+    const _requester = new Requester(this);
+    return await _requester.put(req, `${this.usersUrl}/${userId}`, init);
   };
 
   listTenantUsers = async (
