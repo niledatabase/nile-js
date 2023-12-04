@@ -10,7 +10,9 @@ const baseConfig = [
   'database',
   'db',
   'listTenantUsers',
+  'listUsers',
   'me',
+  'updateUser',
   'workspace',
 ];
 const config = {

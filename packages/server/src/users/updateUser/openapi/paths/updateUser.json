@@ -1,0 +1,53 @@
+{
+  "tags": ["users"],
+  "summary": "Update a user",
+  "description": "Updates user attributes by id",
+  "operationId": "updateUser",
+  "requestBody": {
+    "content": {
+      "*/*": {
+        "schema": {
+          "$ref": "../../../../../openapi/index.json#/components/schemas/UpdateUserRequest"
+        }
+      }
+    },
+    "required": true
+  },
+  "responses": {
+    "201": {
+      "description": "User updated",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/User"
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/APIError"
+          }
+        }
+      }
+    },
+    "404": {
+      "description": "User not found",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/APIError"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "jwtBearerAuth": []
+    }
+  ]
+}

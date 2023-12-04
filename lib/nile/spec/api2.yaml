@@ -1150,6 +1150,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/APIError'
   /workspaces/{workspaceSlug}/databases/{databaseName}/users:
+    get:
+      tags:
+        - users
+      summary: List database users
+      description: Lists all users in the database
+      operationId: listUsers
+      parameters:
+        - name: workspaceSlug
+          in: path
+          required: false
+          schema:
+            type: string
+        - name: databaseName
+          in: path
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+        - jwtBearerAuth: []
     post:
       tags:
         - users
@@ -1205,6 +1237,55 @@ paths:
       responses:
         '200':
           description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+        - jwtBearerAuth: []
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Updates user attributes by id.
+      operationId: updateUser
+      parameters:
+        - name: workspaceSlug
+          in: path
+          required: false
+          schema:
+            type: string
+        - name: databaseName
+          in: path
+          required: false
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        required: true
+      responses:
+        '200':
+          description: User updated
           content:
             application/json:
               schema:
@@ -1694,6 +1775,19 @@ components:
         password:
           type: string
         preferredName:
+          type: string
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        preferredName:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
           type: string
     User:
       type: object
