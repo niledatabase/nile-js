@@ -23,9 +23,11 @@ describe('nile db', () => {
           'identifyDeveloper',
           'identifyUser',
           'listTenantUsers',
+          'listUsers',
           'loginOIDCUser',
           'loginTenantUser',
           'loginUser',
+          'updateUser',
         ]);
       }
     });
