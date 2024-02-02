@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const headers = new Headers(loginResp.headers);
 
     const [tenant] = await db('tenant_users')
-      .withSchema('user')
+      .withSchema('users')
       .leftJoin(
         db('tenants').withSchema('public').as('tenants'),
         'tenants.id',
