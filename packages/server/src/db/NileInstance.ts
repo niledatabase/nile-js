@@ -24,7 +24,8 @@ class NileDatabase {
     };
 
     const database =
-      (config.db.connection as PgConnectionConfig)?.database ?? config.database;
+      (config.db.connection as PgConnectionConfig)?.database ??
+      config.databaseId;
 
     this.config = {
       ...config,

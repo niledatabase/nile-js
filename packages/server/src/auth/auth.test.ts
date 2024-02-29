@@ -7,8 +7,7 @@ const baseConfig = [
   '_userId',
   'api',
   'createProvider',
-  'database',
-  'workspace',
+  'databaseId',
   'db',
   'getSSOCallbackUrl',
   'listProviders',
@@ -20,8 +19,6 @@ const baseConfig = [
   'updateProvider',
 ];
 it('has expected methods', () => {
-  const auth = new Auth(
-    new Config({ workspace: 'workspace', database: 'database' })
-  );
+  const auth = new Auth(new Config({ databaseId: 'databaseId' }));
   expect(Object.keys(auth).sort()).toEqual(baseConfig.sort());
 });

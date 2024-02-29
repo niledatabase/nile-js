@@ -9,9 +9,7 @@ export default class Users extends Config {
   }
 
   get baseUrl() {
-    return `/workspaces/${encodeURIComponent(
-      this.workspace
-    )}/databases/${encodeURIComponent(this.database)}`;
+    return `/databases/${encodeURIComponent(this.databaseId)}`;
   }
 
   get usersUrl() {
@@ -40,7 +38,7 @@ export default class Users extends Config {
 
   updateUser = async (
     userId: string,
-    req: NileRequest<RestModels.UpdateUserRequest>,
+    req: NileRequest<unknown>,
     init?: RequestInit
   ): NileResponse<RestModels.User> => {
     const _requester = new Requester(this);
@@ -56,9 +54,7 @@ export default class Users extends Config {
   };
 
   get meUrl() {
-    return `/workspaces/${encodeURIComponent(
-      this.workspace
-    )}/databases/${encodeURIComponent(this.database)}/users/me`;
+    return `/databases/${encodeURIComponent(this.databaseId)}/users/me`;
   }
 
   me = async (

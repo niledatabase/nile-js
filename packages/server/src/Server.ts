@@ -55,22 +55,13 @@ class Server {
     this.config = new Config(cfg);
   }
 
-  set database(val: string | void) {
+  set databaseId(val: string | void) {
     if (val) {
-      this.config.database = val;
+      this.config.databaseId = val;
       (this.config.db.connection as PgConnectionConfig).database = val;
-      this.api.auth.database = val;
-      this.api.users.database = val;
-      this.api.tenants.database = val;
-    }
-  }
-
-  set workspace(val: string | void) {
-    if (val) {
-      this.config.workspace = val;
-      this.api.auth.workspace = val;
-      this.api.users.workspace = val;
-      this.api.tenants.workspace = val;
+      this.api.auth.databaseId = val;
+      this.api.users.databaseId = val;
+      this.api.tenants.databaseId = val;
     }
   }
 
@@ -79,7 +70,7 @@ class Server {
   }
 
   set userId(userId: string | undefined | null) {
-    this.database = this.config.database;
+    this.databaseId = this.config.databaseId;
 
     this.config.userId = userId;
 
@@ -95,7 +86,7 @@ class Server {
   }
 
   set tenantId(tenantId: string | undefined | null) {
-    this.database = this.config.database;
+    this.databaseId = this.config.databaseId;
     this.config.tenantId = tenantId;
 
     if (this.api) {
@@ -148,8 +139,7 @@ class Server {
       existing.tenantId = updatedConfig.tenantId;
       existing.userId = updatedConfig.userId;
       existing.token = updatedConfig.api.token;
-      existing.workspace = updatedConfig.workspace;
-      existing.database = updatedConfig.database;
+      existing.databaseId = updatedConfig.databaseId;
       return existing;
     }
 
