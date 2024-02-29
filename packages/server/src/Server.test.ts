@@ -3,21 +3,19 @@ import Nile from './Server';
 describe('server', () => {
   it('has reasonable defaults', () => {
     const config = {
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
     };
     const server = Nile(config);
     expect(server.config.db.connection).toEqual({
       host: 'db.thenile.dev',
       port: 5432,
-      database: 'database',
+      database: 'databaseId',
     });
     expect(server.config.api.basePath).toEqual('https://api.thenile.dev');
   });
   it('sets a tenant id everywhere when set', () => {
     const config = {
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
     };
     const nile = Nile(config);
     nile.tenantId = 'tenantId';
@@ -30,12 +28,11 @@ describe('server', () => {
   });
   it('manages instances', () => {
     const config = {
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
     };
     const nile = Nile(config);
 
-    const another = nile.getInstance({ database: 'somethingelse?!' });
+    const another = nile.getInstance({ databaseId: 'somethingelse?!' });
     const theSameOne = nile.getInstance(config);
 
     // in this case, we change the base object tenant id
@@ -54,13 +51,12 @@ describe('server', () => {
 
   it('ensures existing configs get updated with provided configs', () => {
     const config = {
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
     };
     const nile = Nile(config);
 
     const another = nile.getInstance({
-      database: 'somethingelse?!',
+      databaseId: 'somethingelse?!',
       tenantId: null,
     });
     expect(another.tenantId).toEqual(null);
@@ -68,7 +64,7 @@ describe('server', () => {
     expect(another.tenantId).toEqual('something else');
 
     const sameOne = nile.getInstance({
-      database: 'somethingelse?!',
+      databaseId: 'somethingelse?!',
       tenantId: null,
     });
     expect(sameOne.tenantId).toEqual(null);

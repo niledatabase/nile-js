@@ -7,8 +7,7 @@ jest.mock('../../utils/ResponseError', () => ({
 }));
 
 const config = {
-  workspace: 'workspace',
-  database: 'database',
+  databaseId: 'databaseId',
   tenantId: 'tenant',
 };
 describe('createUser', () => {
@@ -26,7 +25,7 @@ describe('createUser', () => {
     const res = await createTenant(params);
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath + '/workspaces/workspace/databases/database/tenants'
+      _config.api.basePath + '/databases/databaseId/tenants'
     );
   });
 });

@@ -16,12 +16,12 @@ describe('google sso button', () => {
   it('renders using the context', () => {
     render(
       <NileProvider>
-        <GoogleSSOButton workspace="workspace" database="database" />
+        <GoogleSSOButton databaseId="databaseId" />
       </NileProvider>
     );
     screen.getByText('Continue with Google');
     expect(screen.getByRole('link').getAttribute('href')).toEqual(
-      'https://api.thenile.dev/workspaces/workspace/databases/database/users/oidc/google/login'
+      'https://api.thenile.dev/databases/databaseId/users/oidc/google/login'
     );
   });
 });

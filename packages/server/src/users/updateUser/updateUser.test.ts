@@ -7,8 +7,7 @@ jest.mock('../../utils/ResponseError', () => ({
 }));
 
 const config = {
-  workspace: 'workspace',
-  database: 'database',
+  databaseId: 'databaseId',
 };
 describe('updateUser', () => {
   it('issues a put against provided user id', async () => {
@@ -26,8 +25,7 @@ describe('updateUser', () => {
     const res = await updateUser(userId, params);
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath +
-        '/workspaces/workspace/databases/database/users/12345'
+      _config.api.basePath + '/databases/databaseId/users/12345'
     );
     //@ts-expect-error - test
     expect(res.payload.path.method).toEqual('PUT');

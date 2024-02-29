@@ -1,5 +1,7 @@
 import { PgConnectionConfig, PoolConfig, ServerConfig } from '../types';
 
+import blockingFetch from './blockingFetch';
+
 class ApiConfig {
   public cookieKey?: string;
   public basePath?: string;
@@ -32,9 +34,21 @@ type DBConfig = {
   connection: PgConnectionConfig;
   pool?: PoolConfig;
 };
+
+function getBasePath(config?: ServerConfig) {
+  const database = blockingFetch(
+    `https://api.${niledatabase_url}/databases/${String(config?.databaseId)}`
+  );
+  const apiUrl = 'apiUrl' in database ? database.apiUrl : '';
+  const basePath = config?.api?.basePath ?? apiUrl;
+  if (basePath) {
+    return basePath;
+  }
+  return `https://api.${niledatabase_url}`;
+}
+
 export class Config {
-  database: string;
-  workspace: string;
+  databaseId: string;
 
   db: DBConfig;
 
@@ -61,16 +75,16 @@ export class Config {
 
   constructor(_config?: ServerConfig) {
     // always provided
-    this.database = String(_config?.database);
-    this.workspace = String(_config?.workspace);
+    this.databaseId = String(_config?.databaseId);
 
     // set the context
     this._tenantId = _config?.tenantId;
     this._userId = _config?.userId;
-
+    // this endpoint does not exist
+    const basePath = getBasePath(_config);
     // api config
     this.api = new ApiConfig({
-      basePath: _config?.api?.basePath ?? `https://api.${niledatabase_url}`,
+      basePath: String(basePath),
       cookieKey: _config?.api?.cookieKey ?? 'token',
       token: _config?.api?.token,
     });
@@ -94,7 +108,7 @@ export class Config {
     const connection = {
       host,
       port,
-      database: _config?.database,
+      database: _config?.databaseId,
       ...(typeof _config?.db?.connection === 'object'
         ? _config.db.connection
         : {}),

@@ -7,17 +7,15 @@ const baseConfig = [
   '_userId',
   'api',
   'createTenantUser',
-  'database',
+  'databaseId',
   'db',
   'listTenantUsers',
   'listUsers',
   'me',
   'updateUser',
-  'workspace',
 ];
 const config = {
-  workspace: 'workspace',
-  database: 'database',
+  databaseId: 'databaseId',
   tenantId: 'tenant',
 };
 describe('users', () => {

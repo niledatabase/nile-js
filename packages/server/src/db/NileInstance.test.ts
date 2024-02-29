@@ -6,8 +6,7 @@ import NileDatabase from './NileInstance';
 describe('nile instance', () => {
   it('evitcs pools', (done) => {
     const config = new Config({
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
       db: {
         pool: {
           idleTimeoutMillis: 1,
