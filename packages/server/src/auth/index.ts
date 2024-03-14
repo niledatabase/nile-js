@@ -81,6 +81,7 @@ export default class Auth extends Config {
     }
     if (res && res.status >= 200 && res.status < 300) {
       const token: RestModels.LoginUserResponse = await res.json();
+      console.log('token', token);
       const cookie = `${this.api?.cookieKey}=${token.token.jwt}; path=/; samesite=lax; httponly;`;
       headers.append('set-cookie', cookie);
       const { tenants } = token;
