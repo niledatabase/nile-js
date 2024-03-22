@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/browser",
-  "version": "1.0.0-alpha.200",
+  "version": "1.0.0-alpha.201",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [

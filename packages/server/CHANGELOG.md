@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.201](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.200...v1.0.0-alpha.201) (2024-03-22)
+
+### Bug Fixes
+
+- remove tsdx from server ([ab90a21](https://github.com/niledatabase/nile-js/commit/ab90a21cb01789c2d0694c959a53aa36a230b444))
+
+### Features
+
+- add listUser and updateUser to server API ([fdca116](https://github.com/niledatabase/nile-js/commit/fdca116e925c2d8df4470693e4ad77f389304f42))
+- **server:** use region apis ([8d48c16](https://github.com/niledatabase/nile-js/commit/8d48c1672ece33447e068ac466e1832ed626335d))
+
 # [1.0.0-alpha.200](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.199...v1.0.0-alpha.200) (2023-11-08)
 
 ### Bug Fixes

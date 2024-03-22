@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.201](https://github.com/niledatabsae/nile-js/compare/v1.0.0-alpha.200...v1.0.0-alpha.201) (2024-03-22)
+
+### Bug Fixes
+
+- remove tsdx from server ([ab90a21](https://github.com/niledatabsae/nile-js/commit/ab90a21cb01789c2d0694c959a53aa36a230b444))
+
 # [1.0.0-alpha.200](https://github.com/TheNileDev/nile-js/compare/v1.0.0-alpha.199...v1.0.0-alpha.200) (2023-11-08)
 
 **Note:** Version bump only for package @niledatabase/browser

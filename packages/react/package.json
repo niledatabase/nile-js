@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/react",
-  "version": "1.0.0-alpha.200",
+  "version": "1.0.0-alpha.201",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
@@ -99,8 +99,8 @@
     "@mui/material": "5.14.18",
     "@mui/x-data-grid": "^6.18.1",
     "@mui/x-date-pickers": "^6.18.1",
-    "@niledatabase/browser": "^1.0.0-alpha.200",
-    "@niledatabase/js": "^1.0.0-alpha.200",
+    "@niledatabase/browser": "^1.0.0-alpha.201",
+    "@niledatabase/js": "^1.0.0-alpha.201",
     "@tanstack/react-query": "^4.36.1",
     "chart.js": "^4.4.0",
     "chartjs-adapter-date-fns": "^2.0.1",
