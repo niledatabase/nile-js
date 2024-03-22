@@ -20,7 +20,7 @@ describe('Okta', () => {
       <NileProvider api={api}>
         <Okta
           onSuccess={onSuccess}
-          callbackUrl="http://localhost:8080/databases/database/tenants/tenantId/auth/oidc/callback"
+          callbackUrl="http://localhost:8080/workspaces/workspace/databases/database/tenants/tenantId/auth/oidc/callback"
           providers={[]}
         />
       </NileProvider>

@@ -8,10 +8,14 @@ export default class Tenants extends Config {
     super(config);
   }
   get tenantsUrl() {
-    return `/databases/${encodeURIComponent(this.database)}/tenants`;
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/tenants`;
   }
   get tenantUrl() {
-    return `/databases/${encodeURIComponent(this.database)}/tenants/${
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/tenants/${
       this.tenantId ?? '{tenantId}'
     }`;
   }

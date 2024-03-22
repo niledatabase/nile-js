@@ -39,6 +39,8 @@ describe('login', () => {
   it('goes to the right url', () => {
     const _config = new Config(config);
     const auth = new Auth(_config);
-    expect(auth.loginUrl).toEqual('/databases/database/users/login');
+    expect(auth.loginUrl).toEqual(
+      '/workspaces/workspace/databases/database/users/login'
+    );
   });
 });

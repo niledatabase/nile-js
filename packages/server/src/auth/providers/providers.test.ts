@@ -24,7 +24,8 @@ describe('listProviders', () => {
     const res = await listProviders();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath + '/databases/database/tenants/auth/oidc/providers'
+      _config.api.basePath +
+        '/workspaces/workspace/databases/database/tenants/auth/oidc/providers'
     );
   });
 });
@@ -50,7 +51,7 @@ describe('updateProvider', () => {
     //@ts-expect-error - test
     expect(res.config).toEqual(
       _config.api.basePath +
-        '/databases/database/tenants/tenantId/auth/oidc/providers/okta'
+        '/workspaces/workspace/databases/database/tenants/tenantId/auth/oidc/providers/okta'
     );
   });
 });
