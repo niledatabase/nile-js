@@ -26,8 +26,7 @@ describe('updateUser', () => {
     const res = await updateUser(userId, params);
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath +
-        '/workspaces/workspace/databases/database/users/12345'
+      _config.api.basePath + '/databases/database/users/12345'
     );
     //@ts-expect-error - test
     expect(res.payload.path.method).toEqual('PUT');

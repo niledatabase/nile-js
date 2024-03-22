@@ -15,7 +15,7 @@ export type ServerConfig = {
   database: string;
   tenantId?: string | null | undefined;
   userId?: string | null | undefined;
-  workspace: string;
+  workspace?: string;
   db?: Knex.Config;
   api?: {
     basePath?: string;
@@ -28,7 +28,6 @@ export type InstanceConfig = {
   database?: string;
   tenantId?: string | null | undefined;
   userId?: string | null | undefined;
-  workspace?: string;
   db?: Knex.Config;
   api?: {
     basePath?: string;

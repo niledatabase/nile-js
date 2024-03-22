@@ -24,7 +24,7 @@ describe('me', () => {
     const res = await me();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath + '/workspaces/workspace/databases/database/users/me'
+      _config.api.basePath + '/databases/database/users/me'
     );
   });
 });
