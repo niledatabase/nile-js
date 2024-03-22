@@ -24,8 +24,7 @@ describe('listTenantUsers', () => {
     const res = await listTenantUsers();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath +
-        '/workspaces/workspace/databases/database/tenants/tenant/users'
+      _config.api.basePath + '/databases/database/tenants/tenant/users'
     );
   });
 });

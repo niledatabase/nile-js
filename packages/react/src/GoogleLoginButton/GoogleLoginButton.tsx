@@ -20,15 +20,13 @@ const LOGIN_PATH = 'users/oidc/google/login';
  */
 export default function GoogleSSOButton(props: {
   href?: string;
-  workspace?: string;
   database?: string;
   newTenantName?: string;
 }) {
-  const { workspace, database, newTenantName } = props;
+  const { database, newTenantName } = props;
   const { basePath } = useNileConfig();
-  const encodedWorkspace = encodeURIComponent(workspace ?? '');
   const encodedDatabase = encodeURIComponent(database ?? '');
-  const contextHref = `${basePath}/workspaces/${encodedWorkspace}/databases/${encodedDatabase}/${LOGIN_PATH}`;
+  const contextHref = `${basePath}/databases/${encodedDatabase}/${LOGIN_PATH}`;
   const query = newTenantName
     ? '?newTenant=' + encodeURIComponent(newTenantName)
     : '';
