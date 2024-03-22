@@ -38,7 +38,7 @@ export default class Users extends Config {
 
   updateUser = async (
     userId: string,
-    req: NileRequest<unknown>,
+    req: NileRequest<RestModels.User>,
     init?: RequestInit
   ): NileResponse<RestModels.User> => {
     const _requester = new Requester(this);
