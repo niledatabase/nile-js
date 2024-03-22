@@ -1,6 +1,5 @@
 {
   "name": "@niledatabase/packages",
-  "packageManager": "yarn@3.2.0",
   "license": "MIT",
   "version": "0.0.2",
   "private": true,
