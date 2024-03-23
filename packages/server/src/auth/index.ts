@@ -15,7 +15,9 @@ export default class Auth extends Config {
     super(config);
   }
   get loginUrl() {
-    return `/databases/${encodeURIComponent(this.database)}/users/login`;
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/users/login`;
   }
 
   login = async (
@@ -117,13 +119,17 @@ export default class Auth extends Config {
   };
 
   loginSSOUrl = (provider: string) => {
-    return `/databases/${encodeURIComponent(this.database)}/tenants/${
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/tenants/${
       this.tenantId ?? '{tenantId}'
     }/auth/oidc/providers/${provider}/login`;
   };
 
   get signUpUrl() {
-    return `/databases/${encodeURIComponent(this.database)}/users`;
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/users`;
   }
 
   signUp = async (
@@ -156,13 +162,17 @@ export default class Auth extends Config {
   };
 
   updateProviderUrl(providerName: string) {
-    return `/databases/${encodeURIComponent(this.database)}/tenants/${
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/tenants/${
       this.tenantId ? encodeURIComponent(this.tenantId) : '{tenantId}'
     }/auth/oidc/providers/${encodeURIComponent(providerName)}`;
   }
 
   get listTenantProvidersUrl() {
-    return `/databases/${encodeURIComponent(this.database)}/tenants/${
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/tenants/${
       this.tenantId ? encodeURIComponent(this.tenantId) : '{tenantId}'
     }/auth/oidc/providers`;
   }
@@ -194,7 +204,9 @@ export default class Auth extends Config {
   };
 
   providerUrl(email?: undefined | string) {
-    return `/databases/${encodeURIComponent(
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(
       this.database
     )}/tenants/auth/oidc/providers${
       email ? `?email=${encodeURIComponent(email)}` : ''
@@ -222,6 +234,6 @@ export default class Auth extends Config {
       tenantId = getTenantFromHttp(param, this);
     }
 
-    return `${this.api.basePath}/databases/${this.database}/tenants/${tenantId}/auth/oidc/callback`;
+    return `${this.api.basePath}/workspaces/${this.workspace}/databases/${this.database}/tenants/${tenantId}/auth/oidc/callback`;
   };
 }

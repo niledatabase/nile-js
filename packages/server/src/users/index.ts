@@ -9,7 +9,9 @@ export default class Users extends Config {
   }
 
   get baseUrl() {
-    return `/databases/${encodeURIComponent(this.database)}`;
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}`;
   }
 
   get usersUrl() {
@@ -54,7 +56,9 @@ export default class Users extends Config {
   };
 
   get meUrl() {
-    return `/databases/${encodeURIComponent(this.database)}/users/me`;
+    return `/workspaces/${encodeURIComponent(
+      this.workspace
+    )}/databases/${encodeURIComponent(this.database)}/users/me`;
   }
 
   me = async (

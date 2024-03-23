@@ -34,7 +34,7 @@ type DBConfig = {
 };
 export class Config {
   database: string;
-  workspace?: string;
+  workspace: string;
 
   db: DBConfig;
 

@@ -24,7 +24,8 @@ describe('getTenant', () => {
     const res = await getTenant();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath + '/databases/database/tenants/123'
+      _config.api.basePath +
+        '/workspaces/workspace/databases/database/tenants/123'
     );
   });
 });
