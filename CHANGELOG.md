@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.202](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.201...v1.0.0-alpha.202) (2024-03-23)
+
+### Reverts
+
+- Revert "feat(server): use region apis" ([102f4a5](https://github.com/niledatabase/nile-js/commit/102f4a54fb9c004f083b4b477a0b60450d2ec6d5))
+
 # [1.0.0-alpha.201](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.200...v1.0.0-alpha.201) (2024-03-22)
 
 ### Bug Fixes
