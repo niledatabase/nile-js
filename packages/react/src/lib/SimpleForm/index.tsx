@@ -2,15 +2,23 @@ import React from 'react';
 import Button from '@mui/joy/Button';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import Stack from '@mui/joy/Stack';
-import { Select, Option, FormLabel, Box } from '@mui/joy';
 import Input from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl';
 import FormHelperText from '@mui/joy/FormHelperText';
+import Error from '@mui/icons-material/Error';
+import FormLabel from '@mui/joy/FormLabel';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import Box from '@mui/joy/Box';
+import Tooltip from '@mui/joy/Tooltip';
+import { Switch } from '@mui/joy';
 
-import { Attribute, AttributeType, DisplayProps } from './types';
 import CheckGroup from './CheckGroup';
+import { Attribute, AttributeType, DisplayProps } from './types';
 
-type AttrMap = { [key: string]: string | number | string[] | number[] };
+type AttrMap = {
+  [key: string]: string | number | boolean | string[] | number[];
+};
 
 type FieldConfig = {
   required?: boolean;
@@ -18,7 +26,7 @@ type FieldConfig = {
 
 export const getAttributeDefault = (
   attribute: Attribute
-): string | number | string[] | number[] => {
+): string | number | boolean | string[] | number[] => {
   // have to look to see if it is an enum
   if (attribute.allowMultiple === true) {
     if (!Array.isArray(attribute.defaultValue) && attribute.defaultValue) {
@@ -31,14 +39,37 @@ export const getAttributeDefault = (
   return attribute.defaultValue ?? '';
 };
 
+function Labler(props: { error?: string; attr: Attribute }) {
+  const { error, attr } = props;
+  if (error) {
+    return (
+      <Tooltip title={error} color="danger" sx={{ cursor: 'pointer' }}>
+        <FormLabel>
+          {attr.label ?? attr.name}
+          <Error sx={{ ml: 0.5, '--Icon-color': '#c41c1c' }} fontSize="small" />
+        </FormLabel>
+      </Tooltip>
+    );
+  }
+  return <FormLabel>{attr.label ?? attr.name}</FormLabel>;
+}
 export default function SimpleForm(props: {
   buttonText: string;
   cancelButton?: React.ReactNode;
   attributes: Attribute[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mutation: { mutate: (data: any) => void };
+  mutation: any;
+  loading?: boolean;
+  successMessage?: JSX.Element;
 }) {
-  const { mutation, buttonText, attributes, cancelButton } = props;
+  const {
+    mutation,
+    buttonText,
+    attributes,
+    cancelButton,
+    loading,
+    successMessage,
+  } = props;
 
   const defaultValues = React.useMemo(
     () =>
@@ -83,16 +114,65 @@ export default function SimpleForm(props: {
             id: attr.label ?? attr.name,
             placeholder: attr.placeholder ?? attr.label ?? attr.name,
             error: Boolean(errors[attr.name]),
+            disabled: Boolean(attr.disabled),
           };
           const options = attr.options ?? [];
-          let helperText = '';
+          const helperText = attr.helpText ?? '';
+          let error = '';
 
           if (attr.required) {
-            helperText = errors[attr.name] ? `${attr.name} is required` : '';
+            error = errors[attr.name]
+              ? `${attr.label ?? attr.name} is required`
+              : '';
             fieldConfig.required = true;
           }
 
           switch (attr.type) {
+            case AttributeType.Switch:
+              return (
+                <FormControl
+                  key={display.key}
+                  id={display.id}
+                  orientation="horizontal"
+                  sx={{ alignItems: 'center' }}
+                >
+                  <Box>
+                    <Labler error={error} attr={attr} />
+                    <FormHelperText id={`${attr.name}-helper-text`}>
+                      {helperText}
+                    </FormHelperText>
+                  </Box>
+                  <Controller
+                    control={control}
+                    rules={{ required: Boolean(attr.required) }}
+                    name={attr.name}
+                    render={({ field }) => {
+                      const color: { color?: 'danger' } = {};
+                      if (errors[attr.name]) {
+                        color.color = 'danger';
+                      }
+                      return (
+                        <Switch
+                          id={`switch-field-${attr.name}`}
+                          {...color}
+                          {...field}
+                          checked={Boolean(field.value)}
+                          onChange={(event) => {
+                            field.onChange(event.target.checked);
+                          }}
+                          color={field.value ? 'success' : 'neutral'}
+                          endDecorator={
+                            field.value ? options[0].label : options[1].label
+                          }
+                          sx={{
+                            '--Switch-thumbSize': '28px',
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </FormControl>
+              );
             case AttributeType.Checkbox:
               return (
                 <CheckGroup
@@ -105,16 +185,8 @@ export default function SimpleForm(props: {
               );
             case AttributeType.Select:
               return (
-                <FormControl
-                  key={display.key}
-                  sx={{
-                    '--FormHelperText-color': 'var(--joy-palette-danger-500)',
-                  }}
-                  id={display.id}
-                >
-                  <FormLabel htmlFor={`select-field-${attr.name}`}>
-                    {display.label}
-                  </FormLabel>
+                <FormControl key={display.key} id={display.id}>
+                  <Labler error={error} attr={attr} />
                   <Controller
                     control={control}
                     rules={{ required: Boolean(attr.required) }}
@@ -124,6 +196,7 @@ export default function SimpleForm(props: {
                       if (errors[attr.name]) {
                         color.color = 'danger';
                       }
+                      const value = String(field.value);
                       return (
                         <Stack>
                           <Select
@@ -131,13 +204,17 @@ export default function SimpleForm(props: {
                             placeholder={`${display.placeholder}...`}
                             {...color}
                             {...field}
+                            value={value}
                             onChange={(_, newValue) => {
                               field.onChange(newValue);
                             }}
                           >
                             {options.map((option) => {
                               return (
-                                <Option key={option.value} value={option.value}>
+                                <Option
+                                  key={String(option.value ?? '')}
+                                  value={option.value}
+                                >
                                   {option.label}
                                 </Option>
                               );
@@ -154,14 +231,8 @@ export default function SimpleForm(props: {
               );
             case AttributeType.Password:
               return (
-                <FormControl
-                  key={display.key}
-                  sx={{
-                    '--FormHelperText-color': 'var(--joy-palette-danger-500)',
-                  }}
-                  id={display.id}
-                >
-                  <FormLabel>{attr.label ?? attr.name}</FormLabel>
+                <FormControl key={display.key} id={display.id}>
+                  <Labler error={error} attr={attr} />
                   <Input
                     {...display}
                     {...register(attr.name, fieldConfig)}
@@ -174,14 +245,8 @@ export default function SimpleForm(props: {
               );
             case AttributeType.Number:
               return (
-                <FormControl
-                  key={display.key}
-                  sx={{
-                    '--FormHelperText-color': 'var(--joy-palette-danger-500)',
-                  }}
-                  id={display.id}
-                >
-                  <FormLabel>{attr.label ?? attr.name}</FormLabel>
+                <FormControl key={display.key} id={display.id}>
+                  <Labler error={error} attr={attr} />
                   <Input
                     {...display}
                     {...register(attr.name, fieldConfig)}
@@ -196,14 +261,8 @@ export default function SimpleForm(props: {
             case AttributeType.Text:
             default:
               return (
-                <FormControl
-                  key={display.key}
-                  sx={{
-                    '--FormHelperText-color': 'var(--joy-palette-danger-500)',
-                  }}
-                  id={display.id}
-                >
-                  <FormLabel>{attr.label ?? attr.name}</FormLabel>
+                <FormControl key={display.key} id={display.id}>
+                  <Labler error={error} attr={attr} />
                   <Input {...display} {...register(attr.name, fieldConfig)} />
                   <FormHelperText id={`${attr.name}-helper-text`}>
                     {helperText}
@@ -220,7 +279,14 @@ export default function SimpleForm(props: {
             </Box>
           </Stack>
         ) : (
-          <Button type="submit">{buttonText}</Button>
+          <Box>
+            <Stack direction="row" gap={2}>
+              <Button type="submit" loading={loading}>
+                {buttonText}
+              </Button>
+              {successMessage}
+            </Stack>
+          </Box>
         )}
       </Stack>
     </FormProvider>

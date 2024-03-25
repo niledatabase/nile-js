@@ -1,0 +1,54 @@
+{
+  "tags": ["users"],
+  "summary": "List database users",
+  "description": "List all users in the database",
+  "operationId": "listUsers",
+  "parameters": [
+    {
+      "name": "workspaceSlug",
+      "in": "path",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "databaseName",
+      "in": "path",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Users found",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "../../../../../openapi/index.json#/components/schemas/User"
+            }
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/APIError"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "jwtBearerAuth": []
+    }
+  ]
+}

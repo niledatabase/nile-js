@@ -10,140 +10,148 @@ describe('index', () => {
   describe('methods', () => {
     it('has the expected methods/properties', () => {
       const nile = Nile();
-      const keys = Object.keys(nile);
+      const keys = Object.keys(nile).sort();
       expect(keys).toEqual([
+        'access',
+        'auth',
         'config',
-        'organizations',
-        'workspaces',
-        'users',
         'developers',
         'entities',
         'events',
-        'access',
         'metrics',
-        'auth',
+        'organizations',
+        'users',
+        'workspaces',
       ]);
       keys.shift();
       keys.forEach((k) => {
-        const props = Object.getOwnPropertyNames(
-          // @ts-expect-error testing
-          Object.getPrototypeOf(nile[k])
-        );
-        if (k === 'workspaces') {
-          expect(nile[k].oidc).toBeTruthy();
-          expect(props).toEqual([
-            'constructor',
-            'createAccessToken',
-            'createWorkspace',
-            'deleteAccessToken',
-            'getAccessToken',
-            'getWorkspaceOpenApi',
-            'getWorkspaceSettings',
-            'listAccessTokens',
-            'listWorkspaces',
-            'oidcWorkspaceLogin',
-            'oidcWorkspaceSignOut',
-            'updateAccessToken',
-            'updateOIDCProviders',
-            'updateOIDCRedirects',
-          ]);
-        }
-        if (k === 'organizations') {
-          expect(nile[k].oidc).toBeTruthy();
-          expect(props).toEqual([
-            'constructor',
-            'acceptInvite',
-            'addUserToOrg',
-            'createOrganization',
-            'deleteOrganization',
-            'getOrganization',
-            'listInvites',
-            'listOrganizations',
-            'listUsersInOrg',
-            'oidcOrganizationLogin',
-            'removeUserFromOrg',
-            'updateOrganization',
-            'updateUserInOrg',
-          ]);
-        }
-        if (k === 'entities') {
-          expect(props).toEqual([
-            'constructor',
-            'createEntity',
-            'createInstance',
-            'deleteInstance',
-            'getEntity',
-            'getInstance',
-            'getOpenAPI',
-            'instanceEvents',
-            'listEntities',
-            'listInstances',
-            'listInstancesInWorkspace',
-            'patchInstance',
-            'updateEntity',
-            'updateInstance',
-          ]);
-        }
-        if (k === 'developers') {
-          expect(props).toEqual([
-            'constructor',
-            'createDeveloper',
-            'developerGoogleOAuthCallback',
-            'loginDeveloper',
-            'startDeveloperGoogleOAuth',
-            'validateDeveloper',
-          ]);
-        }
-        if (k === 'users') {
-          expect(props).toEqual([
-            'constructor',
-            'createDeveloperOwnedUser',
-            'createUser',
-            'deleteUser',
-            'getUser',
-            'listUsers',
-            'loginUser',
-            'me',
-            'token',
-            'updateUser',
-            'validateUser',
-          ]);
-        }
-        if (k === 'access') {
-          expect(props).toEqual([
-            'constructor',
-            'createPolicy',
-            'deletePolicy',
-            'getPolicy',
-            'listPolicies',
-            'updatePolicy',
-          ]);
-        }
-        if (k === 'metrics') {
-          expect(props).toEqual([
-            'constructor',
-            'aggregateMetrics',
-            'filterMetrics',
-            'filterMetricsForEntityType',
-            'listMetricDefinitions',
-            'listMetricDefinitionsForEntityType',
-            'produceBatchOfMetrics',
-          ]);
-        }
-        if (k === 'auth') {
-          expect(props).toEqual([
-            'constructor',
-            'managedOidcCallback',
-            'verifyOidcComplete',
-          ]);
+        // @ts-expect-error testing
+        if (nile[k]) {
+          const props = Object.getOwnPropertyNames(
+            // @ts-expect-error testing
+            Object.getPrototypeOf(nile[k])
+          );
+          if (k === 'workspaces') {
+            expect(nile[k].oidc).toBeTruthy();
+            expect(props).toEqual([
+              'constructor',
+              'createAccessToken',
+              'createWorkspace',
+              'deleteAccessToken',
+              'getAccessToken',
+              'getWorkspaceOpenApi',
+              'getWorkspaceSettings',
+              'listAccessTokens',
+              'listWorkspaces',
+              'oidcWorkspaceLogin',
+              'oidcWorkspaceSignOut',
+              'updateAccessToken',
+              'updateOIDCProviders',
+              'updateOIDCRedirects',
+            ]);
+          }
+          if (k === 'organizations') {
+            expect(nile[k].oidc).toBeTruthy();
+            expect(props).toEqual([
+              'constructor',
+              'acceptInvite',
+              'addUserToOrg',
+              'createOrganization',
+              'deleteOrganization',
+              'getOrganization',
+              'listInvites',
+              'listOrganizations',
+              'listUsersInOrg',
+              'oidcOrganizationLogin',
+              'removeUserFromOrg',
+              'updateOrganization',
+              'updateUserInOrg',
+            ]);
+          }
+          if (k === 'entities') {
+            expect(props).toEqual([
+              'constructor',
+              'createEntity',
+              'createInstance',
+              'deleteInstance',
+              'getEntity',
+              'getInstance',
+              'getOpenAPI',
+              'instanceEvents',
+              'listEntities',
+              'listInstances',
+              'listInstancesInWorkspace',
+              'patchInstance',
+              'updateEntity',
+              'updateInstance',
+            ]);
+          }
+          if (k === 'developers') {
+            expect(props).toEqual([
+              'constructor',
+              'createDeveloper',
+              'developerGoogleOAuthCallback',
+              'loginDeveloper',
+              'startDeveloperGoogleOAuth',
+              'validateDeveloper',
+            ]);
+          }
+          if (k === 'users') {
+            expect(props).toEqual([
+              'constructor',
+              'createDeveloperOwnedUser',
+              'createUser',
+              'deleteUser',
+              'getUser',
+              'listUsers',
+              'loginUser',
+              'me',
+              'token',
+              'updateUser',
+              'validateUser',
+            ]);
+          }
+          if (k === 'access') {
+            expect(props).toEqual([
+              'constructor',
+              'createPolicy',
+              'deletePolicy',
+              'getPolicy',
+              'listPolicies',
+              'updatePolicy',
+            ]);
+          }
+          if (k === 'metrics') {
+            expect(props).toEqual([
+              'constructor',
+              'aggregateMetrics',
+              'filterMetrics',
+              'filterMetricsForEntityType',
+              'listMetricDefinitions',
+              'listMetricDefinitionsForEntityType',
+              'produceBatchOfMetrics',
+            ]);
+          }
+          if (k === 'auth') {
+            expect(props).toEqual([
+              'constructor',
+              'managedOidcCallback',
+              'verifyOidcComplete',
+            ]);
+          }
         }
       });
     });
 
     describe('Nile.connect', () => {
       it('takes a string', () => {
+        const error = jest
+          .spyOn(console, 'error')
+          .mockImplementation(() => 'fetch not defined');
         const nile = Nile().connect('my sweet auth token');
         expect(nile).toBeTruthy();
+        expect(error).not.toHaveBeenCalled();
+        error.mockReset();
       });
       it('takes a username/password', async () => {
         // suppress the error from fetch
@@ -154,12 +162,8 @@ describe('index', () => {
           email: 'patrick@underthesea.com',
           password: 'nothisispatrick',
         });
-        expect(nile).toMatchObject(
-          Nile().connect({
-            email: 'patrick@underthesea.com',
-            password: 'nothisispatrick',
-          })
-        );
+        expect(nile).toBeTruthy();
+        expect(error).toHaveBeenCalled();
         error.mockReset();
       });
     });

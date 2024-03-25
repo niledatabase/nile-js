@@ -1,0 +1,33 @@
+{
+  "tags": ["users"],
+  "summary": "Create a user in a tenant",
+  "description": "Create a new user and associate the user with a tenant",
+  "operationId": "createTenantUser",
+  "requestBody": {
+    "content": {
+      "*/*": {
+        "schema": {
+          "$ref": "../../../../../openapi/index.json#/components/schemas/CreateBasicUserRequest"
+        }
+      }
+    },
+    "required": true
+  },
+  "responses": {
+    "201": {
+      "description": "User created",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/UserAuthResponse"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "jwtBearerAuth": []
+    }
+  ]
+}

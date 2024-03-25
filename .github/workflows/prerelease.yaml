@@ -1,0 +1,71 @@
+name: Publish @niledatabase packages to GitHub Packages
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
+          token: ${{secrets.PAT}}
+
+      # Setup .npmrc file to publish to GitHub Packages
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+          # registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          # scope: '@niledatabase'
+      - name: Authenticate to npm
+        run: |
+          echo "@niledatabase:wq:registry=https://registry.npmjs.org/" 
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Install @niledatabase/js
+        working-directory: lib/nile
+        run: yarn install --no-lockfile
+
+      - name: Install @niledatabase/server
+        working-directory: packages/server
+        run: yarn install --no-lockfile
+
+      - name: Install @niledatabase/browser
+        working-directory: packages/browser
+        run: yarn install --no-lockfile
+
+      - name: Install @niledatabase/react
+        working-directory: packages/react
+        run: yarn install --no-lockfile
+
+      - name: Build @niledatabase/packages
+        run: yarn build
+
+      - name: Version
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          npx lerna version --force-publish --conventional-commits --yes
+
+      - name: Publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npx lerna publish from-git --yes

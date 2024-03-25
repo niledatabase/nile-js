@@ -1,57 +1,43 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import Cookies from 'js-cookie';
+import Stack from '@mui/joy/Stack';
+import Alert from '@mui/joy/Alert';
 
 import UserForm from '../lib/SimpleForm';
 import { Attribute, AttributeType } from '../lib/SimpleForm/types';
-import { useNileConfig } from '../context';
+import { useApi } from '../context';
 
-import { Props } from './types';
+import { Props, LoginInfo } from './types';
 
 export default function SignUpForm(props: Props) {
-  const { buttonText = 'Sign up', onSuccess, onError, attributes } = props;
-  const { workspace, database, basePath, allowClientCookies } = useNileConfig();
-  const fetchPath = `${basePath}/workspaces/${workspace}/databases/${database}/users`;
-
+  const [error, setError] = React.useState<string | void>();
+  const {
+    buttonText = 'Sign up',
+    onSuccess,
+    onError,
+    attributes,
+    beforeMutate,
+  } = props;
+  const api = useApi();
   const mutation = useMutation(
-    async (data: { email: string; password: string }) => {
-      const { email, password, ...metadata } = data;
+    async (_data: LoginInfo) => {
+      setError(undefined);
+      const possibleData = beforeMutate && beforeMutate(_data);
+      const data = possibleData ?? _data;
+      const { email, password, preferredName, newTenant, ...metadata } = data;
       if (Object.keys(metadata).length > 0) {
         // eslint-disable-next-line no-console
         console.warn('additional metadata not supported yet.');
       }
-
-      const res = await fetch(fetchPath, {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-        headers: {
-          'content-type': 'application/json',
-        },
-      }).catch((e) => e);
-
-      if (res.ok === false) {
-        throw new Error(res.status);
-      }
-
-      try {
-        if (res) {
-          return await res.json();
-        }
-      } catch (e) {
-        return e;
-      }
+      return api.auth.signUp({
+        signUpRequest: { email, password, preferredName, newTenant },
+      });
     },
     {
-      onSuccess: (res, data) => {
-        if (allowClientCookies) {
-          Cookies.set('token', res.token.token, {
-            'max-age': String(res.token.maxAge),
-          });
-        }
-        onSuccess && onSuccess(data);
-      },
-      onError: (error, data) => {
-        onError && onError(error as Error, data);
+      onSuccess,
+      onError: (e: Error, vars) => {
+        setError(e.message);
+        onError && onError(e as Error, vars);
       },
     }
   );
@@ -80,10 +66,13 @@ export default function SignUpForm(props: Props) {
   }, [attributes]);
 
   return (
-    <UserForm
-      mutation={mutation}
-      buttonText={buttonText}
-      attributes={completeAttributes}
-    />
+    <Stack gap={2}>
+      {error ? <Alert color="danger">{error}</Alert> : null}
+      <UserForm
+        mutation={mutation}
+        buttonText={buttonText}
+        attributes={completeAttributes}
+      />
+    </Stack>
   );
 }

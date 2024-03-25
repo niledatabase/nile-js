@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import GoogleSSOButton from '../../src/GoogleLoginButton/GoogleSSOButton';
+import GoogleSSOButton from '../../src/GoogleLoginButton/GoogleLoginButton';
 import { NileProvider } from '../../src/context';
 import '../matchMedia.mock';
 
@@ -15,13 +15,13 @@ describe('google sso button', () => {
   });
   it('renders using the context', () => {
     render(
-      <NileProvider workspace="workspace" database="database">
-        <GoogleSSOButton />
+      <NileProvider>
+        <GoogleSSOButton workspace="workspace" database="database" />
       </NileProvider>
     );
     screen.getByText('Continue with Google');
     expect(screen.getByRole('link').getAttribute('href')).toEqual(
-      'https://prod.thenile.dev/workspaces/workspace/databases/database/users/oidc/google/login'
+      'https://api.thenile.dev/workspaces/workspace/databases/database/users/oidc/google/login'
     );
   });
 });

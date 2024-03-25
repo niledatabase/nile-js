@@ -1,0 +1,272 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Nile Server REST API",
+    "description": "A Node wrapper around the base Nile API.",
+    "contact": {
+      "email": "support@thenile.dev"
+    }
+  },
+  "paths": {
+    "/login": {
+      "$ref": "../src/auth/login/openapi/paths/login.json"
+    },
+    "/sign-up": {
+      "$ref": "../src/auth/signUp/openapi/paths/signUp.json"
+    },
+    "/me": {
+      "$ref": "../src/users/me/openapi/paths/me.json"
+    },
+    "/tenants": {
+      "$ref": "../src/tenants/createTenant/openapi/paths/createTenant.json"
+    },
+    "/tenants/{tenantId}": {
+      "$ref": "../src/tenants/getTenant/openapi/paths/getTenant.json"
+    },
+    "/{tenantId}/users": {
+      "get": {
+        "$ref": "../src/users/listTenantUsers/openapi/paths/listTenantUsers.json"
+      },
+      "post": {
+        "$ref": "../src/users/createTenantUser/openapi/paths/createTenantUser.json"
+      }
+    },
+    "/providers/{providerName}": {
+      "get": {
+        "$ref": "../src/auth/providers/openapi/paths/getProvider.json"
+      },
+      "put": {
+        "$ref": "../src/auth/providers/openapi/paths/updateProvider.json"
+      },
+      "post": {
+        "$ref": "../src/auth/providers/openapi/paths/createProvider.json"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserAuthResponse": {
+        "required": ["id", "token"],
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "$ref": "#/components/schemas/Token"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tenants": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "email": {
+            "type": "string"
+          },
+          "preferredName": {
+            "type": "string"
+          }
+        }
+      },
+      "Token": {
+        "required": ["maxAge", "jwt", "type"],
+        "type": "object",
+        "properties": {
+          "jwt": {
+            "type": "string"
+          },
+          "maxAge": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["ACCESS_TOKEN", "REFRESH_TOKEN", "ID_TOKEN"]
+          }
+        }
+      },
+      "Tenant": {
+        "required": ["id"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateBasicUserRequest": {
+        "required": ["email", "password"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "preferredName": {
+            "type": "string"
+          },
+          "newTenant": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "preferredName": {
+            "type": "string"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          }
+        }
+      },
+      "APIError": {
+        "required": ["errorCode", "message", "statusCode"],
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "errorCode": {
+            "type": "string",
+            "enum": [
+              "internal_error",
+              "bad_request",
+              "entity_not_found",
+              "duplicate_entity",
+              "invalid_credentials",
+              "unknown_oidc_provider",
+              "provider_already_exists",
+              "provider_config_error",
+              "provider_mismatch",
+              "provider_update_error",
+              "session_state_missing",
+              "session_state_mismatch",
+              "oidc_code_missing"
+            ],
+            "message": {
+              "type": "string"
+            },
+            "statusCode": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": ["password", "email"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "redirectURI": {
+            "type": "string"
+          }
+        }
+      },
+      "SSOProvider": {
+        "required": [
+          "clientId",
+          "configUrl",
+          "provider",
+          "redirectURI",
+          "tenantId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "configUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "clientId": {
+            "type": "string"
+          },
+          "redirectURI": {
+            "type": "string",
+            "format": "uri"
+          },
+          "emailDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RegisterSSO": {
+        "required": [
+          "clientId",
+          "clientSecret",
+          "configUrl",
+          "emailDomains",
+          "redirectURI"
+        ],
+        "type": "object",
+        "properties": {
+          "configUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "clientId": {
+            "type": "string"
+          },
+          "clientSecret": {
+            "type": "string"
+          },
+          "emailDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

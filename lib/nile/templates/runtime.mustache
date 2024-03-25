@@ -20,6 +20,8 @@ export interface ConfigurationParameters {
     headers?: HTTPHeaders; //header params we want to use on every request
     credentials?: RequestCredentials; //value for the credentials param we want to use on each request
     workspace?: string; // the workspace for the application
+    database?: string; // the workspace for the application
+    tenantId?: string; // the workspace for the application
     tokenStorage?: StorageOptions; // use local storage for tokens
 }
 
@@ -33,7 +35,15 @@ export class Configuration {
     set workspace(val: string) {
         this.workspace = val;
     }
-    
+
+    set database(val: string) {
+        this.workspace = val;
+    }
+
+    set tenantId(val: string) {
+        this.workspace = val;
+    }   
+
     get workspace(): string {
         // It is rare to query without a workspace, but it is possible when initially starting
         return this.configuration.workspace != null ? this.configuration.workspace : '';

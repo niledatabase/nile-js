@@ -5,19 +5,23 @@ export enum AttributeType {
   Number = 'number',
   Float = 'float',
   Checkbox = 'checkbox',
+  Switch = 'switch',
 }
-type NumberOrString = number | string;
+type SimplePrimitive = number | string | boolean;
 
-export type Options = { label: string; value: NumberOrString }[];
+// possibly no value for `<Switch/>`
+export type Options = { label: string; value?: SimplePrimitive }[];
 export type Attribute = {
   name: string;
   type?: AttributeType;
-  defaultValue?: NumberOrString;
+  defaultValue?: SimplePrimitive;
   options?: Options;
   allowMultiple?: boolean;
   label?: string;
   required?: boolean;
   placeholder?: string;
+  helpText?: string;
+  disabled?: boolean;
 };
 
 export type DisplayProps = {
@@ -27,4 +31,5 @@ export type DisplayProps = {
   placeholder: string;
   error?: boolean;
   color?: 'danger';
+  disabled?: boolean;
 };

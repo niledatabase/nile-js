@@ -1,26 +1,20 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import React, { useMemo, createContext, useContext } from 'react';
-import Nile, { NileApi } from '@theniledev/js';
+import BrowserApi, { Client } from '@niledatabase/browser';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
-import { Provider as MetricsProvider } from '../components/Metrics/context';
-
-import defaultTheme from './themeJoiner';
+import defaultTheme from './theme';
 import { NileContext, NileProviderProps, NileReactConfig } from './types';
 
 const queryClient = new QueryClient();
 
 const defaultContext: NileContext = {
-  instance: Nile({
-    basePath: 'https://prod.thenile.dev',
-    workspace: 'none',
+  api: BrowserApi({
+    basePath: 'https://api.thenile.dev',
     credentials: 'include',
   }),
-  workspace: '',
-  database: '',
   basePath: '',
-  allowClientCookies: true, // totally insecure, but makes it easy for getting started
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -41,35 +35,29 @@ export const NileProvider = (props: NileProviderProps) => {
   const {
     children,
     theme,
-    workspace,
-    database,
-    tokenStorage,
+    tenantId,
     QueryProvider = BaseQueryProvider,
-    allowClientCookies,
-    basePath = 'https://prod.thenile.dev',
+    basePath = 'https://api.thenile.dev',
+    api,
   } = props;
 
   const values = useMemo<NileContext>((): NileContext => {
     return {
-      instance: Nile({
-        basePath: basePath,
-        workspace: workspace,
-        credentials: 'include',
-        tokenStorage,
-      }),
-      workspace: String(workspace),
-      database: String(database),
+      api:
+        api ??
+        BrowserApi({
+          basePath,
+          credentials: 'include',
+        }),
+      tenantId: String(tenantId),
       basePath,
-      allowClientCookies,
     };
-  }, [basePath, database, tokenStorage, workspace, allowClientCookies]);
+  }, [api, basePath, tenantId]);
 
   return (
     <QueryProvider>
-      <CssVarsProvider theme={theme ?? defaultTheme}>
-        <MetricsProvider>
-          <Provider value={values}>{children}</Provider>
-        </MetricsProvider>
+      <CssVarsProvider defaultMode="system" theme={theme ?? defaultTheme}>
+        <Provider value={values}>{children}</Provider>
       </CssVarsProvider>
     </QueryProvider>
   );
@@ -79,20 +67,17 @@ const useNileContext = (): NileContext => {
   return useContext(context);
 };
 
-export const useNile = (): NileApi => {
-  return useNileContext().instance;
-};
-
 export const useNileConfig = (): NileReactConfig => {
-  const { database, workspace, basePath, allowClientCookies } =
-    useNileContext();
+  const { basePath, tenantId } = useNileContext();
   return useMemo(
     () => ({
-      workspace,
-      database,
+      tenantId,
       basePath,
-      allowClientCookies,
     }),
-    [allowClientCookies, basePath, database, workspace]
+    [basePath, tenantId]
   );
+};
+
+export const useApi = (): Client => {
+  return useNileContext().api;
 };

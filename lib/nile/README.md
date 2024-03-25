@@ -1,4 +1,4 @@
-# @theniledev/js
+# @niledatabase/js
 
 ## Usage
 
@@ -7,7 +7,7 @@ A full list of functions available to the Nile object can be found in the [docs]
 ## Basic example
 
 ```typescript
-import Nile from "@theniledev/js";
+import Nile from "@niledatabase/js";
 
 const nile = Nile({ apiUrl: props.apiUrl });
 

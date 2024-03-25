@@ -1,0 +1,39 @@
+{
+  "post": {
+    "tags": ["authentication"],
+    "summary": "Create a new user",
+    "operationId": "signUp",
+    "requestBody": {
+      "content": {
+        "*/*": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/CreateBasicUserRequest"
+          }
+        }
+      },
+      "required": true
+    },
+    "responses": {
+      "201": {
+        "description": "Created user successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../../openapi/index.json#/components/schemas/UserAuthResponse"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Authentication failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../../openapi/index.json#/components/schemas/APIError"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,59 +1,32 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import Cookies from 'js-cookie';
+import Alert from '@mui/joy/Alert';
+import Stack from '@mui/joy/Stack';
 
 import { Attribute } from '../lib/SimpleForm/types';
-import { useNileConfig } from '../context';
+import { useApi } from '../context';
 import SimpleForm from '../lib/SimpleForm';
 import { AttributeType } from '../lib/SimpleForm/types';
 
-import { Props, AllowedAny } from './types';
+import { Props, LoginInfo } from './types';
 
 export default function LoginForm(props: Props) {
-  const { workspace, database, basePath, allowClientCookies } = useNileConfig();
-
+  const [error, setError] = React.useState<string | void>();
   const { attributes, onSuccess, onError, beforeMutate } = props;
-  const fetchPath = `${basePath}/workspaces/${workspace}/databases/${database}/users/login`;
-
-  const handleMutate =
-    typeof beforeMutate === 'function'
-      ? beforeMutate
-      : (data: AllowedAny): AllowedAny => data;
+  const api = useApi();
 
   const mutation = useMutation(
-    async (data: { email: string; password: string }) => {
-      const _data = handleMutate(data);
-      const res = await fetch(fetchPath, {
-        method: 'POST',
-        body: JSON.stringify(_data),
-        headers: {
-          'content-type': 'application/json',
-        },
-      }).catch((e) => e);
-      if (res.ok === false) {
-        throw new Error(res.status);
-      }
-      try {
-        return await res.json();
-      } catch (e) {
-        return e;
-      }
+    async (_data: LoginInfo) => {
+      setError(undefined);
+      const possibleData = beforeMutate && beforeMutate(_data);
+      const data = possibleData ?? _data;
+      return await api.auth.login({
+        loginRequest: data,
+      });
     },
     {
-      onSuccess: (token, data) => {
-        if (token) {
-          if (allowClientCookies) {
-            Cookies.set('token', token.token, {
-              'max-age': String(token.maxAge),
-            });
-          }
-
-          onSuccess && onSuccess(token, data);
-        }
-      },
-      onError: (error, data) => {
-        onError && onError(error as Error, data);
-      },
+      onSuccess,
+      onError,
     }
   );
 
@@ -81,10 +54,13 @@ export default function LoginForm(props: Props) {
   }, [attributes]);
 
   return (
-    <SimpleForm
-      mutation={mutation}
-      buttonText="Log in"
-      attributes={completeAttributes}
-    />
+    <Stack gap={2}>
+      {error ? <Alert color="danger">{error}</Alert> : null}
+      <SimpleForm
+        mutation={mutation}
+        buttonText="Log in"
+        attributes={completeAttributes}
+      />
+    </Stack>
   );
 }

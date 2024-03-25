@@ -1,0 +1,49 @@
+{
+  "post": {
+    "tags": ["authentication"],
+    "summary": "Login a user in a tenant",
+    "description": "Login a user, ensuring that the user is a member of the tenant",
+    "operationId": "login",
+    "parameters": [
+      {
+        "name": "sso",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    ],
+    "requestBody": {
+      "content": {
+        "*/*": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/LoginRequest"
+          }
+        }
+      },
+      "required": true
+    },
+    "responses": {
+      "200": {
+        "description": "User logged in successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../../openapi/index.json#/components/schemas/LoginRequest"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "User authentication failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../../../openapi/index.json#/components/schemas/APIError"
+            }
+          }
+        }
+      }
+    }
+  }
+}

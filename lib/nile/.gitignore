@@ -4,6 +4,7 @@ node_modules
 dist
 docs
 src/client
+src/client2
 spec/output.swagger.json
 # sed things
 *-e
@@ -21,3 +22,5 @@ spec/output.swagger.json
 #.pnp.*
 
 .tsbuildinfo
+
+yarn.lock
