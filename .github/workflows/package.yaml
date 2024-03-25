@@ -49,7 +49,7 @@ jobs:
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          npx lerna version --force-publish --conventional-commits --yes
+          npx lerna version major --force-publish --conventional-commits --yes
 
       - name: Publish
         env:
