@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.202...v1.0.0) (2024-03-25)
+
+### Reverts
+
+- Revert "v1.0.0" ([6e8b04d](https://github.com/niledatabase/nile-js/commit/6e8b04dd13fe94a7f728bbc337c4d1167bd418f0))
+- Revert "v1.0.0" ([5ba064c](https://github.com/niledatabase/nile-js/commit/5ba064c143021867bdfe5c1240719e6b3dd9796e))
+- Revert "v2.0.0" ([d9c3663](https://github.com/niledatabase/nile-js/commit/d9c3663bf46a19fdde9ed41f99646755dc989ed1))
+
 # [1.0.0-alpha.202](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.201...v1.0.0-alpha.202) (2024-03-23)
 
 **Note:** Version bump only for package @niledatabase/js
