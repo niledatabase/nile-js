@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.202...v1.0.0) (2024-03-25)
+
+**Note:** Version bump only for package @niledatabase/edge
+
 # [1.0.0-alpha.202](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.201...v1.0.0-alpha.202) (2024-03-23)
 
 **Note:** Version bump only for package @niledatabase/edge
