@@ -6,7 +6,11 @@ jest.mock('../../utils/ResponseError', () => ({
   ResponseError: jest.fn(),
 }));
 
-const config = { databaseId: 'databaseId' };
+const config = {
+  databaseId: 'databaseId',
+  username: 'username',
+  password: 'password',
+};
 describe('login', () => {
   it('sets a cookie at login', async () => {
     //@ts-expect-error - test

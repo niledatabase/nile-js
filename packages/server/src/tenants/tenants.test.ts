@@ -10,9 +10,13 @@ const baseConfig = [
   'getTenant',
   'db',
   'databaseId',
+  'username',
+  'password',
 ];
 const config = {
   databaseId: 'databaseId',
+  username: 'username',
+  password: 'password',
 };
 describe('users', () => {
   it('has expected methods', () => {

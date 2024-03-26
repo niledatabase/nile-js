@@ -9,6 +9,8 @@ jest.mock('../../utils/ResponseError', () => ({
 const config = {
   databaseId: 'databaseId',
   tenantId: '123',
+  username: 'username',
+  password: 'password',
 };
 describe('getTenant', () => {
   it('does a get', async () => {

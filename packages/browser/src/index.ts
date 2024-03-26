@@ -1,7 +1,6 @@
 // these files are generated in the build step
 export * from './openapi/src/models';
 export * from './openapi/src/apis';
-export * from './openapi/src/models/IdentifyUser200Response';
 import {
   AuthenticationApi,
   UsersApi,

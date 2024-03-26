@@ -17,8 +17,16 @@ const baseConfig = [
   'loginSSOUrl',
   'signUp',
   'updateProvider',
+  'username',
+  'password',
 ];
 it('has expected methods', () => {
-  const auth = new Auth(new Config({ databaseId: 'databaseId' }));
+  const auth = new Auth(
+    new Config({
+      databaseId: 'databaseId',
+      username: 'username',
+      password: 'password',
+    })
+  );
   expect(Object.keys(auth).sort()).toEqual(baseConfig.sort());
 });

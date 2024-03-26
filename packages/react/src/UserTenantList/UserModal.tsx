@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { SignUp201Response, SignUpRequest } from '@niledatabase/browser';
 
-import { useApi } from '../context';
+import { useApi, useNileConfig } from '../context';
 
 export type UserFormProps = {
   open: boolean;
@@ -23,6 +23,7 @@ export type UserFormProps = {
 
 export default function AddUser(props: UserFormProps) {
   const { open, setOpen, refetch } = props;
+  const { tenantId } = useNileConfig();
   const api = useApi();
   const [errorText, setErrorText] = React.useState<void | string>();
   const { watch, register, handleSubmit } = useForm<SignUpRequest>();
@@ -38,7 +39,10 @@ export default function AddUser(props: UserFormProps) {
 
   const mutation = useMutation(
     (data: SignUpRequest) =>
-      api.users.createTenantUser({ signUpRequest: data }),
+      api.users.createTenantUser({
+        signUpRequest: data,
+        tenantId: String(tenantId),
+      }),
     {
       onSuccess(data) {
         refetch && refetch(data);

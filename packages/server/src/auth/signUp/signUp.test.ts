@@ -5,7 +5,11 @@ import Auth from '../';
 jest.mock('../../utils/ResponseError', () => ({
   ResponseError: jest.fn(),
 }));
-const config = { databaseId: 'databaseId' };
+const config = {
+  databaseId: 'databaseId',
+  username: 'username',
+  password: 'password',
+};
 
 describe('signUp', () => {
   it('does a post', async () => {
