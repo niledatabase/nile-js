@@ -1,10 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import React, { useMemo, createContext, useContext } from 'react';
 import BrowserApi, { Client } from '@niledatabase/browser';
-import { CssVarsProvider } from '@mui/joy/styles';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
-import defaultTheme from './theme';
+import ThemeProvider from './theme';
 import { NileContext, NileProviderProps, NileReactConfig } from './types';
 
 const queryClient = new QueryClient();
@@ -56,9 +55,9 @@ export const NileProvider = (props: NileProviderProps) => {
 
   return (
     <QueryProvider>
-      <CssVarsProvider defaultMode="system" theme={theme ?? defaultTheme}>
+      <ThemeProvider theme={theme}>
         <Provider value={values}>{children}</Provider>
-      </CssVarsProvider>
+      </ThemeProvider>
     </QueryProvider>
   );
 };
