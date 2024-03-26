@@ -1,12 +1,12 @@
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import Stack from '@mui/joy/Stack';
+import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
+import { Theme } from '@mui/system/createTheme';
 import {
   IdentifyUser200Response,
   SignUp201Response,
 } from '@niledatabase/browser';
-import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import { Theme } from '@mui/system/createTheme';
 
 import CreateUser from './CreateUser';
 import useDataParser from './useDataParser';

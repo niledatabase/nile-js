@@ -1,5 +1,3 @@
-import { RestModels } from '@niledatabase/js';
-
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';
 import { ResponseError } from '../utils/ResponseError';
@@ -9,7 +7,28 @@ import {
   getTenantFromHttp,
 } from '../utils/fetch';
 import { updateToken, updateUserId } from '../utils/Event';
+import { CreateBasicUserRequest, LoginUserResponse } from '../users';
 
+export interface TenantSSORegistration {
+  configUrl: string;
+  clientId: string;
+  clientSecret: string;
+  redirectURI: string;
+  emailDomains: Array<string>;
+  enabled?: boolean;
+}
+
+export interface SSOProvider {
+  readonly id?: string;
+  tenantId?: string;
+  provider?: string;
+  configUrl: string;
+  clientSecret?: string;
+  clientId: string;
+  redirectURI: string;
+  emailDomains?: Array<string>;
+  enabled?: boolean;
+}
 export default class Auth extends Config {
   constructor(config: Config) {
     super(config);
@@ -19,9 +38,9 @@ export default class Auth extends Config {
   }
 
   login = async (
-    req: NileRequest<RestModels.CreateBasicUserRequest>,
+    req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
-  ): NileResponse<RestModels.LoginUserResponse> => {
+  ): NileResponse<LoginUserResponse> => {
     const headers = new Headers({ 'content-type': 'application/json' });
     const _requester = new Requester(this);
 
@@ -78,7 +97,7 @@ export default class Auth extends Config {
       return res.response;
     }
     if (res && res.status >= 200 && res.status < 300) {
-      const token: RestModels.LoginUserResponse = await res.json();
+      const token: LoginUserResponse = await res.json();
       const cookie = `${this.api?.cookieKey}=${token.token.jwt}; path=/; samesite=lax; httponly;`;
       headers.append('set-cookie', cookie);
       const { tenants } = token;
@@ -97,7 +116,7 @@ export default class Auth extends Config {
   loginSSO = (redirectUrl: string) => {
     const ssoLogin = async (
       req: NileRequest<unknown>
-    ): NileResponse<RestModels.TenantSSORegistration[]> => {
+    ): NileResponse<Response> => {
       const headers = new Headers();
       const body = await (req as Request).formData();
       const accessToken = (await body.get('access_token')) as string;
@@ -127,9 +146,9 @@ export default class Auth extends Config {
   }
 
   signUp = async (
-    req: NileRequest<RestModels.CreateBasicUserRequest>,
+    req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
-  ): NileResponse<RestModels.LoginUserResponse> => {
+  ): NileResponse<LoginUserResponse> => {
     const headers = new Headers();
     const _requester = new Requester(this);
     const res = await _requester.post(req, this.signUpUrl, init).catch((e) => {
@@ -141,7 +160,7 @@ export default class Auth extends Config {
       return res.response;
     }
     if (res && res.status >= 200 && res.status < 300) {
-      const token: RestModels.LoginUserResponse = await res.json();
+      const token: LoginUserResponse = await res.json();
       const cookie = `${this.api?.cookieKey}=${token.token?.jwt}; path=/; samesite=lax; httponly;`;
       headers.append('set-cookie', cookie);
       const { id } = token;
@@ -170,24 +189,24 @@ export default class Auth extends Config {
   listTenantProviders = async (
     req: NileRequest<void | Headers>,
     init?: RequestInit
-  ): NileResponse<RestModels.TenantSSORegistration[]> => {
+  ): NileResponse<TenantSSORegistration[]> => {
     const _requester = new Requester(this);
     return _requester.get(req, this.listTenantProvidersUrl, init);
   };
 
   createProvider = async (
-    req: NileRequest<RestModels.RegisterTenantSSORequest>,
+    req: NileRequest<SSOProvider>,
     init?: RequestInit
-  ): NileResponse<RestModels.TenantSSORegistration> => {
+  ): NileResponse<TenantSSORegistration> => {
     const _requester = new Requester(this);
     const providerName = 'okta';
     return _requester.post(req, this.updateProviderUrl(providerName), init);
   };
 
   updateProvider = async (
-    req: NileRequest<RestModels.RegisterTenantSSORequest>,
+    req: NileRequest<SSOProvider>,
     init?: RequestInit
-  ): NileResponse<RestModels.TenantSSORegistration> => {
+  ): NileResponse<TenantSSORegistration> => {
     const _requester = new Requester(this);
     const providerName = 'okta';
     return _requester.put(req, this.updateProviderUrl(providerName), init);
@@ -202,9 +221,9 @@ export default class Auth extends Config {
   }
 
   listProviders = async (
-    req: NileRequest<void | RestModels.CreateBasicUserRequest>,
+    req: NileRequest<void | CreateBasicUserRequest>,
     init?: RequestInit
-  ): NileResponse<RestModels.TenantSSORegistration[]> => {
+  ): NileResponse<TenantSSORegistration[]> => {
     const _requester = new Requester(this);
     let body: { email: string } | undefined;
     // this is a get. Get the email from the response body so the request is filtered.

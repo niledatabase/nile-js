@@ -4,7 +4,6 @@ import Stack from '@mui/joy/Stack';
 import Input from '@mui/joy/Input';
 
 import { NileProvider } from '../context';
-import defaultTheme from '../context/theme';
 
 import GoogleLoginButton from './GoogleLoginButton';
 
@@ -48,7 +47,7 @@ export function BasicWithTenantNameProvider() {
 
 export function AlphaVersionWithOutProvider() {
   return (
-    <CssVarsProvider theme={defaultTheme}>
+    <CssVarsProvider>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <GoogleLoginButton href="some href" />
       </div>

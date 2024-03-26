@@ -26,6 +26,8 @@ describe('nile db', () => {
           'createTenantUser',
           'identifyUser',
           'listTenantUsers',
+          'listUsers',
+          'updateUser',
         ]);
       }
     });

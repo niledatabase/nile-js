@@ -1,7 +1,37 @@
-import { RestModels } from '@niledatabase/js';
-
 import { Config } from '../utils/Config';
 import Requester, { NileRequest, NileResponse } from '../utils/Requester';
+
+export interface CreateBasicUserRequest {
+  email: string;
+  password: string;
+  preferredName?: string;
+  newTenant?: string;
+}
+export const LoginUserResponseTokenTypeEnum = {
+  AccessToken: 'ACCESS_TOKEN',
+  RefreshToken: 'REFRESH_TOKEN',
+  IdToken: 'ID_TOKEN',
+} as const;
+export type LoginUserResponseTokenTypeEnum =
+  (typeof LoginUserResponseTokenTypeEnum)[keyof typeof LoginUserResponseTokenTypeEnum];
+
+export interface LoginUserResponseToken {
+  jwt: string;
+  maxAge: number;
+  type: LoginUserResponseTokenTypeEnum;
+}
+export interface LoginUserResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+  id: string;
+  token: LoginUserResponseToken;
+}
+export interface User {
+  id?: string;
+  tenants?: Set<string>;
+  email?: string;
+  preferredName?: string;
+}
 
 export default class Users extends Config {
   constructor(config: Config) {
@@ -21,9 +51,9 @@ export default class Users extends Config {
   }
 
   createTenantUser = async (
-    req: NileRequest<RestModels.CreateBasicUserRequest>,
+    req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
-  ): NileResponse<RestModels.LoginUserResponse> => {
+  ): NileResponse<LoginUserResponse> => {
     const _requester = new Requester(this);
     return await _requester.post(req, this.tenantUsersUrl, init);
   };
@@ -31,16 +61,16 @@ export default class Users extends Config {
   listUsers = async (
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): NileResponse<RestModels.User[]> => {
+  ): NileResponse<User[]> => {
     const _requester = new Requester(this);
     return await _requester.get(req, this.usersUrl, init);
   };
 
   updateUser = async (
     userId: string,
-    req: NileRequest<RestModels.User>,
+    req: NileRequest<User>,
     init?: RequestInit
-  ): NileResponse<RestModels.User> => {
+  ): NileResponse<User> => {
     const _requester = new Requester(this);
     return await _requester.put(req, `${this.usersUrl}/${userId}`, init);
   };
@@ -48,7 +78,7 @@ export default class Users extends Config {
   listTenantUsers = async (
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): NileResponse<RestModels.User[]> => {
+  ): NileResponse<User[]> => {
     const _requester = new Requester(this);
     return await _requester.get(req, this.tenantUsersUrl, init);
   };
@@ -60,7 +90,7 @@ export default class Users extends Config {
   me = async (
     req: NileRequest<void>,
     init?: RequestInit
-  ): NileResponse<RestModels.User> => {
+  ): NileResponse<User> => {
     const _requester = new Requester(this);
     return await _requester.get(req, this.meUrl, init);
   };
