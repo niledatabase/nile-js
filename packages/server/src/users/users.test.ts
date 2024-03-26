@@ -13,10 +13,14 @@ const baseConfig = [
   'listUsers',
   'me',
   'updateUser',
+  'username',
+  'password',
 ];
 const config = {
   databaseId: 'databaseId',
   tenantId: 'tenant',
+  username: 'username',
+  password: 'password',
 };
 describe('users', () => {
   it('has expected methods', () => {

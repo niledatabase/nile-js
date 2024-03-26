@@ -4,18 +4,24 @@ describe('server', () => {
   it('has reasonable defaults', () => {
     const config = {
       databaseId: 'databaseId',
+      username: 'username',
+      password: 'password',
     };
     const server = Nile(config);
     expect(server.config.db.connection).toEqual({
       host: 'db.thenile.dev',
       port: 5432,
       database: 'databaseId',
+      user: 'username',
+      password: 'password',
     });
     expect(server.config.api.basePath).toEqual('https://api.thenile.dev');
   });
   it('sets a tenant id everywhere when set', () => {
     const config = {
       databaseId: 'databaseId',
+      username: 'username',
+      password: 'password',
     };
     const nile = Nile(config);
     nile.tenantId = 'tenantId';
@@ -29,10 +35,16 @@ describe('server', () => {
   it('manages instances', () => {
     const config = {
       databaseId: 'databaseId',
+      username: 'username',
+      password: 'password',
     };
     const nile = Nile(config);
 
-    const another = nile.getInstance({ databaseId: 'somethingelse?!' });
+    const another = nile.getInstance({
+      databaseId: 'somethingelse?!',
+      username: 'username',
+      password: 'password',
+    });
     const theSameOne = nile.getInstance(config);
 
     // in this case, we change the base object tenant id
@@ -52,12 +64,16 @@ describe('server', () => {
   it('ensures existing configs get updated with provided configs', () => {
     const config = {
       databaseId: 'databaseId',
+      username: 'username',
+      password: 'password',
     };
     const nile = Nile(config);
 
     const another = nile.getInstance({
       databaseId: 'somethingelse?!',
       tenantId: null,
+      username: 'username',
+      password: 'password',
     });
     expect(another.tenantId).toEqual(null);
     another.tenantId = 'something else';
@@ -66,6 +82,8 @@ describe('server', () => {
     const sameOne = nile.getInstance({
       databaseId: 'somethingelse?!',
       tenantId: null,
+      username: 'username',
+      password: 'password',
     });
     expect(sameOne.tenantId).toEqual(null);
   });

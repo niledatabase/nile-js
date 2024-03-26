@@ -5,6 +5,8 @@ describe('db', () => {
   it('has expected properties', () => {
     const db = new NileDB({
       databaseId: 'databaseId',
+      username: 'username',
+      password: 'password',
       db: {
         connection: { port: 4433 },
       },

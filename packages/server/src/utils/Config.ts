@@ -48,6 +48,8 @@ function getBasePath(config?: ServerConfig) {
 }
 
 export class Config {
+  username: string;
+  password: string;
   databaseId: string;
 
   db: DBConfig;
@@ -76,7 +78,8 @@ export class Config {
   constructor(_config?: ServerConfig) {
     // always provided
     this.databaseId = String(_config?.databaseId);
-
+    this.username = String(_config?.username);
+    this.password = String(_config?.password);
     // set the context
     this._tenantId = _config?.tenantId;
     this._userId = _config?.userId;
@@ -105,13 +108,18 @@ export class Config {
         ? Number(_config.db?.connection?.port)
         : 5432;
 
+    const baseCreds = {
+      user: this.username,
+      password: this.password,
+    };
+
     const connection = {
       host,
       port,
       database: _config?.databaseId,
       ...(typeof _config?.db?.connection === 'object'
         ? _config.db.connection
-        : {}),
+        : baseCreds),
     } as PgConnectionConfig;
 
     this.db = {
