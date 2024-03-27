@@ -1,9 +1,10 @@
 import Nile from './Server';
 
 describe('server', () => {
-  it('has reasonable defaults', () => {
+  fit('has reasonable defaults', () => {
     const config = {
       databaseId: 'databaseId',
+      databaseName: 'databaseName',
       username: 'username',
       password: 'password',
     };
@@ -11,7 +12,7 @@ describe('server', () => {
     expect(server.config.db.connection).toEqual({
       host: 'db.thenile.dev',
       port: 5432,
-      database: 'databaseId',
+      database: 'databaseName',
       user: 'username',
       password: 'password',
     });

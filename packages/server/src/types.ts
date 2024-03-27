@@ -12,11 +12,13 @@ export type Opts = {
 };
 
 export type ServerConfig = {
-  databaseId: string;
-  username: string;
-  password: string;
+  databaseId?: string;
+  username?: string;
+  password?: string;
+  databaseName?: string;
   tenantId?: string | null | undefined;
   userId?: string | null | undefined;
+  debug?: boolean;
   db?: Knex.Config;
   api?: {
     basePath?: string;
@@ -31,6 +33,7 @@ export type InstanceConfig = {
   password: string;
   tenantId?: string | null | undefined;
   userId?: string | null | undefined;
+  debug?: boolean;
   db?: Knex.Config;
   api?: {
     basePath?: string;
