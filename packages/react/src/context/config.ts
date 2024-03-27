@@ -1,4 +1,3 @@
-'use client';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import deepmerge from '@mui/utils/deepmerge';
 import { extendTheme as extendJoyTheme } from '@mui/joy/styles';
