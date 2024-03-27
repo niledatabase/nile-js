@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { ServerConfig } from '@niledatabase/server/types';
+import { ServerConfig } from '../../types';
 
 export const getDatbaseId = (_config?: ServerConfig) =>
   _config?.databaseId ? String(_config?.databaseId) : process.env.NILEDB_ID;

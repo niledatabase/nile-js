@@ -73,7 +73,7 @@ function App() {
 
 ### useNile
 
-A method exposing the `@niledatabase/js` instance created in `<NileProvider />`. The methods on the instance can be found in [the client src readme](../../lib/nile/src/README.md), or found in the auto-complete of visual studio code.
+A method exposing the configuration created in `<NileProvider />`. The methods on the instance can be found in [the client src readme](../../lib/nile/src/README.md), or found in the auto-complete of visual studio code.
 
 ### Making requests
 
