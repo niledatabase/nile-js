@@ -12,6 +12,8 @@ const baseConfig = [
   'listTenantUsers',
   'listUsers',
   'me',
+  'databaseName',
+  'debug',
   'updateUser',
   'username',
   'password',

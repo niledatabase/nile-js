@@ -47,6 +47,7 @@
     "@apidevtools/swagger-cli": "^4.0.4",
     "@babel/core": "^7.23.3",
     "@types/jest": "^29.5.9",
+    "@types/sync-fetch": "^0",
     "@typescript-eslint/parser": "^5.62.0",
     "babel-loader": "^9.1.3",
     "dts-cli": "^2.0.3",
@@ -63,8 +64,11 @@
   },
   "dependencies": {
     "@niledatabase/js": "^2.0.0",
+    "dotenv": "^16.4.5",
+    "install": "^0.13.0",
     "jose": "^4.15.4",
     "knex": "^2.5.1",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "sync-fetch": "^0.5.2"
   }
 }

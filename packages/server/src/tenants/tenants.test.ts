@@ -9,7 +9,9 @@ const baseConfig = [
   'createTenant',
   'getTenant',
   'db',
+  'debug',
   'databaseId',
+  'databaseName',
   'username',
   'password',
 ];

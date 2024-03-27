@@ -1,4 +1,4 @@
-import { InstanceConfig, PgConnectionConfig, ServerConfig } from './types';
+import { InstanceConfig, ServerConfig } from './types';
 import { Config } from './utils/Config';
 import Auth from './auth';
 import Users from './users';
@@ -34,7 +34,7 @@ class Server {
   private servers: Map<string, Server>;
 
   constructor(config?: ServerConfig) {
-    this.config = new Config(config);
+    this.config = new Config(config as ServerConfig, true);
     this.servers = new Map();
     const [api] = init(this.config);
     this.api = api;
@@ -43,22 +43,23 @@ class Server {
     watchTenantId((tenantId) => {
       this.tenantId = tenantId;
     });
+
     watchUserId((userId) => {
       this.userId = userId;
     });
+
     watchToken((token) => {
       this.token = token;
     });
   }
 
   setConfig(cfg: Config) {
-    this.config = new Config(cfg);
+    this.config = new Config(cfg, false);
   }
 
   set databaseId(val: string | void) {
     if (val) {
       this.config.databaseId = val;
-      (this.config.db.connection as PgConnectionConfig).database = val;
       this.api.auth.databaseId = val;
       this.api.users.databaseId = val;
       this.api.tenants.databaseId = val;
@@ -133,7 +134,7 @@ class Server {
 
     if (existing) {
       // be sure the config is up to date
-      const updatedConfig = new Config(_config);
+      const updatedConfig = new Config(_config, false);
       existing.setConfig(updatedConfig);
       // propagage special config items
       existing.tenantId = updatedConfig.tenantId;
@@ -149,8 +150,8 @@ class Server {
 }
 
 // export default Server;
-export default function Nile(config: ServerConfig) {
+export default function Nile(config?: ServerConfig) {
   const server = new Server(config);
-  server.setConfig(new Config(config as ServerConfig));
+  // server.setConfig(new Config(config as ServerConfig, false));
   return server;
 }
