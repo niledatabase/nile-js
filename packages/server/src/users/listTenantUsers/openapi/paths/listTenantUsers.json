@@ -5,25 +5,9 @@
   "operationId": "listTenantUsers",
   "parameters": [
     {
-      "name": "workspaceSlug",
-      "in": "path",
-      "required": false,
-      "schema": {
-        "type": "string"
-      }
-    },
-    {
-      "name": "databaseName",
-      "in": "path",
-      "required": false,
-      "schema": {
-        "type": "string"
-      }
-    },
-    {
       "name": "tenantId",
       "in": "path",
-      "required": false,
+      "required": true,
       "schema": {
         "type": "string"
       }

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import { IdentifyUser200Response } from '@niledatabase/browser';
+import { User } from '@niledatabase/browser';
 
 import getColumnSize from '../utils/getColumnSize';
 import useTextSizer from '../hooks/useTextSizer';
@@ -9,7 +9,7 @@ export const internalRowId = '_nile_data_grid_identifier';
 
 type Cleaned = { [key: string]: string | Set<string> };
 
-const makeRenderable = (vals: IdentifyUser200Response) => {
+const makeRenderable = (vals: User) => {
   return Object.keys(vals).reduce((cleaned: Cleaned, key) => {
     const val = (vals as Cleaned)[key];
     if (val instanceof Set) {
@@ -24,7 +24,7 @@ const makeRenderable = (vals: IdentifyUser200Response) => {
 };
 
 const parseResults = (
-  data: void | IdentifyUser200Response[],
+  data: void | User[],
   ctx: CanvasRenderingContext2D | void,
   include: string[]
 ): [GridColDef[], GridRowsProp] => {
@@ -59,7 +59,7 @@ const parseResults = (
 };
 
 export default function useDataParser(
-  data: void | IdentifyUser200Response[],
+  data: void | User[],
   include: string[]
 ): [GridColDef[], GridRowsProp] {
   const ctx = useTextSizer();

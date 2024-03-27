@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { RestModels } from '@niledatabase/js';
-
 // taken from ts lib dom
 interface NileBody<R, B> {
   readonly body: ReadableStream<Uint8Array> | null | B;
@@ -56,4 +54,44 @@ interface NRequest<T> extends NileBody<any, T> {
 
 export type NileRequest<T> = NRequest<T> | T;
 
-export type NileResponse<T> = Promise<NResponse<T & RestModels.APIError>>;
+export const APIErrorErrorCodeEnum = {
+  InternalError: 'internal_error',
+  BadRequest: 'bad_request',
+  EntityNotFound: 'entity_not_found',
+  DuplicateEntity: 'duplicate_entity',
+  InvalidCredentials: 'invalid_credentials',
+  UnknownOidcProvider: 'unknown_oidc_provider',
+  ProviderAlreadyExists: 'provider_already_exists',
+  ProviderConfigError: 'provider_config_error',
+  ProviderMismatch: 'provider_mismatch',
+  ProviderUpdateError: 'provider_update_error',
+  SessionStateMissing: 'session_state_missing',
+  SessionStateMismatch: 'session_state_mismatch',
+  OidcCodeMissing: 'oidc_code_missing',
+} as const;
+export type APIErrorErrorCodeEnum =
+  (typeof APIErrorErrorCodeEnum)[keyof typeof APIErrorErrorCodeEnum];
+
+export interface APIError {
+  [key: string]: any | any;
+  /**
+   *
+   * @type {string}
+   * @memberof APIError
+   */
+  errorCode: APIErrorErrorCodeEnum;
+  /**
+   *
+   * @type {string}
+   * @memberof APIError
+   */
+  message: string;
+  /**
+   *
+   * @type {number}
+   * @memberof APIError
+   */
+  statusCode: number;
+}
+
+export type NileResponse<T> = Promise<NResponse<T & APIError>>;

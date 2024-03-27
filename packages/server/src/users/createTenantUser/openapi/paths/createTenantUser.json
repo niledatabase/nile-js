@@ -3,6 +3,14 @@
   "summary": "Create a user in a tenant",
   "description": "Create a new user and associate the user with a tenant",
   "operationId": "createTenantUser",
+  "parameters": [{
+    "name": "tenantId",
+    "in": "path",
+    "required": true,
+    "schema": {
+      "type": "string"
+    }
+  }],
   "requestBody": {
     "content": {
       "*/*": {
@@ -20,6 +28,16 @@
         "application/json": {
           "schema": {
             "$ref": "../../../../../openapi/index.json#/components/schemas/UserAuthResponse"
+          }
+        }
+      }
+    },
+    "400": {
+      "description": "OIDC provider name mismatch",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../../../../openapi/index.json#/components/schemas/APIError"
           }
         }
       }

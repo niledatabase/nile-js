@@ -1,6 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
+    "version": "0.0.1",
     "title": "Nile Server REST API",
     "description": "A Node wrapper around the base Nile API.",
     "contact": {
@@ -14,6 +15,16 @@
     "/sign-up": {
       "$ref": "../src/auth/signUp/openapi/paths/signUp.json"
     },
+    "/users": {
+      "get": {
+        "$ref": "../src/users/listUsers/openapi/paths/listUsers.json"
+      }
+    },
+    "/users/{userId}": {
+      "post": {
+        "$ref": "../src/users/updateUser/openapi/paths/updateUser.json"
+      }
+    }, 
     "/me": {
       "$ref": "../src/users/me/openapi/paths/me.json"
     },
@@ -168,14 +179,14 @@
               "session_state_missing",
               "session_state_mismatch",
               "oidc_code_missing"
-            ],
-            "message": {
-              "type": "string"
-            },
-            "statusCode": {
-              "type": "integer",
-              "format": "int32"
-            }
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

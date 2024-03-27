@@ -3,24 +3,6 @@
   "summary": "List database users",
   "description": "List all users in the database",
   "operationId": "listUsers",
-  "parameters": [
-    {
-      "name": "workspaceSlug",
-      "in": "path",
-      "required": false,
-      "schema": {
-        "type": "string"
-      }
-    },
-    {
-      "name": "databaseName",
-      "in": "path",
-      "required": false,
-      "schema": {
-        "type": "string"
-      }
-    }
-  ],
   "responses": {
     "200": {
       "description": "Users found",

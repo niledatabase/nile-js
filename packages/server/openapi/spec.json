@@ -1,6 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
+    "version": "0.0.1",
     "title": "Nile Server REST API",
     "description": "A Node wrapper around the base Nile API.",
     "contact": {
@@ -105,14 +106,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -233,14 +234,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -248,6 +249,265 @@
             }
           }
         }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "List database users",
+        "description": "List all users in the database",
+        "operationId": "listUsers",
+        "responses": {
+          "200": {
+            "description": "Users found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "tenants": {
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "preferredName": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "errorCode",
+                    "message",
+                    "statusCode"
+                  ],
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "errorCode": {
+                      "type": "string",
+                      "enum": [
+                        "internal_error",
+                        "bad_request",
+                        "entity_not_found",
+                        "duplicate_entity",
+                        "invalid_credentials",
+                        "unknown_oidc_provider",
+                        "provider_already_exists",
+                        "provider_config_error",
+                        "provider_mismatch",
+                        "provider_update_error",
+                        "session_state_missing",
+                        "session_state_mismatch",
+                        "oidc_code_missing"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "jwtBearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update a user",
+        "description": "Updates user attributes by id",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "preferredName": {
+                    "type": "string"
+                  },
+                  "givenName": {
+                    "type": "string"
+                  },
+                  "familyName": {
+                    "type": "string"
+                  },
+                  "picture": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "tenants": {
+                      "uniqueItems": true,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "preferredName": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "errorCode",
+                    "message",
+                    "statusCode"
+                  ],
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "errorCode": {
+                      "type": "string",
+                      "enum": [
+                        "internal_error",
+                        "bad_request",
+                        "entity_not_found",
+                        "duplicate_entity",
+                        "invalid_credentials",
+                        "unknown_oidc_provider",
+                        "provider_already_exists",
+                        "provider_config_error",
+                        "provider_mismatch",
+                        "provider_update_error",
+                        "session_state_missing",
+                        "session_state_mismatch",
+                        "oidc_code_missing"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "errorCode",
+                    "message",
+                    "statusCode"
+                  ],
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "errorCode": {
+                      "type": "string",
+                      "enum": [
+                        "internal_error",
+                        "bad_request",
+                        "entity_not_found",
+                        "duplicate_entity",
+                        "invalid_credentials",
+                        "unknown_oidc_provider",
+                        "provider_already_exists",
+                        "provider_config_error",
+                        "provider_mismatch",
+                        "provider_update_error",
+                        "session_state_missing",
+                        "session_state_mismatch",
+                        "oidc_code_missing"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "jwtBearerAuth": []
+          }
+        ]
       }
     },
     "/me": {
@@ -316,14 +576,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -359,14 +619,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -455,14 +715,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -498,14 +758,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -605,14 +865,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -648,14 +908,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -680,25 +940,9 @@
         "operationId": "listTenantUsers",
         "parameters": [
           {
-            "name": "workspaceSlug",
-            "in": "path",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "databaseName",
-            "in": "path",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "tenantId",
             "in": "path",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -765,14 +1009,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -793,6 +1037,16 @@
         "summary": "Create a user in a tenant",
         "description": "Create a new user and associate the user with a tenant",
         "operationId": "createTenantUser",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "*/*": {
@@ -862,6 +1116,49 @@
                           ]
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "OIDC provider name mismatch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "errorCode",
+                    "message",
+                    "statusCode"
+                  ],
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "errorCode": {
+                      "type": "string",
+                      "enum": [
+                        "internal_error",
+                        "bad_request",
+                        "entity_not_found",
+                        "duplicate_entity",
+                        "invalid_credentials",
+                        "unknown_oidc_provider",
+                        "provider_already_exists",
+                        "provider_config_error",
+                        "provider_mismatch",
+                        "provider_update_error",
+                        "session_state_missing",
+                        "session_state_mismatch",
+                        "oidc_code_missing"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -980,14 +1277,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -1130,14 +1427,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -1173,14 +1470,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -1216,14 +1513,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -1371,14 +1668,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -1414,14 +1711,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -1457,14 +1754,14 @@
                         "session_state_missing",
                         "session_state_mismatch",
                         "oidc_code_missing"
-                      ],
-                      "message": {
-                        "type": "string"
-                      },
-                      "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                      }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "statusCode": {
+                      "type": "integer",
+                      "format": "int32"
                     }
                   }
                 }
@@ -1648,14 +1945,14 @@
               "session_state_missing",
               "session_state_mismatch",
               "oidc_code_missing"
-            ],
-            "message": {
-              "type": "string"
-            },
-            "statusCode": {
-              "type": "integer",
-              "format": "int32"
-            }
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

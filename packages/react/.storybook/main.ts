@@ -17,6 +17,7 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-essentials'),
     getAbsolutePath('@storybook/addon-onboarding'),
     getAbsolutePath('@storybook/addon-interactions'),
+    getAbsolutePath('@storybook/addon-webpack5-compiler-babel'),
   ],
   framework: {
     name: getAbsolutePath('@storybook/react-webpack5'),
@@ -43,7 +44,6 @@ const config: StorybookConfig = {
       use: ['@svgr/webpack'],
     });
 
-    return config;
     return config;
   },
 };

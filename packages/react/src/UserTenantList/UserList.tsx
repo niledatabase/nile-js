@@ -1,12 +1,9 @@
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import Stack from '@mui/joy/Stack';
-import {
-  IdentifyUser200Response,
-  SignUp201Response,
-} from '@niledatabase/browser';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Theme } from '@mui/system/createTheme';
+import { SignUp201Response, User } from '@niledatabase/browser';
 
 import CreateUser from './CreateUser';
 import useDataParser from './useDataParser';
@@ -14,7 +11,7 @@ import useDataParser from './useDataParser';
 type ColumnNames = string;
 
 type Props = {
-  data: void | IdentifyUser200Response[];
+  data: void | User[];
   allowCreation?: boolean;
   buttonText?: string;
   onUserCreateSuccess?: (user: SignUp201Response) => void;

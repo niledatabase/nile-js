@@ -20,8 +20,6 @@
       "@niledatabase/browser/*": ["./packages/browser/src/*"],
       "@niledatabase/server": ["./packages/server/src"],
       "@niledatabase/server/*": ["./packages/server/src/*"],
-      "@niledatabase/js": ["./lib/nile/src"],
-      "@niledatabase/js/*": ["./lib/nile/src/*"]
     }
   },
   "exclude": ["**/node_modules", "**/.*/"],
