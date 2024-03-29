@@ -47,5 +47,15 @@ describe.skip('api integration', () => {
     const tenants = await nile.api.tenants.getTenant();
     body = await toJSON(tenants.body);
     expect(body.id).toEqual(process.env.TENANT_ID);
+
+    nile.db.query('select * from tenants');
+  });
+});
+
+describe.skip('db integration', () => {
+  it('queries', async () => {
+    const nile = Server();
+    const res = await nile.db.query('select * from tenants');
+    expect(res.rowCount).toBeGreaterThan(0);
   });
 });

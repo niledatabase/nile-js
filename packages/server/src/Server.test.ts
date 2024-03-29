@@ -9,7 +9,7 @@ describe('server', () => {
       password: 'password',
     };
     const server = Nile(config);
-    expect(server.config.db.connection).toEqual({
+    expect(server.config.db).toEqual({
       host: 'db.thenile.dev',
       port: 5432,
       database: 'databaseName',

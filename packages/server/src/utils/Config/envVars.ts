@@ -42,13 +42,8 @@ export const getBasePath = (config?: ServerConfig) => {
 };
 
 export function getDbHost(_config?: ServerConfig) {
-  if (
-    _config?.db &&
-    _config.db.connection &&
-    typeof _config.db?.connection !== 'string' &&
-    'host' in _config.db.connection
-  ) {
-    return _config.db.connection.host;
+  if (_config?.db && _config.db.host) {
+    return _config.db.host;
   } else if (process.env.NILEDB_HOST) {
     return process.env.NILEDB_HOST;
   }
@@ -56,12 +51,8 @@ export function getDbHost(_config?: ServerConfig) {
 }
 
 export function getDbPort(_config?: ServerConfig): number {
-  if (
-    _config?.db?.connection &&
-    typeof _config.db?.connection !== 'string' &&
-    'port' in _config.db.connection
-  ) {
-    return Number(_config.db?.connection?.port);
+  if (_config?.db?.port && _config.db.port != null) {
+    return Number(_config.db?.port);
   }
   if (process.env.NILEDB_PORT) {
     return Number(process.env.NILEDB_PORT);

@@ -1,11 +1,12 @@
+import { Pool } from 'pg';
+
 import { InstanceConfig, ServerConfig } from './types';
 import { Config } from './utils/Config';
 import Auth from './auth';
 import Users from './users';
 import Tenants from './tenants';
 import { watchTenantId, watchToken, watchUserId } from './utils/Event';
-import DbManager, { NileDatabaseI } from './db';
-import DBManager from './db/DBManager';
+import DbManager from './db';
 import { getServerId, makeServerId } from './utils/Server';
 
 type Api = {
@@ -38,7 +39,7 @@ class Server {
     this.servers = new Map();
     const [api] = init(this.config);
     this.api = api;
-    this.manager = new DBManager(this.config);
+    this.manager = new DbManager(this.config);
 
     watchTenantId((tenantId) => {
       this.tenantId = tenantId;
@@ -111,10 +112,9 @@ class Server {
       }
     }
   }
-  get db(): NileDatabaseI {
+  get db(): Pool {
     // only need to interact with the knex object
-    //@ts-expect-error - because that's where it is in the proxy
-    return this.manager.getConnection(this.config).knex;
+    return this.manager.getConnection(this.config);
   }
 
   /**
