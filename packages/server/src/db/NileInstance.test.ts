@@ -10,9 +10,7 @@ describe('nile instance', () => {
       username: 'username',
       password: 'password',
       db: {
-        pool: {
-          idleTimeoutMillis: 1,
-        },
+        idleTimeoutMillis: 1,
       },
     });
     new NileDatabase(config, 'someId');

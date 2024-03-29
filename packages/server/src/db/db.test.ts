@@ -10,7 +10,7 @@ describe('db', () => {
       password: 'password',
       debug: false,
       db: {
-        connection: { port: 4433 },
+        port: 4433,
       },
       api: {
         token: 'blah',

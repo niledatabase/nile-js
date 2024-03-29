@@ -1,58 +1,50 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import knex, { Knex } from 'knex';
+import { Pool } from 'pg';
 
 import { Config } from '../utils/Config';
 import { evictPool } from '../utils/Event';
-import { AfterCreate, PgConnectionConfig, PoolConfig } from '../types';
+import { AfterCreate } from '../types';
+import Logger from '../utils/Logger';
 
 class NileDatabase {
-  knex: Knex;
+  pool: Pool;
   tenantId?: undefined | null | string;
   userId?: undefined | null | string;
   id: string;
-  config: any;
+  config: Config;
   timer: NodeJS.Timeout | undefined;
 
   constructor(config: Config, id: string) {
+    const { warn } = Logger(config, '[NileInstance]');
     this.id = id;
-    const poolConfig: PoolConfig = {
+    const poolConfig = {
       min: 0,
       max: 10,
       idleTimeoutMillis: 30000,
-      ...config.db.pool,
+      ...config.db,
     };
+    const { afterCreate, ...remaining } = poolConfig;
 
-    const database =
-      (config.db.connection as PgConnectionConfig)?.database ??
-      config.databaseId;
+    config.db = poolConfig;
+    this.config = config;
 
-    this.config = {
-      ...config,
-      db: {
-        ...config.db,
-        connection: {
-          ...(config.db.connection as PgConnectionConfig),
-          database,
-        },
-        pool: poolConfig,
-      },
-    };
+    this.pool = new Pool(remaining);
 
-    this.knex = knex({ ...this.config.db, client: 'pg' });
-
-    if (config.db.pool?.afterCreate) {
-      console.log(
+    if (typeof afterCreate === 'function') {
+      warn(
         'Providing an pool configuration will stop automatic tenant context setting.'
       );
-    } else {
-      const afterCreate: AfterCreate = makeAfterCreate(config);
-      poolConfig.afterCreate = afterCreate;
     }
 
     // start the timer for cleanup
     this.startTimeout();
-    this.knex.on('query', async () => {
+    this.pool.on('connect', async (client) => {
+      const afterCreate: AfterCreate = makeAfterCreate(config);
+      afterCreate(client, (err, _client) => {
+        if (err) {
+          _client.release();
+        }
+      });
       this.startTimeout();
     });
   }
@@ -62,21 +54,19 @@ class NileDatabase {
       clearTimeout(this.timer);
     }
     this.timer = setTimeout(async () => {
-      await this.knex.client.pool.destroy();
-      await this.knex.destroy();
+      await this.pool.end();
       evictPool(this.id);
-    }, this.config.db.pool.idleTimeoutMillis);
+    }, this.config.db.idleTimeoutMillis);
   }
 }
-
-export type NileDatabaseI = (table?: string) => Knex;
 
 export default NileDatabase;
 
 function makeAfterCreate(config: Config): AfterCreate {
+  const { warn, info } = Logger(config, '[afterCreate]');
   return (conn, done) => {
-    conn.on('error', function errorHandler(error: unknown) {
-      console.log('Connection was terminated by server', error);
+    conn.on('error', function errorHandler(error: Error) {
+      warn('Connection was terminated by server', error);
       done(error, conn);
     });
 
@@ -84,20 +74,14 @@ function makeAfterCreate(config: Config): AfterCreate {
       const query = [`SET nile.tenant_id = '${config.tenantId}'`];
       if (config.userId) {
         if (!config.tenantId) {
-          console.warn(
-            'A user id cannot be set in context without a tenant id'
-          );
+          warn('A user id cannot be set in context without a tenant id');
         }
         query.push(`SET nile.user_id = '${config.userId}'`);
       }
 
       // in this example we use pg driver's connection API
-      conn.query(query.join(';'), function (err: unknown) {
-        console.log(
-          'tenant id and user id set',
-          config.userId,
-          config.tenantId
-        );
+      conn.query(query.join(';'), function (err: Error) {
+        info('tenant id and user id set', config.userId, config.tenantId);
         done(err, conn);
       });
     }

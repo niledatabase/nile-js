@@ -1,6 +1,6 @@
 import syncFetch from 'sync-fetch';
 
-import { PgConnectionConfig, PoolConfig, ServerConfig } from '../../types';
+import { NilePoolConfig, ServerConfig } from '../../types';
 import Logger from '../Logger';
 
 import {
@@ -49,11 +49,6 @@ class ApiConfig {
   }
 }
 
-type DBConfig = {
-  connection: PgConnectionConfig;
-  pool?: PoolConfig;
-};
-
 export class Config {
   username: string;
   password: string;
@@ -62,7 +57,7 @@ export class Config {
 
   debug: boolean;
 
-  db: DBConfig;
+  db: NilePoolConfig;
 
   api: ApiConfig;
 
@@ -131,24 +126,15 @@ export class Config {
       token: _config?.api?.token,
     });
 
-    const baseCreds = {
+    this.db = {
       user: this.username,
       password: this.password,
-    };
-
-    const connection = {
       host,
       port,
       database: this.databaseName,
-      ...(typeof _config?.db?.connection === 'object'
-        ? _config.db.connection
-        : baseCreds),
-    } as PgConnectionConfig;
-
-    this.db = {
-      ..._config?.db,
-      connection,
+      ...(typeof _config?.db === 'object' ? _config.db : {}),
     };
+    info(this);
   }
 }
 
