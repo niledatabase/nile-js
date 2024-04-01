@@ -44,15 +44,15 @@ jobs:
 
       - name: Install @niledatabase/server
         working-directory: packages/server
-        run: yarn install --immutable-cache
+        run: yarn install
 
       - name: Install @niledatabase/browser
         working-directory: packages/browser
-        run: yarn install --immutable-cache
+        run: yarn install
 
       - name: Install @niledatabase/react
         working-directory: packages/react
-        run: yarn install --immutable-cache
+        run: yarn install
 
       - name: Build @niledatabase/packages
         run: yarn build
