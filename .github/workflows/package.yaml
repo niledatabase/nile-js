@@ -34,10 +34,6 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Install @niledatabase/js
-        working-directory: lib/nile
-        run: yarn install --no-lockfile
-
       - name: Install @niledatabase/react
         working-directory: packages/react
         run: yarn install --no-lockfile
