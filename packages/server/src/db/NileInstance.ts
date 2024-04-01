@@ -15,7 +15,7 @@ class NileDatabase {
   timer: NodeJS.Timeout | undefined;
 
   constructor(config: Config, id: string) {
-    const { warn } = Logger(config, '[NileInstance]');
+    const { warn, info } = Logger(config, '[NileInstance]');
     this.id = id;
     const poolConfig = {
       min: 0,
@@ -27,6 +27,7 @@ class NileDatabase {
 
     config.db = poolConfig;
     this.config = config;
+    info(this.config);
 
     this.pool = new Pool(remaining);
 
@@ -39,6 +40,7 @@ class NileDatabase {
     // start the timer for cleanup
     this.startTimeout();
     this.pool.on('connect', async (client) => {
+      info('pool connected');
       const afterCreate: AfterCreate = makeAfterCreate(config);
       afterCreate(client, (err, _client) => {
         if (err) {
@@ -46,6 +48,9 @@ class NileDatabase {
         }
       });
       this.startTimeout();
+    });
+    this.pool.on('error', async (e) => {
+      info('pool failed', e);
     });
   }
 
@@ -81,7 +86,12 @@ function makeAfterCreate(config: Config): AfterCreate {
 
       // in this example we use pg driver's connection API
       conn.query(query.join(';'), function (err: Error) {
-        info('tenant id and user id set', config.userId, config.tenantId);
+        if (config.tenantId) {
+          info('[tenant id]', config.tenantId);
+        }
+        if (config.userId) {
+          info('[user id]', config.userId);
+        }
         done(err, conn);
       });
     }

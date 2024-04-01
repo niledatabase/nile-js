@@ -8,7 +8,7 @@ export type Opts = {
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
 export type ServerConfig = {
   databaseId?: string;
-  username?: string;
+  user?: string;
   password?: string;
   databaseName?: string;
   tenantId?: string | null | undefined;
@@ -24,7 +24,7 @@ export type ServerConfig = {
 
 export type InstanceConfig = {
   databaseId: string;
-  username: string;
+  user: string;
   password: string;
   tenantId?: string | null | undefined;
   userId?: string | null | undefined;

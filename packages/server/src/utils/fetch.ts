@@ -1,7 +1,5 @@
 import { decodeJwt } from 'jose';
 
-import { ServerConfig } from '../types';
-
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
 import { NileRequest } from './Requester';
@@ -80,11 +78,8 @@ export async function _fetch(
     const token = getTokenFromCookie(headers, cookieKey);
     if (token) {
       basicHeaders.set('Authorization', `Bearer ${token}`);
-    } else if (getToken(config as unknown as ServerConfig)) {
-      basicHeaders.set(
-        'Authorization',
-        `Bearer ${getToken(config as unknown as ServerConfig)}`
-      );
+    } else if (getToken({ config })) {
+      basicHeaders.set('Authorization', `Bearer ${getToken({ config })}`);
     }
   }
 

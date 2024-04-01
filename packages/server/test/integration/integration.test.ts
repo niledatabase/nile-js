@@ -1,4 +1,5 @@
 import Server from '../../src/Server';
+import { ServerConfig } from '../../src/types';
 
 async function toJSON(body: BodyInit) {
   const resp = new Response(body);
@@ -19,9 +20,13 @@ async function toJSON(body: BodyInit) {
     }
   }
 }
+const config: ServerConfig = {
+  debug: true,
+};
+
 describe.skip('api integration', () => {
   it('does a bunch of api calls', async () => {
-    const nile = Server({ debug: true });
+    const nile = Server(config);
     const loginResp = await nile.api.auth.login({
       email: String(process.env.EMAIL),
       password: String(process.env.PASSWORD),
@@ -47,14 +52,12 @@ describe.skip('api integration', () => {
     const tenants = await nile.api.tenants.getTenant();
     body = await toJSON(tenants.body);
     expect(body.id).toEqual(process.env.TENANT_ID);
-
-    nile.db.query('select * from tenants');
   });
 });
 
 describe.skip('db integration', () => {
   it('queries', async () => {
-    const nile = Server();
+    const nile = Server(config);
     const res = await nile.db.query('select * from tenants');
     expect(res.rowCount).toBeGreaterThan(0);
   });

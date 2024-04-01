@@ -47,6 +47,7 @@
     "@apidevtools/swagger-cli": "^4.0.4",
     "@babel/core": "^7.23.3",
     "@types/jest": "^29.5.9",
+    "@types/mime": "^4.0.0",
     "@types/pg": "^8.11.4",
     "@types/sync-fetch": "^0",
     "@typescript-eslint/parser": "^5.62.0",

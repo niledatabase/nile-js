@@ -19,14 +19,14 @@ const baseConfig = [
   'loginSSOUrl',
   'signUp',
   'updateProvider',
-  'username',
+  'user',
   'password',
 ];
 it('has expected methods', () => {
   const auth = new Auth(
     new Config({
       databaseId: 'databaseId',
-      username: 'username',
+      user: 'username',
       password: 'password',
     })
   );

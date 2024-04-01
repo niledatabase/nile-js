@@ -4,11 +4,13 @@ import { NilePoolConfig, ServerConfig } from '../../types';
 import Logger from '../Logger';
 
 import {
+  EnvConfig,
   getBasePath,
   getDatabaseName,
   getDatbaseId,
   getDbHost,
   getDbPort,
+  getInfoBearer,
   getPassword,
   getTenantId,
   getToken,
@@ -21,6 +23,7 @@ type Database = {
   dbHost: string;
   id: string;
   message?: string; // is actually an error
+  status: 'READY' | string;
 };
 class ApiConfig {
   public cookieKey?: string;
@@ -50,7 +53,7 @@ class ApiConfig {
 }
 
 export class Config {
-  username: string;
+  user: string;
   password: string;
   databaseId: string;
   databaseName: string;
@@ -80,31 +83,42 @@ export class Config {
     this._userId = value;
   }
 
-  constructor(_config: ServerConfig, allowPhoneHome?: boolean) {
-    const { info } = Logger(_config, '[config]');
-    // always provided
-    this.databaseId = getDatbaseId(_config) as string;
-    this.username = getUsername(_config) as string;
-    this.password = getPassword(_config) as string;
-    this.databaseName = getDatabaseName(_config) as string;
-    this._tenantId = getTenantId(_config);
-    this.debug = Boolean(_config?.debug);
+  constructor(config: ServerConfig, allowPhoneHome?: boolean) {
+    const { info, error } = Logger(config, '[config]');
 
-    let basePath = getBasePath(_config);
+    const envVarConfig: EnvConfig = {
+      config,
+    };
+    if (allowPhoneHome) {
+      envVarConfig.logger = '[config]';
+    }
+    this.databaseId = getDatbaseId(envVarConfig) as string;
+    this.user = getUsername(envVarConfig) as string;
+    this.password = getPassword(envVarConfig) as string;
+    this.databaseName = getDatabaseName(envVarConfig) as string;
+    this._tenantId = getTenantId(envVarConfig);
+    this.debug = Boolean(config?.debug);
 
-    let host = getDbHost(_config);
-    const port = getDbPort(_config);
+    let basePath = getBasePath(envVarConfig);
 
-    this._userId = _config?.userId;
+    let host = getDbHost(envVarConfig);
+    const port = getDbPort(envVarConfig);
+
+    this._userId = config?.userId;
 
     if (allowPhoneHome && (!host || !this.databaseName || !this.databaseId)) {
-      const database = phoneHome(_config);
+      const database = getInfo(config);
       info('[fetched database]', database);
       if (process.env.NODE_ENV !== 'TEST') {
         if ('message' in database) {
-          throw new Error(
-            'Unable to obtain database config. Please set NILEDB_API, NILEDB_NAME, and NILEDB_HOST to the correct region in your .env file.'
-          );
+          if ('statusCode' in database) {
+            error(database);
+            throw new Error('HTTP error has occured');
+          } else {
+            throw new Error(
+              'Unable to auto-configure. Please set or remove NILEDB_API, NILEDB_NAME, and NILEDB_HOST in your .env file.'
+            );
+          }
         }
 
         if (typeof database === 'object') {
@@ -122,38 +136,47 @@ export class Config {
 
     this.api = new ApiConfig({
       basePath,
-      cookieKey: _config?.api?.cookieKey ?? 'token',
-      token: _config?.api?.token,
+      cookieKey: config?.api?.cookieKey ?? 'token',
+      token: getToken({ config }),
     });
-
     this.db = {
-      user: this.username,
+      user: this.user,
       password: this.password,
       host,
       port,
       database: this.databaseName,
-      ...(typeof _config?.db === 'object' ? _config.db : {}),
+      ...(typeof config?.db === 'object' ? config.db : {}),
     };
-    info(this);
+    if (allowPhoneHome) {
+      info(this);
+    }
   }
 }
 
-function phoneHome(config: ServerConfig): Database {
-  const basePath = getBasePath(config);
-  const databaseId = getDatbaseId(config);
-  const url = `${basePath}/workspaces/nile_check/databases`;
-  const { info, error } = Logger(config, '[phone home]');
-  info(url);
+function getInfo(config: ServerConfig): Database {
+  const basePath = getBasePath({ config });
+  const databaseName = getDatabaseName({ config, logger: 'getInfo' });
+  const url = new URL(`${basePath}/databases/configure`);
+  if (databaseName) {
+    url.searchParams.set('databaseName', databaseName);
+  }
+  const { info, error } = Logger(config, '[getInfo]');
+  info(url.href);
   const res = syncFetch(url, {
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${getInfoBearer({ config })}`,
     },
   });
   const possibleError = res.clone();
   try {
-    const json = res.json();
-    const db = json.find((db: Database) => db.id === databaseId);
-    return db;
+    const json: Database = res.json();
+    if (res.status === 404) {
+      info('is the configured databaseName correct?');
+    }
+    if (json.status && json.status !== 'READY') {
+      return { message: 'Database is not ready yet' } as Database;
+    }
+    return json;
   } catch (e) {
     const message = possibleError.text();
     error(message);

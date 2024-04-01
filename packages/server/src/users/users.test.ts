@@ -15,13 +15,13 @@ const baseConfig = [
   'databaseName',
   'debug',
   'updateUser',
-  'username',
+  'user',
   'password',
 ];
 const config = {
   databaseId: 'databaseId',
   tenantId: 'tenant',
-  username: 'username',
+  user: 'username',
   password: 'password',
 };
 describe('users', () => {
