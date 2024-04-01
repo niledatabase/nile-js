@@ -17,6 +17,9 @@ jobs:
           fetch-depth: 0
           ref: stable
 
+      - name: Enable Corepack before setting up Node
+        run: corepack enable
+
       # Setup .npmrc file to publish to GitHub Packages
       - name: Setup Node
         uses: actions/setup-node@v3
