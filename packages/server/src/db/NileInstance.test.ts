@@ -7,7 +7,7 @@ describe('nile instance', () => {
   it('evitcs pools', (done) => {
     const config = new Config({
       databaseId: 'databaseId',
-      username: 'username',
+      user: 'username',
       password: 'password',
       db: {
         idleTimeoutMillis: 1,

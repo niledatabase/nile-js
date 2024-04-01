@@ -6,7 +6,7 @@ describe('db', () => {
     const db = new NileDB({
       databaseId: 'databaseId',
       databaseName: 'databaseName',
-      username: 'username',
+      user: 'username',
       password: 'password',
       debug: false,
       db: {

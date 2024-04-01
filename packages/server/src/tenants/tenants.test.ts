@@ -12,12 +12,12 @@ const baseConfig = [
   'debug',
   'databaseId',
   'databaseName',
-  'username',
+  'user',
   'password',
 ];
 const config = {
   databaseId: 'databaseId',
-  username: 'username',
+  user: 'username',
   password: 'password',
 };
 describe('users', () => {

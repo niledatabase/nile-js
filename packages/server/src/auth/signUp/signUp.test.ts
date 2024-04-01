@@ -7,7 +7,7 @@ jest.mock('../../utils/ResponseError', () => ({
 }));
 const config = {
   databaseId: 'databaseId',
-  username: 'username',
+  user: 'username',
   password: 'password',
 };
 

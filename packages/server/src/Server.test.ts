@@ -5,7 +5,7 @@ describe('server', () => {
     const config = {
       databaseId: 'databaseId',
       databaseName: 'databaseName',
-      username: 'username',
+      user: 'username',
       password: 'password',
     };
     const server = Nile(config);
@@ -21,7 +21,7 @@ describe('server', () => {
   it('sets a tenant id everywhere when set', () => {
     const config = {
       databaseId: 'databaseId',
-      username: 'username',
+      user: 'username',
       password: 'password',
     };
     const nile = Nile(config);
@@ -36,14 +36,14 @@ describe('server', () => {
   it('manages instances', () => {
     const config = {
       databaseId: 'databaseId',
-      username: 'username',
+      user: 'username',
       password: 'password',
     };
     const nile = Nile(config);
 
     const another = nile.getInstance({
       databaseId: 'somethingelse?!',
-      username: 'username',
+      user: 'username',
       password: 'password',
     });
     const theSameOne = nile.getInstance(config);
@@ -65,7 +65,7 @@ describe('server', () => {
   it('ensures existing configs get updated with provided configs', () => {
     const config = {
       databaseId: 'databaseId',
-      username: 'username',
+      user: 'username',
       password: 'password',
     };
     const nile = Nile(config);
@@ -73,7 +73,7 @@ describe('server', () => {
     const another = nile.getInstance({
       databaseId: 'somethingelse?!',
       tenantId: null,
-      username: 'username',
+      user: 'username',
       password: 'password',
     });
     expect(another.tenantId).toEqual(null);
@@ -83,7 +83,7 @@ describe('server', () => {
     const sameOne = nile.getInstance({
       databaseId: 'somethingelse?!',
       tenantId: null,
-      username: 'username',
+      user: 'username',
       password: 'password',
     });
     expect(sameOne.tenantId).toEqual(null);
