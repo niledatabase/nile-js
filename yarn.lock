@@ -3436,6 +3436,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": "npm:17.8.1"
     "@commitlint/config-conventional": "npm:17.8.1"
+    "@types/mime": "npm:^4.0.0"
     "@typescript-eslint/eslint-plugin": "npm:^5.62.0"
     "@typescript-eslint/parser": "npm:^5.62.0"
     eslint: "npm:^8.54.0"
