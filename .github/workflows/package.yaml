@@ -39,7 +39,7 @@ jobs:
 
       - name: Install @niledatabase/react
         working-directory: packages/react
-        run: yarn install --no-lockfile
+        run: yarn install --immutable-cache
 
       - name: Build @niledatabase/packages
         run: yarn build
