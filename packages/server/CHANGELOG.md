@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.1.1-alpha.0...v2.1.1-alpha.1) (2024-04-02)
+
+**Note:** Version bump only for package @niledatabase/server
+
 ## [2.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.1.0...v2.1.1-alpha.0) (2024-04-02)
 
 **Note:** Version bump only for package @niledatabase/server
