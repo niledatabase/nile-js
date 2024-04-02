@@ -3397,7 +3397,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/browser@npm:^2.1.2-alpha.0, @niledatabase/browser@workspace:packages/browser":
+"@niledatabase/browser@npm:^2.1.2-alpha.1, @niledatabase/browser@workspace:packages/browser":
   version: 0.0.0-use.local
   resolution: "@niledatabase/browser@workspace:packages/browser"
   dependencies:
@@ -3472,7 +3472,7 @@ __metadata:
     "@mui/utils": "npm:^5.15.14"
     "@mui/x-data-grid": "npm:^7.0.0"
     "@mui/x-date-pickers": "npm:^7.0.0"
-    "@niledatabase/browser": "npm:^2.1.2-alpha.0"
+    "@niledatabase/browser": "npm:^2.1.2-alpha.1"
     "@rollup/plugin-babel": "npm:^6.0.4"
     "@size-limit/preset-small-lib": "npm:^8.2.6"
     "@storybook/addon-essentials": "npm:^8.0.0"
