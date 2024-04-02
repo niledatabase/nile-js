@@ -51,7 +51,7 @@ describe.skip('api integration', () => {
 
     const tenants = await nile.api.tenants.getTenant();
     body = await toJSON(tenants.body);
-    expect(body.id).toEqual(process.env.TENANT_ID);
+    expect(body.id).toEqual(process.env.NILEDB_TENANT);
   });
 });
 

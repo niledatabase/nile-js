@@ -14,6 +14,7 @@
     "build:spec": "yarn swagger-cli bundle openapi/index.json --outfile openapi/spec.json -r",
     "build": "yarn build:spec && dts build --tsconfig ./tsconfig.build.json",
     "test": "dts test",
+    "integration": "NODE_ENV=DEV dts test integration",
     "lint": "eslint src",
     "size": "size-limit",
     "analyze": "size-limit --why"

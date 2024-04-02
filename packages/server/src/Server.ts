@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 
-import { InstanceConfig, ServerConfig } from './types';
+import { ServerConfig } from './types';
 import { Config } from './utils/Config';
 import Auth from './auth';
 import Users from './users';
@@ -123,7 +123,7 @@ class Server {
    * or a new one if the config isn't in the cache
    */
 
-  getInstance(config: InstanceConfig): Server {
+  getInstance(config: ServerConfig): Server {
     const _config = { ...this.config, ...config };
     const serverId = getServerId(_config);
     const currentServerId = makeServerId(this.config);

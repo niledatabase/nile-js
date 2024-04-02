@@ -120,7 +120,6 @@ export class Config {
             );
           }
         }
-
         if (typeof database === 'object') {
           const { apiHost, dbHost, name, id } = database;
           this.databaseId = id;
