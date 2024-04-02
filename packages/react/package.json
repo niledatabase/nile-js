@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/react",
-  "version": "2.1.0",
+  "version": "2.1.1-alpha.0",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
@@ -99,7 +99,7 @@
     "@mui/material": "5.14.18",
     "@mui/x-data-grid": "^7.0.0",
     "@mui/x-date-pickers": "^7.0.0",
-    "@niledatabase/browser": "^2.1.0",
+    "@niledatabase/browser": "^2.1.1-alpha.0",
     "@storybook/test": "^8.0.0",
     "@tanstack/react-query": "^4.36.1",
     "dts-cli": "^2.0.3",
