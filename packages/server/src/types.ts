@@ -22,21 +22,6 @@ export type ServerConfig = {
   };
 };
 
-export type InstanceConfig = {
-  databaseId: string;
-  user: string;
-  password: string;
-  tenantId?: string | null | undefined;
-  userId?: string | null | undefined;
-  debug?: boolean;
-  db?: NilePoolConfig;
-  api?: {
-    basePath?: string;
-    cookieKey?: string;
-    token?: string;
-  };
-};
-
 export type NileDb = NilePoolConfig & { tenantId?: string };
 
 export type AfterCreate = (
