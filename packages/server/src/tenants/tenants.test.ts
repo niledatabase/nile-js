@@ -8,13 +8,17 @@ const baseConfig = [
   'api',
   'createTenant',
   'getTenant',
-  'database',
   'db',
-  'workspace',
+  'debug',
+  'databaseId',
+  'databaseName',
+  'user',
+  'password',
 ];
 const config = {
-  workspace: 'workspace',
-  database: 'database',
+  databaseId: 'databaseId',
+  user: 'username',
+  password: 'password',
 };
 describe('users', () => {
   it('has expected methods', () => {

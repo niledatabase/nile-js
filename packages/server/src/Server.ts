@@ -1,11 +1,12 @@
-import { InstanceConfig, PgConnectionConfig, ServerConfig } from './types';
+import { Pool } from 'pg';
+
+import { InstanceConfig, ServerConfig } from './types';
 import { Config } from './utils/Config';
 import Auth from './auth';
 import Users from './users';
 import Tenants from './tenants';
 import { watchTenantId, watchToken, watchUserId } from './utils/Event';
-import DbManager, { NileDatabaseI } from './db';
-import DBManager from './db/DBManager';
+import DbManager from './db';
 import { getServerId, makeServerId } from './utils/Server';
 
 type Api = {
@@ -34,43 +35,35 @@ class Server {
   private servers: Map<string, Server>;
 
   constructor(config?: ServerConfig) {
-    this.config = new Config(config);
+    this.config = new Config(config as ServerConfig, true);
     this.servers = new Map();
     const [api] = init(this.config);
     this.api = api;
-    this.manager = new DBManager(this.config);
+    this.manager = new DbManager(this.config);
 
     watchTenantId((tenantId) => {
       this.tenantId = tenantId;
     });
+
     watchUserId((userId) => {
       this.userId = userId;
     });
+
     watchToken((token) => {
       this.token = token;
     });
   }
 
   setConfig(cfg: Config) {
-    this.config = new Config(cfg);
+    this.config = new Config(cfg, false);
   }
 
-  set database(val: string | void) {
+  set databaseId(val: string | void) {
     if (val) {
-      this.config.database = val;
-      (this.config.db.connection as PgConnectionConfig).database = val;
-      this.api.auth.database = val;
-      this.api.users.database = val;
-      this.api.tenants.database = val;
-    }
-  }
-
-  set workspace(val: string | void) {
-    if (val) {
-      this.config.workspace = val;
-      this.api.auth.workspace = val;
-      this.api.users.workspace = val;
-      this.api.tenants.workspace = val;
+      this.config.databaseId = val;
+      this.api.auth.databaseId = val;
+      this.api.users.databaseId = val;
+      this.api.tenants.databaseId = val;
     }
   }
 
@@ -79,7 +72,7 @@ class Server {
   }
 
   set userId(userId: string | undefined | null) {
-    this.database = this.config.database;
+    this.databaseId = this.config.databaseId;
 
     this.config.userId = userId;
 
@@ -95,7 +88,7 @@ class Server {
   }
 
   set tenantId(tenantId: string | undefined | null) {
-    this.database = this.config.database;
+    this.databaseId = this.config.databaseId;
     this.config.tenantId = tenantId;
 
     if (this.api) {
@@ -119,10 +112,9 @@ class Server {
       }
     }
   }
-  get db(): NileDatabaseI {
+  get db(): Pool {
     // only need to interact with the knex object
-    //@ts-expect-error - because that's where it is in the proxy
-    return this.manager.getConnection(this.config).knex;
+    return this.manager.getConnection(this.config);
   }
 
   /**
@@ -142,14 +134,13 @@ class Server {
 
     if (existing) {
       // be sure the config is up to date
-      const updatedConfig = new Config(_config);
+      const updatedConfig = new Config(_config, false);
       existing.setConfig(updatedConfig);
       // propagage special config items
       existing.tenantId = updatedConfig.tenantId;
       existing.userId = updatedConfig.userId;
       existing.token = updatedConfig.api.token;
-      existing.workspace = updatedConfig.workspace;
-      existing.database = updatedConfig.database;
+      existing.databaseId = updatedConfig.databaseId;
       return existing;
     }
 
@@ -159,8 +150,8 @@ class Server {
 }
 
 // export default Server;
-export default function Nile(config: ServerConfig) {
+export default function Nile(config?: ServerConfig) {
   const server = new Server(config);
-  server.setConfig(new Config(config as ServerConfig));
+  // server.setConfig(new Config(config as ServerConfig, false));
   return server;
 }

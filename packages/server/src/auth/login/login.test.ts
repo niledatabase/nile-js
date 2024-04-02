@@ -6,7 +6,11 @@ jest.mock('../../utils/ResponseError', () => ({
   ResponseError: jest.fn(),
 }));
 
-const config = { workspace: 'workspace', database: 'database' };
+const config = {
+  databaseId: 'databaseId',
+  user: 'username',
+  password: 'password',
+};
 describe('login', () => {
   it('sets a cookie at login', async () => {
     //@ts-expect-error - test
@@ -39,8 +43,6 @@ describe('login', () => {
   it('goes to the right url', () => {
     const _config = new Config(config);
     const auth = new Auth(_config);
-    expect(auth.loginUrl).toEqual(
-      '/workspaces/workspace/databases/database/users/login'
-    );
+    expect(auth.loginUrl).toEqual('/databases/databaseId/users/login');
   });
 });

@@ -9,25 +9,23 @@
   ],
   "scripts": {
     "build:browser": "yarn workspace @niledatabase/browser build",
-    "build:js-lib": "yarn workspace @niledatabase/js build",
     "build:react-storybook": "yarn build && yarn workspace @niledatabase/react build-storybook",
     "build:react": "yarn workspace @niledatabase/react build",
     "build:server": "yarn workspace @niledatabase/server build",
     "build:edge": "yarn workspace @niledatabase/edge build",
-    "build": "yarn build:js-lib && yarn build:server && yarn build:edge && yarn build:browser && yarn build:react",
-    "buildDocs": "yarn workspace @niledatabase/js typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true src/index.ts",
+    "build": "yarn build:server && yarn build:edge && yarn build:browser && yarn build:react",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "husky install",
     "prepare": "husky install",
     "publish": "yarn lerna publish",
     "test:browser": "yarn workspace @niledatabase/browser test",
-    "test:js-lib": "yarn workspace @niledatabase/js test",
     "test:react": "yarn workspace @niledatabase/react test",
     "test:server": "yarn workspace @niledatabase/server test"
   },
   "devDependencies": {
     "@commitlint/cli": "17.8.1",
     "@commitlint/config-conventional": "17.8.1",
+    "@types/mime": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.54.0",
@@ -48,5 +46,6 @@
   "lint-staged": {
     "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix .",
     "lib/nile/src/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix  ."
-  }
+  },
+  "packageManager": "yarn@4.1.1"
 }

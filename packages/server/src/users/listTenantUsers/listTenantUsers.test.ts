@@ -7,9 +7,10 @@ jest.mock('../../utils/ResponseError', () => ({
 }));
 
 const config = {
-  workspace: 'workspace',
-  database: 'database',
+  databaseId: 'databaseId',
   tenantId: 'tenant',
+  user: 'username',
+  password: 'password',
 };
 describe('listTenantUsers', () => {
   it('does a get', async () => {
@@ -24,8 +25,7 @@ describe('listTenantUsers', () => {
     const res = await listTenantUsers();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath +
-        '/workspaces/workspace/databases/database/tenants/tenant/users'
+      _config.api.basePath + '/databases/databaseId/tenants/tenant/users'
     );
   });
 });

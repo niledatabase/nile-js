@@ -5,7 +5,11 @@ import Auth from '../';
 jest.mock('../../utils/ResponseError', () => ({
   ResponseError: jest.fn(),
 }));
-const config = { workspace: 'workspace', database: 'database' };
+const config = {
+  databaseId: 'databaseId',
+  user: 'username',
+  password: 'password',
+};
 
 describe('signUp', () => {
   it('does a post', async () => {
@@ -20,7 +24,7 @@ describe('signUp', () => {
     const res = await signUp({ email: 'email', password: 'password' });
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath + '/workspaces/workspace/databases/database/users'
+      _config.api.basePath + '/databases/databaseId/users'
     );
   });
 });

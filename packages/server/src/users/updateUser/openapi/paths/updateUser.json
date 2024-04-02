@@ -3,6 +3,14 @@
   "summary": "Update a user",
   "description": "Updates user attributes by id",
   "operationId": "updateUser",
+  "parameters": [{
+    "name": "userId",
+    "in": "path",
+    "required": true,
+    "schema": {
+      "type": "string"
+    }
+  }],
   "requestBody": {
     "content": {
       "*/*": {

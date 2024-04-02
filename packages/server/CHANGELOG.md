@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.1.1-alpha.0...v2.1.1-alpha.1) (2024-04-02)
+
+**Note:** Version bump only for package @niledatabase/server
+
+## [2.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.1.0...v2.1.1-alpha.0) (2024-04-02)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [2.1.0](https://github.com/niledatabase/nile-js/compare/v1.0.0...v2.1.0) (2024-04-01)
+
+### Bug Fixes
+
+- **react:** fix storybook build, deps ([bd0db02](https://github.com/niledatabase/nile-js/commit/bd0db02771c3976b31d8204fb0053eea5594e357))
+- **server:** use env vars, add fake phone home, integration tests ([1cddfd6](https://github.com/niledatabase/nile-js/commit/1cddfd6e85cdbdc80a79c6818f6fe8461968b684))
+
+### Features
+
+- **server:** being using region apis ([c981d02](https://github.com/niledatabase/nile-js/commit/c981d02fa2e952d5dfcdb8f026d16978d63b4e74))
+- **server:** require username and password in initial config ([ad0d56b](https://github.com/niledatabase/nile-js/commit/ad0d56ba624eaa3d211dbc1683bbc2e30acb006c))
+- **server:** update user endpoints ([dda45ad](https://github.com/niledatabase/nile-js/commit/dda45ad1863508ebc605ed53912ab23ceb5788cc))
+- **server:** use auto-configure endpoint, logging ([51f17d5](https://github.com/niledatabase/nile-js/commit/51f17d56450ca2f0d86c304e11812b28e98863cf))
+- **server:** use pg-node instead of knex ([ca38bc0](https://github.com/niledatabase/nile-js/commit/ca38bc0ad5685d7e49e6902d78cba0a98b558af3))
+
+# [2.0.0](https://github.com/niledatabase/nile-js/compare/v1.0.0...v2.0.0) (2024-03-25)
+
+**Note:** Version bump only for package @niledatabase/server
+
 # [1.0.0](https://github.com/niledatabase/nile-js/compare/v1.0.0-alpha.202...v1.0.0) (2024-03-25)
 
 ### Reverts

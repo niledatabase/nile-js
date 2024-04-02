@@ -1,23 +1,28 @@
 import Nile from './Server';
 
 describe('server', () => {
-  it('has reasonable defaults', () => {
+  fit('has reasonable defaults', () => {
     const config = {
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
+      databaseName: 'databaseName',
+      user: 'username',
+      password: 'password',
     };
     const server = Nile(config);
-    expect(server.config.db.connection).toEqual({
+    expect(server.config.db).toEqual({
       host: 'db.thenile.dev',
       port: 5432,
-      database: 'database',
+      database: 'databaseName',
+      user: 'username',
+      password: 'password',
     });
     expect(server.config.api.basePath).toEqual('https://api.thenile.dev');
   });
   it('sets a tenant id everywhere when set', () => {
     const config = {
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
+      user: 'username',
+      password: 'password',
     };
     const nile = Nile(config);
     nile.tenantId = 'tenantId';
@@ -30,12 +35,17 @@ describe('server', () => {
   });
   it('manages instances', () => {
     const config = {
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
+      user: 'username',
+      password: 'password',
     };
     const nile = Nile(config);
 
-    const another = nile.getInstance({ database: 'somethingelse?!' });
+    const another = nile.getInstance({
+      databaseId: 'somethingelse?!',
+      user: 'username',
+      password: 'password',
+    });
     const theSameOne = nile.getInstance(config);
 
     // in this case, we change the base object tenant id
@@ -54,22 +64,27 @@ describe('server', () => {
 
   it('ensures existing configs get updated with provided configs', () => {
     const config = {
-      database: 'database',
-      workspace: 'workspace',
+      databaseId: 'databaseId',
+      user: 'username',
+      password: 'password',
     };
     const nile = Nile(config);
 
     const another = nile.getInstance({
-      database: 'somethingelse?!',
+      databaseId: 'somethingelse?!',
       tenantId: null,
+      user: 'username',
+      password: 'password',
     });
     expect(another.tenantId).toEqual(null);
     another.tenantId = 'something else';
     expect(another.tenantId).toEqual('something else');
 
     const sameOne = nile.getInstance({
-      database: 'somethingelse?!',
+      databaseId: 'somethingelse?!',
       tenantId: null,
+      user: 'username',
+      password: 'password',
     });
     expect(sameOne.tenantId).toEqual(null);
   });

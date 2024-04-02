@@ -4,10 +4,13 @@ const properties = ['connections'];
 describe('db', () => {
   it('has expected properties', () => {
     const db = new NileDB({
-      workspace: 'workspace',
-      database: 'database',
+      databaseId: 'databaseId',
+      databaseName: 'databaseName',
+      user: 'username',
+      password: 'password',
+      debug: false,
       db: {
-        connection: { port: 4433 },
+        port: 4433,
       },
       api: {
         token: 'blah',

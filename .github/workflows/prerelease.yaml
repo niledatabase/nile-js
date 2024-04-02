@@ -22,6 +22,9 @@ jobs:
           ref: main
           token: ${{secrets.PAT}}
 
+      - name: Enable Corepack before setting up Node
+        run: corepack enable
+
       # Setup .npmrc file to publish to GitHub Packages
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -39,21 +42,17 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Install @niledatabase/js
-        working-directory: lib/nile
-        run: yarn install --no-lockfile
-
       - name: Install @niledatabase/server
         working-directory: packages/server
-        run: yarn install --no-lockfile
+        run: yarn install --immutable
 
       - name: Install @niledatabase/browser
         working-directory: packages/browser
-        run: yarn install --no-lockfile
+        run: yarn install --immutable
 
       - name: Install @niledatabase/react
         working-directory: packages/react
-        run: yarn install --no-lockfile
+        run: yarn install --immutable
 
       - name: Build @niledatabase/packages
         run: yarn build
@@ -62,7 +61,7 @@ jobs:
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          npx lerna version --force-publish --conventional-commits --yes
+          npx lerna version --force-publish --conventional-prerelease --conventional-commits --yes
 
       - name: Publish
         env:

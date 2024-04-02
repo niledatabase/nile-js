@@ -4,6 +4,8 @@ import { ResponseError } from './ResponseError';
 import { Config } from './Config';
 import { NileRequest } from './Requester';
 import { updateTenantId, updateUserId } from './Event';
+import { getToken } from './Config/envVars';
+import Logger from './Logger';
 
 export const X_NILE_TENANT = 'x-nile-tenantId';
 export const X_NILE_USER_ID = 'x-nile-userId';
@@ -64,6 +66,8 @@ export async function _fetch(
   path: string,
   opts?: RequestInit
 ): Promise<Response | ResponseError> {
+  const { info, error } = Logger(config, '[server]');
+
   const url = `${config.api?.basePath}${path}`;
   const cookieKey = config.api?.cookieKey;
   const headers = new Headers(opts?.headers);
@@ -74,8 +78,8 @@ export async function _fetch(
     const token = getTokenFromCookie(headers, cookieKey);
     if (token) {
       basicHeaders.set('Authorization', `Bearer ${token}`);
-    } else if (config.api?.token) {
-      basicHeaders.set('Authorization', `Bearer ${config.api?.token}`);
+    } else if (getToken({ config })) {
+      basicHeaders.set('Authorization', `Bearer ${getToken({ config })}`);
     }
   }
 
@@ -91,35 +95,73 @@ export async function _fetch(
   const useableUrl = url
     .replace('{tenantId}', encodeURIComponent(String(tenantId)))
     .replace('{userId}', encodeURIComponent(String(userId)));
+
+  info('[fetch]', useableUrl);
+
   const response = await fetch(useableUrl, {
     ...opts,
     headers: basicHeaders,
   }).catch((e) => {
-    // eslint-disable-next-line no-console
-    console.log(e);
+    error('[fetch]', '[response]', e);
   });
 
   if (response && response.status >= 200 && response.status < 300) {
+    if (typeof response.clone === 'function') {
+      info('[fetch]', '[response]', await response.clone().json());
+    }
     return response;
   }
 
   let res;
+  const errorHandler =
+    typeof response?.clone === 'function' ? response.clone() : null;
+  let msg = '';
   try {
     res = await (response as Response)?.json();
   } catch (e) {
-    /* do the default */
+    if (errorHandler) {
+      msg = await errorHandler.text();
+      if (msg) {
+        error('[fetch]', '[response]', `[status: ${errorHandler.status}]`, msg);
+      }
+    }
+    if (!msg) {
+      error('[fetch]', '[response]', e);
+    }
   }
+  if (msg) {
+    return new ResponseError(msg, { status: errorHandler?.status });
+  }
+
   if (res && 'message' in res) {
     const { message } = res;
+    error(
+      '[fetch]',
+      '[response]',
+      `[status: ${errorHandler?.status}]`,
+      message
+    );
     return new ResponseError(message, { status: 400 });
   }
   if (res && 'errors' in res) {
     const {
       errors: [message],
     } = res;
+    error(
+      '[fetch]',
+      '[response]',
+      `[status: ${errorHandler?.status}]`,
+      message
+    );
     return new ResponseError(message, { status: 400 });
   }
 
+  error(
+    '[fetch]',
+    '[response]',
+    `[status: ${errorHandler?.status}]`,
+    'UNHANDLED ERROR'
+  );
   return new ResponseError(null, {
     status: (response as Response)?.status ?? 500,
   });

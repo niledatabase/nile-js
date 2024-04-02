@@ -7,8 +7,9 @@ jest.mock('../../utils/ResponseError', () => ({
 }));
 
 const config = {
-  workspace: 'workspace',
-  database: 'database',
+  databaseId: 'databaseId',
+  user: 'username',
+  password: 'password',
   tenantId: 'tenantId',
 };
 describe('listProviders', () => {
@@ -24,8 +25,7 @@ describe('listProviders', () => {
     const res = await listProviders();
     //@ts-expect-error - test
     expect(res.config).toEqual(
-      _config.api.basePath +
-        '/workspaces/workspace/databases/database/tenants/auth/oidc/providers'
+      _config.api.basePath + '/databases/databaseId/tenants/auth/oidc/providers'
     );
   });
 });
@@ -51,7 +51,7 @@ describe('updateProvider', () => {
     //@ts-expect-error - test
     expect(res.config).toEqual(
       _config.api.basePath +
-        '/workspaces/workspace/databases/database/tenants/tenantId/auth/oidc/providers/okta'
+        '/databases/databaseId/tenants/tenantId/auth/oidc/providers/okta'
     );
   });
 });
