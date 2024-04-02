@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.2-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.1.1...v2.1.2-alpha.0) (2024-04-02)
+
+### Bug Fixes
+
+- **server:** update types for getInstance ([dc0bbb9](https://github.com/niledatabase/nile-js/commit/dc0bbb9b850eb15c08b291eb7420ac37b8eb05d8))
+
 ## [2.1.1](https://github.com/niledatabase/nile-js/compare/v2.1.1-alpha.2...v2.1.1) (2024-04-02)
 
 **Note:** Version bump only for package @niledatabase/server
