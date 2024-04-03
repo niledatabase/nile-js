@@ -19,6 +19,7 @@ const baseConfig = [
   'loginSSOUrl',
   'signUp',
   'updateProvider',
+  'configure',
   'user',
   'password',
 ];

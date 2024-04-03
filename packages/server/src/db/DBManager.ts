@@ -3,6 +3,7 @@ import { Pool } from 'pg';
 import { Config } from '../utils/Config';
 import { watchEvictPool } from '../utils/Event';
 import Logger from '../utils/Logger';
+import { ServerConfig } from '../types';
 
 import NileDatabase from './NileInstance';
 
@@ -21,7 +22,7 @@ export default class DBManager {
     }
     return 'base';
   }
-  constructor(config: Config) {
+  constructor(config: ServerConfig) {
     const { info } = Logger(config, '[DBManager]');
     this.connections = new Map();
     // add the base one, so you can at least query
@@ -35,7 +36,7 @@ export default class DBManager {
     });
   }
 
-  getConnection(config: Config): Pool {
+  getConnection(config: ServerConfig): Pool {
     const { info } = Logger(config, '[DBManager]');
     const id = this.makeId(config.tenantId, config.userId);
     const existing = this.connections.get(id);
