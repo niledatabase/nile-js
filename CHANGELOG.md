@@ -16,6 +16,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **repo:** export esm modules ([8b379a3](https://github.com/niledatabase/nile-js/commit/8b379a34f5e99aad83adb21938b6012522aed93b))
 - **server:** use init vs blocking fetch ([19d150d](https://github.com/niledatabase/nile-js/commit/19d150d07887f74660cbfc1140134b1a49ce194b))
 
+## [2.2.0](https://github.com/niledatabase/nile-js/compare/v2.1.1...v2.2.0) (2024-04-03)
+
+
+### Features
+
+* **repo:** export esm modules ([8b379a3](https://github.com/niledatabase/nile-js/commit/8b379a34f5e99aad83adb21938b6012522aed93b))
+* **server:** use init vs blocking fetch ([19d150d](https://github.com/niledatabase/nile-js/commit/19d150d07887f74660cbfc1140134b1a49ce194b))
+
+
+### Bug Fixes
+
+* **react:** add @mui/utils ([aacc06a](https://github.com/niledatabase/nile-js/commit/aacc06ad7940ea99e5b41ce3e8ce639b294c941e))
+* **server:** remove extra deps ([047aa61](https://github.com/niledatabase/nile-js/commit/047aa613a019a4763360614f8c674cd4a64c952b))
+* **server:** update types for getInstance ([dc0bbb9](https://github.com/niledatabase/nile-js/commit/dc0bbb9b850eb15c08b291eb7420ac37b8eb05d8))
+
 ## [2.1.2-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.1.2-alpha.0...v2.1.2-alpha.1) (2024-04-02)
 
 ### Bug Fixes
