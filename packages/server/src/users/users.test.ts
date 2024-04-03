@@ -14,6 +14,7 @@ const baseConfig = [
   'me',
   'databaseName',
   'debug',
+  'configure',
   'updateUser',
   'user',
   'password',

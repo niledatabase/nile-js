@@ -83,31 +83,75 @@ export class Config {
     this._userId = value;
   }
 
-  constructor(config: ServerConfig, allowPhoneHome?: boolean) {
-    const { info, error } = Logger(config, '[config]');
-
+  constructor(config: ServerConfig) {
     const envVarConfig: EnvConfig = {
       config,
     };
-    if (allowPhoneHome) {
-      envVarConfig.logger = '[config]';
-    }
     this.databaseId = getDatbaseId(envVarConfig) as string;
     this.user = getUsername(envVarConfig) as string;
     this.password = getPassword(envVarConfig) as string;
     this.databaseName = getDatabaseName(envVarConfig) as string;
     this._tenantId = getTenantId(envVarConfig);
     this.debug = Boolean(config?.debug);
+    this._userId = config?.userId;
 
+    const basePath = getBasePath(envVarConfig);
+    const host = getDbHost(envVarConfig);
+    const port = getDbPort(envVarConfig);
+
+    this.api = new ApiConfig({
+      basePath,
+      cookieKey: config?.api?.cookieKey ?? 'token',
+      token: getToken({ config }),
+    });
+    this.db = {
+      user: this.user,
+      password: this.password,
+      host,
+      port,
+      database: this.databaseName,
+      ...(typeof config?.db === 'object' ? config.db : {}),
+    };
+  }
+
+  configure = async (config: ServerConfig): Promise<Config> => {
+    const { info, error } = Logger(config, '[init]');
+    const envVarConfig: EnvConfig = {
+      config,
+    };
     let basePath = getBasePath(envVarConfig);
-
     let host = getDbHost(envVarConfig);
     const port = getDbPort(envVarConfig);
 
-    this._userId = config?.userId;
-
-    if (allowPhoneHome && (!host || !this.databaseName || !this.databaseId)) {
-      const database = getInfo(config);
+    const databaseName = getDatabaseName({ config, logger: 'getInfo' });
+    const url = new URL(`${basePath}/databases/configure`);
+    if (databaseName) {
+      url.searchParams.set('databaseName', databaseName);
+    }
+    info(url.href);
+    const res = syncFetch(url, {
+      headers: {
+        Authorization: `Bearer ${getInfoBearer({ config })}`,
+      },
+    });
+    let database: Database;
+    const possibleError = res.clone();
+    try {
+      const json: Database = res.json();
+      if (res.status === 404) {
+        info('is the configured databaseName correct?');
+      }
+      if (json.status && json.status !== 'READY') {
+        database = { message: 'Database is not ready yet' } as Database;
+      } else {
+        database = json;
+      }
+    } catch (e) {
+      const message = possibleError.text();
+      error(message);
+      database = { message } as Database;
+    }
+    if (!host || !this.databaseName || !this.databaseId) {
       info('[fetched database]', database);
       if (process.env.NODE_ENV !== 'TEST') {
         if ('message' in database) {
@@ -132,7 +176,6 @@ export class Config {
         }
       }
     }
-
     this.api = new ApiConfig({
       basePath,
       cookieKey: config?.api?.cookieKey ?? 'token',
@@ -146,39 +189,7 @@ export class Config {
       database: this.databaseName,
       ...(typeof config?.db === 'object' ? config.db : {}),
     };
-    if (allowPhoneHome) {
-      info(this);
-    }
-  }
-}
-
-function getInfo(config: ServerConfig): Database {
-  const basePath = getBasePath({ config });
-  const databaseName = getDatabaseName({ config, logger: 'getInfo' });
-  const url = new URL(`${basePath}/databases/configure`);
-  if (databaseName) {
-    url.searchParams.set('databaseName', databaseName);
-  }
-  const { info, error } = Logger(config, '[getInfo]');
-  info(url.href);
-  const res = syncFetch(url, {
-    headers: {
-      Authorization: `Bearer ${getInfoBearer({ config })}`,
-    },
-  });
-  const possibleError = res.clone();
-  try {
-    const json: Database = res.json();
-    if (res.status === 404) {
-      info('is the configured databaseName correct?');
-    }
-    if (json.status && json.status !== 'READY') {
-      return { message: 'Database is not ready yet' } as Database;
-    }
-    return json;
-  } catch (e) {
-    const message = possibleError.text();
-    error(message);
-    return { message } as Database;
-  }
+    info('[config set]', this);
+    return this;
+  };
 }

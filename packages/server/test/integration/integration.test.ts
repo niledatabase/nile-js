@@ -26,7 +26,8 @@ const config: ServerConfig = {
 
 describe.skip('api integration', () => {
   it('does a bunch of api calls', async () => {
-    const nile = Server(config);
+    const nile = new Server(config);
+    await nile.init();
     const loginResp = await nile.api.auth.login({
       email: String(process.env.EMAIL),
       password: String(process.env.PASSWORD),
@@ -57,7 +58,8 @@ describe.skip('api integration', () => {
 
 describe.skip('db integration', () => {
   it('queries', async () => {
-    const nile = Server(config);
+    const nile = new Server(config);
+    await nile.init();
     const res = await nile.db.query('select * from tenants');
     expect(res.rowCount).toBeGreaterThan(0);
   });

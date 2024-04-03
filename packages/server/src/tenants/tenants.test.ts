@@ -13,6 +13,7 @@ const baseConfig = [
   'databaseId',
   'databaseName',
   'user',
+  'configure',
   'password',
 ];
 const config = {

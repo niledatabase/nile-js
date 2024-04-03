@@ -15,17 +15,15 @@ type Api = {
   tenants: Tenants;
 };
 
-const init = (config: Config): [Api] => {
+const init = (config: Config): Api => {
   const auth = new Auth(config);
   const users = new Users(config);
   const tenants = new Tenants(config);
-  return [
-    {
-      auth,
-      users,
-      tenants,
-    },
-  ];
+  return {
+    auth,
+    users,
+    tenants,
+  };
 };
 
 class Server {
@@ -35,10 +33,9 @@ class Server {
   private servers: Map<string, Server>;
 
   constructor(config?: ServerConfig) {
-    this.config = new Config(config as ServerConfig, true);
+    this.config = new Config(config as ServerConfig);
     this.servers = new Map();
-    const [api] = init(this.config);
-    this.api = api;
+    this.api = init(this.config);
     this.manager = new DbManager(this.config);
 
     watchTenantId((tenantId) => {
@@ -55,7 +52,17 @@ class Server {
   }
 
   setConfig(cfg: Config) {
-    this.config = new Config(cfg, false);
+    this.config = new Config(cfg);
+  }
+
+  async init(cfg?: Config) {
+    const updatedConfig = await this.config.configure({
+      ...this.config,
+      ...cfg,
+    });
+    this.setConfig(updatedConfig);
+    this.manager = new DbManager(this.config);
+    this.api = init(updatedConfig);
   }
 
   set databaseId(val: string | void) {
@@ -134,7 +141,7 @@ class Server {
 
     if (existing) {
       // be sure the config is up to date
-      const updatedConfig = new Config(_config, false);
+      const updatedConfig = new Config(_config);
       existing.setConfig(updatedConfig);
       // propagage special config items
       existing.tenantId = updatedConfig.tenantId;
@@ -149,9 +156,4 @@ class Server {
   }
 }
 
-// export default Server;
-export default function Nile(config?: ServerConfig) {
-  const server = new Server(config);
-  // server.setConfig(new Config(config as ServerConfig, false));
-  return server;
-}
+export default Server;
