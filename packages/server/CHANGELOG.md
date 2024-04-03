@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.2.0-alpha.0...v2.2.0-alpha.1) (2024-04-03)
+
+### Bug Fixes
+
+- **server:** remove extra deps ([047aa61](https://github.com/niledatabase/nile-js/commit/047aa613a019a4763360614f8c674cd4a64c952b))
+
 # [2.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.1.2-alpha.1...v2.2.0-alpha.0) (2024-04-03)
 
 ### Features
