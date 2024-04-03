@@ -1,5 +1,3 @@
-import syncFetch from 'sync-fetch';
-
 import { NilePoolConfig, ServerConfig } from '../../types';
 import Logger from '../Logger';
 
@@ -129,7 +127,7 @@ export class Config {
       url.searchParams.set('databaseName', databaseName);
     }
     info(url.href);
-    const res = syncFetch(url, {
+    const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${getInfoBearer({ config })}`,
       },
@@ -137,7 +135,7 @@ export class Config {
     let database: Database;
     const possibleError = res.clone();
     try {
-      const json: Database = res.json();
+      const json: Database = await res.json();
       if (res.status === 404) {
         info('is the configured databaseName correct?');
       }
@@ -147,7 +145,7 @@ export class Config {
         database = json;
       }
     } catch (e) {
-      const message = possibleError.text();
+      const message = await possibleError.text();
       error(message);
       database = { message } as Database;
     }
