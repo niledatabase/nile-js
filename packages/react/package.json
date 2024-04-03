@@ -2,7 +2,18 @@
   "name": "@niledatabase/react",
   "version": "2.1.2-alpha.1",
   "license": "MIT",
-  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "default": "./dist/react.esm.js"
+    },
+    "./src": {
+      "default": "./src/index.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/react.esm.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],

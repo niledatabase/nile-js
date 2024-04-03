@@ -7,12 +7,14 @@ Consolidates the API and DB for working with Nile.
 ### With configuration object
 
 ```ts
-import Server from '@niledatabase/server';
+import Nile from '@niledatabase/server';
 
-const nile = Server({
+const nile = new Nile({
   user: 'username',
   password: 'password',
 });
+
+await nile.init();
 
 await nile.api.createTenant({ name: 'name' });
 
@@ -27,18 +29,20 @@ NILEDB_PASSWORD=password
 ```
 
 ```ts
-import Server from '@niledatabase/server';
+import Nile from '@niledatabase/server';
 
-const nile = Server();
+const nile = new Nile();
+
+await nile.init();
 
 await nile.api.createTenant({ name: 'name' });
 
 await nile.db.query('select * from todo');
 ```
 
-## Auto-configuration
+## Initialization
 
-In addition to `user` and `password`, a fully configured SDK must also have values for `db.host`, `databaseName`, and `databaseId`. If the values are not provided in either the `.env` file or the instance configuration, the SDK will automatically phone home to configure itself. For production, it is recommended to set those values.
+In addition to `user` and `password`, a fully configured SDK must also have values for `db.host`, `databaseName`, and `databaseId`. If the values are not provided in either the `.env` file or the instance configuration, the `init()` function should be called, which will allow the SDK to automatically configure itself. For production, it is recommended to set those values.
 
 ## Configuration
 
