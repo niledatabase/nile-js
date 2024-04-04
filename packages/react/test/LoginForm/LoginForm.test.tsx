@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { Client } from '@niledatabase/browser';
+import Browser from '@niledatabase/browser';
 
 import { NileProvider } from '../../src/context';
 import '../matchMedia.mock';
@@ -15,7 +15,7 @@ describe('LoginForm', () => {
       auth: {
         login: async () => jest.fn(),
       },
-    } as unknown as Client;
+    } as unknown as Browser;
     render(
       <NileProvider api={api}>
         <LoginForm onSuccess={onSuccess} />

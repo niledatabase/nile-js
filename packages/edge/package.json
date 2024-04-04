@@ -1,8 +1,9 @@
 {
   "name": "@niledatabase/edge",
-  "version": "2.1.1",
+  "version": "2.2.0-alpha.3",
   "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/edge.esm.js",
   "files": [
     "dist"
   ],

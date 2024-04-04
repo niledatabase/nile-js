@@ -1,8 +1,9 @@
 {
   "name": "@niledatabase/react",
-  "version": "2.1.1",
+  "version": "2.2.0-alpha.3",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/react.esm.js",
   "files": [
     "dist"
   ],
@@ -97,9 +98,10 @@
     "@mui/icons-material": "^5.14.18",
     "@mui/joy": "5.0.0-beta.15",
     "@mui/material": "5.14.18",
+    "@mui/utils": "^5.15.14",
     "@mui/x-data-grid": "^7.0.0",
     "@mui/x-date-pickers": "^7.0.0",
-    "@niledatabase/browser": "^2.1.1",
+    "@niledatabase/browser": "^2.2.0-alpha.3",
     "@storybook/test": "^8.0.0",
     "@tanstack/react-query": "^4.36.1",
     "dts-cli": "^2.0.3",

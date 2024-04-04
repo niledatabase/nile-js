@@ -8,7 +8,7 @@ describe('server', () => {
       user: 'username',
       password: 'password',
     };
-    const server = Nile(config);
+    const server = new Nile(config);
     expect(server.config.db).toEqual({
       host: 'db.thenile.dev',
       port: 5432,
@@ -24,7 +24,7 @@ describe('server', () => {
       user: 'username',
       password: 'password',
     };
-    const nile = Nile(config);
+    const nile = new Nile(config);
     nile.tenantId = 'tenantId';
     nile.userId = 'userId';
     for (const api in nile.api) {
@@ -39,7 +39,7 @@ describe('server', () => {
       user: 'username',
       password: 'password',
     };
-    const nile = Nile(config);
+    const nile = new Nile(config);
 
     const another = nile.getInstance({
       databaseId: 'somethingelse?!',
@@ -68,7 +68,7 @@ describe('server', () => {
       user: 'username',
       password: 'password',
     };
-    const nile = Nile(config);
+    const nile = new Nile(config);
 
     const another = nile.getInstance({
       databaseId: 'somethingelse?!',

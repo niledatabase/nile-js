@@ -1,13 +1,14 @@
 {
   "name": "@niledatabase/browser",
-  "version": "2.1.1",
+  "version": "2.2.0-alpha.3",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/browser.esm.js",
   "files": [
     "dist"
   ],
   "engines": {
-    "node": ">=16.0"
+    "node": ">=18.0"
   },
   "scripts": {
     "start": "dts watch",

@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v2.2.0-alpha.2...v2.2.0-alpha.3) (2024-04-04)
+
+**Note:** Version bump only for package @niledatabase/packages
+
+# [2.2.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v2.2.0-alpha.1...v2.2.0-alpha.2) (2024-04-04)
+
+### Bug Fixes
+
+- **repo:** esm modules again ([6f7a32d](https://github.com/niledatabase/nile-js/commit/6f7a32d5da4aab536d9f5beada8d5eb949347751))
+- **server:** export types from index ([dac0bee](https://github.com/niledatabase/nile-js/commit/dac0bee516ff30122c5c2473acd85bd7f1abb2bb))
+
+# [2.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.2.0-alpha.0...v2.2.0-alpha.1) (2024-04-03)
+
+### Bug Fixes
+
+- **server:** remove extra deps ([047aa61](https://github.com/niledatabase/nile-js/commit/047aa613a019a4763360614f8c674cd4a64c952b))
+
+# [2.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.1.2-alpha.1...v2.2.0-alpha.0) (2024-04-03)
+
+### Features
+
+- **repo:** export esm modules ([8b379a3](https://github.com/niledatabase/nile-js/commit/8b379a34f5e99aad83adb21938b6012522aed93b))
+- **server:** use init vs blocking fetch ([19d150d](https://github.com/niledatabase/nile-js/commit/19d150d07887f74660cbfc1140134b1a49ce194b))
+
+## [2.1.2-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.1.2-alpha.0...v2.1.2-alpha.1) (2024-04-02)
+
+### Bug Fixes
+
+- **react:** add @mui/utils ([aacc06a](https://github.com/niledatabase/nile-js/commit/aacc06ad7940ea99e5b41ce3e8ce639b294c941e))
+
+## [2.1.2-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.1.1...v2.1.2-alpha.0) (2024-04-02)
+
+### Bug Fixes
+
+- **server:** update types for getInstance ([dc0bbb9](https://github.com/niledatabase/nile-js/commit/dc0bbb9b850eb15c08b291eb7420ac37b8eb05d8))
+
 ## [2.1.1](https://github.com/niledatabase/nile-js/compare/v2.1.1-alpha.2...v2.1.1) (2024-04-02)
 
 **Note:** Version bump only for package @niledatabase/packages

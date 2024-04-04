@@ -1,19 +1,21 @@
 {
   "name": "@niledatabase/server",
-  "version": "2.1.1",
+  "version": "2.2.0-alpha.3",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/server.esm.js",
   "files": [
     "dist"
   ],
   "engines": {
-    "node": ">=16.0"
+    "node": ">=18.0"
   },
   "scripts": {
     "start": "dts watch",
     "build:spec": "yarn swagger-cli bundle openapi/index.json --outfile openapi/spec.json -r",
     "build": "yarn build:spec && dts build --tsconfig ./tsconfig.build.json",
     "test": "dts test",
+    "integration": "NODE_ENV=DEV dts test integration",
     "lint": "eslint src",
     "size": "size-limit",
     "analyze": "size-limit --why"
@@ -50,7 +52,6 @@
     "@types/lodash": "^4",
     "@types/mime": "^4.0.0",
     "@types/pg": "^8.11.4",
-    "@types/sync-fetch": "^0",
     "@typescript-eslint/parser": "^5.62.0",
     "babel-loader": "^9.1.3",
     "dts-cli": "^2.0.3",
@@ -67,10 +68,8 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "install": "^0.13.0",
     "jose": "^4.15.4",
     "lodash": "^4.17.21",
-    "pg": "^8.11.3",
-    "sync-fetch": "^0.5.2"
+    "pg": "^8.11.3"
   }
 }
