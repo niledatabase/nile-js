@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v2.2.0-alpha.1...v2.2.0-alpha.2) (2024-04-04)
+
+### Bug Fixes
+
+- **repo:** esm modules again ([6f7a32d](https://github.com/niledatabase/nile-js/commit/6f7a32d5da4aab536d9f5beada8d5eb949347751))
+- **server:** export types from index ([dac0bee](https://github.com/niledatabase/nile-js/commit/dac0bee516ff30122c5c2473acd85bd7f1abb2bb))
+
 # [2.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.2.0-alpha.0...v2.2.0-alpha.1) (2024-04-03)
 
 ### Bug Fixes
