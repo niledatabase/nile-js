@@ -8,7 +8,7 @@ import {
   ConfigurationParameters,
 } from './openapi/src';
 
-export class Client {
+export default class Browser {
   auth: AuthenticationApi;
   users: UsersApi;
   constructor(params: ConfigurationParameters) {
@@ -16,7 +16,4 @@ export class Client {
     this.auth = new AuthenticationApi(config);
     this.users = new UsersApi(config);
   }
-}
-export default function Browser(config?: ConfigurationParameters) {
-  return new Client(config ?? {});
 }

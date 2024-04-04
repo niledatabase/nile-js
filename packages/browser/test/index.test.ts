@@ -1,8 +1,8 @@
-import { Client as RestAPI } from '../src';
+import Browser from '../src';
 
 describe('nile db', () => {
   it('has expected methods', () => {
-    const nile = new RestAPI({});
+    const nile = new Browser({});
     const keys = Object.keys(nile);
     expect(keys).toEqual(['auth', 'users']);
     keys.forEach((k) => {

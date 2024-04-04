@@ -1,4 +1,4 @@
-import { Client } from '@niledatabase/browser';
+import Browser from '@niledatabase/browser';
 import { Theme } from '@mui/joy/styles';
 
 export interface NileReactConfig {
@@ -7,7 +7,7 @@ export interface NileReactConfig {
 }
 
 export type NileContext = NileReactConfig & {
-  api: Client;
+  api: Browser;
   theme?: Theme;
 };
 
@@ -15,5 +15,5 @@ export type NileProviderProps = NileReactConfig & {
   children: JSX.Element | JSX.Element[];
   theme?: Theme;
   QueryProvider?: (props: { children: JSX.Element }) => JSX.Element;
-  api?: Client;
+  api?: Browser;
 };
