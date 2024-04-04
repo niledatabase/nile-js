@@ -64,7 +64,7 @@ export const getToken = (cfg: EnvConfig) => {
 
 export const getDatabaseName = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
-  const { info } = Logger(config, '[databaseName]');
+  const { warn, info } = Logger(config, '[databaseName]');
   if (config?.databaseName) {
     logger && info(logger, 'config', config.databaseName);
     return String(config.databaseName);
@@ -73,6 +73,11 @@ export const getDatabaseName = (cfg: EnvConfig) => {
     logger && info(logger, 'config', process.env.NILEDB_NAME);
     return process.env.NILEDB_NAME;
   }
+  warn(
+    logger,
+    'config',
+    'No database has been set. Set NILEDB_NAME in .env or call `nile.init()`'
+  );
   return null;
 };
 
