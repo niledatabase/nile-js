@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import React, { useMemo, createContext, useContext } from 'react';
-import BrowserApi, { Client } from '@niledatabase/browser';
+import Browser from '@niledatabase/browser';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import ThemeProvider from './theme';
@@ -9,7 +9,7 @@ import { NileContext, NileProviderProps, NileReactConfig } from './types';
 const queryClient = new QueryClient();
 
 const defaultContext: NileContext = {
-  api: BrowserApi({
+  api: new Browser({
     basePath: 'https://api.thenile.dev',
     credentials: 'include',
   }),
@@ -44,7 +44,7 @@ export const NileProvider = (props: NileProviderProps) => {
     return {
       api:
         api ??
-        BrowserApi({
+        new Browser({
           basePath,
           credentials: 'include',
         }),
@@ -77,6 +77,6 @@ export const useNileConfig = (): NileReactConfig => {
   );
 };
 
-export const useApi = (): Client => {
+export const useApi = (): Browser => {
   return useNileContext().api;
 };

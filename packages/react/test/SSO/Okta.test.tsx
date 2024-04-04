@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { Client } from '@niledatabase/browser';
+import Browser from '@niledatabase/browser';
 
 import '../matchMedia.mock';
 import { NileProvider } from '../../src/context';
@@ -15,7 +15,7 @@ describe('Okta', () => {
       auth: {
         createProvider: async () => jest.fn(),
       },
-    } as unknown as Client;
+    } as unknown as Browser;
     render(
       <NileProvider api={api}>
         <Okta
