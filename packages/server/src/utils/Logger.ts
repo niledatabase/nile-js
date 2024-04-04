@@ -14,7 +14,7 @@ export default function Logger(
       }
     },
     warn(...args: unknown[]) {
-      if (config?.debug) {
+      if (process.env.NODE_ENV !== 'test') {
         // eslint-disable-next-line no-console
         console.warn('[niledb]', ...params, ...args);
       }
