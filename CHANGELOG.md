@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.2.1...v2.3.0-alpha.0) (2024-04-05)
+
+### Features
+
+- **server:** async default export, sync server export ([0d0e636](https://github.com/niledatabase/nile-js/commit/0d0e636766275150f03e5ffe4d1d7bb7b397a7c4))
+
 ## [2.2.1](https://github.com/niledatabase/nile-js/compare/v2.2.1-alpha.0...v2.2.1) (2024-04-05)
 
 **Note:** Version bump only for package @niledatabase/packages
