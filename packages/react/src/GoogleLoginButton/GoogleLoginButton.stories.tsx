@@ -4,6 +4,7 @@ import Stack from '@mui/joy/Stack';
 import Input from '@mui/joy/Input';
 
 import { NileProvider } from '../context';
+import theme from '../../.storybook/themeConfig';
 
 import GoogleLoginButton from './GoogleLoginButton';
 
@@ -17,7 +18,7 @@ export default meta;
 
 export function Basic() {
   return (
-    <NileProvider>
+    <NileProvider {...theme}>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <GoogleLoginButton />
       </div>
@@ -28,7 +29,7 @@ export function Basic() {
 export function BasicWithTenantNameProvider() {
   const [newTenant, setNewTenant] = React.useState<string | undefined>();
   return (
-    <NileProvider>
+    <NileProvider {...theme}>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <Stack gap={2}>
           <Stack>
@@ -57,7 +58,7 @@ export function AlphaVersionWithOutProvider() {
 
 export function AlphaVersionWithProvider() {
   return (
-    <NileProvider>
+    <NileProvider {...theme}>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <GoogleLoginButton />
       </div>

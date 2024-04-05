@@ -164,9 +164,6 @@ export default function SimpleForm(props: {
                           endDecorator={
                             field.value ? options[0].label : options[1].label
                           }
-                          sx={{
-                            '--Switch-thumbSize': '28px',
-                          }}
                         />
                       );
                     }}

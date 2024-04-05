@@ -1,7 +1,9 @@
 import React from 'react';
+import Typography from '@mui/joy/Typography';
 import { Meta } from '@storybook/react';
 
 import { NileProvider } from '../context';
+import theme from '../../.storybook/themeConfig';
 
 import BaseSSOForm, { Okta } from '.';
 
@@ -14,9 +16,16 @@ export default meta;
 
 export function BasicSSO() {
   return (
-    <NileProvider>
-      <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
+    <NileProvider {...theme}>
+      <div
+        style={{ maxWidth: '20rem', margin: '0 auto' }}
+        data-joy-color-scheme="dark"
+      >
+        <Typography>Some kind of cool explaination</Typography>
         <BaseSSOForm
+          configurationGuide={
+            <Typography>Some kind of cool explaination</Typography>
+          }
           providerName="placeholder"
           onSuccess={() => alert('success!')}
         />
@@ -26,8 +35,11 @@ export function BasicSSO() {
 }
 export function OktaSSO() {
   return (
-    <NileProvider>
-      <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
+    <NileProvider {...theme}>
+      <div
+        style={{ maxWidth: '20rem', margin: '0 auto' }}
+        data-joy-color-scheme="dark"
+      >
         <Okta
           onSuccess={() => {
             alert('success!');

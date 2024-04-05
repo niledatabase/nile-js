@@ -34,6 +34,7 @@ export const NileProvider = (props: NileProviderProps) => {
   const {
     children,
     theme,
+    slotProps,
     tenantId,
     QueryProvider = BaseQueryProvider,
     basePath = 'https://api.thenile.dev',
@@ -55,7 +56,7 @@ export const NileProvider = (props: NileProviderProps) => {
 
   return (
     <QueryProvider>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider slotProps={slotProps?.provider} theme={theme}>
         <Provider value={values}>{children}</Provider>
       </ThemeProvider>
     </QueryProvider>

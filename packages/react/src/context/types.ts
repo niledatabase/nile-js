@@ -14,6 +14,9 @@ export type NileContext = NileReactConfig & {
 export type NileProviderProps = NileReactConfig & {
   children: JSX.Element | JSX.Element[];
   theme?: Theme;
+  slotProps?: {
+    provider?: Record<string, string>;
+  };
   QueryProvider?: (props: { children: JSX.Element }) => JSX.Element;
   api?: Browser;
 };

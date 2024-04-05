@@ -2,6 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { NileProvider } from '../context';
+import theme from '../../.storybook/themeConfig';
 
 import UserList from '.';
 
@@ -22,7 +23,7 @@ const users = [
 ];
 export function Basic() {
   return (
-    <NileProvider tenantId="tenantId">
+    <NileProvider {...theme} tenantId="tenantId" data-joy-color-scheme="dark">
       <UserList data={users} />
     </NileProvider>
   );

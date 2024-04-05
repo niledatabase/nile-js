@@ -4,17 +4,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Theme } from '@mui/joy/styles';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 
-import defaultTheme from './config';
-
 export default function Themer({
   theme,
   children,
+  slotProps,
 }: {
   theme?: Theme;
   children: JSX.Element;
+  slotProps?: Record<string, string>;
 }) {
   return (
-    <JoyCssVarsProvider theme={theme ?? defaultTheme} defaultMode="dark">
+    <JoyCssVarsProvider {...slotProps} theme={theme}>
       <CssBaseline enableColorScheme />
       {children}
     </JoyCssVarsProvider>
