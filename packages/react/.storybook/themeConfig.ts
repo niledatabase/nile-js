@@ -131,7 +131,6 @@ mergedTheme.unstable_sxConfig = {
 
 export default {
   theme: mergedTheme,
-  defaultMode: 'dark',
   slotProps: {
     provider: {
       defaultMode: 'dark',

@@ -173,7 +173,6 @@ export class Config {
         const { apiHost, dbHost, name, id } = database;
         this.databaseId = id;
         this.databaseName = name;
-        // gotta do something dumb here
         const dburl = new URL(dbHost);
         const apiurl = new URL(apiHost);
         host = dburl.host;
