@@ -107,18 +107,26 @@ export class Config {
       password: this.password,
       host,
       port,
-      database: this.databaseName,
       ...(typeof config?.db === 'object' ? config.db : {}),
     };
+    if (this.databaseName) {
+      this.db.database = this.databaseName;
+    }
   }
 
   configure = async (config: ServerConfig): Promise<Config> => {
-    const { info, error } = Logger(config, '[init]');
     const envVarConfig: EnvConfig = {
       config,
     };
-    let basePath = getBasePath(envVarConfig);
     let host = getDbHost(envVarConfig);
+    const { info, error } = Logger(config, '[init]');
+
+    if (host && this.databaseName && this.databaseId) {
+      info('Alreaady configured, aborting fetch');
+      return this;
+    }
+
+    let basePath = getBasePath(envVarConfig);
     const port = getDbPort(envVarConfig);
 
     const databaseName = getDatabaseName({ config, logger: 'getInfo' });
@@ -149,29 +157,27 @@ export class Config {
       error(message);
       database = { message } as Database;
     }
-    if (!host || !this.databaseName || !this.databaseId) {
-      info('[fetched database]', database);
-      if (process.env.NODE_ENV !== 'TEST') {
-        if ('message' in database) {
-          if ('statusCode' in database) {
-            error(database);
-            throw new Error('HTTP error has occured');
-          } else {
-            throw new Error(
-              'Unable to auto-configure. Please set or remove NILEDB_API, NILEDB_NAME, and NILEDB_HOST in your .env file.'
-            );
-          }
+    info('[fetched database]', database);
+    if (process.env.NODE_ENV !== 'TEST') {
+      if ('message' in database) {
+        if ('statusCode' in database) {
+          error(database);
+          throw new Error('HTTP error has occured');
+        } else {
+          throw new Error(
+            'Unable to auto-configure. Please set or remove NILEDB_API, NILEDB_NAME, and NILEDB_HOST in your .env file.'
+          );
         }
-        if (typeof database === 'object') {
-          const { apiHost, dbHost, name, id } = database;
-          this.databaseId = id;
-          this.databaseName = name;
-          // gotta do something dumb here
-          const dburl = new URL(dbHost);
-          const apiurl = new URL(apiHost);
-          host = dburl.host;
-          basePath = apiurl.origin;
-        }
+      }
+      if (typeof database === 'object') {
+        const { apiHost, dbHost, name, id } = database;
+        this.databaseId = id;
+        this.databaseName = name;
+        // gotta do something dumb here
+        const dburl = new URL(dbHost);
+        const apiurl = new URL(apiHost);
+        host = dburl.host;
+        basePath = apiurl.origin;
       }
     }
     this.api = new ApiConfig({
