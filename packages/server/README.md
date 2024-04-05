@@ -9,12 +9,10 @@ Consolidates the API and DB for working with Nile.
 ```ts
 import Nile from '@niledatabase/server';
 
-const nile = new Nile({
+const nile = await Nile({
   user: 'username',
   password: 'password',
 });
-
-await nile.init();
 
 await nile.api.createTenant({ name: 'name' });
 
@@ -31,9 +29,7 @@ NILEDB_PASSWORD=password
 ```ts
 import Nile from '@niledatabase/server';
 
-const nile = new Nile();
-
-await nile.init();
+const nile = await Nile();
 
 await nile.api.createTenant({ name: 'name' });
 

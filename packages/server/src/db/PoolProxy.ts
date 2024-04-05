@@ -11,14 +11,17 @@ export function createProxyForPool(pool: Pool, config: Config): Pool {
   return new Proxy<Pool>(pool, {
     get(target: AllowAny, property) {
       if (property === 'query') {
-        if (!config.user || !config.password) {
-          error(
-            'Cannot connect to the database. User and/or password are missing. Generate them at https://console.thenile.dev'
-          );
-        } else if (!config.db.database) {
-          error(
-            'Database id is missing from the config. Either call `nile.init()` when you create the NileDB server or set NILEDB_ID in your .env'
-          );
+        // give connection string a pass for these problems
+        if (!config.db.connectionString) {
+          if (!config.user || !config.password) {
+            error(
+              'Cannot connect to the database. User and/or password are missing. Generate them at https://console.thenile.dev'
+            );
+          } else if (!config.db.database) {
+            error(
+              'Database name is missing from the config. Call `nile.init()` or set NILEDB_ID in your .env'
+            );
+          }
         }
         const caller = target[property];
         return function query(...args: AllowAny) {

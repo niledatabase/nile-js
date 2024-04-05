@@ -82,9 +82,8 @@ export class Config {
   }
 
   constructor(config: ServerConfig) {
-    const envVarConfig: EnvConfig = {
-      config,
-    };
+    const envVarConfig: EnvConfig = { config };
+
     this.databaseId = getDatbaseId(envVarConfig) as string;
     this.user = getUsername(envVarConfig) as string;
     this.password = getPassword(envVarConfig) as string;
