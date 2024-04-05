@@ -128,4 +128,12 @@ mergedTheme.unstable_sxConfig = {
   ...muiSxConfig,
   ...joySxConfig,
 };
-export default mergedTheme;
+
+export default {
+  theme: mergedTheme,
+  slotProps: {
+    provider: {
+      defaultMode: 'dark',
+    },
+  },
+};

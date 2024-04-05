@@ -14,16 +14,14 @@ export default function Logger(
       }
     },
     warn(...args: unknown[]) {
-      if (process.env.NODE_ENV !== 'test') {
+      if (config?.debug) {
         // eslint-disable-next-line no-console
         console.warn('[niledb]', ...params, ...args);
       }
     },
     error(...args: unknown[]) {
-      if (config?.debug) {
-        // eslint-disable-next-line no-console
-        console.error('[niledb]', '[ERROR]', ...params, ...args);
-      }
+      // eslint-disable-next-line no-console
+      console.error('[niledb]', '[ERROR]', ...params, ...args);
     },
   };
 }

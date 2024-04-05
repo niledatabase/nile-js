@@ -6,6 +6,8 @@ import { evictPool } from '../utils/Event';
 import { AfterCreate } from '../types';
 import Logger from '../utils/Logger';
 
+import { createProxyForPool } from './PoolProxy';
+
 class NileDatabase {
   pool: Pool;
   tenantId?: undefined | null | string;
@@ -29,7 +31,7 @@ class NileDatabase {
     this.config = config;
     info(this.config);
 
-    this.pool = new Pool(remaining);
+    this.pool = createProxyForPool(new Pool(remaining), this.config);
 
     if (typeof afterCreate === 'function') {
       warn(

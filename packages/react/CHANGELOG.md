@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.2.0...v2.2.1-alpha.0) (2024-04-05)
+
+### Bug Fixes
+
+- **react:** relagate theming to storybook alone ([5318b19](https://github.com/niledatabase/nile-js/commit/5318b197e3b766afc05801a4334469afd69d227f))
+
 # [2.2.0](https://github.com/niledatabase/nile-js/compare/v2.2.0-alpha.3...v2.2.0) (2024-04-04)
 
 **Note:** Version bump only for package @niledatabase/react
