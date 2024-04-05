@@ -1,6 +1,8 @@
 export * from './types';
-import { default as Server } from './Server';
+import create from './Server';
 
-export default Server;
+export { Server } from './Server';
 
-module.exports = Server;
+export default create;
+
+module.exports = create;

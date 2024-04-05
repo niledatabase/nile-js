@@ -26,7 +26,7 @@ const init = (config: Config): Api => {
   };
 };
 
-class Server {
+export class Server {
   config: Config;
   api: Api;
   private manager: DbManager;
@@ -63,6 +63,7 @@ class Server {
     this.setConfig(updatedConfig);
     this.manager = new DbManager(this.config);
     this.api = init(updatedConfig);
+    return this;
   }
 
   set databaseId(val: string | void) {
@@ -156,4 +157,9 @@ class Server {
   }
 }
 
-export default Server;
+export async function create(config?: ServerConfig): Promise<Server> {
+  const server = new Server(config);
+  return await server.init();
+}
+
+export default create;

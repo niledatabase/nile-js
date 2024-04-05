@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.2.1...v2.3.0-alpha.0) (2024-04-05)
+
+**Note:** Version bump only for package @niledatabase/react
+
 ## [2.2.1](https://github.com/niledatabase/nile-js/compare/v2.2.1-alpha.0...v2.2.1) (2024-04-05)
 
 **Note:** Version bump only for package @niledatabase/react

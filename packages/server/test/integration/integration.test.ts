@@ -1,4 +1,4 @@
-import Server from '../../src/Server';
+import Nile, { Server } from '../../src/Server';
 import { ServerConfig } from '../../src/types';
 
 async function toJSON(body: BodyInit) {
@@ -58,8 +58,7 @@ describe.skip('api integration', () => {
 
 describe.skip('db integration', () => {
   it('queries', async () => {
-    const nile = new Server(config);
-    await nile.init();
+    const nile = await Nile(config);
     const res = await nile.db.query('select * from tenants');
     expect(res.rowCount).toBeGreaterThan(0);
   });
