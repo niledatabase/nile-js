@@ -50,6 +50,7 @@
     "@babel/core": "^7.23.3",
     "@types/jest": "^29.5.9",
     "@types/lodash": "^4",
+    "@types/lodash-es": "^4",
     "@types/mime": "^4.0.0",
     "@types/pg": "^8.11.4",
     "@typescript-eslint/parser": "^5.62.0",
@@ -70,6 +71,7 @@
     "dotenv": "^16.4.5",
     "jose": "^4.15.4",
     "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "pg": "^8.11.3"
   }
 }
