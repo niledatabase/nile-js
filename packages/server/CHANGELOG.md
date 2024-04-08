@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.1...v2.3.0-alpha.2) (2024-04-08)
+
+### Bug Fixes
+
+- **server:** remove lodash dep ([0960226](https://github.com/niledatabase/nile-js/commit/0960226981a4f8d246f93d1ac6e8f656163a64fc))
+
 # [2.3.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.0...v2.3.0-alpha.1) (2024-04-08)
 
 ### Bug Fixes
