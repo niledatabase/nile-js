@@ -3474,8 +3474,6 @@ __metadata:
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jose: "npm:^4.15.4"
-    lodash: "npm:^4.17.21"
-    lodash-es: "npm:^4.17.21"
     pg: "npm:^8.11.3"
     size-limit: "npm:^8.2.6"
     ts-jest: "npm:^29.1.1"
@@ -14155,13 +14153,6 @@ __metadata:
   dependencies:
     p-locate: "npm:^6.0.0"
   checksum: 10/1c6d269d4efec555937081be964e8a9b4a136319c79ca1d45ac6382212a8466113c75bd89e44521ca8ecd1c47fb08523b56eee5c0712bc7d14fec5f729deeb42
-  languageName: node
-  linkType: hard
-
-"lodash-es@npm:^4.17.21":
-  version: 4.17.21
-  resolution: "lodash-es@npm:4.17.21"
-  checksum: 10/03f39878ea1e42b3199bd3f478150ab723f93cc8730ad86fec1f2804f4a07c6e30deaac73cad53a88e9c3db33348bb8ceeb274552390e7a75d7849021c02df43
   languageName: node
   linkType: hard
 

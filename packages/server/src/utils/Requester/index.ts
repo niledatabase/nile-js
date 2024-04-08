@@ -1,6 +1,3 @@
-import isEmpty from 'lodash/isEmpty';
-import isObject from 'lodash/isObject';
-
 import { Config } from '../Config';
 import { ResponseError } from '../ResponseError';
 import { X_NILE_TENANT, _fetch } from '../fetch';
@@ -85,8 +82,8 @@ export default class Requester<T> extends Config {
     } else if (
       // is just headers for a GET request
       req instanceof Headers ||
-      isEmpty(req) ||
-      (isObject(req) && Object.values(req).length === 0)
+      JSON.stringify(req) === '{}' ||
+      (req && typeof req === 'object' && Object.values(req).length === 0)
     ) {
       body = undefined;
     }
