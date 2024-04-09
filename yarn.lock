@@ -3433,7 +3433,6 @@ __metadata:
     husky: "npm:^8.0.3"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
-    lodash: "npm:^4.17.21"
     prop-types: "npm:^15.8.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
@@ -3460,6 +3459,7 @@ __metadata:
     "@babel/core": "npm:^7.23.3"
     "@types/jest": "npm:^29.5.9"
     "@types/lodash": "npm:^4"
+    "@types/lodash-es": "npm:^4"
     "@types/mime": "npm:^4.0.0"
     "@types/pg": "npm:^8.11.4"
     "@typescript-eslint/parser": "npm:^5.62.0"
@@ -3473,7 +3473,6 @@ __metadata:
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jose: "npm:^4.15.4"
-    lodash: "npm:^4.17.21"
     pg: "npm:^8.11.3"
     size-limit: "npm:^8.2.6"
     ts-jest: "npm:^29.1.1"
@@ -5821,7 +5820,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4, @types/lodash@npm:^4.14.167":
+"@types/lodash-es@npm:^4":
+  version: 4.17.12
+  resolution: "@types/lodash-es@npm:4.17.12"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 10/56b9a433348b11c31051c6fa9028540a033a08fb80b400c589d740446c19444d73b217cf1471d4036448ef686a83e8cf2a35d1fadcb3f2105f26701f94aebb07
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*, @types/lodash@npm:^4, @types/lodash@npm:^4.14.167":
   version: 4.17.0
   resolution: "@types/lodash@npm:4.17.0"
   checksum: 10/2053203292b5af99352d108656ceb15d39da5922fc3fb8186e1552d65c82d6e545372cc97f36c95873aa7186404d59d9305e9d49254d4ae55e77df1e27ab7b5d

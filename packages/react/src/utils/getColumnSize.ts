@@ -1,6 +1,4 @@
 import { GridRowsProp } from '@mui/x-data-grid';
-import isNull from 'lodash/isNull';
-import isUndefined from 'lodash/isUndefined';
 
 export default function getColumnSize(
   column: unknown,
@@ -13,7 +11,7 @@ export default function getColumnSize(
     nextRow: { [key: string]: any }
   ) => {
     let value = nextRow[String(column)];
-    if (isNull(value) || isUndefined(value)) {
+    if (value == null) {
       value = '';
     }
     value = value?.toString();
