@@ -93,8 +93,9 @@ export class Config {
     this._userId = config?.userId;
 
     const basePath = getBasePath(envVarConfig);
-    const host = getDbHost(envVarConfig);
-    const port = getDbPort(envVarConfig);
+    const { host, port, ...dbConfig } = config.db ?? {};
+    const configuredHost = host ?? getDbHost(envVarConfig);
+    const configuredPort = port ?? getDbPort(envVarConfig);
 
     this.api = new ApiConfig({
       basePath,
@@ -104,9 +105,9 @@ export class Config {
     this.db = {
       user: this.user,
       password: this.password,
-      host,
-      port,
-      ...(typeof config?.db === 'object' ? config.db : {}),
+      host: configuredHost,
+      port: configuredPort,
+      ...dbConfig,
     };
     if (this.databaseName) {
       this.db.database = this.databaseName;
@@ -114,19 +115,21 @@ export class Config {
   }
 
   configure = async (config: ServerConfig): Promise<Config> => {
+    const { info, error } = Logger(config, '[init]');
+
     const envVarConfig: EnvConfig = {
       config,
     };
-    let host = getDbHost(envVarConfig);
-    const { info, error } = Logger(config, '[init]');
 
-    if (host && this.databaseName && this.databaseId) {
+    const { host, port, ...dbConfig } = config.db ?? {};
+    let configuredHost = host ?? getDbHost(envVarConfig);
+    const configuredPort = port ?? getDbPort(envVarConfig);
+    if (configuredHost && this.databaseName && this.databaseId) {
       info('Alreaady configured, aborting fetch');
       return this;
     }
 
     let basePath = getBasePath(envVarConfig);
-    const port = getDbPort(envVarConfig);
 
     const databaseName = getDatabaseName({ config, logger: 'getInfo' });
     const url = new URL(`${basePath}/databases/configure`);
@@ -174,7 +177,7 @@ export class Config {
         this.databaseName = name;
         const dburl = new URL(dbHost);
         const apiurl = new URL(apiHost);
-        host = dburl.host;
+        configuredHost = dburl.host;
         basePath = apiurl.origin;
       }
     }
@@ -186,10 +189,10 @@ export class Config {
     this.db = {
       user: this.user,
       password: this.password,
-      host,
-      port,
+      host: configuredHost,
+      port: configuredPort,
       database: this.databaseName,
-      ...(typeof config?.db === 'object' ? config.db : {}),
+      ...dbConfig,
     };
     info('[config set]', this);
     return this;
