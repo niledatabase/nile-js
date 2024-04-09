@@ -4,6 +4,12 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/react.esm.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/react.esm.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -12,7 +18,8 @@
   },
   "scripts": {
     "start": "dts watch",
-    "build": "dts build --tsconfig tsconfig.build.json",
+    "build": "dts build --tsconfig tsconfig.build.json && yarn build:move-types",
+    "build:move-types": "cp dist/index.d.ts dist/react.esm.d.ts",
     "test": "yarn jest",
     "lint": "eslint src",
     "size": "size-limit",
@@ -103,7 +110,6 @@
     "@mui/x-data-grid": "^7.0.0",
     "@niledatabase/browser": "^2.3.0-alpha.2",
     "@tanstack/react-query": "^4.36.1",
-    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",

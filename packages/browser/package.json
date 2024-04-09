@@ -4,6 +4,12 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/browser.esm.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/browser.esm.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -12,9 +18,10 @@
   },
   "scripts": {
     "start": "dts watch",
-    "build": "yarn build:move && yarn build:api:gen && dts build --tsconfig ./tsconfig.build.json",
+    "build": "yarn build:move && yarn build:api:gen && dts build --tsconfig ./tsconfig.build.json && yarn build:move-types",
     "build:move": "node ./scripts/move.mjs",
     "build:api:gen": "yarn openapi-generator-cli generate --skip-validate-spec -t templates -i src/spec.json -g typescript-fetch --package-name @niledatabase/client -o src/openapi --additional-properties=ngVersion=6.1.7,npmName=theniledev,supportsES6=true,npmVersion=6.9.0,withInterfaces=true,moduleName=NileClient,typescriptThreePlus=true,projectName=@niledatabase/browser",
+    "build:move-types": "cp dist/index.d.ts dist/browser.esm.d.ts",
     "test": "dts test",
     "lint": "eslint src",
     "size": "size-limit",
@@ -50,11 +57,9 @@
     "@size-limit/preset-small-lib": "^8.2.6",
     "@types/jest": "^29.5.9",
     "@types/node": "^18.18.11",
+    "dts-cli": "^2.0.3",
     "size-limit": "^8.2.6",
     "tslib": "^2.6.2",
     "typescript": "^4.9.5"
-  },
-  "dependencies": {
-    "dts-cli": "^2.0.3"
   }
 }

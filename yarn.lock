@@ -3433,7 +3433,6 @@ __metadata:
     husky: "npm:^8.0.3"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
-    lodash: "npm:^4.17.21"
     prop-types: "npm:^15.8.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
