@@ -81,7 +81,7 @@ export class Config {
     this._userId = value;
   }
 
-  constructor(config: ServerConfig) {
+  constructor(config?: ServerConfig) {
     const envVarConfig: EnvConfig = { config };
 
     this.databaseId = getDatbaseId(envVarConfig) as string;
@@ -93,7 +93,7 @@ export class Config {
     this._userId = config?.userId;
 
     const basePath = getBasePath(envVarConfig);
-    const { host, port, ...dbConfig } = config.db ?? {};
+    const { host, port, ...dbConfig } = config?.db ?? {};
     const configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
 
