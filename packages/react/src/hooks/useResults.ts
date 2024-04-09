@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import isObject from 'lodash/isObject';
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 
 import getColumnSize from '../utils/getColumnSize';
@@ -49,7 +48,7 @@ const parseResults = (
     }
     return Object.keys(row).reduce((accum: { [key: string]: string }, name) => {
       accum[name] = row[name];
-      if (isObject(row[name])) {
+      if (row[name] && typeof row[name] === 'object') {
         accum[name] = JSON.stringify(row[name]);
       }
       // useful for getRowId
