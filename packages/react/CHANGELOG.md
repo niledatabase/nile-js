@@ -3,21 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.3.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.3...v2.3.0-alpha.4) (2024-04-09)
-
-**Note:** Version bump only for package @niledatabase/react
-
-# [2.3.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.2...v2.3.0-alpha.3) (2024-04-09)
-
-### Bug Fixes
-
-- **repo:** build esm better ([86068ea](https://github.com/niledatabase/nile-js/commit/86068ea4a67b95ebccf68e95c49ed262a049006a))
-
-# [2.3.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.1...v2.3.0-alpha.2) (2024-04-08)
-
-**Note:** Version bump only for package @niledatabase/react
-
-# [2.3.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.0...v2.3.0-alpha.1) (2024-04-08)
+# [2.3.0](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.0...v2.3.0) (2024-04-05)
 
 **Note:** Version bump only for package @niledatabase/react
 

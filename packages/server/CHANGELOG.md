@@ -3,29 +3,9 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.3.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.3...v2.3.0-alpha.4) (2024-04-09)
+# [2.3.0](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.0...v2.3.0) (2024-04-05)
 
-### Bug Fixes
-
-- **server:** def check empty config ([325328b](https://github.com/niledatabase/nile-js/commit/325328b6c2396d4e0fed7e462dd8068329e4b384))
-
-# [2.3.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.2...v2.3.0-alpha.3) (2024-04-09)
-
-### Bug Fixes
-
-- **server:** use configured host for db ([238a87d](https://github.com/niledatabase/nile-js/commit/238a87d0a52e704ebec681ca8b7bc3b806c7db03))
-
-# [2.3.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.1...v2.3.0-alpha.2) (2024-04-08)
-
-### Bug Fixes
-
-- **server:** remove lodash dep ([0960226](https://github.com/niledatabase/nile-js/commit/0960226981a4f8d246f93d1ac6e8f656163a64fc))
-
-# [2.3.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.3.0-alpha.0...v2.3.0-alpha.1) (2024-04-08)
-
-### Bug Fixes
-
-- **server:** include lodash-es for esm imports ([c3aa20c](https://github.com/niledatabase/nile-js/commit/c3aa20cb8bdb83de653800527af8dae16c176caf))
+**Note:** Version bump only for package @niledatabase/server
 
 # [2.3.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.2.1...v2.3.0-alpha.0) (2024-04-05)
 
