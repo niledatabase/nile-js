@@ -3,7 +3,8 @@ import { Theme } from '@mui/joy/styles';
 
 export interface NileReactConfig {
   tenantId?: string;
-  basePath?: string; // defaults to https://api.thenile.dev
+  apiUrl?: string; // the FQDN for the database
+  appUrl?: string; // the FQDN BE application the UI will send requests to, matching `Browser` in OpenAPI spec
 }
 
 export type NileContext = NileReactConfig & {

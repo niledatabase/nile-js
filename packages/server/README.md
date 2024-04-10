@@ -55,7 +55,7 @@ Configuration passed to `Server` takes precedence over `.env` vars.
 | db            | `PoolConfig` |                 | Configuration object for [pg.Pool](https://node-postgres.com/apis/pool). |
 | db.host       | `string`     | NILEDB_HOST     | Base host for DB. Defaut is `db.thenile.dev`                             |
 | api           | `object`     |                 | Configuration object for API settings.                                   |
-| api.basePath  | `string`     | NILEDB_API      | Base host for API for a specific region. Default is `api.thenile.dev`.   |
+| api.basePath  | `string`     | NILEDB_API      | Base host for API for a specific region.                                 |
 | api.cookieKey | `string`     |                 | Key for API cookie. Default is `token`.                                  |
 | api.token     | `string`     | NILEDB_TOKEN    | Token for API authentication. Mostly for debugging.                      |
 | debug         | `boolean`    |                 | Flag for enabling debug logging.                                         |

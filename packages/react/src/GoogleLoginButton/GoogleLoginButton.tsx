@@ -18,19 +18,18 @@ const LOGIN_PATH = 'users/oidc/google/login';
  * @param props href: a string to override the URL provided by the context
  * @returns a JSX.Element to render
  */
-export default function GoogleSSOButton(props: {
-  href?: string;
-  databaseId?: string;
-  newTenantName?: string;
-}) {
-  const { databaseId, newTenantName } = props;
-  const { basePath } = useNileConfig();
-  const encodedDatabase = encodeURIComponent(databaseId ?? '');
-  const contextHref = `${basePath}/databases/${encodedDatabase}/${LOGIN_PATH}`;
+export default function GoogleSSOButton(props: { newTenantName?: string }) {
+  const { newTenantName } = props;
+  const { apiUrl } = useNileConfig();
+  if (!apiUrl) {
+    // eslint-disable-next-line no-console
+    console.error('apiUrl is missing from <NileProvider />');
+  }
+  const contextHref = `${apiUrl}/${LOGIN_PATH}`;
   const query = newTenantName
     ? '?newTenant=' + encodeURIComponent(newTenantName)
     : '';
-  const href = (props?.href ?? contextHref) + query;
+  const href = contextHref + query;
   return (
     <Box
       component="a"
