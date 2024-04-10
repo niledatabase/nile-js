@@ -8,15 +8,10 @@ import '../matchMedia.mock';
 jest.mock('../../src/GoogleLoginButton/google.svg', () => 'svg');
 
 describe('google sso button', () => {
-  it('renders with an href prop', () => {
-    const ref = 'somehref';
-    render(<GoogleSSOButton href={ref} />);
-    expect(screen.getByRole('link').getAttribute('href')).toEqual(ref);
-  });
   it('renders using the context', () => {
     render(
-      <NileProvider>
-        <GoogleSSOButton databaseId="databaseId" />
+      <NileProvider apiUrl="https://api.thenile.dev/databases/databaseId">
+        <GoogleSSOButton />
       </NileProvider>
     );
     screen.getByText('Continue with Google');

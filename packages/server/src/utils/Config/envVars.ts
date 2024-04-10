@@ -15,6 +15,10 @@ export const getDatbaseId = (cfg: EnvConfig) => {
     logger && info(logger, 'config', config.databaseId);
     return String(config?.databaseId);
   }
+  if (process.env.NILEDB_POSTGRES_URL) {
+    const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
+    return pgUrl.pathname.substring(1);
+  }
   logger && info(logger, 'env', process.env.NILEDB_ID);
   return process.env.NILEDB_ID;
 };
@@ -26,7 +30,7 @@ export const getUsername = (cfg: EnvConfig) => {
     logger && info(logger, 'config', config.user);
     return String(config?.user);
   }
-  logger && info(logger, '.env', process.env.NILEDB_USER);
+  logger && info(logger, 'NILEDB_USER', process.env.NILEDB_USER);
   return process.env.NILEDB_USER;
 };
 
@@ -40,7 +44,7 @@ export const getPassword = (cfg: EnvConfig) => {
     return String(config.password);
   }
 
-  log && info(logger, '.env', process.env.NILEDB_PASSWORD);
+  log && info(logger, 'NILEDB_PASSWORD', process.env.NILEDB_PASSWORD);
   return process.env.NILEDB_PASSWORD;
 };
 
@@ -56,7 +60,7 @@ export const getToken = (cfg: EnvConfig) => {
     return String(config.api?.token);
   }
   if (process.env.NILEDB_TOKEN) {
-    logger && info(logger, '.env', process.env.NILEDB_TOKEN);
+    logger && info(logger, 'NILEDB_TOKEN', process.env.NILEDB_TOKEN);
     return process.env.NILEDB_TOKEN;
   }
   return undefined;
@@ -70,7 +74,7 @@ export const getDatabaseName = (cfg: EnvConfig) => {
     return String(config.databaseName);
   }
   if (process.env.NILEDB_NAME) {
-    logger && info(logger, 'config', process.env.NILEDB_NAME);
+    logger && info(logger, 'NILEDB_NAME', process.env.NILEDB_NAME);
     return process.env.NILEDB_NAME;
   }
   return null;
@@ -85,7 +89,7 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
   }
 
   if (process.env.NILEDB_TENANT) {
-    logger && info(logger, '.env', process.env.NILEDB_TENANT);
+    logger && info(logger, 'NILEDB_TENANT', process.env.NILEDB_TENANT);
     return process.env.NILEDB_TENANT;
   }
 
@@ -101,12 +105,26 @@ export const getBasePath = (cfg: EnvConfig) => {
     return basePath;
   }
 
-  if (process.env.NILEDB_API) {
-    logger && info(logger, '.env', process.env.NILEDB_API);
-    return `https://${process.env.NILEDB_API}`;
+  if (process.env.NILEDB_API_URL) {
+    logger && info(logger, 'NILEDB_API_URL', process.env.NILEDB_API_URL);
+    const apiUrl = new URL(process.env.NILEDB_API_URL);
+    return apiUrl.origin;
   }
 
-  logger && info(logger, 'default', process.env.NILEDB_API);
+  logger && info(logger, 'default', 'https://api.thenile.dev');
+  return 'https://api.thenile.dev';
+};
+
+export const getControlPlane = (cfg: EnvConfig) => {
+  const { config, logger } = cfg;
+  const { info } = Logger(config, '[basePath]');
+
+  if (process.env.NILEDB_CONFIGURE) {
+    logger && info(logger, 'NILEDB_CONFIGURE', process.env.NILEDB_CONFIGURE);
+    return `https://${process.env.NILEDB_CONFIGURE}`;
+  }
+
+  logger && info(logger, 'default', process.env.NILEDB_CONFIGURE);
   return 'https://api.thenile.dev';
 };
 
@@ -119,8 +137,14 @@ export function getDbHost(cfg: EnvConfig) {
     return config.db.host;
   }
 
+  if (process.env.NILEDB_POSTGRES_URL) {
+    const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
+    logger && info(logger, 'NILEDB_POSTGRES_URL', pgUrl.host);
+    return pgUrl.host;
+  }
+
   if (process.env.NILEDB_HOST) {
-    logger && info(logger, '.env', process.env.NILEDB_HOST);
+    logger && info(logger, 'NILEDB_HOST', process.env.NILEDB_HOST);
     return process.env.NILEDB_HOST;
   }
 

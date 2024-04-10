@@ -13,7 +13,7 @@ const defaultContext: NileContext = {
     basePath: 'https://api.thenile.dev',
     credentials: 'include',
   }),
-  basePath: '',
+  apiUrl: '',
 };
 
 const context = createContext<NileContext>(defaultContext);
@@ -37,7 +37,8 @@ export const NileProvider = (props: NileProviderProps) => {
     slotProps,
     tenantId,
     QueryProvider = BaseQueryProvider,
-    basePath = 'https://api.thenile.dev',
+    appUrl,
+    apiUrl = 'https://api.thenile.dev',
     api,
   } = props;
 
@@ -46,13 +47,13 @@ export const NileProvider = (props: NileProviderProps) => {
       api:
         api ??
         new Browser({
-          basePath,
+          basePath: appUrl,
           credentials: 'include',
         }),
       tenantId: String(tenantId),
-      basePath,
+      apiUrl,
     };
-  }, [api, basePath, tenantId]);
+  }, [api, apiUrl, appUrl, tenantId]);
 
   return (
     <QueryProvider>
@@ -68,13 +69,14 @@ const useNileContext = (): NileContext => {
 };
 
 export const useNileConfig = (): NileReactConfig => {
-  const { basePath, tenantId } = useNileContext();
+  const { apiUrl, tenantId, appUrl } = useNileContext();
   return useMemo(
     () => ({
       tenantId,
-      basePath,
+      apiUrl,
+      appUrl,
     }),
-    [basePath, tenantId]
+    [apiUrl, tenantId, appUrl]
   );
 };
 

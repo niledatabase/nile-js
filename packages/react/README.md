@@ -20,7 +20,13 @@ function App() {
 }
 ```
 
-Once added, there is a hook and components available for use. It is recommended to place the `<NileProvider />` as high up in your render tree as possible, since it contains both stying and request wrappers.
+## Configuration
+
+| Property | Type     | Description                                                       |
+| -------- | -------- | ----------------------------------------------------------------- |
+| tenantId | `string` | ID of the tenant associated.                                      |
+| appUrl   | `string` | the FQDN for a service running a `@niledatabase/server`-like API. |
+| apiUrl   | `string` | the API URL of your database                                      |
 
 ## Dependencies
 
@@ -135,17 +141,3 @@ function App() {
   );
 }
 ```
-
-## Available components
-
-[EntityForm](./src/components/EntityForm/README.md)
-
-[InstanceList](./src/components/InstanceList/README.md)
-
-[LoginForm](./src/components/LoginForm/README.md)
-
-[Metrics](./src/components/Metrics/README.md)
-
-[OrganizationForm](./src/components/OrganizationForm/README.md)
-
-[SignUpForm](./src/components/SignUpForm/README.md)

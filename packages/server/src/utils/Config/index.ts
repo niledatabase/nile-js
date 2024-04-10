@@ -4,6 +4,7 @@ import Logger from '../Logger';
 import {
   EnvConfig,
   getBasePath,
+  getControlPlane,
   getDatabaseName,
   getDatbaseId,
   getDbHost,
@@ -81,8 +82,8 @@ export class Config {
     this._userId = value;
   }
 
-  constructor(config?: ServerConfig) {
-    const envVarConfig: EnvConfig = { config };
+  constructor(config?: ServerConfig, logger?: string) {
+    const envVarConfig: EnvConfig = { config, logger };
 
     this.databaseId = getDatbaseId(envVarConfig) as string;
     this.user = getUsername(envVarConfig) as string;
@@ -130,9 +131,10 @@ export class Config {
     }
 
     let basePath = getBasePath(envVarConfig);
+    const cp = getControlPlane(envVarConfig);
 
     const databaseName = getDatabaseName({ config, logger: 'getInfo' });
-    const url = new URL(`${basePath}/databases/configure`);
+    const url = new URL(`${cp}/databases/configure`);
     if (databaseName) {
       url.searchParams.set('databaseName', databaseName);
     }
