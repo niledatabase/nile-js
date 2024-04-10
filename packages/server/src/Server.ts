@@ -33,7 +33,7 @@ export class Server {
   private servers: Map<string, Server>;
 
   constructor(config?: ServerConfig) {
-    this.config = new Config(config as ServerConfig);
+    this.config = new Config(config as ServerConfig, '[initial config]');
     this.servers = new Map();
     this.api = init(this.config);
     this.manager = new DbManager(this.config);
