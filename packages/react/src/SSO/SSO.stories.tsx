@@ -41,6 +41,15 @@ export function OktaSSO() {
         data-joy-color-scheme="dark"
       >
         <Okta
+          providers={[
+            {
+              provider: 'okta',
+              tenantId: '',
+              configUrl: '',
+              clientId: '',
+              redirectURI: '',
+            },
+          ]}
           onSuccess={() => {
             alert('success!');
           }}

@@ -50,7 +50,7 @@ export function AlphaVersionWithOutProvider() {
   return (
     <CssVarsProvider>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
-        <GoogleLoginButton href="some href" />
+        <GoogleLoginButton />
       </div>
     </CssVarsProvider>
   );
