@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.4.0-alpha.0...v2.4.0-alpha.1) (2024-04-10)
+
+### Bug Fixes
+
+- **server:** support copy/pasted urls, fix logging ([974297c](https://github.com/niledatabase/nile-js/commit/974297cfdb345967b5b367f15f2245f810055997))
+
 # [2.4.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.3.2...v2.4.0-alpha.0) (2024-04-10)
 
 ### Features
