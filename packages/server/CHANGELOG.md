@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.4.0...v2.4.1-alpha.0) (2024-04-11)
+
+### Bug Fixes
+
+- **server:** export nile as named ([2c8ae7b](https://github.com/niledatabase/nile-js/commit/2c8ae7b54153d04a4ff63f92e759cb3db36341de))
+
 # [2.4.0](https://github.com/niledatabase/nile-js/compare/v2.4.0-alpha.1...v2.4.0) (2024-04-10)
 
 **Note:** Version bump only for package @niledatabase/server
