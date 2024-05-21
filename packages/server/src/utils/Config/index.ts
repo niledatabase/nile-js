@@ -85,9 +85,22 @@ export class Config {
   constructor(config?: ServerConfig, logger?: string) {
     const envVarConfig: EnvConfig = { config, logger };
 
-    this.databaseId = getDatbaseId(envVarConfig) as string;
     this.user = getUsername(envVarConfig) as string;
     this.password = getPassword(envVarConfig) as string;
+    if (process.env.NODE_ENV !== 'TEST') {
+      if (!this.user) {
+        throw new Error(
+          'User is required. Set NILEDB_USER as an environment variable or set `user` in the config options.'
+        );
+      }
+      if (!this.password) {
+        throw new Error(
+          'Password is required. Set NILEDB_PASSWORD as an environment variable or set `password` in the config options.'
+        );
+      }
+    }
+
+    this.databaseId = getDatbaseId(envVarConfig) as string;
     this.databaseName = getDatabaseName(envVarConfig) as string;
     this._tenantId = getTenantId(envVarConfig);
     this.debug = Boolean(config?.debug);
@@ -169,7 +182,7 @@ export class Config {
           throw new Error('HTTP error has occured');
         } else {
           throw new Error(
-            'Unable to auto-configure. Please set or remove NILEDB_API, NILEDB_NAME, and NILEDB_HOST in your .env file.'
+            'Unable to auto-configure. Please remove NILEDB_NAME, NILEDB_API_URL, NILEDB_POSTGRES_URL, and/or NILEDB_HOST from your environment variables.'
           );
         }
       }

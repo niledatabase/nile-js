@@ -49,19 +49,34 @@ class NileDatabase {
           _client.release();
         }
       });
+
       this.startTimeout();
     });
     this.pool.on('error', async (e) => {
       info('pool failed', e);
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      evictPool(this.id);
     });
   }
 
   startTimeout() {
+    const { info } = Logger(this.config, '[NileInstance]');
     if (this.timer) {
       clearTimeout(this.timer);
     }
     this.timer = setTimeout(async () => {
-      await this.pool.end();
+      info(
+        'Pool reached idleTimeoutMillis.',
+        this.id,
+        'evicted after',
+        this.config.db.idleTimeoutMillis,
+        'ms'
+      );
+      await this.pool.end(() => {
+        // something odd going on here. Without the callback, pool.end() is flakey
+      });
       evictPool(this.id);
     }, this.config.db.idleTimeoutMillis);
   }
