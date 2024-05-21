@@ -32,6 +32,13 @@ class Eventer {
     // store the callback function of the subscriber
     this.events[eventName].push(callback);
   }
+
+  unsubscribe(eventName: string, callback: EventFn) {
+    const toRemove = this.events[eventName].findIndex((cb) => cb === callback);
+    if (toRemove !== -1) {
+      this.events[eventName].splice(toRemove, 1);
+    }
+  }
 }
 
 // tenantId manager
@@ -58,6 +65,10 @@ export const watchToken = (cb: EventFn) => eventer.subscribe(Events.Token, cb);
 
 export const watchEvictPool = (cb: EventFn) =>
   eventer.subscribe(Events.EvictPool, cb);
+
+export const closeEvictPool = (cb: EventFn) =>
+  eventer.unsubscribe(Events.EvictPool, cb);
+
 export const evictPool = (val: BusValues) => {
   eventer.publish(Events.EvictPool, val);
 };

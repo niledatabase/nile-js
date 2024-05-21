@@ -29,7 +29,7 @@ const init = (config: Config): Api => {
 export class Server {
   config: Config;
   api: Api;
-  private manager: DbManager;
+  private manager!: DbManager;
   private servers: Map<string, Server>;
 
   constructor(config?: ServerConfig) {
@@ -61,8 +61,10 @@ export class Server {
       ...cfg,
     });
     this.setConfig(updatedConfig);
+
+    this.manager.clear(this.config);
     this.manager = new DbManager(this.config);
-    this.api = init(updatedConfig);
+    this.api = init(this.config);
     return this;
   }
 
