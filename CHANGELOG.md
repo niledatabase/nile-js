@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.4.1...v2.4.2-alpha.0) (2024-05-22)
+
+### Bug Fixes
+
+- **repo:** publish to git, fix build ([d329fa6](https://github.com/niledatabase/nile-js/commit/d329fa6a152b9008e3e4438ac1493ecad71f219c))
+- **repo:** update packaging action ([763890d](https://github.com/niledatabase/nile-js/commit/763890d91ce1aeecd41b21243a01684a00a0b92f))
+- **server:** make eviction work ([f3ca437](https://github.com/niledatabase/nile-js/commit/f3ca4370b5f37e4e2d07fcbeea4165cee7a300b0))
+
 ## [2.4.1](https://github.com/niledatabase/nile-js/compare/v2.4.1-alpha.0...v2.4.1) (2024-04-11)
 
 **Note:** Version bump only for package @niledatabase/packages
