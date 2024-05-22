@@ -5,14 +5,14 @@ on:
     branches:
       - stable
 jobs:
-  package:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: stable
@@ -22,9 +22,9 @@ jobs:
 
       # Setup .npmrc file to publish to GitHub Packages
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "lts/*"
+          node-version: "20.x"
           # registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
           # scope: '@niledatabase'
