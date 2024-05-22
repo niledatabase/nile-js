@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.3](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.2...v2.4.2-alpha.3) (2024-05-22)
+
+### Bug Fixes
+
+- **build:** github packages ([5b4b9e4](https://github.com/niledatabase/nile-js/commit/5b4b9e4d004f6a7a1b7c9b3afde83aa0683bb01e))
+
 ## [2.4.2-alpha.2](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.1...v2.4.2-alpha.2) (2024-05-22)
 
 ### Bug Fixes
