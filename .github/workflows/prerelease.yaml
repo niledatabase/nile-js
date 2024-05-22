@@ -73,7 +73,9 @@ jobs:
         run: |
           rm -rf .npmrc
           echo "@niledatabase:registry=https://npm.pkg.github.com/" >> .npmrc
-          echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN" >> .npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to git
         run: npx lerna publish from-git --yes
