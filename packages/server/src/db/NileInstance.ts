@@ -44,9 +44,11 @@ class NileDatabase {
     this.pool.on('connect', async (client) => {
       info('pool connected');
       const afterCreate: AfterCreate = makeAfterCreate(config);
-      afterCreate(client, (err, _client) => {
+      afterCreate(client, (err) => {
+        const { error } = Logger(config, '[after create callback]');
         if (err) {
-          _client.release();
+          error('after create failed', err);
+          evictPool(this.id);
         }
       });
 
@@ -75,6 +77,7 @@ class NileDatabase {
         'ms'
       );
       await this.pool.end(() => {
+        info('Pool end called');
         // something odd going on here. Without the callback, pool.end() is flakey
       });
       evictPool(this.id);
