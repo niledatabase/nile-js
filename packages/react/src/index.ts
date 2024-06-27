@@ -19,3 +19,5 @@ export {
   Attribute as FormAttribute,
   AttributeType as FormAttributeType,
 } from './lib/SimpleForm/types';
+
+export * from 'next-auth/react';
