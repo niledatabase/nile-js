@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.4](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-06-27)
+
+### Bug Fixes
+
+- **server:** evict pool when after create fails ([221ea46](https://github.com/niledatabase/nile-js/commit/221ea464b457245ab7c5b14c90f84e317e06b64f))
+
 ## [2.4.2-alpha.3](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.2...v2.4.2-alpha.3) (2024-05-22)
 
 ### Bug Fixes
