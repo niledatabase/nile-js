@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.4...v2.5.0-alpha.0) (2024-06-27)
+
+### Features
+
+- **react:** export nextauth for simplicity ([9e356d3](https://github.com/niledatabase/nile-js/commit/9e356d3d2f5bbb237e24dca83c0e3c7ffccb2ac5))
+
 ## [2.4.2-alpha.4](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-06-27)
 
 ### Bug Fixes
