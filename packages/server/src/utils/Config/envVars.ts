@@ -96,9 +96,13 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
   return null;
 };
 
+/**
+ * @param cfg various overrides
+ * @returns the url for REST to use
+ */
 export const getBasePath = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
-  const { info } = Logger(config, '[basePath]');
+  const { info, warn } = Logger(config, '[basePath]');
   const basePath = config?.api?.basePath;
   if (basePath) {
     logger && info(logger, 'config', config?.api?.basePath);
@@ -111,6 +115,11 @@ export const getBasePath = (cfg: EnvConfig) => {
     return apiUrl.origin;
   }
 
+  // eslint-disable-next-line no-console
+  console.warn(
+    '[niledb]',
+    'NILEDB_API_URL is missing. It will be required in a future update.'
+  );
   logger && info(logger, 'default', 'https://api.thenile.dev');
   return 'https://api.thenile.dev';
 };
@@ -125,7 +134,7 @@ export const getControlPlane = (cfg: EnvConfig) => {
   }
 
   logger && info(logger, 'default', process.env.NILEDB_CONFIGURE);
-  return 'https://api.thenile.dev';
+  return 'https://global.thenile.dev';
 };
 
 export function getDbHost(cfg: EnvConfig) {
