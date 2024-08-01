@@ -29,7 +29,7 @@ class NileDatabase {
 
     config.db = poolConfig;
     this.config = config;
-    info(this.config);
+    info(this.config.db);
 
     this.pool = createProxyForPool(new Pool(remaining), this.config);
 

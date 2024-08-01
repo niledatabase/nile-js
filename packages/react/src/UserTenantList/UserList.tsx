@@ -3,7 +3,7 @@ import React from 'react';
 import Stack from '@mui/joy/Stack';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Theme } from '@mui/system/createTheme';
-import { SignUp201Response, User } from '@niledatabase/browser';
+import { User } from '@niledatabase/browser';
 
 import CreateUser from './CreateUser';
 import useDataParser from './useDataParser';
@@ -14,7 +14,7 @@ type Props = {
   data: void | User[];
   allowCreation?: boolean;
   buttonText?: string;
-  onUserCreateSuccess?: (user: SignUp201Response) => void;
+  onUserCreateSuccess?: (user: any) => void;
   slots?: {
     dataGrid?: SxProps<Theme>;
   };

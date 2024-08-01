@@ -3,14 +3,11 @@ import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
-
-import { useNileConfig } from '../context';
+import { signIn } from 'next-auth/react';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import GoogleLogo from './google.svg';
-
-const LOGIN_PATH = 'users/oidc/google/login';
 
 /**
  * A component for a Google login button, according to their design language.
@@ -18,25 +15,17 @@ const LOGIN_PATH = 'users/oidc/google/login';
  * @param props href: a string to override the URL provided by the context
  * @returns a JSX.Element to render
  */
-export default function GoogleSSOButton(props: { newTenantName?: string }) {
-  const { newTenantName } = props;
-  const { apiUrl } = useNileConfig();
-  if (!apiUrl) {
-    // eslint-disable-next-line no-console
-    console.error('apiUrl is missing from <NileProvider />');
-  }
-  const contextHref = `${apiUrl}/${LOGIN_PATH}`;
-  const query = newTenantName
-    ? '?newTenant=' + encodeURIComponent(newTenantName)
-    : '';
-  const href = contextHref + query;
+export default function GoogleSSOButton(props: { callbackUrl?: string }) {
+  const { callbackUrl } = props;
+
   return (
     <Box
-      component="a"
-      href={href}
       display="flex"
       flex={1}
       sx={{ textDecoration: 'none' }}
+      onClick={() => {
+        signIn('google', { callbackUrl });
+      }}
     >
       <Box>
         <Button

@@ -1,7 +1,5 @@
-import { SSOProvider } from '@niledatabase/browser';
-
 export type OktaProps = {
-  providers?: SSOProvider[];
+  providers?: any[];
   callbackUrl?: string;
   onSuccess?: (data: unknown, variables: unknown) => void;
   onError?: (e: Error) => void;

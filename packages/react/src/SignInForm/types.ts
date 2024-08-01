@@ -1,4 +1,4 @@
-import { LoginRequest } from '@niledatabase/browser';
+type LoginRequest = any;
 
 import { Attribute } from '../lib/SimpleForm/types';
 

@@ -7,8 +7,8 @@ import { updateTenantId, updateUserId } from './Event';
 import { getToken } from './Config/envVars';
 import Logger from './Logger';
 
-export const X_NILE_TENANT = 'x-nile-tenantId';
-export const X_NILE_USER_ID = 'x-nile-userId';
+export const X_NILE_TENANT = 'niledb-tenantid';
+export const X_NILE_USER_ID = 'niledb-userid';
 
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,9 +47,9 @@ function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
   }
   return null;
 }
-export function getTenantFromHttp(headers: Headers, config: Config) {
-  const cookieTenant = getTokenFromCookie(headers, 'tenantId');
-  return cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config.tenantId;
+export function getTenantFromHttp(headers: Headers, config?: Config) {
+  const cookieTenant = getTokenFromCookie(headers, X_NILE_TENANT);
+  return cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config?.tenantId;
 }
 
 export function getUserFromHttp(headers: Headers, config: Config) {

@@ -1,5 +1,6 @@
 export enum AttributeType {
   Text = 'text',
+  Email = 'email',
   Password = 'password',
   Select = 'select',
   Number = 'number',

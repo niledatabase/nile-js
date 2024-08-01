@@ -4,7 +4,7 @@ import Browser from '@niledatabase/browser';
 
 import { NileProvider } from '../../src/context';
 import '../matchMedia.mock';
-import LoginForm from '../../src/LoginForm/LoginForm';
+import LoginForm from '../../src/SignInForm/SignInForm';
 import { token } from '../fetch.mock';
 
 describe('LoginForm', () => {

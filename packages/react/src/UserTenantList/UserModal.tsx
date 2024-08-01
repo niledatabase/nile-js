@@ -11,14 +11,13 @@ import {
 } from '@mui/joy';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { SignUp201Response, SignUpRequest } from '@niledatabase/browser';
 
 import { useApi, useNileConfig } from '../context';
 
 export type UserFormProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  refetch?: (user: SignUp201Response) => void;
+  refetch?: (user: any) => void;
 };
 
 export default function AddUser(props: UserFormProps) {
@@ -26,7 +25,7 @@ export default function AddUser(props: UserFormProps) {
   const { tenantId } = useNileConfig();
   const api = useApi();
   const [errorText, setErrorText] = React.useState<void | string>();
-  const { watch, register, handleSubmit } = useForm<SignUpRequest>();
+  const { watch, register, handleSubmit } = useForm<any>();
   const email = watch('email');
 
   React.useEffect(() => {
@@ -38,9 +37,9 @@ export default function AddUser(props: UserFormProps) {
   }, [email]);
 
   const mutation = useMutation(
-    (data: SignUpRequest) =>
+    (data: any) =>
       api.users.createTenantUser({
-        signUpRequest: data,
+        createBasicUserRequest: data,
         tenantId: String(tenantId),
       }),
     {
@@ -57,7 +56,7 @@ export default function AddUser(props: UserFormProps) {
   );
 
   const handleUpdate = React.useCallback(
-    async (data: SignUpRequest) => {
+    async (data: any) => {
       setErrorText('');
       mutation.mutate(data);
     },
@@ -78,9 +77,7 @@ export default function AddUser(props: UserFormProps) {
               width: '40ch',
             }}
             spacing={1}
-            onSubmit={handleSubmit((data) =>
-              handleUpdate(data as SignUpRequest)
-            )}
+            onSubmit={handleSubmit((data) => handleUpdate(data as any))}
           >
             <FormControl
               sx={{

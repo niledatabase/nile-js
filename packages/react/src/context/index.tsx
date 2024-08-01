@@ -52,6 +52,7 @@ export const NileProvider = (props: NileProviderProps) => {
         }),
       tenantId: String(tenantId),
       apiUrl,
+      appUrl,
     };
   }, [api, apiUrl, appUrl, tenantId]);
 

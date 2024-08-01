@@ -23,5 +23,5 @@
     }
   },
   "exclude": ["**/node_modules", "**/.*/"],
-  "types": ["node", "react", "react-is/next"]
+  "types": ["node", "react", "react-is/next", "jest"]
 }
