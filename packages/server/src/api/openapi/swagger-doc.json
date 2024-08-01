@@ -1,0 +1,11 @@
+{
+  "apiFolder": "src/api",
+  "outputFile": "openapi/swagger.json",
+  "definition": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Niledatabase regional APIs",
+      "version": "2.0"
+    }
+  }
+}

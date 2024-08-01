@@ -7,7 +7,6 @@ import CopyAll from '@mui/icons-material/CopyAll';
 import { Theme } from '@mui/joy/styles';
 import Tooltip from '@mui/joy/Tooltip';
 import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
-import { SSOProvider } from '@niledatabase/browser';
 
 import BaseSSOForm from './BaseSSOForm';
 import { OktaProps } from './types';
@@ -102,7 +101,7 @@ export default function Okta(props: OktaProps) {
   return (
     <BaseSSOForm
       {...remaining}
-      config={config as SSOProvider}
+      config={config as any}
       providerName="Okta"
       configurationGuide={<ConfigGuide callbackUrl={callbackUrl} />}
     />

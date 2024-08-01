@@ -7,7 +7,7 @@ export type EnvConfig = {
   config?: ServerConfig;
 };
 
-export const getDatbaseId = (cfg: EnvConfig) => {
+export const getDatabaseId = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
 
   const { info } = Logger(config, '[databaseId]');
@@ -102,26 +102,25 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
  */
 export const getBasePath = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
-  const { info, warn } = Logger(config, '[basePath]');
+  const { info } = Logger(config, '[basePath]');
   const basePath = config?.api?.basePath;
+  let version = '';
+  if (!/\/v\d\//.test(String(basePath))) {
+    version =
+      config?.api?.version === 1 ? '' : `/v${config?.api?.version ?? 2}`;
+  }
   if (basePath) {
-    logger && info(logger, 'config', config?.api?.basePath);
-    return basePath;
+    logger && info(logger, 'config', basePath);
+    return `${basePath}${version}`;
   }
 
   if (process.env.NILEDB_API_URL) {
     logger && info(logger, 'NILEDB_API_URL', process.env.NILEDB_API_URL);
     const apiUrl = new URL(process.env.NILEDB_API_URL);
-    return apiUrl.origin;
+    return apiUrl.href;
   }
 
-  // eslint-disable-next-line no-console
-  console.warn(
-    '[niledb]',
-    'NILEDB_API_URL is missing. It will be required in a future update.'
-  );
-  logger && info(logger, 'default', 'https://api.thenile.dev');
-  return 'https://api.thenile.dev';
+  throw new Error('NILEDB_API_URL is missing.');
 };
 
 export const getControlPlane = (cfg: EnvConfig) => {
@@ -130,7 +129,7 @@ export const getControlPlane = (cfg: EnvConfig) => {
 
   if (process.env.NILEDB_CONFIGURE) {
     logger && info(logger, 'NILEDB_CONFIGURE', process.env.NILEDB_CONFIGURE);
-    return `https://${process.env.NILEDB_CONFIGURE}`;
+    return process.env.NILEDB_CONFIGURE;
   }
 
   logger && info(logger, 'default', process.env.NILEDB_CONFIGURE);

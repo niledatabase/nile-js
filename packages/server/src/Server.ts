@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 
+import NewNileApi from './api';
 import { ServerConfig } from './types';
 import { Config } from './utils/Config';
 import Auth from './auth';
@@ -29,6 +30,14 @@ const init = (config: Config): Api => {
 export class Server {
   config: Config;
   api: Api;
+  newApi: {
+    handlers: {
+      GET: (req: Request) => Promise<void | Response>;
+      POST: (req: Request) => Promise<void | Response>;
+      DELETE: (req: Request) => Promise<void | Response>;
+      PUT: (req: Request) => Promise<void | Response>;
+    };
+  };
   private manager!: DbManager;
   private servers: Map<string, Server>;
 
@@ -37,6 +46,7 @@ export class Server {
     this.servers = new Map();
     this.api = init(this.config);
     this.manager = new DbManager(this.config);
+    this.newApi = NewNileApi(this.config);
 
     watchTenantId((tenantId) => {
       this.tenantId = tenantId;
@@ -65,6 +75,7 @@ export class Server {
     this.manager.clear(this.config);
     this.manager = new DbManager(this.config);
     this.api = init(this.config);
+    this.newApi = NewNileApi(this.config);
     return this;
   }
 
@@ -146,7 +157,7 @@ export class Server {
       // be sure the config is up to date
       const updatedConfig = new Config(_config);
       existing.setConfig(updatedConfig);
-      // propagage special config items
+      // propagate special config items
       existing.tenantId = updatedConfig.tenantId;
       existing.userId = updatedConfig.userId;
       existing.token = updatedConfig.api.token;

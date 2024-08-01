@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { UpdateProviderRequest, SSOProvider } from '@niledatabase/browser';
+import { SSOProvider } from '@niledatabase/browser';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Alert from '@mui/joy/Alert';
@@ -12,9 +12,7 @@ import { Attribute, AttributeType } from '../lib/SimpleForm/types';
 
 import { OktaProps } from './types';
 
-type SSOFormRequest = Omit<UpdateProviderRequest, 'emailDomains'> & {
-  emailDomains: string;
-};
+type SSOFormRequest = any;
 export default function BaseSSOForm(
   props: Omit<OktaProps, 'callbackUrl' | 'providers'> & {
     providerName: string;
@@ -114,7 +112,7 @@ export default function BaseSSOForm(
   };
 
   const mutation = useMutation(
-    (ssoRequest: SSOFormRequest) => {
+    (ssoRequest: SSOFormRequest): any => {
       setLoading(true);
       const payload = {
         providerName: providerName.toLowerCase(),
@@ -123,10 +121,11 @@ export default function BaseSSOForm(
           emailDomains: ssoRequest.emailDomains.split(','),
         },
       };
+      return null;
       if (optimisticConfig != null) {
-        return api.auth.updateProvider(payload);
+        // return api.auth.updateProvider(payload);
       } else {
-        return api.auth.createProvider(payload);
+        // return api.auth.createProvider(payload);
       }
     },
     {
@@ -147,7 +146,7 @@ export default function BaseSSOForm(
               clientId: vars.clientId,
               configUrl: vars.configUrl,
               emailDomains: vars.emailDomains.split(', '),
-            } as SSOProvider);
+            } as any);
           }
           setSuccess(true);
           onSuccess && onSuccess(data, vars);

@@ -1,4 +1,4 @@
-import { NilePoolConfig, ServerConfig } from '../../types';
+import { Database, NilePoolConfig, ServerConfig } from '../../types';
 import Logger from '../Logger';
 
 import {
@@ -6,7 +6,7 @@ import {
   getBasePath,
   getControlPlane,
   getDatabaseName,
-  getDatbaseId,
+  getDatabaseId,
   getDbHost,
   getDbPort,
   getInfoBearer,
@@ -16,29 +16,36 @@ import {
   getUsername,
 } from './envVars';
 
-type Database = {
-  name: string;
-  apiHost: string;
-  dbHost: string;
-  id: string;
-  message?: string; // is actually an error
-  status: 'READY' | string;
+export type ConfigRoutes = {
+  SIGNIN?: string;
+  SESSION?: string;
+  PROVIDERS?: string;
+  CSRF?: string;
+  CALLBACK?: string;
+  SIGNOUT?: string;
+  ME?: string;
+  ERROR?: string;
 };
+
 class ApiConfig {
   public cookieKey?: string;
   public basePath?: string;
+  public version?: number;
   private _token?: string;
   constructor({
     basePath,
     cookieKey,
     token,
+    version,
   }: {
     basePath: string;
     cookieKey: string;
     token: string | undefined;
+    version: number;
   }) {
     this.basePath = basePath;
     this.cookieKey = cookieKey;
+    this.version = version;
     this._token = token;
   }
 
@@ -56,6 +63,8 @@ export class Config {
   password: string;
   databaseId: string;
   databaseName: string;
+  routePrefix?: string;
+  routes?: ConfigRoutes;
 
   debug: boolean;
 
@@ -84,7 +93,6 @@ export class Config {
 
   constructor(config?: ServerConfig, logger?: string) {
     const envVarConfig: EnvConfig = { config, logger };
-
     this.user = getUsername(envVarConfig) as string;
     this.password = getPassword(envVarConfig) as string;
     if (process.env.NODE_ENV !== 'TEST') {
@@ -100,7 +108,7 @@ export class Config {
       }
     }
 
-    this.databaseId = getDatbaseId(envVarConfig) as string;
+    this.databaseId = getDatabaseId(envVarConfig) as string;
     this.databaseName = getDatabaseName(envVarConfig) as string;
     this._tenantId = getTenantId(envVarConfig);
     this.debug = Boolean(config?.debug);
@@ -115,6 +123,7 @@ export class Config {
       basePath,
       cookieKey: config?.api?.cookieKey ?? 'token',
       token: getToken({ config }),
+      version: config?.api?.version ?? 2,
     });
     this.db = {
       user: this.user,
@@ -139,7 +148,7 @@ export class Config {
     let configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
     if (configuredHost && this.databaseName && this.databaseId) {
-      info('Alreaady configured, aborting fetch');
+      info('Already configured, aborting fetch');
       return this;
     }
 
@@ -179,7 +188,7 @@ export class Config {
       if ('message' in database) {
         if ('statusCode' in database) {
           error(database);
-          throw new Error('HTTP error has occured');
+          throw new Error('HTTP error has occurred');
         } else {
           throw new Error(
             'Unable to auto-configure. Please remove NILEDB_NAME, NILEDB_API_URL, NILEDB_POSTGRES_URL, and/or NILEDB_HOST from your environment variables.'
@@ -188,18 +197,22 @@ export class Config {
       }
       if (typeof database === 'object') {
         const { apiHost, dbHost, name, id } = database;
+        const duckApiHost = getBasePath(envVarConfig) || apiHost; // this needs changed in the control plane response
         this.databaseId = id;
         this.databaseName = name;
         const dburl = new URL(dbHost);
-        const apiurl = new URL(apiHost);
+        const apiurl = new URL(duckApiHost);
         configuredHost = dburl.host;
-        basePath = apiurl.origin;
+        basePath = duckApiHost;
       }
     }
+    delete envVarConfig.config?.api?.basePath;
+    basePath = getBasePath(envVarConfig);
     this.api = new ApiConfig({
       basePath,
       cookieKey: config?.api?.cookieKey ?? 'token',
       token: getToken({ config }),
+      version: config?.api?.version ?? 2,
     });
     this.db = {
       user: this.user,

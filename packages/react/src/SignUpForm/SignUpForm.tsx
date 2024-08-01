@@ -7,7 +7,7 @@ import UserForm from '../lib/SimpleForm';
 import { Attribute, AttributeType } from '../lib/SimpleForm/types';
 import { useApi } from '../context';
 
-import { Props, LoginInfo } from './types';
+import { Props, SignUpInfo } from './types';
 
 export default function SignUpForm(props: Props) {
   const [error, setError] = React.useState<string | void>();
@@ -20,17 +20,34 @@ export default function SignUpForm(props: Props) {
   } = props;
   const api = useApi();
   const mutation = useMutation(
-    async (_data: LoginInfo) => {
+    async (_data: SignUpInfo) => {
       setError(undefined);
       const possibleData = beforeMutate && beforeMutate(_data);
-      const data = possibleData ?? _data;
-      const { email, password, preferredName, newTenant, ...metadata } = data;
+      const data: SignUpInfo = { ..._data, ...possibleData };
+      const {
+        name,
+        givenName,
+        familyName,
+        picture,
+        email,
+        password,
+        newTenantName,
+        ...metadata
+      } = data;
       if (Object.keys(metadata).length > 0) {
         // eslint-disable-next-line no-console
         console.warn('additional metadata not supported yet.');
       }
-      return api.auth.signUp({
-        signUpRequest: { email, password, preferredName, newTenant },
+      return await api.users.createUser({
+        createBasicUserRequest: {
+          email,
+          password,
+          name,
+          familyName,
+          picture,
+          givenName,
+          newTenantName,
+        },
       });
     },
     {
@@ -47,7 +64,7 @@ export default function SignUpForm(props: Props) {
       {
         name: 'email',
         label: 'Email',
-        type: AttributeType.Text,
+        type: AttributeType.Email,
         defaultValue: '',
         required: true,
       },

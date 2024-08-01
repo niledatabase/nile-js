@@ -1,13 +1,13 @@
-export { NileProvider } from './context';
+export { NileProvider, useApi } from './context';
 
-export { default as GoogleLoginButton } from './GoogleLoginButton';
+export { default as Google } from './GoogleLoginButton';
 export * from './GoogleLoginButton';
 
 export * from './SignUpForm';
-export { default as UserSignupForm } from './SignUpForm';
+export { default as SignUpForm } from './SignUpForm';
 
-export * from './LoginForm';
-export { default as UserLoginForm } from './LoginForm';
+export * from './SignInForm';
+export { default as SignInForm } from './SignInForm';
 
 export * from './UserTenantList';
 export { default as UserTenantList } from './UserTenantList';

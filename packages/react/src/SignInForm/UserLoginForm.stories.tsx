@@ -3,8 +3,9 @@ import { Meta } from '@storybook/react';
 import Stack from '@mui/joy/Stack';
 
 import theme from '../../.storybook/themeConfig';
-import LoginForm from '../../src/LoginForm';
-import { NileProvider } from '../../src/context';
+import { NileProvider } from '../context';
+
+import LoginForm from '.';
 
 const meta: Meta = {
   tags: ['autodocs'],

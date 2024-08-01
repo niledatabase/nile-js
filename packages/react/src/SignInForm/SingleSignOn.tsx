@@ -33,10 +33,11 @@ export default function SingleSignOnForm(
     async (_data: LoginInfo) => {
       const possibleData = beforeMutate && beforeMutate(_data);
       const data = possibleData ?? _data;
-      return await api.auth.login({
-        loginRequest: { email: data.email, password: data.password },
-        sso: !disableSSO,
-      });
+      // return await api.auth.login({
+      // loginRequest: { email: data.email, password: data.password },
+      // sso: !disableSSO,
+      // });
+      return {} as any;
     },
     {
       onSuccess: (token, data) => {

@@ -3,14 +3,13 @@ import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import { useState } from 'react';
 import Add from '@mui/icons-material/Add';
-import { SignUp201Response } from '@niledatabase/browser';
 
 import UserModal from './UserModal';
 
 type Props = {
   allowCreation: boolean;
   buttonText: string;
-  onUserCreateSuccess?: (user: SignUp201Response) => void;
+  onUserCreateSuccess?: (user: any) => void;
 };
 export default function CreateUser(props: Props) {
   const { allowCreation, buttonText, onUserCreateSuccess } = props;

@@ -135,6 +135,7 @@ export default function SimpleForm(props: {
                   id={display.id}
                   orientation="horizontal"
                   sx={{ alignItems: 'center' }}
+                  required={attr.required}
                 >
                   <Box>
                     <Labler error={error} attr={attr} />
@@ -182,7 +183,11 @@ export default function SimpleForm(props: {
               );
             case AttributeType.Select:
               return (
-                <FormControl key={display.key} id={display.id}>
+                <FormControl
+                  key={display.key}
+                  id={display.id}
+                  required={attr.required}
+                >
                   <Labler error={error} attr={attr} />
                   <Controller
                     control={control}
@@ -228,7 +233,11 @@ export default function SimpleForm(props: {
               );
             case AttributeType.Password:
               return (
-                <FormControl key={display.key} id={display.id}>
+                <FormControl
+                  key={display.key}
+                  id={display.id}
+                  required={attr.required}
+                >
                   <Labler error={error} attr={attr} />
                   <Input
                     {...display}
@@ -242,7 +251,11 @@ export default function SimpleForm(props: {
               );
             case AttributeType.Number:
               return (
-                <FormControl key={display.key} id={display.id}>
+                <FormControl
+                  key={display.key}
+                  id={display.id}
+                  required={attr.required}
+                >
                   <Labler error={error} attr={attr} />
                   <Input
                     {...display}
@@ -258,7 +271,11 @@ export default function SimpleForm(props: {
             case AttributeType.Text:
             default:
               return (
-                <FormControl key={display.key} id={display.id}>
+                <FormControl
+                  key={display.key}
+                  id={display.id}
+                  required={attr.required}
+                >
                   <Labler error={error} attr={attr} />
                   <Input {...display} {...register(attr.name, fieldConfig)} />
                   <FormHelperText id={`${attr.name}-helper-text`}>
