@@ -1,12 +1,15 @@
 import { Server } from './Server';
 
 describe('server', () => {
-  fit('has reasonable defaults', () => {
+  it('has reasonable defaults', () => {
     const config = {
       databaseId: 'databaseId',
       databaseName: 'databaseName',
       user: 'username',
       password: 'password',
+      db: {
+        host: 'db.thenile.dev',
+      },
     };
     const server = new Server(config);
     expect(server.config.db).toEqual({
@@ -16,7 +19,9 @@ describe('server', () => {
       user: 'username',
       password: 'password',
     });
-    expect(server.config.api.basePath).toEqual('https://api.thenile.dev');
+    expect(server.config.api.basePath).toEqual(
+      'http://thenile.dev/v2/databases/testdb'
+    );
   });
   it('sets a tenant id everywhere when set', () => {
     const config = {
@@ -27,11 +32,8 @@ describe('server', () => {
     const nile = new Server(config);
     nile.tenantId = 'tenantId';
     nile.userId = 'userId';
-    for (const api in nile.api) {
-      // @ts-expect-error - checking api
-      const _api = nile.api[api];
-      expect(_api.tenantId).toEqual('tenantId');
-    }
+    expect(nile.api.users.tenantId).toEqual('tenantId');
+    expect(nile.api.tenants.tenantId).toEqual('tenantId');
   });
   it('manages instances', () => {
     const config = {

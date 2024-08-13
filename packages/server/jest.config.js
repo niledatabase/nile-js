@@ -8,3 +8,6 @@ module.exports = {
 
 process.env.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'test';
 process.env.NILEDB_API_URL = 'http://thenile.dev/v2/databases/testdb';
+process.env.NILEDB_HOST = 'db.thenile.dev';
+process.env.NILEDB_PASSWORD = 'super_secret';
+process.env.NILEDB_USER = 'shhhh';

@@ -1,9 +1,9 @@
 import Logger from '../../../utils/Logger';
 import { Routes } from '../../types';
 import { apiRoutes } from '../../utils/routes/apiRoutes';
-import fetch from '../../utils/request';
 import urlMatches from '../../utils/routes/urlMatches';
 import { Config } from '../../../utils/Config';
+import request from '../../utils/request';
 
 const key = 'ME';
 const url = apiRoutes[key];
@@ -42,11 +42,15 @@ async function GET(
   log: (...args: string[]) => void
 ) {
   log('[GET]');
-  return await fetch(url, init);
+  return await request(url, init);
 }
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger({ ...config, debug: true }, '[ROUTES]', `[${key}]`);
+  const { info } = Logger(
+    { ...config, debug: config.debug },
+    '[ROUTES]',
+    `[${key}]`
+  );
 
   switch (request.method) {
     case 'GET':

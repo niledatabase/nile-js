@@ -8,7 +8,6 @@ import { Config } from '../../utils/Config';
 
 export default function PUTER(configRoutes: Routes, config: Config) {
   return async function PUT(req: Request) {
-    console.log('in here for sure');
     if (matchesTenantUsers(configRoutes, req)) {
       return tenantUsers(req, config);
     }

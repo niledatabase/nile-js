@@ -1,7 +1,5 @@
 import React from 'react';
 import { CssVarsProvider } from '@mui/joy/styles';
-import Stack from '@mui/joy/Stack';
-import Input from '@mui/joy/Input';
 
 import { NileProvider } from '../context';
 import theme from '../../.storybook/themeConfig';
@@ -21,26 +19,6 @@ export function Basic() {
     <NileProvider {...theme}>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <GoogleLoginButton />
-      </div>
-    </NileProvider>
-  );
-}
-
-export function BasicWithTenantNameProvider() {
-  const [newTenant, setNewTenant] = React.useState<string | undefined>();
-  return (
-    <NileProvider {...theme}>
-      <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
-        <Stack gap={2}>
-          <Stack>
-            <Input
-              size="sm"
-              placeholder="Organization Name"
-              onChange={(event) => setNewTenant(event.target.value)}
-            />
-          </Stack>
-          <GoogleLoginButton newTenantName={newTenant} />
-        </Stack>
       </div>
     </NileProvider>
   );

@@ -7,16 +7,30 @@ export interface Tenant {
 }
 
 export default class Tenants extends Config {
-  constructor(config: Config) {
+  headers?: Headers;
+  constructor(config: Config, headers?: Headers) {
     super(config);
+    this.headers = headers;
+  }
+  handleHeaders(init?: RequestInit) {
+    if (this.headers) {
+      if (init) {
+        init.headers = new Headers({ ...this.headers, ...init?.headers });
+        return init;
+      } else {
+        init = {
+          headers: this.headers,
+        };
+        return init;
+      }
+    }
+    return undefined;
   }
   get tenantsUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/tenants`;
+    return '/tenants';
   }
   get tenantUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/tenants/${
-      this.tenantId ?? '{tenantId}'
-    }`;
+    return `/tenants/${this.tenantId ?? '{tenantId}'}`;
   }
 
   createTenant = async (
@@ -24,7 +38,8 @@ export default class Tenants extends Config {
     init?: RequestInit
   ): NileResponse<Tenant> => {
     const _requester = new Requester(this);
-    return _requester.post(req, this.tenantsUrl, init);
+    const _init = this.handleHeaders(init);
+    return _requester.post(req, this.tenantsUrl, _init);
   };
 
   getTenant = async (
@@ -32,6 +47,7 @@ export default class Tenants extends Config {
     init?: RequestInit
   ): NileResponse<Tenant> => {
     const _requester = new Requester(this);
-    return _requester.get(req, this.tenantUrl, init);
+    const _init = this.handleHeaders(init);
+    return _requester.get(req, this.tenantUrl, _init);
   };
 }

@@ -2,11 +2,11 @@ import { appRoutes } from '../utils/routes/defaultRoutes';
 import { Config } from '../../utils/Config';
 import { X_NILE_TENANT } from '../../utils/fetch';
 
-import POSTER from './POST';
+import DELETER from './DELETE';
 
 jest.mock('../utils/auth', () => () => 'a session, relax');
-describe('poster', () => {
-  const apiGet = POSTER(appRoutes(), new Config());
+describe('DELETER', () => {
+  const apiGet = DELETER(appRoutes(), new Config());
   global.fetch = jest.fn();
 
   beforeEach(() => {
@@ -15,14 +15,10 @@ describe('poster', () => {
   });
 
   [
-    'auth/signin',
     'tenants',
     'tenants/{tenantId}',
     'tenants/{tenantId}/users',
     'tenants/${tenantId}/users/${userId}',
-    'users',
-    'users/${userId}',
-    'users/${userId}/tenants',
   ].forEach((key) => {
     it(`matches ${key} `, async () => {
       const headersArray: { key: string; value: string }[] = [];

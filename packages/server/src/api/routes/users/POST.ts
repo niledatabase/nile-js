@@ -68,22 +68,18 @@ import { apiRoutes } from '../../utils/routes/apiRoutes';
 export async function POST(
   session: void | ActiveSession,
   init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  log?: (...args: string[]) => void
 ) {
   if (!session) {
     return new Response(null, { status: 401 });
   }
   init.body = init.request.body;
-  init.method = 'PUT';
+  init.method = 'POST';
   const yurl = new URL(init.request.url);
   const tenantId = yurl.searchParams.get('tenantId');
   const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
-  if (!tenant) {
-    return new Response(null, { status: 404 });
-  }
-
-  const url = apiRoutes.TENANT_USERS(tenant);
-  log('[POST]', url);
+  const url = apiRoutes.USERS(tenant ? tenant : undefined);
+  log && log('[POST]', url);
 
   return await request(url, init);
 }

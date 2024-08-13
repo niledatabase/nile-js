@@ -1,6 +1,6 @@
 import { apiRoutes } from '../../../../utils/routes/apiRoutes';
-import fetch from '../../../../utils/request';
 import { ActiveSession } from '../../../../utils/auth';
+import request from '../../../../utils/request';
 
 /**
  * @swagger
@@ -44,7 +44,7 @@ export async function GET(
     return new Response(null, { status: 404 });
   }
 
-  const url = `${apiRoutes.TENANT_USER(tenantId, session.id)}`;
-  log('[GET]', url);
-  return await fetch(url, init);
+  const url = `${apiRoutes.TENANT_USERS(tenantId)}`;
+  log('[GET]', '[TENANT_USERS]', url);
+  return await request(url, init);
 }

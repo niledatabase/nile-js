@@ -1,5 +1,8 @@
 import me, { matches as matchesMe } from '../routes/me';
 import users, { matches as matchesUsers } from '../routes/users';
+import tenantUsers, {
+  matches as matchesTenantUsers,
+} from '../routes/tenants/[tenantId]/users';
 import tenants, { matches as matchesTenants } from '../routes/tenants';
 import { Routes } from '../types';
 import * as authRoutes from '../routes/auth';
@@ -13,6 +16,11 @@ export default function GETTER(configRoutes: Routes, config: Config) {
     if (matchesUsers(configRoutes, req)) {
       return users(req, config);
     }
+
+    if (matchesTenantUsers(configRoutes, req)) {
+      return tenantUsers(req, config);
+    }
+
     if (matchesTenants(configRoutes, req)) {
       return tenants(req, config);
     }

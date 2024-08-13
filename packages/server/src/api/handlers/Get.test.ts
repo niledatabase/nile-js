@@ -1,9 +1,13 @@
+import { X_NILE_TENANT } from '../../utils/fetch';
+import { Config } from '../../utils/Config';
 import { appRoutes } from '../utils/routes/defaultRoutes';
 
 import GETTER from './GET';
 
+jest.mock('../utils/auth', () => () => 'a session, relax');
+
 describe('getter', () => {
-  const apiGet = GETTER(appRoutes());
+  const apiGet = GETTER(appRoutes(), new Config());
   global.fetch = jest.fn();
 
   beforeEach(() => {
@@ -11,7 +15,17 @@ describe('getter', () => {
     global.fetch.mockClear();
   });
 
-  ['me', 'users', 'tenants'].forEach((key) => {
+  [
+    'me',
+    'users',
+    'users/${userId}',
+    'tenants',
+    'tenants/{tenantId}',
+    'auth/signin',
+    'tenants/${tenantId}/users/${userId}',
+    'tenants/{tenantId}/users',
+    'users/${userId}/tenants',
+  ].forEach((key) => {
     it(`matches ${key} `, async () => {
       const headersArray: { key: string; value: string }[] = [];
       let params: Request = {} as Request;
@@ -20,7 +34,11 @@ describe('getter', () => {
         nextUrl: {
           pathname: `/api/${key}`,
         },
-        headers: new Headers({ host: 'http://localhost:3000' }),
+        method: 'GET',
+        headers: new Headers({
+          [X_NILE_TENANT]: '123',
+          host: 'http://localhost:3000',
+        }),
         url: `http://localhost:3001/api/${key}`,
       };
 
@@ -40,8 +58,13 @@ describe('getter', () => {
         headersArray.push({ key, value });
       });
       expect(headersArray).toEqual([
-        { key: 'x-niledb-creds', value: 'undefined:undefined' },
-        { key: 'x-niledb-origin', value: 'http://localhost:3001' },
+        { key: 'host', value: 'http://localhost:3000' },
+        {
+          key: 'niledb-creds',
+          value: 'c2hoaGg6c3VwZXJfc2VjcmV0',
+        },
+        { key: 'niledb-origin', value: 'http://localhost:3001' },
+        { key: X_NILE_TENANT, value: '123' },
       ]);
     });
   });

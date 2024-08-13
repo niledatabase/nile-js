@@ -4,7 +4,7 @@ import { X_NILE_TENANT, _fetch } from '../fetch';
 
 export { NileResponse, NileRequest } from './types';
 
-type Methods = 'POST' | 'GET' | 'PUT';
+type Methods = 'DELETE' | 'POST' | 'GET' | 'PUT';
 export default class Requester<T> extends Config {
   constructor(config: Config) {
     super(config);
@@ -118,5 +118,13 @@ export default class Requester<T> extends Config {
     init?: RequestInit
   ): Promise<Response> => {
     return await this.request('PUT', url, req, init);
+  };
+
+  delete = async (
+    req: T | Headers,
+    url: string,
+    init?: RequestInit
+  ): Promise<Response> => {
+    return await this.request('DELETE', url, req, init);
   };
 }

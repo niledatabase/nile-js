@@ -1,52 +1,59 @@
 import { Pool } from 'pg';
 
-import NewNileApi from './api';
 import { ServerConfig } from './types';
 import { Config } from './utils/Config';
-import Auth from './auth';
 import Users from './users';
 import Tenants from './tenants';
 import { watchTenantId, watchToken, watchUserId } from './utils/Event';
 import DbManager from './db';
 import { getServerId, makeServerId } from './utils/Server';
+import serverAuth from './auth';
+import { appRoutes } from './api/utils/routes/defaultRoutes';
+import Handlers from './api/handlers';
+import { Routes } from './api/types';
 
-type Api = {
-  auth: Auth;
+class Api {
+  config: Config;
   users: Users;
   tenants: Tenants;
-};
-
-const init = (config: Config): Api => {
-  const auth = new Auth(config);
-  const users = new Users(config);
-  const tenants = new Tenants(config);
-  return {
-    auth,
-    users,
-    tenants,
+  routes: Routes;
+  handlers: {
+    GET: (req: Request) => Promise<void | Response>;
+    POST: (req: Request) => Promise<void | Response>;
+    DELETE: (req: Request) => Promise<void | Response>;
+    PUT: (req: Request) => Promise<void | Response>;
   };
-};
+  constructor(config: Config) {
+    this.config = config;
+    this.users = new Users(config);
+    this.tenants = new Tenants(config);
+    this.routes = {
+      ...appRoutes(config?.routePrefix),
+      ...config?.routes,
+    };
+    this.handlers = Handlers(this.routes, config);
+  }
+
+  set headers(headers: Headers) {
+    this.users = new Users(this.config, headers);
+    this.tenants = new Tenants(this.config, headers);
+  }
+  async login(payload: { email: string; password: string }) {
+    this.headers = await serverAuth(this.config, this.handlers)(payload);
+  }
+}
 
 export class Server {
   config: Config;
   api: Api;
-  newApi: {
-    handlers: {
-      GET: (req: Request) => Promise<void | Response>;
-      POST: (req: Request) => Promise<void | Response>;
-      DELETE: (req: Request) => Promise<void | Response>;
-      PUT: (req: Request) => Promise<void | Response>;
-    };
-  };
   private manager!: DbManager;
   private servers: Map<string, Server>;
 
   constructor(config?: ServerConfig) {
     this.config = new Config(config as ServerConfig, '[initial config]');
     this.servers = new Map();
-    this.api = init(this.config);
+    this.api = new Api(this.config);
     this.manager = new DbManager(this.config);
-    this.newApi = NewNileApi(this.config);
 
     watchTenantId((tenantId) => {
       this.tenantId = tenantId;
@@ -74,15 +81,13 @@ export class Server {
 
     this.manager.clear(this.config);
     this.manager = new DbManager(this.config);
-    this.api = init(this.config);
-    this.newApi = NewNileApi(this.config);
+    this.api = new Api(this.config);
     return this;
   }
 
   set databaseId(val: string | void) {
     if (val) {
       this.config.databaseId = val;
-      this.api.auth.databaseId = val;
       this.api.users.databaseId = val;
       this.api.tenants.databaseId = val;
     }
@@ -98,7 +103,6 @@ export class Server {
     this.config.userId = userId;
 
     if (this.api) {
-      this.api.auth.userId = this.config.userId;
       this.api.users.userId = this.config.userId;
       this.api.tenants.userId = this.config.userId;
     }
@@ -113,7 +117,6 @@ export class Server {
     this.config.tenantId = tenantId;
 
     if (this.api) {
-      this.api.auth.tenantId = tenantId;
       this.api.users.tenantId = tenantId;
       this.api.tenants.tenantId = tenantId;
     }
@@ -127,7 +130,6 @@ export class Server {
     if (token) {
       this.config.api.token = token;
       if (this.api) {
-        this.api.auth.api.token = token;
         this.api.users.api.token = token;
         this.api.tenants.api.token = token;
       }

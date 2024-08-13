@@ -4,7 +4,8 @@ type ApiRouteKeys = keyof typeof apiRoutes;
 export type ApiRoutePaths = (typeof apiRoutes)[ApiRouteKeys];
 export const apiRoutes = {
   ME: makeRestUrl('/me'),
-  USERS: makeRestUrl('/users'),
+  USERS: (tenantId?: string) =>
+    makeRestUrl('/users', tenantId ? { tenantId } : undefined),
   USER: (userId: string) => makeRestUrl(`/users/${userId}`),
   TENANTS: makeRestUrl('/tenants'),
   TENANT: (tenantId: string) => makeRestUrl(`/tenants/${tenantId}`),

@@ -1,246 +1,76 @@
 import { Config } from '../utils/Config';
-import Requester, { NileRequest, NileResponse } from '../utils/Requester';
-import { ResponseError } from '../utils/ResponseError';
-import {
-  X_NILE_TENANT,
-  X_NILE_USER_ID,
-  getTenantFromHttp,
-} from '../utils/fetch';
-import { updateToken, updateUserId } from '../utils/Event';
-import { CreateBasicUserRequest, LoginUserResponse } from '../users';
 
-export interface TenantSSORegistration {
-  configUrl: string;
-  clientId: string;
-  clientSecret: string;
-  redirectURI: string;
-  emailDomains: Array<string>;
-  enabled?: boolean;
-}
-
-export interface SSOProvider {
-  readonly id?: string;
-  tenantId?: string;
-  provider?: string;
-  configUrl: string;
-  clientSecret?: string;
-  clientId: string;
-  redirectURI: string;
-  emailDomains?: Array<string>;
-  enabled?: boolean;
-}
-export default class Auth extends Config {
-  constructor(config: Config) {
-    super(config);
+/**
+ * a helper function to log in server side.
+ */
+export default function serverAuth(
+  config: Config,
+  handlers: {
+    GET: (req: Request) => Promise<void | Response>;
+    POST: (req: Request) => Promise<void | Response>;
+    DELETE: (req: Request) => Promise<void | Response>;
+    PUT: (req: Request) => Promise<void | Response>;
   }
-  get loginUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/users/login`;
-  }
-
-  login = async (
-    req: NileRequest<CreateBasicUserRequest>,
-    init?: RequestInit
-  ): NileResponse<LoginUserResponse> => {
-    const headers = new Headers({ 'content-type': 'application/json' });
-    const _requester = new Requester(this);
-
-    const params =
-      req instanceof Request
-        ? new URL(req.url).searchParams
-        : new URLSearchParams();
-
-    const sso = params.get('sso');
-
-    if (sso === 'true') {
-      const providerRes = await this.listProviders(
-        (req as Request).clone(),
-        init
-      );
-      // if you have a provider, log them in
-      if (
-        providerRes &&
-        providerRes.status >= 200 &&
-        providerRes.status < 300
-      ) {
-        const providers = await new Response(providerRes.body).json();
-        if (providers.length > 0) {
-          if (providers.length > 1) {
-            return new Response(JSON.stringify(providers), { status: 200 });
-            // a user has to make a choice
-          }
-
-          // is there a way to do this? probably not.
-          headers.set(X_NILE_TENANT, providers[0].tenantId);
-          headers.append(
-            'set-cookie',
-            `tenantId=${providers[0].tenantId}; path=/; httponly;`
-          );
-          // const ssoResp = await this.loginSSO(req);
-          return new Response(
-            JSON.stringify({
-              redirectURI: `${this.api.basePath}${this.loginSSOUrl('okta')}`,
-            }),
-            { status: 200 }
-          );
-          // make it a client side redirect, because of the headers
-          // if there is no provider, require a password.
-        }
-      }
-    }
-
-    const res = await _requester.post(req, this.loginUrl, init).catch((e) => {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return e;
+) {
+  return async function login({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) {
+    const sessionUrl = new URL(`${config.api.localPath}/api/auth/providers`);
+    const sessionReq = new Request(sessionUrl, {
+      method: 'GET',
+      headers: new Headers({
+        host: sessionUrl.host,
+      }),
     });
-    if (res instanceof ResponseError) {
-      return res.response;
-    }
-    if (res && res.status >= 200 && res.status < 300) {
-      const token: LoginUserResponse = await res.json();
-      const cookie = `${this.api?.cookieKey}=${token.token.jwt}; path=/; samesite=lax; httponly;`;
-      headers.append('set-cookie', cookie);
-      const { tenants } = token;
-      const tenant = tenants?.values();
-      const tenantId = tenant?.next().value;
-      headers.set(X_NILE_TENANT, tenantId);
-      headers.append('set-cookie', `tenantId=${tenantId}; path=/; httponly;`);
-      updateToken(token.token.jwt);
+    const sessionRes = await handlers.POST(sessionReq);
+    const providers = await sessionRes?.json();
 
-      return new Response(JSON.stringify(token), { status: 200, headers });
-    }
-    const text = await res.text();
-    return new Response(text, { status: res.status });
-  };
-
-  loginSSO = (redirectUrl: string) => {
-    const ssoLogin = async (
-      req: NileRequest<unknown>
-    ): NileResponse<Response> => {
-      const headers = new Headers();
-      const body = await (req as Request).formData();
-      const accessToken = (await body.get('access_token')) as string;
-      const tenantId = (await body.get('tenantId')) as string;
-      const cookie = `${this.api?.cookieKey}=${accessToken}; path=/; samesite=lax; httponly;`;
-      updateToken(accessToken);
-      headers.append('set-cookie', cookie);
-      headers.set(X_NILE_TENANT, tenantId);
-      headers.append('set-cookie', `tenantId=${tenantId}; path=/; httponly;`);
-      headers.set('Location', redirectUrl);
-      return new Response(null, {
-        headers,
-        status: 303,
-      });
-    };
-    return ssoLogin;
-  };
-
-  loginSSOUrl = (provider: string) => {
-    return `/databases/${encodeURIComponent(this.databaseId)}/tenants/${
-      this.tenantId ?? '{tenantId}'
-    }/auth/oidc/providers/${provider}/login`;
-  };
-
-  get signUpUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/users`;
-  }
-
-  signUp = async (
-    req: NileRequest<CreateBasicUserRequest>,
-    init?: RequestInit
-  ): NileResponse<LoginUserResponse> => {
-    const headers = new Headers();
-    const _requester = new Requester(this);
-    const res = await _requester.post(req, this.signUpUrl, init).catch((e) => {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return e;
+    const csrf = new URL(`${config.api.localPath}/api/auth/csrf`);
+    const csrfReq = new Request(csrf, {
+      method: 'GET',
+      headers: new Headers({
+        host: sessionUrl.host,
+      }),
     });
-    if (res instanceof ResponseError) {
-      return res.response;
+    const csrfRes = await handlers.POST(csrfReq);
+
+    const { csrfToken } = (await csrfRes?.json()) ?? {};
+    const { credentials } = providers;
+
+    const csrfCookie = csrfRes?.headers.get('set-cookie');
+    expect(csrfCookie).toContain('nile.csrf-token=');
+
+    const signInUrl = new URL(credentials.callbackUrl);
+
+    if (!csrfCookie) {
+      throw new Error('unable to authenticate REST');
     }
-    if (res && res.status >= 200 && res.status < 300) {
-      const token: LoginUserResponse = await res.json();
-      const cookie = `${this.api?.cookieKey}=${token.token?.jwt}; path=/; samesite=lax; httponly;`;
-      headers.append('set-cookie', cookie);
-      const { id } = token;
-      updateToken(token.token?.jwt);
-      updateUserId(id);
-      headers.set(X_NILE_USER_ID, id);
-      headers.append('set-cookie', `userId=${id}; path=/; httponly;`);
-      return new Response(JSON.stringify(token), { status: 201, headers });
+    const postReq = new Request(signInUrl, {
+      method: 'POST',
+      headers: new Headers({
+        'content-type': 'application/json',
+        cookie: csrfCookie,
+      }),
+      body: JSON.stringify({
+        email,
+        password,
+        csrfToken,
+        callbackUrl: credentials.callbackUrl,
+      }),
+    });
+    const loginRes = await handlers.POST(postReq);
+    const authCookie = loginRes?.headers.get('set-cookie');
+    if (!authCookie) {
+      throw new Error('authentication failed');
     }
-    const text = await res.text();
-    return new Response(text, { status: res.status });
-  };
-
-  updateProviderUrl(providerName: string) {
-    return `/databases/${encodeURIComponent(this.databaseId)}/tenants/${
-      this.tenantId ? encodeURIComponent(this.tenantId) : '{tenantId}'
-    }/auth/oidc/providers/${encodeURIComponent(providerName)}`;
-  }
-
-  get listTenantProvidersUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/tenants/${
-      this.tenantId ? encodeURIComponent(this.tenantId) : '{tenantId}'
-    }/auth/oidc/providers`;
-  }
-
-  listTenantProviders = async (
-    req: NileRequest<void | Headers>,
-    init?: RequestInit
-  ): NileResponse<TenantSSORegistration[]> => {
-    const _requester = new Requester(this);
-    return _requester.get(req, this.listTenantProvidersUrl, init);
-  };
-
-  createProvider = async (
-    req: NileRequest<SSOProvider>,
-    init?: RequestInit
-  ): NileResponse<TenantSSORegistration> => {
-    const _requester = new Requester(this);
-    const providerName = 'okta';
-    return _requester.post(req, this.updateProviderUrl(providerName), init);
-  };
-
-  updateProvider = async (
-    req: NileRequest<SSOProvider>,
-    init?: RequestInit
-  ): NileResponse<TenantSSORegistration> => {
-    const _requester = new Requester(this);
-    const providerName = 'okta';
-    return _requester.put(req, this.updateProviderUrl(providerName), init);
-  };
-
-  providerUrl(email?: undefined | string) {
-    return `/databases/${encodeURIComponent(
-      this.databaseId
-    )}/tenants/auth/oidc/providers${
-      email ? `?email=${encodeURIComponent(email)}` : ''
-    }`;
-  }
-
-  listProviders = async (
-    req: NileRequest<void | CreateBasicUserRequest>,
-    init?: RequestInit
-  ): NileResponse<TenantSSORegistration[]> => {
-    const _requester = new Requester(this);
-    let body: { email: string } | undefined;
-    // this is a get. Get the email from the response body so the request is filtered.
-    if (req && 'body' in req) {
-      body = await new Response(req.body as BodyInit).json();
-    }
-    return _requester.get(req, this.providerUrl(body?.email), init);
-  };
-
-  getSSOCallbackUrl = (param: Headers | string) => {
-    let tenantId;
-    if (typeof tenantId === 'string') {
-      tenantId = param;
-    } else if (param instanceof Headers) {
-      tenantId = getTenantFromHttp(param, this);
-    }
-
-    return `/databases/${this.databaseId}/tenants/${tenantId}/auth/oidc/callback`;
+    expect(authCookie).toContain('nile.session-token=');
+    const [, token] = /(nile\.session-token=.+?);/.exec(authCookie) ?? [];
+    return new Headers({
+      cookie: [token, csrfCookie].join('; '),
+    });
   };
 }

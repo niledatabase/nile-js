@@ -42,9 +42,11 @@ export async function GET(
   const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
 
   if (!tenant) {
+    log('[GET]', '[ERROR]', 'No tenant id provided.');
     return new Response(null, { status: 404 });
   }
   const url = apiRoutes.TENANT_USERS(tenant);
   log('[GET]', url);
+  init.method = 'GET';
   return await request(url, init);
 }

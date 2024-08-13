@@ -1,5 +1,3 @@
-type LoginRequest = any;
-
 import { Attribute } from '../lib/SimpleForm/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -7,7 +5,7 @@ export type AllowedAny = any;
 
 export type LoginInfo = { email: string; password: string };
 type LoginSuccess = (
-  response: LoginRequest,
+  response: AllowedAny,
   formValues: LoginInfo,
   ...args: AllowedAny
 ) => void;

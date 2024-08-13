@@ -1,58 +1,145 @@
 import Nile, { Server } from '../../src/Server';
 import { ServerConfig } from '../../src/types';
 
-async function toJSON(body: BodyInit) {
-  const resp = new Response(body);
-  const error = resp.clone();
-  if (resp.status < 199 || resp.status > 300) {
-    throw new Error('API fetch failed');
-  }
-  try {
-    const json = await resp.json();
-    return json;
-  } catch (e: unknown) {
-    const message = await error.text();
-    if (message) {
-      throw new Error(message);
-    }
-    if (e && typeof e === 'object' && 'message' in e) {
-      throw new Error(String(e.message));
-    }
-  }
-}
 const config: ServerConfig = {
-  debug: true,
+  // debug: true,
 };
 
+/*
+    const signUpUrl = new URL('http://localhost:3000/api/users');
+    const signUpReq = new Request(signUpUrl, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: '123@123.com',
+        password: '123@123.com',
+      }),
+      headers: new Headers({
+        host: signUpUrl.host,
+      }),
+    });
+    const signUpRes = await handlers.POST(signUpReq);
+    console.log(signUpRes, 'user signed up?');
+    */
+// GET /api/auth/providers
+// GET /api/auth/csrf
+// POST /api/auth/callback/credentials
+
+/*
+    const meReq = new Request('http://localhost:3000/api/me', {
+      headers,
+    });
+    const me = await handlers.GET(meReq);
+  
+
+    const apiMe = await me?.json();
+    const meAgain = await nile.api.users.me(meReq);
+    const otherMe = await new Response(meAgain.body).json();
+    expect(otherMe).toEqual(apiMe);
+    */
+/*
+      {
+      id: '01913794-cf44-77c2-abfe-740cf1357def',
+      created: '2024-08-09T18:39:44.962Z',
+      updated: '2024-08-09T18:39:44.962Z',
+      deleted: null,
+      name: null,
+      family_name: null,
+      given_name: null,
+      email: '123@123.com',
+      picture: null,
+      tenants: []
+    }*/
+
+/*
+    const createTenant = new Request('http://localhost:3000/api/tenants', {
+      headers,
+      method: 'POST',
+      body: JSON.stringify({ name: 'tenant1' }),
+    });
+    const createTenantRes = await handlers.POST(createTenant);
+   */
+// add me to tenant
+
+// [x] create a user
+// [x] update myself
+// [x] create a tenant (adds me to it)
+// [x] list the tenants I am in
+// [x] add a new user to a tenant I am in
+// [] update a tenant I am in
+const tenantId = String(process.env.TENANT_ID);
+
+const deleteUserId = String(process.env.DELETE_USER_ID);
+
 describe.skip('api integration', () => {
-  it('does a bunch of api calls', async () => {
+  test.skip('does api calls for the handlers', async () => {
     const nile = new Server(config);
     await nile.init();
-    const loginResp = await nile.api.auth.login({
+    const { handlers } = nile.api;
+    await nile.api.login({
       email: String(process.env.EMAIL),
       password: String(process.env.PASSWORD),
     });
-    let body = await toJSON(loginResp.body);
-    expect(loginResp.status).toEqual(200);
-    nile.token = body.token.jwt;
-    expect(nile.token).toBe(body.token.jwt);
 
-    const me = await nile.api.users.me();
-    body = await toJSON(me.body);
-    expect(body.id).toEqual(process.env.USER_ID);
+    const tenantUsersUrl = new URL(
+      `http://localhost:3000/api/tenants/${tenantId}/users`
+    );
 
-    const users = await nile.api.users.listTenantUsers();
-    body = await toJSON(users.body);
-    expect(body.length).toBeGreaterThan(0);
+    const tenantUsersReq = new Request(tenantUsersUrl, {
+      headers: nile.api.headers,
+    });
+    const tenantUsers = await handlers.GET(tenantUsersReq);
+    const tenantUsersJson = await new Response(tenantUsers?.body).json();
 
-    const tenantProviders = await nile.api.auth.listProviders();
-    expect(tenantProviders.status).toEqual(200);
-    body = await toJSON(tenantProviders.body);
-    expect(body).not.toBeNull();
+    const createUserInMyTenantUrl = new URL(
+      `http://localhost:3000/api/tenants/${tenantId}/users`
+    );
 
-    const tenants = await nile.api.tenants.getTenant();
-    body = await toJSON(tenants.body);
-    expect(body.id).toEqual(process.env.NILEDB_TENANT);
+    const userInMyTenantReq = new Request(createUserInMyTenantUrl, {
+      headers: nile.api.headers,
+      method: 'PUT',
+      body: JSON.stringify({
+        id: deleteUserId,
+      }),
+    });
+    const newUser = await handlers.GET(userInMyTenantReq);
+    const newUserJson = await new Response(newUser?.body).json();
+    expect(newUserJson.email).toEqual('456@456.com');
+
+    const deleteUrl = new URL(
+      `http://localhost:3000/api/tenants/${tenantId}/users/${deleteUserId}`
+    );
+
+    const deleteReq = new Request(deleteUrl, {
+      headers: nile.api.headers,
+      method: 'DELETE',
+    });
+    await handlers.DELETE(deleteReq);
+
+    const users = await nile.api.users.listUsers(tenantUsersReq);
+    const usersBody = await new Response(users.body).json();
+
+    expect(usersBody).toEqual(tenantUsersJson);
+  });
+  test('does api calls for the api sdk', async () => {
+    const nile = new Server(config);
+    await nile.init();
+
+    await nile.api.login({
+      email: String(process.env.EMAIL),
+      password: String(process.env.PASSWORD),
+    });
+    nile.tenantId = tenantId;
+
+    const tenantUsers = await nile.api.users.listUsers();
+    expect(tenantUsers.status).toEqual(200);
+
+    const linkedUser = await nile.api.users.linkUser({ id: deleteUserId });
+    expect(linkedUser.status).toEqual(201);
+
+    const unlinkedUser = await nile.api.users.unlinkUser({ id: deleteUserId });
+    expect(unlinkedUser.status).toEqual(204);
+    const users = await nile.api.users.listUsers();
+    expect(await users.json()).toEqual(await tenantUsers.json());
   });
 });
 
