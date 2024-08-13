@@ -35,7 +35,12 @@ export async function GET(
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
-  const url = `${apiRoutes.USER_TENANTS(session.id)}`;
+  let url = `${apiRoutes.USER_TENANTS(session.id)}`;
+  if (typeof session === 'object' && 'user' in session && session.user) {
+    url = `${apiRoutes.USER_TENANTS(session.user.id)}`;
+  }
   log('[GET]', url);
-  return await request(url, init);
+
+  const res = await request(url, init);
+  return res;
 }

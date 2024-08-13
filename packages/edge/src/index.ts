@@ -20,7 +20,7 @@ export default function middleware(
     tenantId = parsed[key];
   }
   if (tenantId) {
-    response.headers.set('x-nile-tenantId', tenantId);
+    response.headers.set('niledb-tenant-id', tenantId);
   }
 }
 

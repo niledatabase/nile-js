@@ -78,6 +78,7 @@ export async function POST(
   const yurl = new URL(init.request.url);
   const tenantId = yurl.searchParams.get('tenantId');
   const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
+
   const url = apiRoutes.USERS(tenant ? tenant : undefined);
   log && log('[POST]', url);
 
