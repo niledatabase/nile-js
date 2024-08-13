@@ -1,5 +1,5 @@
 import { ActiveSession } from '../../utils/auth';
-import fetch from '../../utils/request';
+import request from '../../utils/request';
 import { apiRoutes } from '../../utils/routes/apiRoutes';
 
 /**
@@ -37,5 +37,5 @@ export async function GET(
 ) {
   const url = `${apiRoutes.USER_TENANTS(session.id)}`;
   log('[GET]', url);
-  return await fetch(url, init);
+  return await request(url, init);
 }

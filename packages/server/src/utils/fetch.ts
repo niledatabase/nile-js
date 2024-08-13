@@ -7,8 +7,8 @@ import { updateTenantId, updateUserId } from './Event';
 import { getToken } from './Config/envVars';
 import Logger from './Logger';
 
-export const X_NILE_TENANT = 'niledb-tenantid';
-export const X_NILE_USER_ID = 'niledb-userid';
+export const X_NILE_TENANT = 'niledb-tenant-id';
+export const X_NILE_USER_ID = 'niledb-user-id';
 
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,8 +71,15 @@ export async function _fetch(
   const url = `${config.api?.basePath}${path}`;
   const cookieKey = config.api?.cookieKey;
   const headers = new Headers(opts?.headers);
-  const basicHeaders = new Headers();
+  const basicHeaders = new Headers(opts?.headers);
   basicHeaders.set('content-type', 'application/json; charset=utf-8');
+
+  const creds = Buffer.from(
+    `${process.env.NILEDB_USER}:${process.env.NILEDB_PASSWORD}`,
+    'utf8'
+  ).toString('base64');
+
+  basicHeaders.set('niledb-creds', creds);
   const authHeader = headers.get('Authorization');
   if (!authHeader) {
     const token = getTokenFromCookie(headers, cookieKey);
@@ -107,11 +114,20 @@ export async function _fetch(
 
   if (response && response.status >= 200 && response.status < 300) {
     if (typeof response.clone === 'function') {
-      info('[fetch]', '[response]', await response.clone().json());
+      try {
+        info('[fetch]', '[response]', await response.clone().json());
+      } catch (e) {
+        info('[fetch]', '[response]', await response.clone().text());
+      }
     }
     return response;
   }
-
+  if (response?.status === 401) {
+    return new ResponseError('Unauthorized', { status: 401 });
+  }
+  if (response?.status === 405) {
+    return new ResponseError('Method not allowed', { status: 405 });
+  }
   let res;
   const errorHandler =
     typeof response?.clone === 'function' ? response.clone() : null;
@@ -155,7 +171,6 @@ export async function _fetch(
     );
     return new ResponseError(message, { status: 400 });
   }
-
   error(
     '[fetch]',
     '[response]',

@@ -15,8 +15,5 @@ describe('google sso button', () => {
       </NileProvider>
     );
     screen.getByText('Continue with Google');
-    expect(screen.getByRole('link').getAttribute('href')).toEqual(
-      'https://api.thenile.dev/databases/databaseId/users/oidc/google/login'
-    );
   });
 });

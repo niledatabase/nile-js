@@ -11,7 +11,11 @@ import { POST } from './POST';
 const key = 'TENANTS';
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger({ ...config, debug: true }, '[ROUTES]', `[${key}]`);
+  const { info } = Logger(
+    { ...config, debug: config.debug },
+    '[ROUTES]',
+    `[${key}]`
+  );
   const session = await auth(request, config);
 
   if (!session) {

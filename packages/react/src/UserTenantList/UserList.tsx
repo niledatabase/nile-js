@@ -14,6 +14,7 @@ type Props = {
   data: void | User[];
   allowCreation?: boolean;
   buttonText?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUserCreateSuccess?: (user: any) => void;
   slots?: {
     dataGrid?: SxProps<Theme>;
@@ -29,7 +30,7 @@ export default function UserList(props: Props) {
     buttonText = 'Add a user',
     onUserCreateSuccess,
     slots,
-    include = ['email', 'preferedName'],
+    include = ['email', 'preferredName'],
   } = props;
 
   const dataGridSx = {

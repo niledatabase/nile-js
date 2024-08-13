@@ -35,6 +35,7 @@ export async function DELETE(
   log: (...args: string[]) => void
 ) {
   const yurl = new URL(init.request.url);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userId, _, tenantId] = yurl.pathname.split('/').reverse();
   if (!tenantId) {
     return new Response(null, { status: 404 });

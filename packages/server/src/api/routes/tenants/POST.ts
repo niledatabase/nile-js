@@ -1,4 +1,5 @@
 import { ActiveSession } from '../../utils/auth';
+import request from '../../utils/request';
 import { apiRoutes } from '../../utils/routes/apiRoutes';
 
 /**
@@ -52,5 +53,5 @@ export async function POST(
   const url = `${apiRoutes.TENANTS}`;
   log('[POST]', url);
 
-  return await fetch(url, init);
+  return await request(url, init);
 }

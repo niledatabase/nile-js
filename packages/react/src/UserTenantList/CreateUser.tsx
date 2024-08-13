@@ -9,6 +9,7 @@ import UserModal from './UserModal';
 type Props = {
   allowCreation: boolean;
   buttonText: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUserCreateSuccess?: (user: any) => void;
 };
 export default function CreateUser(props: Props) {

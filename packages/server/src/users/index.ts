@@ -34,36 +34,42 @@ export interface User {
 }
 
 export default class Users extends Config {
-  constructor(config: Config) {
+  headers?: Headers;
+  constructor(config: Config, headers?: Headers) {
     super(config);
-  }
-
-  get baseUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}`;
+    this.headers = headers;
   }
 
   get usersUrl() {
-    return `${this.baseUrl}/users`;
+    return '/users';
   }
 
   get tenantUsersUrl() {
-    return `${this.baseUrl}/tenants/${this.tenantId ?? '{tenantId}'}/users`;
+    return `/tenants/${this.tenantId ?? '{tenantId}'}/users`;
+  }
+  handleHeaders(init?: RequestInit) {
+    if (this.headers) {
+      if (init) {
+        init.headers = new Headers({ ...this.headers, ...init?.headers });
+        return init;
+      } else {
+        init = {
+          headers: this.headers,
+        };
+        return init;
+      }
+    }
+    return undefined;
   }
 
-  createTenantUser = async (
+  createUser = async (
     req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
   ): NileResponse<LoginUserResponse> => {
     const _requester = new Requester(this);
-    return await _requester.post(req, this.tenantUsersUrl, init);
-  };
 
-  listUsers = async (
-    req: NileRequest<void> | Headers,
-    init?: RequestInit
-  ): NileResponse<User[]> => {
-    const _requester = new Requester(this);
-    return await _requester.get(req, this.usersUrl, init);
+    const _init = this.handleHeaders(init);
+    return await _requester.post(req, this.usersUrl, _init);
   };
 
   updateUser = async (
@@ -72,19 +78,63 @@ export default class Users extends Config {
     init?: RequestInit
   ): NileResponse<User> => {
     const _requester = new Requester(this);
-    return await _requester.put(req, `${this.usersUrl}/${userId}`, init);
+    const _init = this.handleHeaders(init);
+    return await _requester.put(req, `${this.usersUrl}/${userId}`, _init);
   };
 
-  listTenantUsers = async (
+  listUsers = async (
     req: NileRequest<void> | Headers,
     init?: RequestInit
   ): NileResponse<User[]> => {
     const _requester = new Requester(this);
-    return await _requester.get(req, this.tenantUsersUrl, init);
+    const _init = this.handleHeaders(init);
+    return await _requester.get(req, this.tenantUsersUrl, _init);
+  };
+
+  linkUser = async (
+    req: NileRequest<{ id: string }> | Headers,
+    init?: RequestInit
+  ): NileResponse<User[]> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return await _requester.put(req, this.tenantUsersUrl, _init);
+  };
+
+  tenantUsersDeleteUrl = (userId?: string) => {
+    return `/tenants/${this.tenantId ?? '{tenantId}'}/users/${
+      userId ?? '{userId}'
+    }`;
+  };
+
+  getUserId = async (req: Headers | NileRequest<{ id: string }>) => {
+    if (req instanceof Request) {
+      const body = await new Response(req?.body).json();
+      if (body) {
+        return body.id;
+      }
+    }
+    if ('id' in req) {
+      return req.id;
+    }
+    return null;
+  };
+
+  unlinkUser = async (
+    req: NileRequest<{ id: string }> | Headers,
+    init?: RequestInit
+  ): NileResponse<User[]> => {
+    const _requester = new Requester(this);
+    const userId = await this.getUserId(req);
+    const _init = this.handleHeaders(init);
+    return await _requester.delete(
+      req,
+      this.tenantUsersDeleteUrl(userId),
+      _init
+    );
   };
 
   get meUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/users/me`;
+    return '/me';
   }
 
   me = async (
@@ -92,6 +142,7 @@ export default class Users extends Config {
     init?: RequestInit
   ): NileResponse<User> => {
     const _requester = new Requester(this);
-    return await _requester.get(req, this.meUrl, init);
+    const _init = this.handleHeaders(init);
+    return await _requester.get(req, this.meUrl, _init);
   };
 }

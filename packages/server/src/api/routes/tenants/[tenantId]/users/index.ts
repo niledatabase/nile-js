@@ -12,7 +12,11 @@ import { PUT } from './PUT';
 const key = 'TENANT_USERS';
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger({ ...config, debug: true }, '[ROUTES]', `[${key}]`);
+  const { info } = Logger(
+    { ...config, debug: config.debug },
+    '[ROUTES]',
+    `[${key}]`
+  );
   const session = await auth(request, config);
 
   if (!session) {
@@ -37,9 +41,14 @@ export default async function route(request: Request, config: Config) {
 
 export function matches(configRoutes: Routes, request: Request): boolean {
   const url = new URL(request.url);
-  const [userId, _, tenantId] = url.pathname.split('/').reverse();
-  const route = configRoutes[key]
+  const [userId, possibleTenantId, tenantId] = url.pathname
+    .split('/')
+    .reverse();
+  let route = configRoutes[key]
     .replace('{tenantId}', tenantId)
     .replace('{userId}', userId);
+  if (userId === 'users') {
+    route = configRoutes[key].replace('{tenantId}', possibleTenantId);
+  }
   return urlMatches(request.url, route);
 }

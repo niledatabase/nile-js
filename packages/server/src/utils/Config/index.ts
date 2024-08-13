@@ -14,6 +14,7 @@ import {
   getTenantId,
   getToken,
   getUsername,
+  getLocal,
 } from './envVars';
 
 export type ConfigRoutes = {
@@ -31,22 +32,26 @@ class ApiConfig {
   public cookieKey?: string;
   public basePath?: string;
   public version?: number;
+  public localPath?: string;
   private _token?: string;
   constructor({
     basePath,
     cookieKey,
     token,
     version,
+    localPath,
   }: {
     basePath: string;
     cookieKey: string;
     token: string | undefined;
     version: number;
+    localPath: string;
   }) {
     this.basePath = basePath;
     this.cookieKey = cookieKey;
     this.version = version;
     this._token = token;
+    this.localPath = localPath ?? 'http://localhost:3000';
   }
 
   public get token(): string | undefined {
@@ -124,6 +129,7 @@ export class Config {
       cookieKey: config?.api?.cookieKey ?? 'token',
       token: getToken({ config }),
       version: config?.api?.version ?? 2,
+      localPath: getLocal(envVarConfig),
     });
     this.db = {
       user: this.user,
@@ -160,7 +166,7 @@ export class Config {
     if (databaseName) {
       url.searchParams.set('databaseName', databaseName);
     }
-    info(url.href);
+    info('configuring from', url.href);
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${getInfoBearer({ config })}`,
@@ -201,7 +207,6 @@ export class Config {
         this.databaseId = id;
         this.databaseName = name;
         const dburl = new URL(dbHost);
-        const apiurl = new URL(duckApiHost);
         configuredHost = dburl.host;
         basePath = duckApiHost;
       }
@@ -213,6 +218,7 @@ export class Config {
       cookieKey: config?.api?.cookieKey ?? 'token',
       token: getToken({ config }),
       version: config?.api?.version ?? 2,
+      localPath: getLocal(envVarConfig),
     });
     this.db = {
       user: this.user,

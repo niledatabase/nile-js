@@ -13,7 +13,6 @@ import {
   TenantsApi,
 } from './openapi/src';
 
-export type SSOProvider = any;
 export default class Browser extends BaseAPI {
   auth: AuthenticationApi;
   users: UsersApi;

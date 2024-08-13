@@ -7,13 +7,14 @@ import route from '.';
 const utilRequest = fetch as jest.Mock;
 
 jest.mock('../../utils/request', () => jest.fn());
+jest.mock('../../utils/auth', () => () => 'a session, relax');
 
 describe('users route', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
   it('should 404 on GET users without a tenant id', async () => {
-    const _res = new Request('http://thenile.dev', { method: 'get' });
+    const _res = new Request('http://thenile.dev', { method: 'GET' });
     const res = await route(_res, new Config());
     expect(res?.status).toEqual(404);
     expect(utilRequest).not.toHaveBeenCalled();

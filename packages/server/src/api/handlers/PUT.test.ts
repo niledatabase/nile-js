@@ -2,11 +2,11 @@ import { appRoutes } from '../utils/routes/defaultRoutes';
 import { Config } from '../../utils/Config';
 import { X_NILE_TENANT } from '../../utils/fetch';
 
-import POSTER from './POST';
+import PUTTER from './PUT';
 
 jest.mock('../utils/auth', () => () => 'a session, relax');
-describe('poster', () => {
-  const apiGet = POSTER(appRoutes(), new Config());
+describe('Putter', () => {
+  const apiGet = PUTTER(appRoutes(), new Config());
   global.fetch = jest.fn();
 
   beforeEach(() => {
@@ -15,7 +15,6 @@ describe('poster', () => {
   });
 
   [
-    'auth/signin',
     'tenants',
     'tenants/{tenantId}',
     'tenants/{tenantId}/users',
