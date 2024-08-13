@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.5.0-alpha.0...v3.0.0-alpha.0) (2024-08-13)
+
+### Features
+
+- **server:** use new region api ([079415e](https://github.com/niledatabase/nile-js/commit/079415e17e342e30e63481cee79bcb32ed7042bc))
+- **server:** use the global control plane ([eb86869](https://github.com/niledatabase/nile-js/commit/eb868696b1f47fa8b26c302c2b531b702a6e9128))
+
+### BREAKING CHANGES
+
+- **server:** URLS for auto configuration changed
+
 # [2.5.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.4...v2.5.0-alpha.0) (2024-06-27)
 
 ### Features

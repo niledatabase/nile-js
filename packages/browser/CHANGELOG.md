@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.0](https://github.com/niledatabsae/nile-js/compare/v2.5.0-alpha.0...v3.0.0-alpha.0) (2024-08-13)
+
+### Features
+
+- **server:** use new region api ([079415e](https://github.com/niledatabsae/nile-js/commit/079415e17e342e30e63481cee79bcb32ed7042bc))
+
 # [2.5.0-alpha.0](https://github.com/niledatabsae/nile-js/compare/v2.4.2-alpha.4...v2.5.0-alpha.0) (2024-06-27)
 
 **Note:** Version bump only for package @niledatabase/browser
