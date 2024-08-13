@@ -41,8 +41,9 @@ async function GET(
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
-  log('[GET]');
-  return await request(url, init);
+  log('[GET]', url);
+  const res = await request(url, init);
+  return res;
 }
 
 export default async function route(request: Request, config: Config) {

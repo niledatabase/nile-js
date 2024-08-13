@@ -31,30 +31,33 @@
 
 import { Routes } from '../../types';
 import { proxyRoutes } from '../../utils/routes/proxyRoutes';
-import fetch from '../../utils/request';
+import request from '../../utils/request';
 import urlMatches from '../../utils/routes/urlMatches';
 
 const key = 'SIGNIN';
 
-export default async function route(request: Request) {
+export default async function route(req: Request) {
   let url = proxyRoutes[key];
 
   const init: RequestInit = {
-    method: request.method,
+    method: req.method,
+    headers: req.headers,
   };
-  if (request.method === 'POST') {
-    init.body = request.body;
-    const [provider] = new URL(request.url).pathname.split('/').reverse();
+  if (req.method === 'POST') {
+    if (typeof req.clone === 'function') {
+      init.body = req.clone().body;
+    }
+    const [provider] = new URL(req.url).pathname.split('/').reverse();
 
     url = `${proxyRoutes[key]}/${provider}`;
   }
 
-  const passThroughUrl = new URL(request.url);
+  const passThroughUrl = new URL(req.url);
   const params = new URLSearchParams(passThroughUrl.search);
 
   url = `${url}${params.toString() !== '' ? `?${params.toString()}` : ''}`;
 
-  const res = await fetch(url, { ...init, request });
+  const res = await request(url, { ...init, request: req });
 
   return res;
 }

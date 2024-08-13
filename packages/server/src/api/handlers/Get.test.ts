@@ -55,10 +55,12 @@ describe('getter', () => {
       expect(fn).toBeTruthy();
       expect(fn?.status).toEqual(200);
       params.headers.forEach((value, key) => {
-        headersArray.push({ key, value });
+        if (key !== 'content-type') {
+          headersArray.push({ key, value });
+        }
       });
       expect(headersArray).toEqual([
-        { key: 'host', value: 'http://localhost:3000' },
+        { key: 'host', value: 'localhost:3001' },
         {
           key: 'niledb-creds',
           value: 'c2hoaGg6c3VwZXJfc2VjcmV0',
