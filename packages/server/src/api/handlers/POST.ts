@@ -22,7 +22,7 @@ export default function POSTER(configRoutes: Routes, config: Config) {
     }
 
     if (authRoutes.matchSession(configRoutes, req)) {
-      return authRoutes.handleSession(req);
+      return authRoutes.handleSession(req, config);
     }
 
     if (authRoutes.matchSignIn(configRoutes, req)) {

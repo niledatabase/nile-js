@@ -24,8 +24,9 @@ export default function GETTER(configRoutes: Routes, config: Config) {
     if (matchesTenants(configRoutes, req)) {
       return tenants(req, config);
     }
+
     if (authRoutes.matchSession(configRoutes, req)) {
-      return authRoutes.handleSession(req);
+      return authRoutes.handleSession(req, config);
     }
 
     if (authRoutes.matchSignIn(configRoutes, req)) {
