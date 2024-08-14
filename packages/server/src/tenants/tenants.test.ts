@@ -16,6 +16,7 @@ const baseConfig = [
   'databaseId',
   'databaseName',
   'user',
+  'listTenants',
   'configure',
   'password',
 ];
