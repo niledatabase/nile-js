@@ -50,4 +50,14 @@ export default class Tenants extends Config {
     const _init = this.handleHeaders(init);
     return _requester.get(req, this.tenantUrl, _init);
   };
+
+  get tenantListUrl() {
+    return `/users/${this.userId ?? '{userId}'}/tenants`;
+  }
+
+  listTenants = async (req: NileRequest<void>, init?: RequestInit) => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return _requester.get(req, this.tenantListUrl, _init);
+  };
 }
