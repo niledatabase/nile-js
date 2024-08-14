@@ -4,7 +4,7 @@ import { ActiveSession } from '../../../../../utils/auth';
 
 /**
  * @swagger
- * /api/tenants/{tenantId}/users/{userId}:
+ * /api/tenants/{tenantId}/users/{email}:
  *   delete:
  *    tags:
  *    - tenants
@@ -18,7 +18,7 @@ import { ActiveSession } from '../../../../../utils/auth';
  *      required: true
  *      schema:
  *        type: string
- *    - name: userId 
+ *    - name: email 
  *      in: path
  *      required: true
  *      schema:
@@ -42,6 +42,7 @@ export async function DELETE(
   }
 
   init.method = 'DELETE';
+  init.body = JSON.stringify({ email: userId });
   const url = `${apiRoutes.TENANT_USER(tenantId, userId)}`;
   log('[DELETE]', url);
 

@@ -18,8 +18,7 @@ import { ActiveSession } from '../../../../utils/auth';
  *        type: string
  *    requestBody:
  *      description: |
- *        The email and password combination the user will use to authenticate.
- *        The `name` is optional; if provided it will be recorded in the `users` table.
+ *        The email of the user you want to add to a tenant.
  *      content:
  *        application/json:
  *          schema:
