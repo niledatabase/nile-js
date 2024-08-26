@@ -116,9 +116,8 @@ describe.skip('api integration', () => {
     await handlers.DELETE(deleteReq);
 
     const users = await nile.api.users.listUsers(tenantUsersReq);
-    const usersBody = await new Response(users.body).json();
 
-    expect(usersBody).toEqual(tenantUsersJson);
+    expect(users).toEqual(tenantUsersJson);
   });
   test('does api calls for the api sdk', async () => {
     const nile = new Server(config);
@@ -131,15 +130,8 @@ describe.skip('api integration', () => {
     nile.tenantId = tenantId;
 
     const tenantUsers = await nile.api.users.listUsers();
-    expect(tenantUsers.status).toEqual(200);
-
-    const linkedUser = await nile.api.users.linkUser({ id: deleteUserId });
-    expect(linkedUser.status).toEqual(201);
-
-    const unlinkedUser = await nile.api.users.unlinkUser({ id: deleteUserId });
-    expect(unlinkedUser.status).toEqual(204);
     const users = await nile.api.users.listUsers();
-    expect(await users.json()).toEqual(await tenantUsers.json());
+    expect(users).toEqual(tenantUsers);
   });
 });
 

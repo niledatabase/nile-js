@@ -6,6 +6,7 @@ import Logger from '../utils/Logger';
 import { ServerConfig } from '../types';
 
 import NileDatabase from './NileInstance';
+import { isUUID } from './isUUID';
 
 export default class DBManager {
   connections: Map<string, NileDatabase>;
@@ -15,10 +16,10 @@ export default class DBManager {
     tenantId?: string | undefined | null,
     userId?: string | undefined | null
   ) {
-    if (tenantId && userId) {
+    if (isUUID(tenantId) && isUUID(userId)) {
       return `${tenantId}:${userId}`;
     }
-    if (tenantId) {
+    if (isUUID(tenantId)) {
       return `${tenantId}`;
     }
     return 'base';

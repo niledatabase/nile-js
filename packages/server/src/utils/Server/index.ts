@@ -6,5 +6,5 @@ export const getServerId = (config: ServerConfig) => {
   return makeServerId(cfg);
 };
 export const makeServerId = (config: Config) => {
-  return Buffer.from(JSON.stringify(config), 'base64').toString();
+  return Buffer.from(JSON.stringify(config), 'utf8').toString('base64');
 };

@@ -2,46 +2,10 @@ import { Pool } from 'pg';
 
 import { ServerConfig } from './types';
 import { Config } from './utils/Config';
-import Users from './users';
-import Tenants from './tenants';
 import { watchTenantId, watchToken, watchUserId } from './utils/Event';
 import DbManager from './db';
 import { getServerId, makeServerId } from './utils/Server';
-import serverAuth from './auth';
-import { appRoutes } from './api/utils/routes/defaultRoutes';
-import Handlers from './api/handlers';
-import { Routes } from './api/types';
-
-class Api {
-  config: Config;
-  users: Users;
-  tenants: Tenants;
-  routes: Routes;
-  handlers: {
-    GET: (req: Request) => Promise<void | Response>;
-    POST: (req: Request) => Promise<void | Response>;
-    DELETE: (req: Request) => Promise<void | Response>;
-    PUT: (req: Request) => Promise<void | Response>;
-  };
-  constructor(config: Config) {
-    this.config = config;
-    this.users = new Users(config);
-    this.tenants = new Tenants(config);
-    this.routes = {
-      ...appRoutes(config?.routePrefix),
-      ...config?.routes,
-    };
-    this.handlers = Handlers(this.routes, config);
-  }
-
-  set headers(headers: Headers) {
-    this.users = new Users(this.config, headers);
-    this.tenants = new Tenants(this.config, headers);
-  }
-  async login(payload: { email: string; password: string }) {
-    this.headers = await serverAuth(this.config, this.handlers)(payload);
-  }
-}
+import { Api } from './Api';
 
 export class Server {
   config: Config;
@@ -136,7 +100,6 @@ export class Server {
     }
   }
   get db(): Pool {
-    // only need to interact with the knex object
     return this.manager.getConnection(this.config);
   }
 
@@ -167,8 +130,11 @@ export class Server {
       return existing;
     }
 
-    this.servers.set(serverId, new Server(_config));
-    return this.servers.get(serverId) as unknown as Server;
+    const newServer = new Server(_config);
+
+    this.servers.set(serverId, newServer);
+
+    return newServer;
   }
 }
 

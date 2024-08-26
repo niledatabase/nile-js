@@ -1,5 +1,5 @@
 import { Config } from '../utils/Config';
-import Requester, { NileRequest, NileResponse } from '../utils/Requester';
+import Requester, { NileRequest } from '../utils/Requester';
 
 export interface CreateBasicUserRequest {
   email: string;
@@ -65,7 +65,7 @@ export default class Users extends Config {
   createUser = async (
     req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
-  ): NileResponse<LoginUserResponse> => {
+  ): Promise<User | Response> => {
     const _requester = new Requester(this);
 
     const _init = this.handleHeaders(init);
@@ -76,7 +76,7 @@ export default class Users extends Config {
     userId: string,
     req: NileRequest<User>,
     init?: RequestInit
-  ): NileResponse<User> => {
+  ): Promise<User | Response> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
     return await _requester.put(req, `${this.usersUrl}/${userId}`, _init);
@@ -85,7 +85,7 @@ export default class Users extends Config {
   listUsers = async (
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): NileResponse<User[]> => {
+  ): Promise<User[] | Response> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
     return await _requester.get(req, this.tenantUsersUrl, _init);
@@ -94,7 +94,7 @@ export default class Users extends Config {
   linkUser = async (
     req: NileRequest<{ id: string }> | Headers,
     init?: RequestInit
-  ): NileResponse<User[]> => {
+  ): Promise<User | Response> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
     return await _requester.put(req, this.tenantUsersUrl, _init);
@@ -122,7 +122,7 @@ export default class Users extends Config {
   unlinkUser = async (
     req: NileRequest<{ id: string }> | Headers,
     init?: RequestInit
-  ): NileResponse<User[]> => {
+  ): Promise<User[] | Response> => {
     const _requester = new Requester(this);
     const userId = await this.getUserId(req);
     const _init = this.handleHeaders(init);
@@ -138,9 +138,9 @@ export default class Users extends Config {
   }
 
   me = async (
-    req: NileRequest<void>,
+    req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): NileResponse<User> => {
+  ): Promise<User | Response> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
     return await _requester.get(req, this.meUrl, _init);

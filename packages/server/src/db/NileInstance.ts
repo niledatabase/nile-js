@@ -7,6 +7,7 @@ import { AfterCreate } from '../types';
 import Logger from '../utils/Logger';
 
 import { createProxyForPool } from './PoolProxy';
+import { isUUID } from './isUUID';
 
 class NileDatabase {
   pool: Pool;
@@ -95,9 +96,9 @@ function makeAfterCreate(config: Config): AfterCreate {
       done(error, conn);
     });
 
-    if (config.tenantId) {
+    if (isUUID(config.tenantId)) {
       const query = [`SET nile.tenant_id = '${config.tenantId}'`];
-      if (config.userId) {
+      if (isUUID(config.userId)) {
         if (!config.tenantId) {
           warn('A user id cannot be set in context without a tenant id');
         }
@@ -106,10 +107,10 @@ function makeAfterCreate(config: Config): AfterCreate {
 
       // in this example we use pg driver's connection API
       conn.query(query.join(';'), function (err: Error) {
-        if (config.tenantId) {
+        if (query.length === 1) {
           info('[tenant id]', config.tenantId);
         }
-        if (config.userId) {
+        if (query.length === 2) {
           info('[user id]', config.userId);
         }
         done(err, conn);
