@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.4...v3.0.0-alpha.5) (2024-08-26)
+
+### Bug Fixes
+
+- **server:** fixes for v3 ([ea360e6](https://github.com/niledatabase/nile-js/commit/ea360e626decb2a0c03e590dff4c890b459e3167))
+
 # [3.0.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.3...v3.0.0-alpha.4) (2024-08-15)
 
 ### Bug Fixes
