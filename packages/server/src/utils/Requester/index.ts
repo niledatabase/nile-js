@@ -32,7 +32,7 @@ export default class Requester<T> extends Config {
   }
 
   /**
-   * three optios here
+   * three options here
    * 1) pass in headers for a server side request
    * 2) pass in the payload that matches the api
    * 3) pass in the request object sent by a browser
@@ -96,35 +96,51 @@ export default class Requester<T> extends Config {
     return await this.rawRequest(method, url, _init, body);
   }
 
-  post = async (
+  async post<R = JSON>(
     req: T | Headers,
     url: string,
     init?: RequestInit
-  ): Promise<Response> => {
-    return await this.request('POST', url, req, init);
-  };
+  ): Promise<Response | R> {
+    const response = await this.request('POST', url, req, init);
+    if (response && response.status >= 200 && response.status < 300) {
+      return response.json();
+    }
+    return response;
+  }
 
-  get = async (
+  async get<R = JSON>(
     req: T | Headers,
     url: string,
     init?: RequestInit
-  ): Promise<Response> => {
-    return await this.request('GET', url, req, init);
-  };
+  ): Promise<Response | R> {
+    const response = await this.request('GET', url, req, init);
+    if (response && response.status >= 200 && response.status < 300) {
+      return response.json();
+    }
+    return response;
+  }
 
-  put = async (
+  async put<R = JSON>(
     req: T | Headers,
     url: string,
     init?: RequestInit
-  ): Promise<Response> => {
-    return await this.request('PUT', url, req, init);
-  };
+  ): Promise<Response | R> {
+    const response = await this.request('PUT', url, req, init);
+    if (response && response.status >= 200 && response.status < 300) {
+      return response.json();
+    }
+    return response;
+  }
 
-  delete = async (
+  async delete<R = JSON>(
     req: T | Headers,
     url: string,
     init?: RequestInit
-  ): Promise<Response> => {
-    return await this.request('DELETE', url, req, init);
-  };
+  ): Promise<Response | R> {
+    const response = await this.request('DELETE', url, req, init);
+    if (response && response.status >= 200 && response.status < 300) {
+      return response.json();
+    }
+    return response;
+  }
 }
