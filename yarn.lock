@@ -3375,7 +3375,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/browser@npm:^3.0.0-alpha.5, @niledatabase/browser@workspace:packages/browser":
+"@niledatabase/browser@npm:^3.0.0-alpha.6, @niledatabase/browser@workspace:packages/browser":
   version: 0.0.0-use.local
   resolution: "@niledatabase/browser@workspace:packages/browser"
   dependencies:
@@ -3448,7 +3448,7 @@ __metadata:
     "@mui/joy": "npm:5.0.0-beta.15"
     "@mui/material": "npm:5.14.18"
     "@mui/x-data-grid": "npm:^7.0.0"
-    "@niledatabase/browser": "npm:^3.0.0-alpha.5"
+    "@niledatabase/browser": "npm:^3.0.0-alpha.6"
     "@rollup/plugin-babel": "npm:^6.0.4"
     "@size-limit/preset-small-lib": "npm:^8.2.6"
     "@storybook/addon-essentials": "npm:^8.0.0"

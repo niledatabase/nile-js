@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.6](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.5...v3.0.0-alpha.6) (2024-08-27)
+
+### Bug Fixes
+
+- **react:** make callbackURL a first class citizen ([3ec8797](https://github.com/niledatabase/nile-js/commit/3ec8797c7bfdf04b39a80beee1c088d530610ff4))
+
 # [3.0.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.4...v3.0.0-alpha.5) (2024-08-26)
 
 **Note:** Version bump only for package @niledatabase/react
