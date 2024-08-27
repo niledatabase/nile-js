@@ -138,14 +138,18 @@ export const getControlPlane = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
   const { info } = Logger(config, '[basePath]');
 
-  if (process.env.NILEDB_CONFIGURE) {
-    logger && info(logger, 'NILEDB_CONFIGURE', process.env.NILEDB_CONFIGURE);
-    return process.env.NILEDB_CONFIGURE;
+  if (config?.configureUrl) {
+    logger && info(logger, 'config', config.configureUrl);
+    return config.configureUrl;
   }
 
-  if (config?.configureUrl) {
-    logger && info(logger, 'NILEDB_CONFIGURE', config.configureUrl);
-    return config.configureUrl;
+  if (process.env.NILEDB_CONFIGURE) {
+    logger && info(logger, 'NILEDB_CONFIGURE', process.env.NILEDB_CONFIGURE);
+    // backwards compatible, but not really
+    if (!process.env.NILEDB_CONFIGURE.startsWith('http')) {
+      return `https://${process.env.NILEDB_CONFIGURE}`;
+    }
+    return process.env.NILEDB_CONFIGURE;
   }
 
   logger && info(logger, 'default', 'https://global.thenile.dev');
