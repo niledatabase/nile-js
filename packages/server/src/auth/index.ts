@@ -47,6 +47,11 @@ export default function serverAuth(
 
     const csrfCookie = csrfRes?.headers.get('set-cookie');
 
+    if (!credentials) {
+      throw new Error(
+        'Unable to obtain credential provider. Aborting server side login.'
+      );
+    }
     const signInUrl = new URL(credentials.callbackUrl);
 
     if (!csrfCookie) {
