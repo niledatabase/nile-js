@@ -12,7 +12,7 @@ type LoginSuccess = (
 
 export interface Props {
   beforeMutate?: (data: AllowedAny) => AllowedAny;
-  onSuccess: LoginSuccess;
+  onSuccess?: LoginSuccess;
   onError?: (error: Error, data: AllowedAny) => void;
   attributes?: Attribute[];
   disableSSO?: boolean;
