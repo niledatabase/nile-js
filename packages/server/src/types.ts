@@ -14,6 +14,7 @@ export type ServerConfig = {
   tenantId?: string | null | undefined; // process.env.NILEDB_TENANT
   userId?: string | null | undefined;
   debug?: boolean;
+  configureUrl?: string; // process.env.NILEDB_CONFIGURE
   db?: NilePoolConfig; // db.host process.env.NILEDB_HOST
   api?: {
     version?: number;

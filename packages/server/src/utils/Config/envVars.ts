@@ -143,7 +143,12 @@ export const getControlPlane = (cfg: EnvConfig) => {
     return process.env.NILEDB_CONFIGURE;
   }
 
-  logger && info(logger, 'default', process.env.NILEDB_CONFIGURE);
+  if (config?.configureUrl) {
+    logger && info(logger, 'NILEDB_CONFIGURE', config.configureUrl);
+    return config.configureUrl;
+  }
+
+  logger && info(logger, 'default', 'https://global.thenile.dev');
   return 'https://global.thenile.dev';
 };
 
