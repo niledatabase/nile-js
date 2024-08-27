@@ -12,13 +12,14 @@ import { Props, LoginInfo } from './types';
 
 export default function SignInForm(props: Props) {
   const [error, setError] = React.useState<string | void>();
-  const { attributes, onSuccess, onError, beforeMutate } = props;
+  const { attributes, onSuccess, onError, beforeMutate, callbackUrl } = props;
 
   const mutation = useMutation(
     async (_data: LoginInfo) => {
       setError(undefined);
-      const possibleData = beforeMutate && beforeMutate(_data);
-      const data = possibleData ?? _data;
+      const d = { ..._data, callbackUrl };
+      const possibleData = beforeMutate && beforeMutate(d);
+      const data = possibleData ?? d;
       signIn('credentials', data);
     },
     {
