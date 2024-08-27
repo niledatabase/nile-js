@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.8...v3.0.0-alpha.9) (2024-08-27)
+
+### Bug Fixes
+
+- **server:** fix server side login debugger, allow configure url to be configured ([803ecc0](https://github.com/niledatabase/nile-js/commit/803ecc0c4820c002bab23f18b78dd522670cba81))
+
 # [3.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.7...v3.0.0-alpha.8) (2024-08-27)
 
 **Note:** Version bump only for package @niledatabase/packages

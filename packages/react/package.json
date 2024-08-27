@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/react",
-  "version": "3.0.0-alpha.8",
+  "version": "3.0.0-alpha.9",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/react.esm.js",
@@ -108,7 +108,7 @@
     "@mui/joy": "5.0.0-beta.15",
     "@mui/material": "5.14.18",
     "@mui/x-data-grid": "^7.0.0",
-    "@niledatabase/browser": "^3.0.0-alpha.8",
+    "@niledatabase/browser": "^3.0.0-alpha.9",
     "@tanstack/react-query": "^4.36.1",
     "next-auth": "^4.24.7",
     "react": "^18.2.0",
