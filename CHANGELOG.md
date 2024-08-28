@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.11](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.10...v3.0.0-alpha.11) (2024-08-28)
+
+### Bug Fixes
+
+- **server:** allow autoconfiguration on basepath for routes ([9ad10f5](https://github.com/niledatabase/nile-js/commit/9ad10f5543b3a6cb01200b17aefcef877d15f3a3))
+
 # [3.0.0-alpha.10](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.9...v3.0.0-alpha.10) (2024-08-28)
 
 ### Bug Fixes
