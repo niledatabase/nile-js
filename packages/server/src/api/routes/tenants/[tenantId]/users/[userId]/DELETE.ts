@@ -1,6 +1,6 @@
 import { apiRoutes } from '../../../../../utils/routes/apiRoutes';
 import fetch from '../../../../../utils/request';
-import { ActiveSession } from '../../../../../utils/auth';
+import { Config } from '../../../../../../utils/Config';
 
 /**
  * @swagger
@@ -30,7 +30,7 @@ import { ActiveSession } from '../../../../../utils/auth';
  */
 
 export async function DELETE(
-  session: ActiveSession,
+  config: Config,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
@@ -43,7 +43,7 @@ export async function DELETE(
 
   init.method = 'DELETE';
   init.body = JSON.stringify({ email: userId });
-  const url = `${apiRoutes.TENANT_USER(tenantId, userId)}`;
+  const url = `${apiRoutes(config).TENANT_USER(tenantId, userId)}`;
   log('[DELETE]', url);
 
   return await fetch(url, init);

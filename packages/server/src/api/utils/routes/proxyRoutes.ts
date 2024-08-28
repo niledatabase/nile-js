@@ -1,14 +1,16 @@
+import { Config } from '../../../utils/Config';
+
 import { makeRestUrl } from './makeRestUrl';
 
-export const proxyRoutes = {
-  SIGNIN: makeRestUrl('/auth/signin'),
-  PROVIDERS: makeRestUrl('/auth/providers'),
-  SESSION: makeRestUrl('/auth/session'),
-  CSRF: makeRestUrl('/auth/csrf'),
-  CALLBACK: makeRestUrl('/auth/callback'),
-  SIGNOUT: makeRestUrl('/auth/signout'),
-  ERROR: makeRestUrl('/auth/error'),
-};
+export const proxyRoutes = (config: Config) => ({
+  SIGNIN: makeRestUrl(config, '/auth/signin'),
+  PROVIDERS: makeRestUrl(config, '/auth/providers'),
+  SESSION: makeRestUrl(config, '/auth/session'),
+  CSRF: makeRestUrl(config, '/auth/csrf'),
+  CALLBACK: makeRestUrl(config, '/auth/callback'),
+  SIGNOUT: makeRestUrl(config, '/auth/signout'),
+  ERROR: makeRestUrl(config, '/auth/error'),
+});
 
 type ProxyKeys = keyof typeof proxyRoutes;
 

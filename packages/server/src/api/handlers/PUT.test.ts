@@ -6,7 +6,10 @@ import PUTTER from './PUT';
 
 jest.mock('../utils/auth', () => () => 'a session, relax');
 describe('Putter', () => {
-  const apiGet = PUTTER(appRoutes(), new Config());
+  const apiGet = PUTTER(
+    appRoutes(),
+    new Config({ api: { basePath: 'http://thenile.dev/v2/databases/testdb' } })
+  );
   global.fetch = jest.fn();
 
   beforeEach(() => {

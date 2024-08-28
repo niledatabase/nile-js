@@ -20,7 +20,12 @@ describe('tenants route', () => {
     const _res = new Request('http://thenile.dev?tenantId=123', {
       method: 'POST',
     });
-    await route(_res, new Config());
+    await route(
+      _res,
+      new Config({
+        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+      })
+    );
     expect(utilRequest).toHaveBeenCalledWith(
       'http://thenile.dev/v2/databases/testdb/tenants',
       expect.objectContaining({ method: 'POST' })
@@ -30,7 +35,12 @@ describe('tenants route', () => {
     const _res = new Request('http://localhost:3000/users/${userId}/tenants', {
       method: 'GET',
     });
-    await route(_res, new Config());
+    await route(
+      _res,
+      new Config({
+        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+      })
+    );
 
     expect(utilRequest.mock.calls[0][0]).toEqual(
       'http://thenile.dev/v2/databases/testdb/users/something/tenants'
@@ -42,7 +52,12 @@ describe('tenants route', () => {
         [X_NILE_TENANT]: '123',
       }),
     });
-    await route(_res, new Config());
+    await route(
+      _res,
+      new Config({
+        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+      })
+    );
     expect(utilRequest.mock.calls[0][0]).toEqual(
       'http://thenile.dev/v2/databases/testdb/users/something/tenants'
     );
@@ -53,7 +68,12 @@ describe('tenants route', () => {
         cookie: `token=abunchofgarbage; ${X_NILE_TENANT}=456`,
       }),
     });
-    await route(_res, new Config());
+    await route(
+      _res,
+      new Config({
+        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+      })
+    );
     expect(utilRequest.mock.calls[0][0]).toEqual(
       'http://thenile.dev/v2/databases/testdb/users/something/tenants'
     );

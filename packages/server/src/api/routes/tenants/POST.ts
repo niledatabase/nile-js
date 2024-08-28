@@ -1,4 +1,4 @@
-import { ActiveSession } from '../../utils/auth';
+import { Config } from '../../../utils/Config';
 import request from '../../utils/request';
 import { apiRoutes } from '../../utils/routes/apiRoutes';
 
@@ -44,13 +44,13 @@ import { apiRoutes } from '../../utils/routes/apiRoutes';
  *              $ref: '#/components/schemas/APIError'
  */
 export async function POST(
-  session: ActiveSession,
+  config: Config,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
   init.body = init.request.body;
   init.method = 'POST';
-  const url = `${apiRoutes.TENANTS}`;
+  const url = `${apiRoutes(config).TENANTS}`;
   log('[POST]', url);
 
   return await request(url, init);

@@ -30,7 +30,7 @@ export type ConfigRoutes = {
 
 class ApiConfig {
   public cookieKey?: string;
-  public basePath?: string;
+  public basePath?: string | undefined;
   public version?: number;
   public localPath?: string;
   private _token?: string;
@@ -41,7 +41,7 @@ class ApiConfig {
     version,
     localPath,
   }: {
-    basePath: string;
+    basePath?: string | undefined;
     cookieKey: string;
     token: string | undefined;
     version: number;
@@ -153,12 +153,12 @@ export class Config {
     const { host, port, ...dbConfig } = config.db ?? {};
     let configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
-    if (configuredHost && this.databaseName && this.databaseId) {
+    let basePath = getBasePath(envVarConfig);
+    if (configuredHost && this.databaseName && this.databaseId && basePath) {
       info('Already configured, aborting fetch');
       return this;
     }
 
-    let basePath = getBasePath(envVarConfig);
     const cp = getControlPlane(envVarConfig);
 
     const databaseName = getDatabaseName({ config, logger: 'getInfo' });
@@ -203,16 +203,13 @@ export class Config {
       }
       if (typeof database === 'object') {
         const { apiHost, dbHost, name, id } = database;
-        const duckApiHost = getBasePath(envVarConfig) || apiHost; // this needs changed in the control plane response
+        basePath = basePath || apiHost;
         this.databaseId = id;
         this.databaseName = name;
         const dburl = new URL(dbHost);
         configuredHost = dburl.host;
-        basePath = duckApiHost;
       }
     }
-    delete envVarConfig.config?.api?.basePath;
-    basePath = getBasePath(envVarConfig);
     this.api = new ApiConfig({
       basePath,
       cookieKey: config?.api?.cookieKey ?? 'token',

@@ -2,6 +2,7 @@ import { getTenantFromHttp } from '../../../utils/fetch';
 import { ActiveSession } from '../../utils/auth';
 import request from '../../utils/request';
 import { apiRoutes } from '../../utils/routes/apiRoutes';
+import { Config } from '../../../utils/Config';
 /**
  * @swagger
  * /api/users:
@@ -66,6 +67,7 @@ import { apiRoutes } from '../../utils/routes/apiRoutes';
  */
 
 export async function POST(
+  config: Config,
   session: void | ActiveSession,
   init: RequestInit & { request: Request },
   log?: (...args: string[]) => void
@@ -79,7 +81,7 @@ export async function POST(
   const tenantId = yurl.searchParams.get('tenantId');
   const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
 
-  const url = apiRoutes.USERS(tenant ? tenant : undefined);
+  const url = apiRoutes(config).USERS(tenant ? tenant : undefined);
   log && log('[POST]', url);
 
   return await request(url, init);

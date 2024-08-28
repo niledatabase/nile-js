@@ -10,6 +10,7 @@ describe('server', () => {
       db: {
         host: 'db.thenile.dev',
       },
+      api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
     };
     const server = new Server(config);
     expect(server.config.db).toEqual({

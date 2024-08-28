@@ -1,4 +1,3 @@
-const { log } = console;
 import { Config } from '../../utils/Config';
 import Logger from '../../utils/Logger';
 
@@ -31,7 +30,7 @@ export default async function request(
     params.duplex = 'half';
   }
 
-  log(`[${params.method ?? 'GET'}]`, url);
+  info(`[${params.method ?? 'GET'}]`, url);
   const res = await fetch(url, { ...params }).catch((e) => {
     error('An error has occurred in the fetch', e);
     return new Response(

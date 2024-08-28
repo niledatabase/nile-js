@@ -30,25 +30,25 @@ export default function GETTER(configRoutes: Routes, config: Config) {
     }
 
     if (authRoutes.matchSignIn(configRoutes, req)) {
-      return authRoutes.handleSignIn(req);
+      return authRoutes.handleSignIn(req, config);
     }
 
     if (authRoutes.matchProviders(configRoutes, req)) {
-      return authRoutes.handleProviders(req);
+      return authRoutes.handleProviders(req, config);
     }
 
     if (authRoutes.matchCsrf(configRoutes, req)) {
-      return authRoutes.handleCsrf(req);
+      return authRoutes.handleCsrf(req, config);
     }
 
     if (authRoutes.matchCallback(configRoutes, req)) {
-      return authRoutes.handleCallback(req);
+      return authRoutes.handleCallback(req, config);
     }
     if (authRoutes.matchSignOut(configRoutes, req)) {
-      return authRoutes.handleSignOut(req);
+      return authRoutes.handleSignOut(req, config);
     }
     if (authRoutes.matchError(configRoutes, req)) {
-      return authRoutes.handleError(req);
+      return authRoutes.handleError(req, config);
     }
     return new Response(null, { status: 404 });
   };

@@ -1,6 +1,7 @@
 import { ActiveSession } from '../../../../utils/auth';
 import fetch from '../../../../utils/request';
 import { apiRoutes } from '../../../../utils/routes/apiRoutes';
+import { Config } from '../../../../../utils/Config';
 
 /**
  * @swagger
@@ -43,6 +44,7 @@ import { apiRoutes } from '../../../../utils/routes/apiRoutes';
  *              $ref: '#/components/schemas/User'
  */
 export async function POST(
+  config: Config,
   session: ActiveSession,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
@@ -53,7 +55,7 @@ export async function POST(
   // @ts-ignore
   init.body = JSON.stringify({ email: session.email });
   init.method = 'PUT';
-  const url = apiRoutes.TENANT_USERS(tenantId);
+  const url = apiRoutes(config).TENANT_USERS(tenantId);
   log('[PUT]', url);
 
   return await fetch(url, init);

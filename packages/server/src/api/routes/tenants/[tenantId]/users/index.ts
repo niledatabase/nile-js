@@ -13,7 +13,7 @@ const key = 'TENANT_USERS';
 
 export default async function route(request: Request, config: Config) {
   const { info } = Logger(
-    { ...config, debug: config.debug },
+    { ...config, debug: config.debug } as Config,
     '[ROUTES]',
     `[${key}]`
   );
@@ -26,13 +26,13 @@ export default async function route(request: Request, config: Config) {
 
   switch (request.method) {
     case 'GET':
-      return await GET(session, { request }, info);
+      return await GET(config, { request }, info);
     case 'POST':
-      return await POST(session, { request }, info);
+      return await POST(config, session, { request }, info);
     case 'PUT':
-      return await PUT(session, { request }, info);
+      return await PUT(config, { request }, info);
     case 'DELETE':
-      return await DELETE(session, { request }, info);
+      return await DELETE(config, { request }, info);
 
     default:
       return new Response('method not allowed', { status: 405 });

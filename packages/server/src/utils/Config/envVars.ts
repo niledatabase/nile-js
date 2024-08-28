@@ -111,7 +111,7 @@ export const getLocal = (cfg: EnvConfig) => {
  * @param cfg various overrides
  * @returns the url for REST to use
  */
-export const getBasePath = (cfg: EnvConfig) => {
+export const getBasePath = (cfg: EnvConfig): undefined | string => {
   const { config, logger } = cfg;
   const { info } = Logger(config, '[basePath]');
   const basePath = config?.api?.basePath;
@@ -131,7 +131,8 @@ export const getBasePath = (cfg: EnvConfig) => {
     return apiUrl.href;
   }
 
-  throw new Error('NILEDB_API_URL is missing.');
+  info('not set. Must run auto-configuration');
+  return undefined;
 };
 
 export const getControlPlane = (cfg: EnvConfig) => {

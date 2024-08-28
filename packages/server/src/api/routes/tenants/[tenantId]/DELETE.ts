@@ -1,4 +1,4 @@
-import { ActiveSession } from '../../../utils/auth';
+import { Config } from '../../../../utils/Config';
 import fetch from '../../../utils/request';
 import { apiRoutes } from '../../../utils/routes/apiRoutes';
 
@@ -33,7 +33,7 @@ import { apiRoutes } from '../../../utils/routes/apiRoutes';
  *              $ref: '#/components/schemas/APIError'
  */
 export async function DELETE(
-  session: ActiveSession,
+  config: Config,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
@@ -44,7 +44,7 @@ export async function DELETE(
   }
 
   init.method = 'DELETE';
-  const url = `${apiRoutes.TENANT(tenantId)}`;
+  const url = `${apiRoutes(config).TENANT(tenantId)}`;
   log('[DELETE]', url);
 
   return await fetch(url, init);
