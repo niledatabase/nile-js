@@ -78,4 +78,4 @@ jobs:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to git
-        run: npx lerna publish from-git --yes --registry=https://npm.pkg.github.com/ --access public
+        run: npx lerna publish from-git --yes --registry=https://npm.pkg.github.com/
