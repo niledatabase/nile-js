@@ -26,7 +26,7 @@ export default function serverAuth(
     }
 
     info('Obtaining providers for', email);
-    const sessionUrl = new URL(`${config.api.localPath}/api/auth/providers`);
+    const sessionUrl = new URL(`${config.api.basePath}/api/auth/providers`);
     const sessionReq = new Request(sessionUrl, {
       method: 'GET',
       headers: new Headers({
@@ -38,12 +38,12 @@ export default function serverAuth(
     try {
       providers = await sessionRes?.json();
     } catch (e) {
-      info(sessionRes);
+      info(sessionUrl, sessionRes);
       error(e);
     }
 
     info('Obtaining csrf');
-    const csrf = new URL(`${config.api.localPath}/api/auth/csrf`);
+    const csrf = new URL(`${config.api.basePath}/api/auth/csrf`);
     const csrfReq = new Request(csrf, {
       method: 'GET',
       headers: new Headers({
@@ -56,10 +56,11 @@ export default function serverAuth(
       const json = (await csrfRes?.json()) ?? {};
       csrfToken = json?.csrfToken;
     } catch (e) {
+      info(sessionUrl, csrfRes);
       error(e, csrfRes);
     }
 
-    const { credentials } = providers;
+    const { credentials } = providers ?? {};
 
     const csrfCookie = csrfRes?.headers.get('set-cookie');
 

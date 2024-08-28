@@ -14,7 +14,6 @@ import {
   getTenantId,
   getToken,
   getUsername,
-  getLocal,
 } from './envVars';
 
 export type ConfigRoutes = {
@@ -31,27 +30,19 @@ export type ConfigRoutes = {
 class ApiConfig {
   public cookieKey?: string;
   public basePath?: string | undefined;
-  public version?: number;
-  public localPath?: string;
   private _token?: string;
   constructor({
     basePath,
     cookieKey,
     token,
-    version,
-    localPath,
   }: {
     basePath?: string | undefined;
     cookieKey: string;
     token: string | undefined;
-    version: number;
-    localPath: string;
   }) {
     this.basePath = basePath;
     this.cookieKey = cookieKey;
-    this.version = version;
     this._token = token;
-    this.localPath = localPath ?? 'http://localhost:3000';
   }
 
   public get token(): string | undefined {
@@ -128,8 +119,6 @@ export class Config {
       basePath,
       cookieKey: config?.api?.cookieKey ?? 'token',
       token: getToken({ config }),
-      version: config?.api?.version ?? 2,
-      localPath: getLocal(envVarConfig),
     });
     this.db = {
       user: this.user,
@@ -214,8 +203,6 @@ export class Config {
       basePath,
       cookieKey: config?.api?.cookieKey ?? 'token',
       token: getToken({ config }),
-      version: config?.api?.version ?? 2,
-      localPath: getLocal(envVarConfig),
     });
     this.db = {
       user: this.user,
