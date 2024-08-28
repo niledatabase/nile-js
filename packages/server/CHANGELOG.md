@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.13](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.12...v3.0.0-alpha.13) (2024-08-28)
+
+### Bug Fixes
+
+- **server:** log requests based on the config again ([155bd31](https://github.com/niledatabase/nile-js/commit/155bd314a1f6c62f17658458af106a857b1db9b3))
+
 # [3.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.11...v3.0.0-alpha.12) (2024-08-28)
 
 **Note:** Version bump only for package @niledatabase/server
