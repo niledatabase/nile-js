@@ -96,17 +96,6 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
   return null;
 };
 
-export const getLocal = (cfg: EnvConfig) => {
-  const { config, logger } = cfg;
-
-  if (process.env.NILEDB_LOCAL) {
-    const { info } = Logger(config, '[local]');
-    logger && info(logger, 'NILEDB_LOCAL', process.env.NILEDB_LOCAL);
-    const apiUrl = new URL(process.env.NILEDB_LOCAL);
-    return apiUrl.href;
-  }
-  return 'http://localhost:3000';
-};
 /**
  * @param cfg various overrides
  * @returns the url for REST to use
