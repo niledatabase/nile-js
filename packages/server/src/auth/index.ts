@@ -13,7 +13,7 @@ export default function serverAuth(
     PUT: (req: Request) => Promise<void | Response>;
   }
 ) {
-  const { info } = Logger(config, '[server side login]');
+  const { info, error } = Logger(config, '[server side login]');
   return async function login({
     email,
     password,
@@ -21,7 +21,11 @@ export default function serverAuth(
     email: string;
     password: string;
   }) {
-    info('Obtaining session');
+    if (!email || !password) {
+      throw new Error('Server side login requires a user email and password.');
+    }
+
+    info('Obtaining providers for', email);
     const sessionUrl = new URL(`${config.api.localPath}/api/auth/providers`);
     const sessionReq = new Request(sessionUrl, {
       method: 'GET',
@@ -30,7 +34,13 @@ export default function serverAuth(
       }),
     });
     const sessionRes = await handlers.POST(sessionReq);
-    const providers = await sessionRes?.json();
+    let providers;
+    try {
+      providers = await sessionRes?.json();
+    } catch (e) {
+      info(sessionRes);
+      error(e);
+    }
 
     info('Obtaining csrf');
     const csrf = new URL(`${config.api.localPath}/api/auth/csrf`);
@@ -41,8 +51,14 @@ export default function serverAuth(
       }),
     });
     const csrfRes = await handlers.POST(csrfReq);
+    let csrfToken;
+    try {
+      const json = (await csrfRes?.json()) ?? {};
+      csrfToken = json?.csrfToken;
+    } catch (e) {
+      error(e, csrfRes);
+    }
 
-    const { csrfToken } = (await csrfRes?.json()) ?? {};
     const { credentials } = providers;
 
     const csrfCookie = csrfRes?.headers.get('set-cookie');
@@ -57,7 +73,7 @@ export default function serverAuth(
     if (!csrfCookie) {
       throw new Error('Unable to authenticate REST');
     }
-    info('Attempting sign in via', signInUrl.href, 'proxy');
+    info('Attempting sign in via proxy', signInUrl.href, 'with email', email);
     const postReq = new Request(signInUrl, {
       method: 'POST',
       headers: new Headers({

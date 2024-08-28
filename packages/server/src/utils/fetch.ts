@@ -122,6 +122,10 @@ export async function _fetch(
     }
     return response;
   }
+  if (response?.status === 404) {
+    return new ResponseError('Not found', { status: 404 });
+  }
+
   if (response?.status === 401) {
     return new ResponseError('Unauthorized', { status: 401 });
   }

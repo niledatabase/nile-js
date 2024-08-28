@@ -39,10 +39,11 @@ const key = 'ME';
 async function GET(
   url: string,
   init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  log: (...args: string[]) => void,
+  config: Config
 ) {
   log('[GET]', url);
-  const res = await request(url, init);
+  const res = await request(url, init, config);
   return res;
 }
 
@@ -56,7 +57,7 @@ export default async function route(request: Request, config: Config) {
 
   switch (request.method) {
     case 'GET':
-      return await GET(url, { request }, info);
+      return await GET(url, { request }, info, config);
 
     default:
       return new Response('method not allowed', { status: 405 });

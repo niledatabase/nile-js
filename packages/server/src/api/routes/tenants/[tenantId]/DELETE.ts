@@ -47,5 +47,5 @@ export async function DELETE(
   const url = `${apiRoutes(config).TENANT(tenantId)}`;
   log('[DELETE]', url);
 
-  return await fetch(url, init);
+  return await fetch(url, init, config);
 }

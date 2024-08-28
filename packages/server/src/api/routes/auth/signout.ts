@@ -17,7 +17,7 @@ export default async function route(request: Request, config: Config) {
     url = `${proxyRoutes(config)[key]}/${provider}`;
   }
 
-  const res = await fetch(url, { ...init, request });
+  const res = await fetch(url, { ...init, request }, config);
   return res;
 }
 export function matches(configRoutes: Routes, request: Request): boolean {

@@ -27,7 +27,7 @@ export default async function auth(
   // handle the pass through with posts
   req.headers.delete('content-length');
 
-  const res = await request(sessionUrl, { request: req });
+  const res = await request(sessionUrl, { request: req }, config);
   if (!res) {
     info('no session found');
     return undefined;

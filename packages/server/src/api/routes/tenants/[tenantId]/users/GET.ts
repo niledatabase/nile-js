@@ -46,5 +46,5 @@ export async function GET(
 
   const url = `${apiRoutes(config).TENANT_USERS(tenantId)}`;
   log('[GET]', '[TENANT_USERS]', url);
-  return await request(url, init);
+  return await request(url, init, config);
 }

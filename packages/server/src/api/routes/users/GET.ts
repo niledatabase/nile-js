@@ -50,5 +50,5 @@ export async function GET(
   const url = apiRoutes(config).TENANT_USERS(tenant);
   log('[GET]', url);
   init.method = 'GET';
-  return await request(url, init);
+  return await request(url, init, config);
 }

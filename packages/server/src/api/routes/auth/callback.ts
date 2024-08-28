@@ -20,10 +20,14 @@ export default async function route(request: Request, config: Config) {
     params.toString() !== '' ? `?${params.toString()}` : ''
   }`;
 
-  const res = await fetch(url, {
-    request,
-    method: request.method,
-  }).catch((e) => {
+  const res = await fetch(
+    url,
+    {
+      request,
+      method: request.method,
+    },
+    config
+  ).catch((e) => {
     error('an error as occurred', e);
   });
 

@@ -28,7 +28,8 @@ describe('tenants route', () => {
     );
     expect(utilRequest).toHaveBeenCalledWith(
       'http://thenile.dev/v2/databases/testdb/tenants',
-      expect.objectContaining({ method: 'POST' })
+      expect.objectContaining({ method: 'POST' }),
+      expect.objectContaining({})
     );
   });
   it('should GET to v2 tenant users with params', async () => {
