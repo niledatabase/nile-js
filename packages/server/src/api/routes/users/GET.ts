@@ -1,6 +1,7 @@
 import { getTenantFromHttp } from '../../../utils/fetch';
 import request from '../../utils/request';
 import { apiRoutes } from '../../utils/routes/apiRoutes';
+import { Config } from '../../../utils/Config';
 
 /**
  * @swagger
@@ -34,6 +35,7 @@ import { apiRoutes } from '../../utils/routes/apiRoutes';
  *         content: {}
  */
 export async function GET(
+  config: Config,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
@@ -45,7 +47,7 @@ export async function GET(
     log('[GET]', '[ERROR]', 'No tenant id provided.');
     return new Response(null, { status: 404 });
   }
-  const url = apiRoutes.TENANT_USERS(tenant);
+  const url = apiRoutes(config).TENANT_USERS(tenant);
   log('[GET]', url);
   init.method = 'GET';
   return await request(url, init);

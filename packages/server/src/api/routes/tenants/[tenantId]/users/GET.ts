@@ -1,5 +1,5 @@
 import { apiRoutes } from '../../../../utils/routes/apiRoutes';
-import { ActiveSession } from '../../../../utils/auth';
+import { Config } from '../../../../../utils/Config';
 import request from '../../../../utils/request';
 
 /**
@@ -34,7 +34,7 @@ import request from '../../../../utils/request';
  *              $ref: '#/components/schemas/APIError'
  */
 export async function GET(
-  session: ActiveSession,
+  config: Config,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
@@ -44,7 +44,7 @@ export async function GET(
     return new Response(null, { status: 404 });
   }
 
-  const url = `${apiRoutes.TENANT_USERS(tenantId)}`;
+  const url = `${apiRoutes(config).TENANT_USERS(tenantId)}`;
   log('[GET]', '[TENANT_USERS]', url);
   return await request(url, init);
 }

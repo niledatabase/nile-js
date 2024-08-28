@@ -6,7 +6,7 @@ import { Config } from '../../../utils/Config';
 
 export default async function route(req: Request, config: Config) {
   return request(
-    proxyRoutes.SESSION,
+    proxyRoutes(config).SESSION,
     {
       method: req.method,
       request: req,

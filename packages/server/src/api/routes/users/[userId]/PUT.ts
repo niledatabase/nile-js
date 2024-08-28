@@ -1,6 +1,7 @@
 import { apiRoutes } from '../../../utils/routes/apiRoutes';
 import fetch from '../../../utils/request';
 import { ActiveSession } from '../../../utils/auth';
+import { Config } from '../../../../utils/Config';
 
 /**
  * @swagger
@@ -40,6 +41,7 @@ import { ActiveSession } from '../../../utils/auth';
  */
 
 export async function PUT(
+  config: Config,
   session: void | ActiveSession,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
@@ -54,7 +56,7 @@ export async function PUT(
 
   const [userId] = new URL(init.request.url).pathname.split('/').reverse();
 
-  const url = apiRoutes.USER(userId);
+  const url = apiRoutes(config).USER(userId);
 
   log('[PUT]', url);
 

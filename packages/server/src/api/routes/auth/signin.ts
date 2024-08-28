@@ -30,14 +30,15 @@
  */
 
 import { Routes } from '../../types';
+import { Config } from '../../../utils/Config';
 import { proxyRoutes } from '../../utils/routes/proxyRoutes';
 import request from '../../utils/request';
 import urlMatches from '../../utils/routes/urlMatches';
 
 const key = 'SIGNIN';
 
-export default async function route(req: Request) {
-  let url = proxyRoutes[key];
+export default async function route(req: Request, config: Config) {
+  let url = proxyRoutes(config)[key];
 
   const init: RequestInit = {
     method: req.method,
@@ -49,7 +50,7 @@ export default async function route(req: Request) {
     }
     const [provider] = new URL(req.url).pathname.split('/').reverse();
 
-    url = `${proxyRoutes[key]}/${provider}`;
+    url = `${proxyRoutes(config)[key]}/${provider}`;
   }
 
   const passThroughUrl = new URL(req.url);

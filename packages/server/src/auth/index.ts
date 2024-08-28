@@ -57,7 +57,7 @@ export default function serverAuth(
     if (!csrfCookie) {
       throw new Error('Unable to authenticate REST');
     }
-    info('Attempting sign in to', signInUrl.href);
+    info('Attempting sign in via', signInUrl.href, 'proxy');
     const postReq = new Request(signInUrl, {
       method: 'POST',
       headers: new Headers({

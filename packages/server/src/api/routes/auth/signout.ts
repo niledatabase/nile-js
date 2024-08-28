@@ -2,10 +2,11 @@ import { Routes } from '../../types';
 import { proxyRoutes } from '../../utils/routes/proxyRoutes';
 import fetch from '../../utils/request';
 import urlMatches from '../../utils/routes/urlMatches';
+import { Config } from '../../../utils/Config';
 
 const key = 'SIGNOUT';
-export default async function route(request: Request) {
-  let url = proxyRoutes[key];
+export default async function route(request: Request, config: Config) {
+  let url = proxyRoutes(config)[key];
 
   const init: RequestInit = {
     method: request.method,
@@ -13,7 +14,7 @@ export default async function route(request: Request) {
   if (request.method === 'POST') {
     init.body = request.body;
     const [provider] = new URL(request.url).pathname.split('/').reverse();
-    url = `${proxyRoutes[key]}/${provider}`;
+    url = `${proxyRoutes(config)[key]}/${provider}`;
   }
 
   const res = await fetch(url, { ...init, request });

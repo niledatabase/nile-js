@@ -1,7 +1,6 @@
 import { apiRoutes } from '../../../../utils/routes/apiRoutes';
 import fetch from '../../../../utils/request';
-import { ActiveSession } from '../../../../utils/auth';
-
+import { Config } from '../../../../../utils/Config';
 /**
  * @swagger
  * /api/tenants/{tenantId}/users:
@@ -29,7 +28,7 @@ import { ActiveSession } from '../../../../utils/auth';
  */
 
 export async function PUT(
-  session: ActiveSession,
+  config: Config,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
@@ -40,7 +39,7 @@ export async function PUT(
   }
 
   init.method = 'PUT';
-  const url = `${apiRoutes.TENANT_USERS(tenantId)}`;
+  const url = `${apiRoutes(config).TENANT_USERS(tenantId)}`;
   log('[PUT]', url);
 
   return await fetch(url, init);

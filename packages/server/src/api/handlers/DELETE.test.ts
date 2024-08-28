@@ -6,7 +6,10 @@ import DELETER from './DELETE';
 
 jest.mock('../utils/auth', () => () => 'a session, relax');
 describe('DELETER', () => {
-  const apiGet = DELETER(appRoutes(), new Config());
+  const apiGet = DELETER(
+    appRoutes(),
+    new Config({ api: { basePath: 'http://thenile.dev/v2/databases/testdb' } })
+  );
   global.fetch = jest.fn();
 
   beforeEach(() => {

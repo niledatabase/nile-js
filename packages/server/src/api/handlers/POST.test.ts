@@ -6,7 +6,10 @@ import POSTER from './POST';
 
 jest.mock('../utils/auth', () => () => 'a session, relax');
 describe('poster', () => {
-  const apiGet = POSTER(appRoutes(), new Config());
+  const apiGet = POSTER(
+    appRoutes(),
+    new Config({ api: { basePath: 'http://thenile.dev/v2/databases/testdb' } })
+  );
   global.fetch = jest.fn();
 
   beforeEach(() => {

@@ -1,3 +1,4 @@
+import { Config } from '../../../utils/Config';
 import { ActiveSession } from '../../utils/auth';
 import request from '../../utils/request';
 import { apiRoutes } from '../../utils/routes/apiRoutes';
@@ -31,13 +32,14 @@ import { apiRoutes } from '../../utils/routes/apiRoutes';
  *         content: {}
  */
 export async function GET(
+  config: Config,
   session: ActiveSession,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
-  let url = `${apiRoutes.USER_TENANTS(session.id)}`;
+  let url = `${apiRoutes(config).USER_TENANTS(session.id)}`;
   if (typeof session === 'object' && 'user' in session && session.user) {
-    url = `${apiRoutes.USER_TENANTS(session.user.id)}`;
+    url = `${apiRoutes(config).USER_TENANTS(session.user.id)}`;
   }
   log('[GET]', url);
 

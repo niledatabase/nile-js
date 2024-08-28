@@ -6,7 +6,6 @@ import { Config } from '../../../utils/Config';
 import request from '../../utils/request';
 
 const key = 'ME';
-const url = apiRoutes[key];
 
 /**
  * @swagger
@@ -38,6 +37,7 @@ const url = apiRoutes[key];
  */
 
 async function GET(
+  url: string,
   init: RequestInit & { request: Request },
   log: (...args: string[]) => void
 ) {
@@ -47,15 +47,16 @@ async function GET(
 }
 
 export default async function route(request: Request, config: Config) {
+  const url = apiRoutes(config)[key];
   const { info } = Logger(
-    { ...config, debug: config.debug },
+    { ...config, debug: config.debug } as Config,
     '[ROUTES]',
     `[${key}]`
   );
 
   switch (request.method) {
     case 'GET':
-      return await GET({ request }, info);
+      return await GET(url, { request }, info);
 
     default:
       return new Response('method not allowed', { status: 405 });
