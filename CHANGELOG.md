@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.11...v3.0.0-alpha.12) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/packages
+
 # [3.0.0-alpha.11](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.10...v3.0.0-alpha.11) (2024-08-28)
 
 ### Bug Fixes
