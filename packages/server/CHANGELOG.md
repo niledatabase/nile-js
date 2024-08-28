@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.10](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.9...v3.0.0-alpha.10) (2024-08-28)
+
+### Bug Fixes
+
+- **server:** swap configure preference, debug migration missing on db ([fa0e846](https://github.com/niledatabase/nile-js/commit/fa0e8469212f8db168f9627010a34fd102bc4440))
+
 # [3.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.8...v3.0.0-alpha.9) (2024-08-27)
 
 ### Bug Fixes
