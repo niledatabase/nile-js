@@ -13,7 +13,7 @@ export default function serverAuth(
     PUT: (req: Request) => Promise<void | Response>;
   }
 ) {
-  const { info } = Logger(config, '[serverAuth]');
+  const { info } = Logger(config, '[server side login]');
   return async function login({
     email,
     password,
@@ -76,9 +76,8 @@ export default function serverAuth(
     if (!authCookie) {
       throw new Error('authentication failed');
     }
-
-    info('Server login successful');
     const [, token] = /(nile\.session-token=.+?);/.exec(authCookie) ?? [];
+    info('Server login successful', authCookie, csrfCookie);
     return new Headers({
       cookie: [token, csrfCookie].join('; '),
     });
