@@ -60,5 +60,5 @@ export async function PUT(
 
   log('[PUT]', url);
 
-  return await fetch(url, init);
+  return await fetch(url, init, config);
 }

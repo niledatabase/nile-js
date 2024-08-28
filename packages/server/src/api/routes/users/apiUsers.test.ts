@@ -34,7 +34,8 @@ describe('users route', () => {
     );
     expect(utilRequest).toHaveBeenCalledWith(
       'http://thenile.dev/v2/databases/testdb/users',
-      expect.objectContaining({ method: 'POST' })
+      expect.objectContaining({ method: 'POST' }),
+      expect.objectContaining({})
     );
   });
   it('should GET to v2 tenant users with params', async () => {
@@ -47,7 +48,8 @@ describe('users route', () => {
     );
     expect(utilRequest).toHaveBeenCalledWith(
       'http://thenile.dev/v2/databases/testdb/tenants/123/users',
-      expect.objectContaining({ method: 'GET' })
+      expect.objectContaining({ method: 'GET' }),
+      expect.objectContaining({})
     );
   });
   it('should GET to v2 tenant users with headers', async () => {
@@ -64,7 +66,8 @@ describe('users route', () => {
     );
     expect(utilRequest).toHaveBeenCalledWith(
       'http://thenile.dev/v2/databases/testdb/tenants/123/users',
-      expect.objectContaining({ method: 'GET' })
+      expect.objectContaining({ method: 'GET' }),
+      expect.objectContaining({})
     );
   });
   it('should GET to v2 tenant users with cookies', async () => {
@@ -81,7 +84,8 @@ describe('users route', () => {
     );
     expect(utilRequest).toHaveBeenCalledWith(
       'http://thenile.dev/v2/databases/testdb/tenants/456/users',
-      expect.objectContaining({ method: 'GET' })
+      expect.objectContaining({ method: 'GET' }),
+      expect.objectContaining({})
     );
   });
 });

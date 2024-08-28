@@ -53,5 +53,5 @@ export async function POST(
   const url = `${apiRoutes(config).TENANTS}`;
   log('[POST]', url);
 
-  return await request(url, init);
+  return await request(url, init, config);
 }

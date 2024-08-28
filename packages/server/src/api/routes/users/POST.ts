@@ -84,5 +84,5 @@ export async function POST(
   const url = apiRoutes(config).USERS(tenant ? tenant : undefined);
   log && log('[POST]', url);
 
-  return await request(url, init);
+  return await request(url, init, config);
 }

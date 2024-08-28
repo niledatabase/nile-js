@@ -58,7 +58,7 @@ export default async function route(req: Request, config: Config) {
 
   url = `${url}${params.toString() !== '' ? `?${params.toString()}` : ''}`;
 
-  const res = await request(url, { ...init, request: req });
+  const res = await request(url, { ...init, request: req }, config);
 
   return res;
 }

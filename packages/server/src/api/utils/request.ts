@@ -4,13 +4,9 @@ import Logger from '../../utils/Logger';
 export default async function request(
   url: string,
   _init: RequestInit & { request: Request },
-  config?: Config
+  config: Config
 ) {
-  const { info, error } = Logger(
-    { ...config, debug: config?.debug },
-    '[REQUEST]',
-    `[${url}]`
-  );
+  const { info, error } = Logger(config, '[REQUEST]');
   const { request, ...init } = _init;
   const requestUrl = new URL(request.url);
   const updatedHeaders = new Headers(request.headers);

@@ -43,6 +43,6 @@ export async function GET(
   }
   log('[GET]', url);
 
-  const res = await request(url, init);
+  const res = await request(url, init, config);
   return res;
 }

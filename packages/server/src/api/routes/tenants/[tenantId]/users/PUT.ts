@@ -42,5 +42,5 @@ export async function PUT(
   const url = `${apiRoutes(config).TENANT_USERS(tenantId)}`;
   log('[PUT]', url);
 
-  return await fetch(url, init);
+  return await fetch(url, init, config);
 }
