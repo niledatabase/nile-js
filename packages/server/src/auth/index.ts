@@ -5,7 +5,15 @@ import Logger from '../utils/Logger';
 /**
  * a helper function to log in server side.
  */
-export default function login(config: Config) {
+export default function serverAuth(
+  config: Config,
+  handlers: {
+    GET: (req: Request) => Promise<void | Response>;
+    POST: (req: Request) => Promise<void | Response>;
+    DELETE: (req: Request) => Promise<void | Response>;
+    PUT: (req: Request) => Promise<void | Response>;
+  }
+) {
   const { info, error } = Logger(config, '[server side login]');
   const routes = proxyRoutes(config);
   return async function login({
@@ -27,7 +35,12 @@ export default function login(config: Config) {
         host: sessionUrl.host,
       }),
     });
-    const sessionRes = await fetch(sessionReq);
+    const sessionRes = await handlers.POST(sessionReq);
+
+    if (sessionRes?.status === 404) {
+      throw new Error('Unable to login, cannot find region api.');
+    }
+
     let providers;
     try {
       providers = await sessionRes?.json();
@@ -44,7 +57,7 @@ export default function login(config: Config) {
         host: sessionUrl.host,
       }),
     });
-    const csrfRes = await fetch(csrfReq);
+    const csrfRes = await handlers.POST(csrfReq);
     let csrfToken;
     try {
       const json = (await csrfRes?.json()) ?? {};
@@ -82,7 +95,7 @@ export default function login(config: Config) {
         callbackUrl: credentials.callbackUrl,
       }),
     });
-    const loginRes = await fetch(postReq);
+    const loginRes = await handlers.POST(postReq);
     const authCookie = loginRes?.headers.get('set-cookie');
     if (!authCookie) {
       throw new Error('authentication failed');
