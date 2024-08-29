@@ -19,7 +19,7 @@ export default async function auth(
   req: Request,
   config: Config
 ): Promise<void | ActiveSession> {
-  const { info } = Logger({ ...config, debug: config.debug }, '[nileauth]');
+  const { info, error } = Logger(config, '[nileauth]');
   info('checking auth');
 
   const sessionUrl = `${config.api.basePath}/auth/session`;
@@ -33,5 +33,10 @@ export default async function auth(
     return undefined;
   }
   info('session active');
-  return await new Response(res.body).json();
+  try {
+    return await new Response(res.body).json();
+  } catch (e) {
+    error(e);
+    return undefined;
+  }
 }
