@@ -33,6 +33,6 @@ export class Api {
     this.tenants = new Tenants(this.config, headers);
   }
   async login(payload: { email: string; password: string }) {
-    this.headers = await serverAuth(this.config, this.handlers)(payload);
+    this.headers = await serverAuth(this.config)(payload);
   }
 }
