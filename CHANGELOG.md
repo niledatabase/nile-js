@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.14...v3.0.0-alpha.15) (2024-08-29)
+
+### Bug Fixes
+
+- **server:** use real proxy routes for server side login ([27f0551](https://github.com/niledatabase/nile-js/commit/27f0551aa7a40d635431a20519df0cdee888729c))
+
 # [3.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.13...v3.0.0-alpha.14) (2024-08-28)
 
 ### Bug Fixes
