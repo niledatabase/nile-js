@@ -1,3 +1,4 @@
+import { proxyRoutes } from '../api/utils/routes/proxyRoutes';
 import { Config } from '../utils/Config';
 import Logger from '../utils/Logger';
 
@@ -14,6 +15,7 @@ export default function serverAuth(
   }
 ) {
   const { info, error } = Logger(config, '[server side login]');
+  const routes = proxyRoutes(config);
   return async function login({
     email,
     password,
@@ -26,7 +28,7 @@ export default function serverAuth(
     }
 
     info('Obtaining providers for', email);
-    const sessionUrl = new URL(`${config.api.basePath}/api/auth/providers`);
+    const sessionUrl = new URL(routes.PROVIDERS);
     const sessionReq = new Request(sessionUrl, {
       method: 'GET',
       headers: new Headers({
@@ -43,7 +45,7 @@ export default function serverAuth(
     }
 
     info('Obtaining csrf');
-    const csrf = new URL(`${config.api.basePath}/api/auth/csrf`);
+    const csrf = new URL(routes.CSRF);
     const csrfReq = new Request(csrf, {
       method: 'GET',
       headers: new Headers({
@@ -69,7 +71,7 @@ export default function serverAuth(
         'Unable to obtain credential provider. Aborting server side login.'
       );
     }
-    const signInUrl = new URL(credentials.callbackUrl);
+    const signInUrl = new URL(routes.SIGNIN);
 
     if (!csrfCookie) {
       throw new Error('Unable to authenticate REST');
