@@ -1,7 +1,9 @@
-import { proxyRoutes } from '../api/utils/routes/proxyRoutes';
+import { appRoutes } from '../api/utils/routes/defaultRoutes';
 import { Config } from '../utils/Config';
 import Logger from '../utils/Logger';
 
+// url host does not matter, we only match on the 1st leg by path
+const ORIGIN = 'http://localhost';
 /**
  * a helper function to log in server side.
  */
@@ -15,7 +17,7 @@ export default function serverAuth(
   }
 ) {
   const { info, error } = Logger(config, '[server side login]');
-  const routes = proxyRoutes(config);
+  const routes = appRoutes(config.routePrefix);
   return async function login({
     email,
     password,
@@ -28,7 +30,7 @@ export default function serverAuth(
     }
 
     info('Obtaining providers for', email);
-    const sessionUrl = new URL(routes.PROVIDERS);
+    const sessionUrl = new URL(`${ORIGIN}${routes.PROVIDERS}`);
     const sessionReq = new Request(sessionUrl, {
       method: 'GET',
       headers: new Headers({
@@ -50,7 +52,7 @@ export default function serverAuth(
     }
 
     info('Obtaining csrf');
-    const csrf = new URL(routes.CSRF);
+    const csrf = new URL(`${ORIGIN}${routes.CSRF}`);
     const csrfReq = new Request(csrf, {
       method: 'GET',
       headers: new Headers({
@@ -76,12 +78,12 @@ export default function serverAuth(
         'Unable to obtain credential provider. Aborting server side login.'
       );
     }
-    const signInUrl = new URL(routes.SIGNIN);
+    const signInUrl = new URL(credentials.callbackUrl);
 
     if (!csrfCookie) {
       throw new Error('Unable to authenticate REST');
     }
-    info('Attempting sign in via proxy', signInUrl.href, 'with email', email);
+    info('Attempting sign in with email', email);
     const postReq = new Request(signInUrl, {
       method: 'POST',
       headers: new Headers({
@@ -101,6 +103,9 @@ export default function serverAuth(
       throw new Error('authentication failed');
     }
     const [, token] = /(nile\.session-token=.+?);/.exec(authCookie) ?? [];
+    if (!token) {
+      throw new Error('Server login failed');
+    }
     info('Server login successful', authCookie, csrfCookie);
     return new Headers({
       cookie: [token, csrfCookie].join('; '),
