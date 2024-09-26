@@ -74,12 +74,6 @@ export async function _fetch(
   const basicHeaders = new Headers(opts?.headers);
   basicHeaders.set('content-type', 'application/json; charset=utf-8');
 
-  const creds = Buffer.from(
-    `${process.env.NILEDB_USER}:${process.env.NILEDB_PASSWORD}`,
-    'utf8'
-  ).toString('base64');
-
-  basicHeaders.set('niledb-creds', creds);
   const authHeader = headers.get('Authorization');
   if (!authHeader) {
     const token = getTokenFromCookie(headers, cookieKey);
