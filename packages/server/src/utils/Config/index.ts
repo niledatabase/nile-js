@@ -25,6 +25,9 @@ export type ConfigRoutes = {
   SIGNOUT?: string;
   ME?: string;
   ERROR?: string;
+  TENANTS?: string;
+  TENANT_USERS?: string;
+  USERS?: string;
 };
 
 class ApiConfig {

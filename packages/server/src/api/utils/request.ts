@@ -13,12 +13,6 @@ export default async function request(
 
   updatedHeaders.set('host', requestUrl.host);
   updatedHeaders.set('niledb-origin', requestUrl.origin);
-  updatedHeaders.set(
-    'niledb-creds',
-    Buffer.from(
-      `${process.env.NILEDB_USER}:${process.env.NILEDB_PASSWORD}`
-    ).toString('base64')
-  );
   const params = { ...init, headers: updatedHeaders };
   if (params.method === 'POST' || params.method === 'PUT') {
     params.body = init.body ?? request.body;
