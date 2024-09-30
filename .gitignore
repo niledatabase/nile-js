@@ -3,6 +3,8 @@ node_modules
 .eslintcache
 .idea
 
+.turbo
+
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

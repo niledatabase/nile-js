@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import deepmerge from '@mui/utils/deepmerge';
+import { deepmerge } from '@mui/utils';
 import { extendTheme as extendJoyTheme } from '@mui/joy/styles';
 import { experimental_extendTheme as extendMuiTheme } from '@mui/material/styles';
 
