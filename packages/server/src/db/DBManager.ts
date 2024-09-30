@@ -44,7 +44,12 @@ export default class DBManager {
 
   getConnection = (config: ServerConfig): Pool => {
     const { info } = Logger(config, '[DBManager]');
-    const id = this.makeId(config.tenantId, config.userId);
+    let id = this.makeId(config.tenantId, config.userId);
+    if (id === 'base' && (config.tenantId || config.userId)) {
+      info('tenantId or useId unable to be validated, creating new connection');
+      id = crypto.randomUUID();
+    }
+
     const existing = this.connections.get(id);
     info('# of instances:', this.connections.size);
     if (existing) {
