@@ -6,7 +6,6 @@ import Logger from '../utils/Logger';
 import { ServerConfig } from '../types';
 
 import NileDatabase from './NileInstance';
-import { isUUID } from './isUUID';
 
 export default class DBManager {
   connections: Map<string, NileDatabase>;
@@ -16,10 +15,10 @@ export default class DBManager {
     tenantId?: string | undefined | null,
     userId?: string | undefined | null
   ) {
-    if (isUUID(tenantId) && isUUID(userId)) {
+    if (tenantId && userId) {
       return `${tenantId}:${userId}`;
     }
-    if (isUUID(tenantId)) {
+    if (tenantId) {
       return `${tenantId}`;
     }
     return 'base';
@@ -44,11 +43,7 @@ export default class DBManager {
 
   getConnection = (config: ServerConfig): Pool => {
     const { info } = Logger(config, '[DBManager]');
-    let id = this.makeId(config.tenantId, config.userId);
-    if (id === 'base' && (config.tenantId || config.userId)) {
-      info('tenantId or useId unable to be validated, creating new connection');
-      id = crypto.randomUUID();
-    }
+    const id = this.makeId(config.tenantId, config.userId);
 
     const existing = this.connections.get(id);
     info('# of instances:', this.connections.size);

@@ -7,7 +7,6 @@ import { AfterCreate } from '../types';
 import Logger from '../utils/Logger';
 
 import { createProxyForPool } from './PoolProxy';
-import { isUUID } from './isUUID';
 
 class NileDatabase {
   pool: Pool;
@@ -96,9 +95,9 @@ function makeAfterCreate(config: Config): AfterCreate {
       done(error, conn);
     });
 
-    if (isUUID(config.tenantId)) {
+    if (config.tenantId) {
       const query = [`SET nile.tenant_id = '${config.tenantId}'`];
-      if (isUUID(config.userId)) {
+      if (config.userId) {
         if (!config.tenantId) {
           warn('A user id cannot be set in context without a tenant id');
         }
