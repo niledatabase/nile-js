@@ -1,8 +1,6 @@
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import Stack from '@mui/joy/Stack';
-import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import { Theme } from '@mui/system/createTheme';
 import { User } from '@niledatabase/browser';
 
 import CreateUser from './CreateUser';
@@ -17,7 +15,7 @@ type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUserCreateSuccess?: (user: any) => void;
   slots?: {
-    dataGrid?: SxProps<Theme>;
+    dataGrid?: unknown;
   };
   // white list of columns to show
   include?: ColumnNames[];
