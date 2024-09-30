@@ -59,10 +59,6 @@ describe('Putter', () => {
       });
       expect(headersArray).toEqual([
         { key: 'host', value: 'localhost:3001' },
-        {
-          key: 'niledb-creds',
-          value: 'c2hoaGg6c3VwZXJfc2VjcmV0',
-        },
         { key: 'niledb-origin', value: 'http://localhost:3001' },
       ]);
     });
