@@ -1,4 +1,4 @@
-import { Attribute } from '../lib/SimpleForm/types';
+import { QueryClient } from '@tanstack/react-query';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
@@ -14,7 +14,6 @@ export interface Props {
   beforeMutate?: (data: AllowedAny) => AllowedAny;
   onSuccess?: LoginSuccess;
   onError?: (error: Error, data: AllowedAny) => void;
-  attributes?: Attribute[];
-  disableSSO?: boolean;
   callbackUrl?: string;
+  client?: QueryClient;
 }

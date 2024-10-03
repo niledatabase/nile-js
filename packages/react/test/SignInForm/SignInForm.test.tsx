@@ -1,35 +1,24 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Browser from '@niledatabase/browser';
+import userEvent from '@testing-library/user-event';
 
-import { NileProvider } from '../../src/context';
 import '../matchMedia.mock';
-import LoginForm from '../../src/SignInForm/SignInForm';
+import SignInForm from '../../src/SignInForm/SignInForm';
 import { token } from '../fetch.mock';
 
 describe('LoginForm', () => {
   it('calls success if successful', async () => {
     const onSuccess = jest.fn();
     global.fetch = token;
-    const api = {
-      auth: {
-        login: async () => jest.fn(),
-      },
-    } as unknown as Browser;
-    render(
-      <NileProvider api={api}>
-        <LoginForm onSuccess={onSuccess} />
-      </NileProvider>
-    );
+    render(<SignInForm onSuccess={onSuccess} />);
     const password = screen.getByPlaceholderText('Password');
     fireEvent.change(password, { target: { value: 'supersecret' } });
 
     const email = screen.getByPlaceholderText('Email');
     fireEvent.change(email, { target: { value: 'squirrel@super.secret' } });
 
-    const button = screen.getByRole('button', { name: 'Log in' });
-    fireEvent.click(button);
-
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    await userEvent.click(submitButton);
     await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
   });
 });

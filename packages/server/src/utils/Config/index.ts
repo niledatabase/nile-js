@@ -148,6 +148,20 @@ export class Config {
     let basePath = getBasePath(envVarConfig);
     if (configuredHost && this.databaseName && this.databaseId && basePath) {
       info('Already configured, aborting fetch');
+      this.api = new ApiConfig({
+        basePath,
+        cookieKey: config?.api?.cookieKey ?? 'token',
+        token: getToken({ config }),
+      });
+      this.db = {
+        user: this.user,
+        password: this.password,
+        host: configuredHost,
+        port: configuredPort,
+        database: this.databaseName,
+        ...dbConfig,
+      };
+      info('[config set]', this);
       return this;
     }
 

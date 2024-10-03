@@ -7,36 +7,42 @@ enum Events {
   EvictPool = 'EvictPool',
 }
 class Eventer {
-  events: { [key: string]: EventFn[] };
-  constructor() {
-    this.events = {};
-  }
-  publish(eventName: string, value: BusValues) {
-    // Get all the callback functions of the current event
-    const callbackList = this.events[eventName];
+  private events: { [key: string]: EventFn[] } = {};
 
-    // execute each callback function
+  // Publish event and notify all subscribers
+  publish(eventName: string, value: BusValues) {
+    const callbackList = this.events[eventName];
     if (callbackList) {
       for (const callback of callbackList) {
         callback(value);
       }
     }
   }
+
   // Subscribe to events
   subscribe(eventName: string, callback: EventFn) {
-    // initialize this event
     if (!this.events[eventName]) {
       this.events[eventName] = [];
     }
-
-    // store the callback function of the subscriber
     this.events[eventName].push(callback);
   }
 
+  // Unsubscribe from an event
   unsubscribe(eventName: string, callback: EventFn) {
-    const toRemove = this.events[eventName].findIndex((cb) => cb === callback);
-    if (toRemove !== -1) {
-      this.events[eventName].splice(toRemove, 1);
+    const callbackList = this.events[eventName];
+
+    if (!callbackList) {
+      return; // Early exit if no event exists
+    }
+
+    const index = callbackList.indexOf(callback);
+    if (index !== -1) {
+      callbackList.splice(index, 1); // Remove the callback
+    }
+
+    // If there are no more listeners, clean up the event
+    if (callbackList.length === 0) {
+      delete this.events[eventName];
     }
   }
 }
@@ -65,9 +71,6 @@ export const watchToken = (cb: EventFn) => eventer.subscribe(Events.Token, cb);
 
 export const watchEvictPool = (cb: EventFn) =>
   eventer.subscribe(Events.EvictPool, cb);
-
-export const closeEvictPool = (cb: EventFn) =>
-  eventer.unsubscribe(Events.EvictPool, cb);
 
 export const evictPool = (val: BusValues) => {
   eventer.publish(Events.EvictPool, val);

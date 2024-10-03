@@ -22,7 +22,7 @@ export default async function route(request: Request, config: Config) {
     case 'GET':
       return await GET(config, { request }, info);
     case 'POST':
-      return await POST(config, session, { request }, info);
+      return await POST(config, { request }, info);
     case 'PUT':
       return await PUT(config, session, { request }, info);
 
