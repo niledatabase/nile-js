@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.18...v3.0.0-alpha.19) (2024-10-03)
+
+### Bug Fixes
+
+- **repo:** remove turbo/pnp, fix dbmanager, remove mui, use tailwind ([900270c](https://github.com/niledatabase/nile-js/commit/900270cdff5ad5c87997fe6a930e9bcf891784f8))
+
 # [3.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.17...v3.0.0-alpha.18) (2024-08-29)
 
 **Note:** Version bump only for package @niledatabase/react

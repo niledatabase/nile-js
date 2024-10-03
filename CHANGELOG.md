@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.18...v3.0.0-alpha.19) (2024-10-03)
+
+### Bug Fixes
+
+- **repo:** remove turbo/pnp, fix dbmanager, remove mui, use tailwind ([900270c](https://github.com/niledatabase/nile-js/commit/900270cdff5ad5c87997fe6a930e9bcf891784f8))
+- **server:** let the db handle UUIDs, mostly ([0a8bc23](https://github.com/niledatabase/nile-js/commit/0a8bc23f7dedfa3444be583c9ceb923f5d01bded))
+- **server:** remove db creds, allow any UUID ([bbc75bf](https://github.com/niledatabase/nile-js/commit/bbc75bf13b1e5d9d2dc0c1a98e31ecd512743133))
+- **server:** remove dev creds from requests ([d473275](https://github.com/niledatabase/nile-js/commit/d473275320925d7ef3291f3d90bf5133f1a6e3ee))
+- **server:** support random uuids ([2a04619](https://github.com/niledatabase/nile-js/commit/2a04619c43ad8a67c476c421ba721b7823dbb88d))
+
 # [3.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.17...v3.0.0-alpha.18) (2024-08-29)
 
 ### Bug Fixes
