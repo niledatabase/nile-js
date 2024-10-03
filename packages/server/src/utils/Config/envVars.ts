@@ -104,14 +104,9 @@ export const getBasePath = (cfg: EnvConfig): undefined | string => {
   const { config, logger } = cfg;
   const { info } = Logger(config, '[basePath]');
   const basePath = config?.api?.basePath;
-  let version = '';
-  if (!/\/v\d\//.test(String(basePath))) {
-    version =
-      config?.api?.version === 1 ? '' : `/v${config?.api?.version ?? 2}`;
-  }
   if (basePath) {
     logger && info(logger, 'config', basePath);
-    return `${basePath}${version}`;
+    return basePath;
   }
 
   if (process.env.NILEDB_API_URL) {

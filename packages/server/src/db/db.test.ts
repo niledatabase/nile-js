@@ -6,6 +6,7 @@ const properties = [
   'cleared',
   'getConnection',
   'poolWatcher',
+  'poolWatcherFn',
 ];
 describe('db', () => {
   it('has expected properties', () => {

@@ -1,64 +1,13 @@
 import React from 'react';
-import { useMutation } from '@tanstack/react-query';
-import Alert from '@mui/joy/Alert';
-import Stack from '@mui/joy/Stack';
-import { signIn } from 'next-auth/react';
 
-import { Attribute } from '../lib/SimpleForm/types';
-import SimpleForm from '../lib/SimpleForm';
-import { AttributeType } from '../lib/SimpleForm/types';
+import FormSignIn from './Form';
+import { Props } from './types';
 
-import { Props, LoginInfo } from './types';
-
-export default function SignInForm(props: Props) {
-  const [error, setError] = React.useState<string | void>();
-  const { attributes, onSuccess, onError, beforeMutate, callbackUrl } = props;
-
-  const mutation = useMutation(
-    async (_data: LoginInfo) => {
-      setError(undefined);
-      const d = { ..._data, callbackUrl };
-      const possibleData = beforeMutate && beforeMutate(d);
-      const data = possibleData ?? d;
-      signIn('credentials', data);
-    },
-    {
-      onSuccess,
-      onError,
-    }
-  );
-
-  const completeAttributes = React.useMemo(() => {
-    const mainAttributes: Attribute[] = [
-      {
-        name: 'email',
-        label: 'Email',
-        type: AttributeType.Text,
-        defaultValue: '',
-        required: true,
-      },
-      {
-        name: 'password',
-        label: 'Password',
-        type: AttributeType.Password,
-        defaultValue: '',
-        required: true,
-      },
-    ];
-    if (attributes && attributes.length > 0) {
-      return mainAttributes.concat(attributes);
-    }
-    return mainAttributes;
-  }, [attributes]);
-
+export default function SigningIn(props: Props) {
   return (
-    <Stack gap={2}>
-      {error ? <Alert color="danger">{error}</Alert> : null}
-      <SimpleForm
-        mutation={mutation}
-        buttonText="Log in"
-        attributes={completeAttributes}
-      />
-    </Stack>
+    <div className="flex flex-col gap-4">
+      <h2 className="font-sans text-3xl">Sign In</h2>
+      <FormSignIn {...props} />
+    </div>
   );
 }

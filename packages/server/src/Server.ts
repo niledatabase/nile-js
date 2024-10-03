@@ -4,18 +4,15 @@ import { ServerConfig } from './types';
 import { Config } from './utils/Config';
 import { watchTenantId, watchToken, watchUserId } from './utils/Event';
 import DbManager from './db';
-import { getServerId, makeServerId } from './utils/Server';
 import { Api } from './Api';
 
 export class Server {
   config: Config;
   api: Api;
   private manager!: DbManager;
-  private servers: Map<string, Server>;
 
   constructor(config?: ServerConfig) {
     this.config = new Config(config as ServerConfig, '[initial config]');
-    this.servers = new Map();
     this.api = new Api(this.config);
     this.manager = new DbManager(this.config);
 
@@ -43,8 +40,6 @@ export class Server {
     });
     this.setConfig(updatedConfig);
 
-    this.manager.clear(this.config);
-    this.manager = new DbManager(this.config);
     this.api = new Api(this.config);
     return this;
   }
@@ -104,42 +99,30 @@ export class Server {
   }
 
   /**
-   * A utility function if you want to manage different NileDB instances yourself
-   * returns the global Server object, an existing server that's already been configured,
-   * or a new one if the config isn't in the cache
+   * A convenience function that applies a config and ensures whatever was passed is set properly
    */
 
   getInstance(config: ServerConfig): Server {
     const _config = { ...this.config, ...config };
-    const serverId = getServerId(_config);
-    const currentServerId = makeServerId(this.config);
-    if (serverId === currentServerId) {
-      return this;
-    }
-    const existing = this.servers.get(serverId);
 
-    if (existing) {
-      // be sure the config is up to date
-      const updatedConfig = new Config(_config);
-      existing.setConfig(updatedConfig);
-      // propagate special config items
-      existing.tenantId = updatedConfig.tenantId;
-      existing.userId = updatedConfig.userId;
-      existing.token = updatedConfig.api.token;
-      existing.databaseId = updatedConfig.databaseId;
-      return existing;
-    }
+    // be sure the config is up to date
+    const updatedConfig = new Config(_config);
+    this.setConfig(updatedConfig);
+    // propagate special config items
+    this.tenantId = updatedConfig.tenantId;
+    this.userId = updatedConfig.userId;
+    this.token = updatedConfig.api.token;
+    this.databaseId = updatedConfig.databaseId;
 
-    const newServer = new Server(_config);
-
-    this.servers.set(serverId, newServer);
-
-    return newServer;
+    return this;
   }
 }
 
+let server: Server;
 export async function create(config?: ServerConfig): Promise<Server> {
-  const server = new Server(config);
+  if (!server) {
+    server = new Server(config);
+  }
   return await server.init();
 }
 

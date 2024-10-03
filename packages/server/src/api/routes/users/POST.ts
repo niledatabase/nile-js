@@ -1,5 +1,4 @@
 import { getTenantFromHttp } from '../../../utils/fetch';
-import { ActiveSession } from '../../utils/auth';
 import request from '../../utils/request';
 import { apiRoutes } from '../../utils/routes/apiRoutes';
 import { Config } from '../../../utils/Config';
@@ -68,13 +67,9 @@ import { Config } from '../../../utils/Config';
 
 export async function POST(
   config: Config,
-  session: void | ActiveSession,
   init: RequestInit & { request: Request },
   log?: (...args: string[]) => void
 ) {
-  if (!session) {
-    return new Response(null, { status: 401 });
-  }
   init.body = init.request.body;
   init.method = 'POST';
   const yurl = new URL(init.request.url);

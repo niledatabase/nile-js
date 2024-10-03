@@ -1,9 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Browser from '@niledatabase/browser';
 
 import '../matchMedia.mock';
-import { NileProvider } from '../../src/context';
 import SignUpForm from '../../src/SignUpForm/SignUpForm';
 import { token } from '../fetch.mock';
 
@@ -11,16 +9,8 @@ describe('SignUpForm', () => {
   it('calls success if successful', async () => {
     const onSuccess = jest.fn();
     global.fetch = token;
-    const api = {
-      auth: {
-        signUp: async () => jest.fn(),
-      },
-    } as unknown as Browser;
-    render(
-      <NileProvider api={api}>
-        <SignUpForm onSuccess={onSuccess} />
-      </NileProvider>
-    );
+
+    render(<SignUpForm onSuccess={onSuccess} />);
     const password = screen.getByPlaceholderText('Password');
     fireEvent.change(password, { target: { value: 'supersecret' } });
 

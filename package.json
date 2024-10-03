@@ -4,12 +4,12 @@
   "version": "0.0.2",
   "private": true,
   "workspaces": [
-    "lib/*",
     "packages/*"
   ],
   "scripts": {
     "build:browser": "yarn workspace @niledatabase/browser build",
-    "build:react-storybook": "yarn build && yarn workspace @niledatabase/react build-storybook",
+    "build:storybook": "yarn build && yarn workspace @niledatabase/react build:storybook",
+    "dev:react": "yarn workspace @niledatabase/react dev",
     "build:react": "yarn workspace @niledatabase/react build",
     "build:server": "yarn workspace @niledatabase/server build",
     "build:edge": "yarn workspace @niledatabase/edge build",
@@ -45,12 +45,11 @@
     "prettier": "^2.8.8",
     "prettier-eslint": "^15.0.1",
     "tslint-config-prettier": "^1.18.0",
-    "turbo": "^2.1.2",
-    "typescript": "^5.3.2"
+    "typescript": "^5.5.0"
   },
   "lint-staged": {
     "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix .",
     "lib/nile/src/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix  ."
   },
-  "packageManager": "yarn@4.1.1"
+  "packageManager": "yarn@4.5.0"
 }

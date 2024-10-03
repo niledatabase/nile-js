@@ -42,9 +42,6 @@ export default async function route(request: Request, config: Config) {
       if (isUUID(possibleTenantId)) {
         return await TENANT_GET(config, { request }, info);
       }
-      if (possibleTenantId) {
-        return new Response(null, { status: 404 });
-      }
       return await GET(config, session, { request }, info);
     case 'POST':
       return await POST(config, { request }, info);

@@ -36,34 +36,6 @@ describe('server', () => {
     expect(nile.api.users.tenantId).toEqual('tenantId');
     expect(nile.api.tenants.tenantId).toEqual('tenantId');
   });
-  it('manages instances', () => {
-    const config = {
-      databaseId: 'databaseId',
-      user: 'username',
-      password: 'password',
-    };
-    const nile = new Server(config);
-
-    const another = nile.getInstance({
-      databaseId: 'somethingelse?!',
-      user: 'username',
-      password: 'password',
-    });
-    const theSameOne = nile.getInstance(config);
-
-    // in this case, we change the base object tenant id
-    theSameOne.tenantId = 'tenantId2';
-    expect(nile.config.tenantId).toEqual('tenantId2');
-
-    nile.tenantId = 'tenantId4';
-    another.tenantId = 'tenantId1';
-
-    expect(nile.config).not.toEqual(another?.config);
-    expect(nile.config).toEqual(theSameOne?.config);
-
-    //@ts-expect-error - test
-    expect(nile.servers.size).toEqual(1);
-  });
 
   it('ensures existing configs get updated with provided configs', () => {
     const config = {

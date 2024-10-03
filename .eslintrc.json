@@ -39,6 +39,7 @@
         "trailingComma": "es5"
       }
     ],
+    
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "semi": "error",
     "import/namespace": 2,
@@ -58,6 +59,7 @@
         "minProperties": 4
       }
     ],
+    "react/prop-types": 0,
     "react/react-in-jsx-scope": "off",
     "react/jsx-key": 2,
     "react-hooks/exhaustive-deps": "error",
