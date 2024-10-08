@@ -26,8 +26,7 @@ const key = 'TENANTS';
 export default async function route(request: Request, config: Config) {
   const { info } = Logger(
     { ...config, debug: config.debug } as Config,
-    '[ROUTES]',
-    `[${key}]`
+    `[ROUTES][${key}]`
   );
   const session = await auth(request, config);
 
@@ -42,13 +41,13 @@ export default async function route(request: Request, config: Config) {
       if (isUUID(possibleTenantId)) {
         return await TENANT_GET(config, { request }, info);
       }
-      return await GET(config, session, { request }, info);
+      return await GET(config, session, { request });
     case 'POST':
-      return await POST(config, { request }, info);
+      return await POST(config, { request });
     case 'DELETE':
-      return await DELETE(config, { request }, info);
+      return await DELETE(config, { request });
     case 'PUT':
-      return await PUT(config, { request }, info);
+      return await PUT(config, { request });
 
     default:
       return new Response('method not allowed', { status: 405 });

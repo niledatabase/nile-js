@@ -43,8 +43,7 @@ import { Config } from '../../../../utils/Config';
 export async function PUT(
   config: Config,
   session: void | ActiveSession,
-  init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  init: RequestInit & { request: Request }
 ) {
   if (!session) {
     return new Response(null, { status: 401 });
@@ -57,8 +56,6 @@ export async function PUT(
   const [userId] = new URL(init.request.url).pathname.split('/').reverse();
 
   const url = apiRoutes(config).USER(userId);
-
-  log('[PUT]', url);
 
   return await fetch(url, init, config);
 }

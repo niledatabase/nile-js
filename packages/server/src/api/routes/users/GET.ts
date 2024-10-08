@@ -37,18 +37,17 @@ import { Config } from '../../../utils/Config';
 export async function GET(
   config: Config,
   init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  log: (message: string | unknown, meta?: Record<string, unknown>) => void
 ) {
   const yurl = new URL(init.request.url);
   const tenantId = yurl.searchParams.get('tenantId');
   const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
 
   if (!tenant) {
-    log('[GET]', '[ERROR]', 'No tenant id provided.');
+    log('[GET] No tenant id provided.');
     return new Response(null, { status: 404 });
   }
   const url = apiRoutes(config).TENANT_USERS(tenant);
-  log('[GET]', url);
   init.method = 'GET';
   return await request(url, init, config);
 }

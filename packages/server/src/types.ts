@@ -22,6 +22,11 @@ export type ServerConfig = {
     cookieKey?: string;
     token?: string; // process.env.NILEDB_TOKEN
   };
+  logger?: {
+    info?: (args: unknown[]) => void;
+    warn?: (args: unknown[]) => void;
+    error?: (args: unknown[]) => void;
+  };
 };
 
 export type NileDb = NilePoolConfig & { tenantId?: string };

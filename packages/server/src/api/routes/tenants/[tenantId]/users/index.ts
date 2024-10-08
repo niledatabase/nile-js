@@ -14,8 +14,7 @@ const key = 'TENANT_USERS';
 export default async function route(request: Request, config: Config) {
   const { info } = Logger(
     { ...config, debug: config.debug } as Config,
-    '[ROUTES]',
-    `[${key}]`
+    `[ROUTES][${key}]`
   );
   const session = await auth(request, config);
 
@@ -23,16 +22,23 @@ export default async function route(request: Request, config: Config) {
     info('401');
     return new Response(null, { status: 401 });
   }
+  const yurl = new URL(request.url);
+  const [, tenantId] = yurl.pathname.split('/').reverse();
+
+  if (!tenantId) {
+    info('No tenant id found in path');
+    return new Response(null, { status: 404 });
+  }
 
   switch (request.method) {
     case 'GET':
-      return await GET(config, { request }, info);
+      return await GET(config, { request });
     case 'POST':
-      return await POST(config, session, { request }, info);
+      return await POST(config, session, { request });
     case 'PUT':
-      return await PUT(config, { request }, info);
+      return await PUT(config, { request });
     case 'DELETE':
-      return await DELETE(config, { request }, info);
+      return await DELETE(config, { request });
 
     default:
       return new Response('method not allowed', { status: 405 });

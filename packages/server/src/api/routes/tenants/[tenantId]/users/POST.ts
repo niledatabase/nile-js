@@ -46,8 +46,7 @@ import { Config } from '../../../../../utils/Config';
 export async function POST(
   config: Config,
   session: ActiveSession,
-  init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  init: RequestInit & { request: Request }
 ) {
   const yurl = new URL(init.request.url);
   const [, tenantId] = yurl.pathname.split('/').reverse();
@@ -56,7 +55,6 @@ export async function POST(
   init.body = JSON.stringify({ email: session.email });
   init.method = 'PUT';
   const url = apiRoutes(config).TENANT_USERS(tenantId);
-  log('[PUT]', url);
 
   return await fetch(url, init, config);
 }

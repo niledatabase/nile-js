@@ -29,7 +29,7 @@ class NileDatabase {
 
     config.db = poolConfig;
     this.config = config;
-    info(this.config.db);
+    info(JSON.stringify(this.config.db));
 
     this.pool = createProxyForPool(new Pool(remaining), this.config);
 
@@ -47,15 +47,21 @@ class NileDatabase {
       afterCreate(client, (err) => {
         const { error } = Logger(config, '[after create callback]');
         if (err) {
-          error('after create failed', err);
+          error('after create failed', {
+            message: err.message,
+            stack: err.stack,
+          });
           evictPool(this.id);
         }
       });
 
       this.startTimeout();
     });
-    this.pool.on('error', async (e) => {
-      info('pool failed', e);
+    this.pool.on('error', async (err) => {
+      info('pool failed', {
+        message: err.message,
+        stack: err.stack,
+      });
       if (this.timer) {
         clearTimeout(this.timer);
       }
@@ -70,15 +76,13 @@ class NileDatabase {
     }
     this.timer = setTimeout(() => {
       info(
-        'Pool reached idleTimeoutMillis.',
-        this.id,
-        'evicted after',
-        Number(this.config.db.idleTimeoutMillis) ?? 30000,
-        'ms'
+        `Pool reached idleTimeoutMillis. ${this.id} evicted after ${
+          Number(this.config.db.idleTimeoutMillis) ?? 30000
+        }ms`
       );
       this.pool.end(() => {
         evictPool(this.id);
-        info('Pool end called for', this.id);
+        info(`Pool end called for ${this.id}`);
         // something odd going on here. Without the callback, pool.end() is flakey
       });
     }, Number(this.config.db.idleTimeoutMillis) ?? 30000);
@@ -91,7 +95,10 @@ function makeAfterCreate(config: Config): AfterCreate {
   const { warn, info } = Logger(config, '[afterCreate]');
   return (conn, done) => {
     conn.on('error', function errorHandler(error: Error) {
-      warn('Connection was terminated by server', error);
+      warn('Connection was terminated by server', {
+        message: error.message,
+        stack: error.stack,
+      });
       done(error, conn);
     });
 
@@ -107,10 +114,10 @@ function makeAfterCreate(config: Config): AfterCreate {
       // in this example we use pg driver's connection API
       conn.query(query.join(';'), function (err: Error) {
         if (query.length === 1) {
-          info('[tenant id]', config.tenantId);
+          info(`[tenant id] ${config.tenantId}`);
         }
         if (query.length === 2) {
-          info('[user id]', config.userId);
+          info(`[user id] ${config.userId}`);
         }
         done(err, conn);
       });

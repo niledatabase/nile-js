@@ -38,8 +38,7 @@ import { apiRoutes } from '../../../utils/routes/apiRoutes';
  */
 export async function PUT(
   config: Config,
-  init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  init: RequestInit & { request: Request }
 ) {
   const yurl = new URL(init.request.url);
   const [tenantId] = yurl.pathname.split('/').reverse();
@@ -49,7 +48,6 @@ export async function PUT(
   init.body = init.request.body;
   init.method = 'PUT';
   const url = `${apiRoutes(config).TENANT(tenantId)}`;
-  log('[PUT]', url);
 
   return await fetch(url, init, config);
 }

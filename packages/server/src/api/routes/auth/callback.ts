@@ -10,8 +10,7 @@ const key = 'CALLBACK';
 export default async function route(request: Request, config: Config) {
   const { error } = Logger(
     { ...config, debug: config.debug } as Config,
-    '[ROUTES]',
-    `[${key}]`
+    `[ROUTES][${key}]`
   );
   const [provider] = new URL(request.url).pathname.split('/').reverse();
   const passThroughUrl = new URL(request.url);

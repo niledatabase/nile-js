@@ -1,5 +1,5 @@
 import { Config } from '../../../../utils/Config';
-import fetch from '../../../utils/request';
+import request from '../../../utils/request';
 import { apiRoutes } from '../../../utils/routes/apiRoutes';
 
 /**
@@ -38,17 +38,17 @@ import { apiRoutes } from '../../../utils/routes/apiRoutes';
 export async function GET(
   config: Config,
   init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  log: (message: string | unknown, meta?: Record<string, unknown>) => void
 ) {
   const yurl = new URL(init.request.url);
   const [tenantId] = yurl.pathname.split('/').reverse();
   if (!tenantId) {
+    log('[GET] No tenant id provided.');
     return new Response(null, { status: 404 });
   }
 
   init.method = 'GET';
   const url = `${apiRoutes(config).TENANT(tenantId)}`;
-  log('[GET]', url);
 
-  return await fetch(url, init, config);
+  return await request(url, init, config);
 }

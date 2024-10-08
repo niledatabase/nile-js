@@ -34,14 +34,12 @@ import { apiRoutes } from '../../utils/routes/apiRoutes';
 export async function GET(
   config: Config,
   session: ActiveSession,
-  init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  init: RequestInit & { request: Request }
 ) {
   let url = `${apiRoutes(config).USER_TENANTS(session.id)}`;
   if (typeof session === 'object' && 'user' in session && session.user) {
     url = `${apiRoutes(config).USER_TENANTS(session.user.id)}`;
   }
-  log('[GET]', url);
 
   const res = await request(url, init, config);
   return res;

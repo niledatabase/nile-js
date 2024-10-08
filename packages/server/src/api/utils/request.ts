@@ -20,15 +20,21 @@ export default async function request(
     params.duplex = 'half';
   }
 
-  info(`[${params.method ?? 'GET'}]`, url);
   const res = await fetch(url, { ...params }).catch((e) => {
-    error('An error has occurred in the fetch', e);
+    error('An error has occurred in the fetch', {
+      message: e.message,
+      stack: e.stack,
+    });
     return new Response(
       'An unexpected (most likely configuration) problem has occurred',
       { status: 500 }
     );
   });
   const loggingRes = typeof res?.clone === 'function' ? res?.clone() : null;
-  info('[Response]', res?.status, res?.statusText, await loggingRes?.text());
+  info(`[${params.method ?? 'GET'}] ${url}`, {
+    status: res?.status,
+    statusText: res?.statusText,
+    text: await loggingRes?.text(),
+  });
   return res;
 }

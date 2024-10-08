@@ -13,8 +13,7 @@ const key = 'USERS';
 export default async function route(request: Request, config: Config) {
   const { info } = Logger(
     { ...config, debug: config.debug } as Config,
-    '[ROUTES]',
-    `[${key}]`
+    `[ROUTES][${key}]`
   );
   const session = await auth(request, config);
 
@@ -22,9 +21,9 @@ export default async function route(request: Request, config: Config) {
     case 'GET':
       return await GET(config, { request }, info);
     case 'POST':
-      return await POST(config, { request }, info);
+      return await POST(config, { request });
     case 'PUT':
-      return await PUT(config, session, { request }, info);
+      return await PUT(config, session, { request });
 
     default:
       return new Response('method not allowed', { status: 405 });

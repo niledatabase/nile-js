@@ -67,8 +67,7 @@ import { Config } from '../../../utils/Config';
 
 export async function POST(
   config: Config,
-  init: RequestInit & { request: Request },
-  log?: (...args: string[]) => void
+  init: RequestInit & { request: Request }
 ) {
   init.body = init.request.body;
   init.method = 'POST';
@@ -77,7 +76,6 @@ export async function POST(
   const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
 
   const url = apiRoutes(config).USERS(tenant ? tenant : undefined);
-  log && log('[POST]', url);
 
   return await request(url, init, config);
 }

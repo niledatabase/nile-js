@@ -23,7 +23,7 @@ export default async function auth(
   info('checking auth');
 
   const sessionUrl = `${config.api.basePath}/auth/session`;
-  info('using session', sessionUrl);
+  info(`using session${sessionUrl}`);
   // handle the pass through with posts
   req.headers.delete('content-length');
 
