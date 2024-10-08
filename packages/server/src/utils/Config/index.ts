@@ -161,7 +161,7 @@ export class Config {
         database: this.databaseName,
         ...dbConfig,
       };
-      info('[config set]', this);
+      info('[config set]', { db: this.db, api: this.api });
       return this;
     }
 
@@ -172,7 +172,7 @@ export class Config {
     if (databaseName) {
       url.searchParams.set('databaseName', databaseName);
     }
-    info('configuring from', url.href);
+    info(`configuring from ${url.href}`);
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${getInfoBearer({ config })}`,
@@ -229,7 +229,7 @@ export class Config {
       database: this.databaseName,
       ...dbConfig,
     };
-    info('[config set]', this);
+    info('[config set]', { db: this.db, api: this.api });
     return this;
   };
 }

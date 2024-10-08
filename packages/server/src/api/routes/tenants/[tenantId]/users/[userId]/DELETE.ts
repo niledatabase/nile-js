@@ -31,20 +31,15 @@ import { Config } from '../../../../../../utils/Config';
 
 export async function DELETE(
   config: Config,
-  init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  init: RequestInit & { request: Request }
 ) {
   const yurl = new URL(init.request.url);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userId, _, tenantId] = yurl.pathname.split('/').reverse();
-  if (!tenantId) {
-    return new Response(null, { status: 404 });
-  }
 
   init.method = 'DELETE';
   init.body = JSON.stringify({ email: userId });
   const url = `${apiRoutes(config).TENANT_USER(tenantId, userId)}`;
-  log('[DELETE]', url);
 
   return await fetch(url, init, config);
 }

@@ -25,7 +25,7 @@ export function createProxyForPool(pool: Pool, config: Config): Pool {
         }
         const caller = target[property];
         return function query(...args: AllowAny) {
-          info(...args);
+          info('query', ...args);
           // @ts-expect-error - not mine
           const called = caller.apply(this, args);
           return called;

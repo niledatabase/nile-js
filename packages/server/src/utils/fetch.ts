@@ -97,21 +97,21 @@ export async function _fetch(
     .replace('{tenantId}', encodeURIComponent(String(tenantId)))
     .replace('{userId}', encodeURIComponent(String(userId)));
 
-  info('[fetch]', useableUrl);
+  info(`[fetch] ${useableUrl}`);
 
   const response = await fetch(useableUrl, {
     ...opts,
     headers: basicHeaders,
   }).catch((e) => {
-    error('[fetch]', '[response]', e);
+    error('[fetch][response]', { message: e.message, stack: e.stack });
   });
 
   if (response && response.status >= 200 && response.status < 300) {
     if (typeof response.clone === 'function') {
       try {
-        info('[fetch]', '[response]', await response.clone().json());
+        info(`[fetch][response] ${await response.clone().json()}`);
       } catch (e) {
-        info('[fetch]', '[response]', await response.clone().text());
+        info(`[fetch][response] ${await response.clone().text()}`, { e });
       }
     }
     return response;
@@ -136,11 +136,13 @@ export async function _fetch(
     if (errorHandler) {
       msg = await errorHandler.text();
       if (msg) {
-        error('[fetch]', '[response]', `[status: ${errorHandler.status}]`, msg);
+        error(`[fetch][response] status: ${errorHandler.status}]`, {
+          message: msg,
+        });
       }
     }
     if (!msg) {
-      error('[fetch]', '[response]', e);
+      error('[fetch][response]', { e });
     }
   }
   if (msg) {
@@ -149,32 +151,19 @@ export async function _fetch(
 
   if (res && 'message' in res) {
     const { message } = res;
-    error(
-      '[fetch]',
-      '[response]',
-      `[status: ${errorHandler?.status}]`,
-      message
-    );
+    error(`[fetch][response] status: ${errorHandler?.status}] ${message}`);
     return new ResponseError(message, { status: 400 });
   }
   if (res && 'errors' in res) {
     const {
       errors: [message],
     } = res;
-    error(
-      '[fetch]',
-      '[response]',
-      `[status: ${errorHandler?.status}]`,
-      message
-    );
+    error(`[fetch][response] status: ${errorHandler?.status}] ${message}`);
     return new ResponseError(message, { status: 400 });
   }
-  error(
-    '[fetch]',
-    '[response]',
-    `[status: ${errorHandler?.status}]`,
-    'UNHANDLED ERROR'
-  );
+  error(`[fetch][response] status: ${errorHandler?.status}] UNHANDLED ERROR`, {
+    res,
+  });
   return new ResponseError(null, {
     status: (response as Response)?.status ?? 500,
   });

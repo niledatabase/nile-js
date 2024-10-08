@@ -29,7 +29,7 @@ export default function serverAuth(
       throw new Error('Server side login requires a user email and password.');
     }
 
-    info('Obtaining providers for', email);
+    info(`Obtaining providers for ${email}`);
     const sessionUrl = new URL(`${ORIGIN}${routes.PROVIDERS}`);
     const sessionReq = new Request(sessionUrl, {
       method: 'GET',
@@ -47,7 +47,7 @@ export default function serverAuth(
     try {
       providers = await sessionRes?.json();
     } catch (e) {
-      info(sessionUrl, sessionRes);
+      info(sessionUrl, { sessionRes });
       error(e);
     }
 
@@ -65,8 +65,8 @@ export default function serverAuth(
       const json = (await csrfRes?.json()) ?? {};
       csrfToken = json?.csrfToken;
     } catch (e) {
-      info(sessionUrl, csrfRes);
-      error(e, csrfRes);
+      info(sessionUrl, { csrfRes });
+      error(e, { csrfRes });
     }
 
     const { credentials } = providers ?? {};
@@ -83,7 +83,7 @@ export default function serverAuth(
     if (!csrfCookie) {
       throw new Error('Unable to authenticate REST');
     }
-    info('Attempting sign in with email', email);
+    info(`Attempting sign in with email ${email}`);
     const postReq = new Request(signInUrl, {
       method: 'POST',
       headers: new Headers({
@@ -106,7 +106,7 @@ export default function serverAuth(
     if (!token) {
       throw new Error('Server login failed');
     }
-    info('Server login successful', authCookie, csrfCookie);
+    info('Server login successful', { authCookie, csrfCookie });
     return new Headers({
       cookie: [token, csrfCookie].join('; '),
     });

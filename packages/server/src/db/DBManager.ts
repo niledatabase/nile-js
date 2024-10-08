@@ -31,12 +31,12 @@ export default class DBManager {
     watchEvictPool(this.poolWatcherFn);
   }
   poolWatcher = (config: ServerConfig) => (id: undefined | null | string) => {
-    const { info } = Logger(config, '[DBManager]');
+    const { info, warn } = Logger(config, '[DBManager]');
     if (id && this.connections.has(id)) {
-      info('Removing', id, 'from db connection pool.');
+      info(`Removing ${id} from db connection pool.`);
       this.connections.delete(id);
     } else {
-      info('missed eviction of', id);
+      warn(`missed eviction of ${id}`);
     }
   };
 
@@ -45,16 +45,16 @@ export default class DBManager {
     const id = this.makeId(config.tenantId, config.userId);
 
     const existing = this.connections.get(id);
-    info('# of instances:', this.connections.size);
+    info(`# of instances: ${this.connections.size}`);
     if (existing) {
-      info('returning existing', id);
+      info(`returning existing ${id}`);
       existing.startTimeout();
       return existing.pool;
     }
     const newOne = new NileDatabase(new Config(config), id);
     this.connections.set(id, newOne);
-    info('created new', id);
-    info('# of instances:', this.connections.size);
+    info(`created new ${id}`);
+    info(`# of instances: ${this.connections.size}`);
     if (this.cleared) {
       this.cleared = false;
     }
@@ -63,7 +63,7 @@ export default class DBManager {
 
   clear = (config: ServerConfig) => {
     const { info } = Logger(config, '[DBManager]');
-    info('Clearing all connections', this.connections.size);
+    info(`Clearing all connections ${this.connections.size}`);
     this.cleared = true;
     this.connections.clear();
   };

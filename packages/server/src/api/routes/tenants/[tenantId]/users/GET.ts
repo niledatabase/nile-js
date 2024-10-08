@@ -35,16 +35,11 @@ import request from '../../../../utils/request';
  */
 export async function GET(
   config: Config,
-  init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  init: RequestInit & { request: Request }
 ) {
   const yurl = new URL(init.request.url);
   const [, tenantId] = yurl.pathname.split('/').reverse();
-  if (!tenantId) {
-    return new Response(null, { status: 404 });
-  }
 
   const url = `${apiRoutes(config).TENANT_USERS(tenantId)}`;
-  log('[GET]', '[TENANT_USERS]', url);
   return await request(url, init, config);
 }

@@ -45,13 +45,11 @@ import { apiRoutes } from '../../utils/routes/apiRoutes';
  */
 export async function POST(
   config: Config,
-  init: RequestInit & { request: Request },
-  log: (...args: string[]) => void
+  init: RequestInit & { request: Request }
 ) {
   init.body = init.request.body;
   init.method = 'POST';
   const url = `${apiRoutes(config).TENANTS}`;
-  log('[POST]', url);
 
   return await request(url, init, config);
 }
