@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.21](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.20...v3.0.0-alpha.21) (2024-10-09)
+
+### Bug Fixes
+
+- **server:** also find tokens in secure cookies ([9bd4c52](https://github.com/niledatabase/nile-js/commit/9bd4c52b89b5bb8eb0704979e321eebe81f5369e))
+- **server:** fix tests ([5af03ab](https://github.com/niledatabase/nile-js/commit/5af03abcb46e7b080d1dc20120ad66637c34cb2b))
+
 # [3.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.19...v3.0.0-alpha.20) (2024-10-08)
 
 ### Bug Fixes
