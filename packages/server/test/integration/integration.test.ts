@@ -127,11 +127,18 @@ describe.skip('api integration', () => {
       email: String(process.env.EMAIL),
       password: String(process.env.PASSWORD),
     });
-    nile.tenantId = tenantId;
+    const tenants = await nile.api.tenants.listTenants();
 
-    const tenantUsers = await nile.api.users.listUsers();
+    if (Array.isArray(tenants)) {
+      nile.tenantId = tenants[0].id;
+    }
+
     const users = await nile.api.users.listUsers();
-    expect(users).toEqual(tenantUsers);
+    if (Array.isArray(users)) {
+      expect(users.length).toEqual(1);
+    } else {
+      throw Error('no users');
+    }
   });
 });
 

@@ -109,7 +109,9 @@ export async function _fetch(
   if (response && response.status >= 200 && response.status < 300) {
     if (typeof response.clone === 'function') {
       try {
-        info(`[fetch][response] ${await response.clone().json()}`);
+        info(
+          `[fetch][response] ${JSON.stringify(await response.clone().json())}`
+        );
       } catch (e) {
         info(`[fetch][response] ${await response.clone().text()}`, { e });
       }
