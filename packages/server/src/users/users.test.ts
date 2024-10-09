@@ -18,6 +18,7 @@ const baseConfig = [
   'debug',
   'configure',
   'updateUser',
+  'logger',
   'routePrefix',
   'routes',
   'tenantUsersDeleteUrl',
