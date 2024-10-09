@@ -13,6 +13,7 @@ const baseConfig = [
   'routePrefix',
   'routes',
   'debug',
+  'logger',
   'databaseId',
   'databaseName',
   'user',
