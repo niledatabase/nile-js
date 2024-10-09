@@ -1,4 +1,9 @@
-import { Database, NilePoolConfig, ServerConfig } from '../../types';
+import {
+  Database,
+  LoggerType,
+  NilePoolConfig,
+  ServerConfig,
+} from '../../types';
 import Logger from '../Logger';
 
 import {
@@ -64,6 +69,7 @@ export class Config {
   databaseName: string;
   routePrefix?: string;
   routes?: ConfigRoutes;
+  logger?: LoggerType;
 
   debug: boolean;
 
@@ -93,6 +99,7 @@ export class Config {
   constructor(config?: ServerConfig, logger?: string) {
     const envVarConfig: EnvConfig = { config, logger };
     this.user = getUsername(envVarConfig) as string;
+    this.logger = config?.logger;
     this.password = getPassword(envVarConfig) as string;
     if (process.env.NODE_ENV !== 'TEST') {
       if (!this.user) {
@@ -136,7 +143,7 @@ export class Config {
   }
 
   configure = async (config: ServerConfig): Promise<Config> => {
-    const { info, error } = Logger(config, '[init]');
+    const { info, error, debug } = Logger(config, '[init]');
 
     const envVarConfig: EnvConfig = {
       config,
@@ -192,6 +199,7 @@ export class Config {
       }
     } catch (e) {
       const message = await possibleError.text();
+      debug('Unable to auto-configure');
       error(message);
       database = { message } as Database;
     }
