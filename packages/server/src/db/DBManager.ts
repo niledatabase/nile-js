@@ -34,6 +34,8 @@ export default class DBManager {
     const { info, warn } = Logger(config, '[DBManager]');
     if (id && this.connections.has(id)) {
       info(`Removing ${id} from db connection pool.`);
+      const connection = this.connections.get(id);
+      connection?.shutdown();
       this.connections.delete(id);
     } else {
       warn(`missed eviction of ${id}`);

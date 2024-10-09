@@ -3,7 +3,7 @@ import { Config } from '../utils/Config';
 import Logger from '../utils/Logger';
 
 // url host does not matter, we only match on the 1st leg by path
-const ORIGIN = 'http://localhost';
+const ORIGIN = 'https://us-west-2.api.dev.thenile.dev';
 /**
  * a helper function to log in server side.
  */
@@ -29,13 +29,15 @@ export default function serverAuth(
       throw new Error('Server side login requires a user email and password.');
     }
 
-    info(`Obtaining providers for ${email}`);
     const sessionUrl = new URL(`${ORIGIN}${routes.PROVIDERS}`);
+    const baseHeaders = {
+      host: sessionUrl.host,
+      'niledb-origin': ORIGIN,
+    };
+    info(`Obtaining providers for ${email}`);
     const sessionReq = new Request(sessionUrl, {
       method: 'GET',
-      headers: new Headers({
-        host: sessionUrl.host,
-      }),
+      ...baseHeaders,
     });
     const sessionRes = await handlers.POST(sessionReq);
 
@@ -56,7 +58,7 @@ export default function serverAuth(
     const csrfReq = new Request(csrf, {
       method: 'GET',
       headers: new Headers({
-        host: sessionUrl.host,
+        ...baseHeaders,
       }),
     });
     const csrfRes = await handlers.POST(csrfReq);
@@ -89,6 +91,7 @@ export default function serverAuth(
       headers: new Headers({
         'content-type': 'application/json',
         cookie: csrfCookie,
+        ...baseHeaders,
       }),
       body: JSON.stringify({
         email,
@@ -102,13 +105,15 @@ export default function serverAuth(
     if (!authCookie) {
       throw new Error('authentication failed');
     }
-    const [, token] = /(nile\.session-token=.+?);/.exec(authCookie) ?? [];
+    const [, token] =
+      /((__Secure-)?nile\.session-token=.+?);/.exec(authCookie) ?? [];
     if (!token) {
       throw new Error('Server login failed');
     }
     info('Server login successful', { authCookie, csrfCookie });
     return new Headers({
       cookie: [token, csrfCookie].join('; '),
+      ...baseHeaders,
     });
   };
 }
