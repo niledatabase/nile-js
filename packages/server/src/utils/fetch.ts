@@ -66,7 +66,7 @@ export async function _fetch(
   path: string,
   opts?: RequestInit
 ): Promise<Response | ResponseError> {
-  const { info, error } = Logger(config, '[server]');
+  const { debug, error } = Logger(config, '[server]');
 
   const url = `${config.api?.basePath}${path}`;
   const cookieKey = config.api?.cookieKey;
@@ -74,6 +74,7 @@ export async function _fetch(
   const basicHeaders = new Headers(opts?.headers);
   basicHeaders.set('content-type', 'application/json; charset=utf-8');
 
+  // this is old, but still maybe something worth keeping.
   const authHeader = headers.get('Authorization');
   if (!authHeader) {
     const token = getTokenFromCookie(headers, cookieKey);
@@ -97,7 +98,7 @@ export async function _fetch(
     .replace('{tenantId}', encodeURIComponent(String(tenantId)))
     .replace('{userId}', encodeURIComponent(String(userId)));
 
-  info(`[fetch] ${useableUrl}`);
+  debug(`[fetch] ${useableUrl}`);
 
   const response = await fetch(useableUrl, {
     ...opts,
@@ -109,11 +110,23 @@ export async function _fetch(
   if (response && response.status >= 200 && response.status < 300) {
     if (typeof response.clone === 'function') {
       try {
-        info(
-          `[fetch][response] ${JSON.stringify(await response.clone().json())}`
+        debug(
+          `[fetch][response][${opts?.method ?? 'GET'}] ${
+            response.status
+          } ${useableUrl}`,
+          {
+            body: await response.clone().json(),
+          }
         );
       } catch (e) {
-        info(`[fetch][response] ${await response.clone().text()}`, { e });
+        debug(
+          `[fetch][response][${opts?.method ?? 'GET'}] ${
+            response.status
+          } ${useableUrl}`,
+          {
+            body: await response.clone().text(),
+          }
+        );
       }
     }
     return response;
