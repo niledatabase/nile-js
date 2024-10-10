@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.23](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.22...v3.0.0-alpha.23) (2024-10-10)
+
+### Bug Fixes
+
+- **server:** keep a single API instance ([1cd5eab](https://github.com/niledatabase/nile-js/commit/1cd5eab252dd9557cb5baa21736374432509d3fb))
+
 # [3.0.0-alpha.22](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.21...v3.0.0-alpha.22) (2024-10-09)
 
 ### Bug Fixes
