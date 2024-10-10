@@ -40,7 +40,6 @@ export class Server {
     });
     this.setConfig(updatedConfig);
 
-    this.api = new Api(this.config);
     return this;
   }
 
