@@ -16,7 +16,7 @@ export default function serverAuth(
     PUT: (req: Request) => Promise<void | Response>;
   }
 ) {
-  const { info, error } = Logger(config, '[server side login]');
+  const { info, error, debug } = Logger(config, '[server side login]');
   const routes = appRoutes(config.routePrefix);
   return async function login({
     email,
@@ -83,23 +83,26 @@ export default function serverAuth(
     const signInUrl = new URL(credentials.callbackUrl);
 
     if (!csrfCookie) {
-      throw new Error('Unable to authenticate REST');
+      debug('CSRF failed', { headers: csrfRes?.headers });
+      throw new Error('Unable to authenticate REST, CSRF missing.');
     }
-    info(`Attempting sign in with email ${email}`);
+    info(`Attempting sign in with email ${email} ${signInUrl.href}`);
+    const body = JSON.stringify({
+      email,
+      password,
+      csrfToken,
+      callbackUrl: credentials.callbackUrl,
+    });
     const postReq = new Request(signInUrl, {
       method: 'POST',
       headers: new Headers({
-        'content-type': 'application/json',
-        cookie: csrfCookie,
         ...baseHeaders,
+        'content-type': 'application/json',
+        cookie: csrfCookie.split(',').join('; '),
       }),
-      body: JSON.stringify({
-        email,
-        password,
-        csrfToken,
-        callbackUrl: credentials.callbackUrl,
-      }),
+      body,
     });
+
     const loginRes = await handlers.POST(postReq);
     const authCookie = loginRes?.headers.get('set-cookie');
     if (!authCookie) {
@@ -108,12 +111,14 @@ export default function serverAuth(
     const [, token] =
       /((__Secure-)?nile\.session-token=.+?);/.exec(authCookie) ?? [];
     if (!token) {
+      error('Unable to obtain auth token', { authCookie });
       throw new Error('Server login failed');
     }
     info('Server login successful', { authCookie, csrfCookie });
-    return new Headers({
-      cookie: [token, csrfCookie].join('; '),
+    const headers = new Headers({
       ...baseHeaders,
+      cookie: [token, csrfCookie].join('; '),
     });
+    return headers;
   };
 }

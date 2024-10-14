@@ -20,21 +20,34 @@ export default async function request(
     params.duplex = 'half';
   }
 
-  const res = await fetch(url, { ...params }).catch((e) => {
-    error('An error has occurred in the fetch', {
-      message: e.message,
-      stack: e.stack,
+  try {
+    const res = await fetch(url, { ...params }).catch((e) => {
+      error('An error has occurred in the fetch', {
+        message: e.message,
+        stack: e.stack,
+      });
+      return new Response(
+        'An unexpected (most likely configuration) problem has occurred',
+        { status: 500 }
+      );
     });
+    const loggingRes = typeof res?.clone === 'function' ? res?.clone() : null;
+    info(`[${params.method ?? 'GET'}] ${url}`, {
+      status: res?.status,
+      statusText: res?.statusText,
+      text: await loggingRes?.text(),
+    });
+    return res;
+  } catch (e) {
+    if (e instanceof Error) {
+      error('An error has occurred in the fetch', {
+        message: e.message,
+        stack: e.stack,
+      });
+    }
     return new Response(
       'An unexpected (most likely configuration) problem has occurred',
       { status: 500 }
     );
-  });
-  const loggingRes = typeof res?.clone === 'function' ? res?.clone() : null;
-  info(`[${params.method ?? 'GET'}] ${url}`, {
-    status: res?.status,
-    statusText: res?.statusText,
-    text: await loggingRes?.text(),
-  });
-  return res;
+  }
 }
