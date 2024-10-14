@@ -184,7 +184,12 @@ export class Config {
       headers: {
         Authorization: `Bearer ${getInfoBearer({ config })}`,
       },
+    }).catch(() => {
+      error(`Unable to auto-configure. is ${url} available?`);
     });
+    if (!res) {
+      return this;
+    }
     let database: Database;
     const possibleError = res.clone();
     try {
