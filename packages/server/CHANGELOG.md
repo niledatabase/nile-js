@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.24](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.23...v3.0.0-alpha.24) (2024-10-14)
+
+### Bug Fixes
+
+- **server:** split the set-cookie header correctly ([7588125](https://github.com/niledatabase/nile-js/commit/7588125f7518fdfac2bff3a80e99d911e2216e24))
+
 # [3.0.0-alpha.23](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.22...v3.0.0-alpha.23) (2024-10-10)
 
 ### Bug Fixes
