@@ -28,6 +28,11 @@ export class Api {
     this.handlers = Handlers(this.routes, config);
   }
 
+  updateConfig(config: Config) {
+    this.config = config;
+    this.handlers = Handlers(this.routes, config);
+  }
+
   set headers(headers: Headers) {
     this.users = new Users(this.config, headers);
     this.tenants = new Tenants(this.config, headers);
