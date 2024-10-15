@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.25](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.24...v3.0.0-alpha.25) (2024-10-15)
+
+### Bug Fixes
+
+- **server:** use hostname not host, evict on release ([49e7c7e](https://github.com/niledatabase/nile-js/commit/49e7c7e084625813dc6c682628cd8db1f368134d))
+
 # [3.0.0-alpha.24](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.23...v3.0.0-alpha.24) (2024-10-14)
 
 ### Bug Fixes
