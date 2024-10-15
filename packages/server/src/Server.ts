@@ -31,6 +31,7 @@ export class Server {
 
   setConfig(cfg: Config) {
     this.config = new Config(cfg);
+    this.api.updateConfig(this.config);
   }
 
   async init(cfg?: Config) {
@@ -121,6 +122,9 @@ let server: Server;
 export async function create(config?: ServerConfig): Promise<Server> {
   if (!server) {
     server = new Server(config);
+  }
+  if (config) {
+    return await server.init(new Config(config));
   }
   return await server.init();
 }
