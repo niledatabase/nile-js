@@ -153,8 +153,8 @@ export function getDbHost(cfg: EnvConfig) {
 
   if (process.env.NILEDB_POSTGRES_URL) {
     const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
-    logger && info(`${logger}[NILEDB_POSTGRES_URL] ${pgUrl.host}`);
-    return pgUrl.host;
+    logger && info(`${logger}[NILEDB_POSTGRES_URL] ${pgUrl.hostname}`);
+    return pgUrl.hostname;
   }
 
   if (process.env.NILEDB_HOST) {
