@@ -226,7 +226,7 @@ export class Config {
         this.databaseId = id;
         this.databaseName = name;
         const dburl = new URL(dbHost);
-        configuredHost = dburl.host;
+        configuredHost = dburl.hostname;
       }
     }
     this.api = new ApiConfig({

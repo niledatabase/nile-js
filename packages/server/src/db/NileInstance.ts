@@ -29,7 +29,7 @@ class NileDatabase {
 
     config.db = poolConfig;
     this.config = config;
-    debug(JSON.stringify(this.config.db));
+    debug(`Connection pool config ${JSON.stringify(this.config.db)}`);
 
     this.pool = createProxyForPool(new Pool(remaining), this.config);
 
@@ -42,7 +42,7 @@ class NileDatabase {
     // start the timer for cleanup
     this.startTimeout();
     this.pool.on('connect', async (client) => {
-      debug('pool connected');
+      debug(`pool connected ${this.id}`);
       this.startTimeout();
       const afterCreate: AfterCreate = makeAfterCreate(
         config,
@@ -67,6 +67,13 @@ class NileDatabase {
         stack: err.stack,
       });
       evictPool(this.id);
+    });
+    this.pool.on('release', (destroy) => {
+      if (destroy) {
+        clearTimeout(this.timer);
+        evictPool(this.id);
+        debug(`destroying pool ${this.id}`);
+      }
     });
   }
 
@@ -121,14 +128,6 @@ function makeAfterCreate(config: Config, id: string): AfterCreate {
 
       // in this example we use pg driver's connection API
       conn.query(query.join(';'), function (err: Error) {
-        if (query.length === 1) {
-          debug(`connection context set: tenantId=${config.tenantId}`);
-        }
-        if (query.length === 2) {
-          debug(
-            `connection context set: tenantId=${config.tenantId} userId=${config.userId}`
-          );
-        }
         if (err) {
           error('query connection failed', {
             cause: err.cause,
@@ -137,7 +136,17 @@ function makeAfterCreate(config: Config, id: string): AfterCreate {
             name: err.name,
             id,
           });
+        } else {
+          if (query.length === 1) {
+            debug(`connection context set: tenantId=${config.tenantId}`);
+          }
+          if (query.length === 2) {
+            debug(
+              `connection context set: tenantId=${config.tenantId} userId=${config.userId}`
+            );
+          }
         }
+
         done(err, conn);
       });
     }
