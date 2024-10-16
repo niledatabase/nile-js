@@ -3,16 +3,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  FormDescription,
-} from '../../components/ui/form';
-import { Input } from '../../components/ui/input';
+import { Email, Form, Password } from '../../components/ui/form';
 import { Button } from '../../components/ui/button';
 
 import { Props } from './types';
@@ -40,47 +31,8 @@ export function SignInForm(props: Props) {
         )}
         className="space-y-8"
       >
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Email"
-                    {...field}
-                    autoComplete="current-email"
-                  />
-                </FormControl>
-                <FormDescription>Your email address.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Password"
-                    {...field}
-                    type="password"
-                    autoComplete="current-password"
-                  />
-                </FormControl>
-                <FormDescription>Your password.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
+        <Email />
+        <Password />
         <Button>Sign up</Button>
       </form>
     </Form>

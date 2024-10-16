@@ -13,6 +13,7 @@ import {
 import { cn } from '../../lib/utils';
 
 import { Label } from './label';
+import { Input } from './input';
 
 const Form = FormProvider;
 
@@ -168,6 +169,59 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = 'FormMessage';
 
+const Email = () => {
+  const form = useFormContext();
+  return (
+    <FormField
+      control={form.control}
+      name="email"
+      render={({ field }) => {
+        return (
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input
+                placeholder="Email"
+                {...field}
+                autoComplete="current-email"
+              />
+            </FormControl>
+            <FormDescription>Your email address</FormDescription>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
+  );
+};
+
+const Password = () => {
+  const form = useFormContext();
+  return (
+    <FormField
+      control={form.control}
+      name="password"
+      render={({ field }) => {
+        return (
+          <FormItem>
+            <FormLabel>Password</FormLabel>
+            <FormControl>
+              <Input
+                placeholder="Password"
+                {...field}
+                type="password"
+                autoComplete="current-password"
+              />
+            </FormControl>
+            <FormDescription>The desired password</FormDescription>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
+  );
+};
+
 export {
   useFormField,
   Form,
@@ -177,4 +231,6 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  Email,
+  Password,
 };
