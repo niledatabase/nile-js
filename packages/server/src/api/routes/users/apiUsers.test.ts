@@ -38,6 +38,26 @@ describe('users route', () => {
       expect.objectContaining({})
     );
   });
+
+  it('should post to v2 users with tenantId and newTenantName', async () => {
+    const _res = new Request(
+      'http://thenile.dev?tenantId=123&newTenantName=456',
+      { method: 'POST' }
+    );
+    await route(
+      _res,
+      new Config({
+        api: {
+          basePath: 'http://thenile.dev/v2/databases/testdb',
+        },
+      })
+    );
+    expect(utilRequest).toHaveBeenCalledWith(
+      'http://thenile.dev/v2/databases/testdb/users?tenantId=123&newTenantName=456',
+      expect.objectContaining({ method: 'POST' }),
+      expect.objectContaining({})
+    );
+  });
   it('should GET to v2 tenant users with params', async () => {
     const _res = new Request('http://localhost:3000?tenantId=123', {});
     await route(
