@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.28](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.27...v3.0.0-alpha.28) (2024-10-16)
+
+### Bug Fixes
+
+- **server:** pass query params along ([3a450a8](https://github.com/niledatabase/nile-js/commit/3a450a82b9e66ce69db9c0ee6c6c58d7dfde9c7c))
+
 # [3.0.0-alpha.27](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.26...v3.0.0-alpha.27) (2024-10-16)
 
 ### Bug Fixes
