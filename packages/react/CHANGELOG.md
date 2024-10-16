@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.27](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.26...v3.0.0-alpha.27) (2024-10-16)
+
+### Bug Fixes
+
+- **react:** support qps for sign up ([aef23b7](https://github.com/niledatabase/nile-js/commit/aef23b7ccd550fd8fc9502c1cd4ff526f40a1e91))
+
 # [3.0.0-alpha.26](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.25...v3.0.0-alpha.26) (2024-10-15)
 
 **Note:** Version bump only for package @niledatabase/react
