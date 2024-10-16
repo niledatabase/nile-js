@@ -1,7 +1,7 @@
 import { CreateBasicUserRequest } from '@niledatabase/browser';
 import { QueryClient } from '@tanstack/react-query';
 
-export type SignUpInfo = CreateBasicUserRequest;
+export type SignUpInfo = CreateBasicUserRequest & { tenantId?: string };
 type SignInSuccess = (response: Response, formValues: SignUpInfo) => void;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
