@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.31](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.30...v3.0.0-alpha.31) (2024-10-17)
+
+### Bug Fixes
+
+- **server:** export more types ([bbe9b41](https://github.com/niledatabase/nile-js/commit/bbe9b41ddf16f11bc54b1e40f605497bd42f2bec))
+
 # [3.0.0-alpha.30](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.29...v3.0.0-alpha.30) (2024-10-17)
 
 ### Bug Fixes
