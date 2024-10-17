@@ -1,13 +1,15 @@
+import { ActiveSession, JWT } from '../api/utils/auth';
 import { appRoutes } from '../api/utils/routes/defaultRoutes';
 import { Config } from '../utils/Config';
 import Logger from '../utils/Logger';
+import Requester, { NileRequest } from '../utils/Requester';
 
 // url host does not matter, we only match on the 1st leg by path
 const ORIGIN = 'https://us-west-2.api.dev.thenile.dev';
 /**
  * a helper function to log in server side.
  */
-export default function serverAuth(
+export function serverLogin(
   config: Config,
   handlers: {
     GET: (req: Request) => Promise<void | Response>;
@@ -120,5 +122,39 @@ export default function serverAuth(
       cookie: [token, csrfCookie].join('; '),
     });
     return headers;
+  };
+}
+
+export default class Auth extends Config {
+  headers?: Headers;
+  constructor(config: Config, headers?: Headers) {
+    super(config);
+    this.headers = headers;
+  }
+  handleHeaders(init?: RequestInit) {
+    if (this.headers) {
+      if (init) {
+        init.headers = new Headers({ ...this.headers, ...init?.headers });
+        return init;
+      } else {
+        init = {
+          headers: this.headers,
+        };
+        return init;
+      }
+    }
+    return undefined;
+  }
+
+  get sessionUrl() {
+    return '/auth/session';
+  }
+  session = async (
+    req: NileRequest<void> | Headers,
+    init?: RequestInit
+  ): Promise<Response | JWT | ActiveSession> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return await _requester.get(req, this.sessionUrl, _init);
   };
 }
