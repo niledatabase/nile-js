@@ -1,10 +1,7 @@
 import { Config } from '../utils/Config';
 import Requester, { NileRequest } from '../utils/Requester';
 
-export interface Tenant {
-  id: string;
-  name?: string;
-}
+import { Tenant } from './types';
 
 export default class Tenants extends Config {
   headers?: Headers;
