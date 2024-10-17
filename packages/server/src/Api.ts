@@ -38,6 +38,7 @@ export class Api {
   set headers(headers: Headers) {
     this.users = new Users(this.config, headers);
     this.tenants = new Tenants(this.config, headers);
+    this.auth = new Auth(this.config, headers);
   }
   async login(payload: { email: string; password: string }) {
     this.headers = await serverLogin(this.config, this.handlers)(payload);
