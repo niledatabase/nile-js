@@ -27,10 +27,15 @@ export interface LoginUserResponse {
   token: LoginUserResponseToken;
 }
 export interface User {
-  id?: string;
-  tenants?: Set<string>;
-  email?: string;
-  preferredName?: string;
+  id: string;
+  email: string;
+  name: string | null;
+  familyName: string | null;
+  givenName: string | null;
+  picture: string | null;
+  created: string;
+  updated: string;
+  tenants: { id: string }[];
 }
 
 export default class Users extends Config {
