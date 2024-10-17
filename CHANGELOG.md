@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.32](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.31...v3.0.0-alpha.32) (2024-10-17)
+
+### Bug Fixes
+
+- **server:** set auth headers, more type exports ([22ab80e](https://github.com/niledatabase/nile-js/commit/22ab80e9700d584ff5420180fa82f02d55c0bcd3))
+
 # [3.0.0-alpha.31](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.30...v3.0.0-alpha.31) (2024-10-17)
 
 ### Bug Fixes
