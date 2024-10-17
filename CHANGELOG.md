@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.29](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.28...v3.0.0-alpha.29) (2024-10-17)
+
+### Bug Fixes
+
+- **server:** add server side method for getting the session ([c8d496f](https://github.com/niledatabase/nile-js/commit/c8d496f899236813d02d3d31f64172fb6d9265a1))
+
 # [3.0.0-alpha.28](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.27...v3.0.0-alpha.28) (2024-10-16)
 
 ### Bug Fixes
