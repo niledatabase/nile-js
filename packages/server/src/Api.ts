@@ -1,7 +1,7 @@
 import Handlers from './api/handlers';
 import { Routes } from './api/types';
 import { appRoutes } from './api/utils/routes/defaultRoutes';
-import serverAuth from './auth';
+import Auth, { serverLogin } from './auth';
 import Tenants from './tenants';
 import Users from './users';
 import { Config } from './utils/Config';
@@ -9,6 +9,7 @@ import { Config } from './utils/Config';
 export class Api {
   config: Config;
   users: Users;
+  auth: Auth;
   tenants: Tenants;
   routes: Routes;
   handlers: {
@@ -19,6 +20,7 @@ export class Api {
   };
   constructor(config: Config) {
     this.config = config;
+    this.auth = new Auth(config);
     this.users = new Users(config);
     this.tenants = new Tenants(config);
     this.routes = {
@@ -38,6 +40,6 @@ export class Api {
     this.tenants = new Tenants(this.config, headers);
   }
   async login(payload: { email: string; password: string }) {
-    this.headers = await serverAuth(this.config, this.handlers)(payload);
+    this.headers = await serverLogin(this.config, this.handlers)(payload);
   }
 }

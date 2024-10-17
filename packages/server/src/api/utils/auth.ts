@@ -3,6 +3,15 @@ import Logger from '../../utils/Logger';
 
 import request from './request';
 
+export type JWT = {
+  email: string;
+  sub: string;
+  id: string;
+  iat: number;
+  exp: number;
+  jti: string;
+};
+
 export type ActiveSession = {
   id: string;
   email: string;
