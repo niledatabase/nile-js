@@ -17,6 +17,7 @@ const baseConfig = [
   'databaseId',
   'databaseName',
   'user',
+  'secureCookies',
   'listTenants',
   'configure',
   'password',

@@ -19,6 +19,7 @@ import {
   getTenantId,
   getToken,
   getUsername,
+  getSecureCookies,
 } from './envVars';
 
 export type ConfigRoutes = {
@@ -70,6 +71,7 @@ export class Config {
   routePrefix?: string;
   routes?: ConfigRoutes;
   logger?: LoggerType;
+  secureCookies?: boolean | undefined;
 
   debug: boolean;
 
@@ -114,6 +116,7 @@ export class Config {
       }
     }
 
+    this.secureCookies = getSecureCookies(envVarConfig);
     this.databaseId = getDatabaseId(envVarConfig) as string;
     this.databaseName = getDatabaseName(envVarConfig) as string;
     this._tenantId = getTenantId(envVarConfig);

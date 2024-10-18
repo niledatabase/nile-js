@@ -21,6 +21,7 @@ const baseConfig = [
   'logger',
   'routePrefix',
   'routes',
+  'secureCookies',
   'tenantUsersDeleteUrl',
   'unlinkUser',
   'user',

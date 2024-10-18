@@ -21,6 +21,7 @@ export type ServerConfig = {
   userId?: string | null | undefined;
   debug?: boolean;
   configureUrl?: string; // process.env.NILEDB_CONFIGURE
+  secureCookies?: boolean; // process.env.NILEDB_SECURECOOKIES
   db?: NilePoolConfig; // db.host process.env.NILEDB_HOST
   api?: {
     version?: number;

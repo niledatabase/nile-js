@@ -17,6 +17,7 @@ const baseConfig = [
   'routePrefix',
   'routes',
   'session',
+  'secureCookies',
   'user',
 ];
 const config = {
