@@ -9,6 +9,7 @@ import Logger from './Logger';
 
 export const X_NILE_TENANT = 'niledb-tenant-id';
 export const X_NILE_USER_ID = 'niledb-user-id';
+export const X_NILE_SECURECOOKIES = 'niledb-useSecureCookies';
 
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,6 +62,27 @@ export function getUserFromHttp(headers: Headers, config: Config) {
   return headers?.get(X_NILE_USER_ID) ?? config.userId;
 }
 
+export function makeBasicHeaders(config: Config, opts?: RequestInit) {
+  const headers = new Headers(opts?.headers);
+  headers.set('content-type', 'application/json; charset=utf-8');
+  const cookieKey = config.api?.cookieKey;
+
+  // this is old, but still maybe something worth keeping.
+  const authHeader = headers.get('Authorization');
+  if (!authHeader) {
+    const token = getTokenFromCookie(headers, cookieKey);
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    } else if (getToken({ config })) {
+      headers.set('Authorization', `Bearer ${getToken({ config })}`);
+    }
+  }
+  if (config.secureCookies) {
+    headers.set(X_NILE_SECURECOOKIES, 'true');
+  }
+  return headers;
+}
+
 export async function _fetch(
   config: Config,
   path: string,
@@ -69,23 +91,9 @@ export async function _fetch(
   const { debug, error } = Logger(config, '[server]');
 
   const url = `${config.api?.basePath}${path}`;
-  const cookieKey = config.api?.cookieKey;
   const headers = new Headers(opts?.headers);
-  const basicHeaders = new Headers(opts?.headers);
-  basicHeaders.set('content-type', 'application/json; charset=utf-8');
-
-  // this is old, but still maybe something worth keeping.
-  const authHeader = headers.get('Authorization');
-  if (!authHeader) {
-    const token = getTokenFromCookie(headers, cookieKey);
-    if (token) {
-      basicHeaders.set('Authorization', `Bearer ${token}`);
-    } else if (getToken({ config })) {
-      basicHeaders.set('Authorization', `Bearer ${getToken({ config })}`);
-    }
-  }
-
   const tenantId = getTenantFromHttp(headers, config);
+  const basicHeaders = makeBasicHeaders(config, opts);
   updateTenantId(tenantId);
   const userId = getUserFromHttp(headers, config);
   updateUserId(userId);

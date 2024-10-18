@@ -7,6 +7,13 @@ export type EnvConfig = {
   config?: ServerConfig;
 };
 
+export const getSecureCookies = (cfg: EnvConfig) => {
+  const { config } = cfg;
+  if (process.env.NILEDB_SECURECOOKIES) {
+    return Boolean(process.env.NILEDB_SECURECOOKIES);
+  }
+  return config?.secureCookies;
+};
 export const getDatabaseId = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
 
