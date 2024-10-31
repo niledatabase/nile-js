@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.34](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.33...v3.0.0-alpha.34) (2024-10-31)
+
+### Bug Fixes
+
+- **server:** change sign up to log in ([928a439](https://github.com/niledatabase/nile-js/commit/928a4393dcd3749f58408480bc87c9de365c22e6))
+
 # [3.0.0-alpha.33](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.32...v3.0.0-alpha.33) (2024-10-18)
 
 ### Bug Fixes
