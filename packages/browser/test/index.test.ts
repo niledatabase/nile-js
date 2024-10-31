@@ -28,6 +28,7 @@ describe('nile db', () => {
           'createUser',
           'listTenantUsers',
           'listUsers',
+          'signUp',
           'updateUser',
         ]);
       }
