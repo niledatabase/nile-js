@@ -1,0 +1,954 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Niledatabase regional APIs",
+    "version": "2.0"
+  },
+  "paths": {
+    "/api/auth/signin": {
+      "get": {
+        "tags": [
+          "authentication"
+        ],
+        "summary": "lists users in the tenant",
+        "description": "Returns information about the users within the tenant provided",
+        "operationId": "signin",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/me": {
+      "get": {
+        "summary": "Identify the principal",
+        "description": "Returns information about the principal associated with the session provided",
+        "operationId": "me",
+        "responses": {
+          "200": {
+            "description": "Identified user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "API/Database failures",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/signup": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "signs a user up",
+        "description": "signs a user up and logs them in. Expects a email and password combo",
+        "operationId": "signUp",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "description": "A tenant id to add the user to when they are created",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newTenantName",
+            "description": "A tenant name to create, then the user to when they are created",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The email and password combination the user will use to authenticate.\nThe `name` is optional; if provided it will be recorded in the `users` table.\nThe `newTenant` is optional; if provided, it is used as the name of a new tenant record associated with the newly created user.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBasicUserRequest"
+              },
+              "examples": {
+                "Create User Request": {
+                  "summary": "Creates a user with basic credentials",
+                  "description": "Create User Request",
+                  "value": {
+                    "email": "a.user@somedomain.com",
+                    "password": "somepassword",
+                    "name": "A. User"
+                  }
+                },
+                "Create User Request with Tenant": {
+                  "summary": "Creates a user and a new tenant for that user",
+                  "description": "Create User Request with Tenant",
+                  "value": {
+                    "email": "a.user@somedomain.com",
+                    "password": "somepassword",
+                    "name": "A. User",
+                    "newTenant": "My Sandbox"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User and session created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "API/Database failures",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}": {
+      "delete": {
+        "tags": [
+          "tenants"
+        ],
+        "summary": "Deletes a tenant.",
+        "operationId": "deleteTenant",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tenant deleted"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "tenants"
+        ],
+        "summary": "Obtains a specific tenant.",
+        "operationId": "getTenant",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "the desired tenant",
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "tenants"
+        ],
+        "summary": "Obtains a specific tenant.",
+        "operationId": "updateTenant",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "update an existing tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tenant"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/users/{email}": {
+      "delete": {
+        "tags": [
+          "tenants"
+        ],
+        "summary": "removes a user from a tenant",
+        "description": "removes an associated user from a specified tenant.",
+        "operationId": "unlinkUser",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User removed"
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "List tenant users",
+        "description": "Lists users that are associated with the specified tenant.",
+        "operationId": "listTenantUsers",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create a user in a tenant",
+        "description": "Creates a new user and associates that user with the specified tenant.",
+        "operationId": "createTenantUser",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The email and password combination the user will use to authenticate.\nThe `name` is optional; if provided it will be recorded in the `users` table.\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBasicUserRequest"
+              },
+              "examples": {
+                "Create User Request": {
+                  "summary": "Creates a user with basic credentials",
+                  "description": "Create User Request",
+                  "value": {
+                    "email": "a.user@somedomain.com",
+                    "password": "somepassword",
+                    "name": "A. User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "tenants"
+        ],
+        "summary": "associates an existing user with the tenant",
+        "operationId": "linkUser",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The email of the user you want to add to a tenant.\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssociateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "add user to tenant"
+          }
+        }
+      }
+    },
+    "/api/tenants": {
+      "get": {
+        "tags": [
+          "tenants"
+        ],
+        "summary": "list tenants by user",
+        "description": "Creates a user in the database",
+        "operationId": "listTenants",
+        "responses": {
+          "200": {
+            "description": "a list of tenants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tenant"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "API/Database failures",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tenants"
+        ],
+        "summary": "Create a tenant",
+        "description": "Creates a new tenant in a database.",
+        "operationId": "createTenant",
+        "requestBody": {
+          "description": "A wrapper for the tenant name.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantRequest"
+              },
+              "examples": {
+                "Create Tenant Request": {
+                  "summary": "Creates a named tenant",
+                  "description": "Create Tenant Request",
+                  "value": {
+                    "name": "My Sandbox"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tenant created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tenant"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Database not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{userid}": {
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "update a user",
+        "description": "updates a user within the tenant",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update a user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "An updated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "lists users in the tenant",
+        "description": "Returns information about the users within the tenant provided. You can also pass the a `niledb-tenant-id` in the header or in a cookie.",
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TenantUser"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Creates a user",
+        "description": "Creates a user in the database",
+        "operationId": "createUser",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "description": "A tenant id to add the user to when they are created",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newTenantName",
+            "description": "A tenant name to create, then the user to when they are created",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The email and password combination the user will use to authenticate.\nThe `name` is optional; if provided it will be recorded in the `users` table.\nThe `newTenant` is optional; if provided, it is used as the name of a new tenant record associated with the newly created user.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBasicUserRequest"
+              },
+              "examples": {
+                "Create User Request": {
+                  "summary": "Creates a user with basic credentials",
+                  "description": "Create User Request",
+                  "value": {
+                    "email": "a.user@somedomain.com",
+                    "password": "somepassword",
+                    "name": "A. User"
+                  }
+                },
+                "Create User Request with Tenant": {
+                  "summary": "Creates a user and a new tenant for that user",
+                  "description": "Create User Request with Tenant",
+                  "value": {
+                    "email": "a.user@somedomain.com",
+                    "password": "somepassword",
+                    "name": "A. User",
+                    "newTenant": "My Sandbox"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "API/Database failures",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateBasicUserRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "newTenantName": {
+            "type": "string"
+          }
+        }
+      },
+      "AssociateUserRequest": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateUserRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateTenantRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Tenant": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tenants": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TenantUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "APIError": {
+        "required": [
+          "errorCode",
+          "message",
+          "statusCode"
+        ],
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string",
+            "enum": [
+              "internal_error",
+              "bad_request",
+              "unsupported_operation",
+              "entity_not_found",
+              "duplicate_entity",
+              "invalid_credentials",
+              "unknown_oidc_provider",
+              "unknown_oidc_party",
+              "provider_already_exists",
+              "provider_config_error",
+              "provider_mismatch",
+              "provider_update_error",
+              "provider_disabled",
+              "session_state_missing",
+              "session_state_mismatch",
+              "oidc_code_missing",
+              "tenant_not_found",
+              "constraint_violation",
+              "sql_exception",
+              "db_creation_failure",
+              "db_status_failure",
+              "db_initialization_failure",
+              "db_config_missing",
+              "unauthorized_workspace_access",
+              "email_send_failure",
+              "jdbc_exception",
+              "oidc_exception",
+              "region_mismatch",
+              "credential_creation_failure",
+              "credential_propagation_failure"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}
