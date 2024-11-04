@@ -1,0 +1,79 @@
+name: Publish @niledatabase packages to GitHub Packages
+
+on:
+  push:
+    branches:
+      - stable
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: stable
+
+      - name: Enable Corepack before setting up Node
+        run: corepack enable
+
+      # Setup .npmrc file to publish to GitHub Packages
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          # registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          # scope: '@niledatabase'
+      - name: Authenticate to npm
+        run: |
+          echo "@niledatabase:wq:registry=https://registry.npmjs.org/" 
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Install @niledatabase/server
+        working-directory: packages/server
+        run: yarn install --immutable
+
+      - name: Install @niledatabase/browser
+        working-directory: packages/browser
+        run: yarn install --immutable
+
+      - name: Install @niledatabase/react
+        working-directory: packages/react
+        run: yarn install --immutable
+
+      - name: Build @niledatabase/packages
+        run: yarn build
+
+      - name: Version
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          npx lerna version --conventional-graduate --force-publish --conventional-commits --yes
+
+      - name: Publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npx lerna publish from-git --yes
+
+      - name: "Get Previous tag"
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+
+      - name: Create Release Notes
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.request(`POST /repos/${{ github.repository }}/releases`, {
+              tag_name: "${{ steps.previoustag.outputs.tag }}",
+              generate_release_notes: true
+            });
