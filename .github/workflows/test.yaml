@@ -1,0 +1,38 @@
+name: test
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lib: ["server", "react", "browser"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "yarn"
+
+      - name: Install deps
+        run: yarn install --immutable
+
+      - name: build
+        run: yarn build
+
+      - name: test
+        env:
+          NILEDB_USER: ${{ secrets.NILEDB_USER }}
+          NILEDB_PASSWORD: ${{ secrets.NILEDB_PASSWORD }}
+          NILEDB_POSTGRES_URL: ${{ secrets.NILEDB_POSTGRES_URL }}
+          NILEDB_API_URL: ${{ secrets.NILEDB_API_URL }}
+        run: yarn test:${{matrix.lib}}

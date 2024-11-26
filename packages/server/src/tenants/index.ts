@@ -72,4 +72,33 @@ export default class Tenants extends Config {
     const _init = this.handleHeaders(init);
     return _requester.get<Tenant[]>(req, this.tenantListUrl, _init);
   };
+
+  deleteTenant = async (
+    req: NileRequest<void> | Headers | string,
+    init?: RequestInit
+  ): Promise<Response> => {
+    if (typeof req === 'string') {
+      this.tenantId = req;
+    }
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return _requester.delete(req, this.tenantUrl, _init);
+  };
+  updateTenant = async (
+    req: NileRequest<void> | Headers | { name: string },
+    init?: RequestInit
+  ): Promise<Tenant | Response> => {
+    let _req;
+    if (req && 'name' in req) {
+      _req = new Request(`${this.api.basePath}${this.tenantUrl}`, {
+        body: JSON.stringify(req),
+        method: 'PUT',
+      });
+    } else {
+      _req = req;
+    }
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return _requester.put<Tenant>(_req, this.tenantUrl, _init);
+  };
 }

@@ -15,7 +15,7 @@ describe('server', () => {
     const server = new Server(config);
     expect(server.config.db).toEqual({
       host: 'db.thenile.dev',
-      port: 5432,
+      port: expect.any(Number),
       database: 'databaseName',
       user: 'username',
       password: 'password',

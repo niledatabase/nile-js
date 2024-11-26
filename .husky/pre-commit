@@ -2,6 +2,3 @@
 . "$(dirname "$0")/_/husky.sh"
 
 yarn lint-staged 
-yarn workspace @niledatabase/react test
-yarn workspace @niledatabase/server test
-yarn workspace @niledatabase/browser test

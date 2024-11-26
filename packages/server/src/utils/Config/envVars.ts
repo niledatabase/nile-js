@@ -23,8 +23,12 @@ export const getDatabaseId = (cfg: EnvConfig) => {
     return String(config?.databaseId);
   }
   if (process.env.NILEDB_POSTGRES_URL) {
-    const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
-    return pgUrl.pathname.substring(1);
+    try {
+      const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
+      return pgUrl.pathname.substring(1);
+    } catch (e) {
+      // ok to fail
+    }
   }
   logger && info(`${logger}[NILEDB_ID] ${process.env.NILEDB_ID}`);
   return process.env.NILEDB_ID;
@@ -84,6 +88,15 @@ export const getDatabaseName = (cfg: EnvConfig) => {
     logger && info(`${logger}[NILEDB_NAME] ${process.env.NILEDB_NAME}`);
     return process.env.NILEDB_NAME;
   }
+
+  if (process.env.NILEDB_POSTGRES_URL) {
+    try {
+      const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
+      return pgUrl.pathname.substring(1);
+    } catch (e) {
+      // ok to fail
+    }
+  }
   return null;
 };
 
@@ -109,7 +122,7 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
  */
 export const getBasePath = (cfg: EnvConfig): undefined | string => {
   const { config, logger } = cfg;
-  const { warn, info } = Logger(config, '[basePath]');
+  const { warn, info, error } = Logger(config, '[basePath]');
   const basePath = config?.api?.basePath;
   if (basePath) {
     logger && info(`${logger}[config] ${basePath}`);
@@ -118,8 +131,14 @@ export const getBasePath = (cfg: EnvConfig): undefined | string => {
 
   if (process.env.NILEDB_API_URL) {
     logger && info(`${logger}[NILEDB_API_URL] ${process.env.NILEDB_API_URL}`);
-    const apiUrl = new URL(process.env.NILEDB_API_URL);
-    return apiUrl.href;
+    try {
+      const apiUrl = new URL(process.env.NILEDB_API_URL);
+      return apiUrl.href;
+    } catch (e) {
+      if (e instanceof Error) {
+        error(e.stack);
+      }
+    }
   }
 
   warn('not set. Must run auto-configuration');
@@ -159,9 +178,13 @@ export function getDbHost(cfg: EnvConfig) {
   }
 
   if (process.env.NILEDB_POSTGRES_URL) {
-    const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
-    logger && info(`${logger}[NILEDB_POSTGRES_URL] ${pgUrl.hostname}`);
-    return pgUrl.hostname;
+    try {
+      const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
+      logger && info(`${logger}[NILEDB_POSTGRES_URL] ${pgUrl.hostname}`);
+      return pgUrl.hostname;
+    } catch (e) {
+      // ok to fail
+    }
   }
 
   if (process.env.NILEDB_HOST) {
@@ -184,6 +207,16 @@ export function getDbPort(cfg: EnvConfig): number {
   if (process.env.NILEDB_PORT) {
     logger && info(`${logger}[NILEDB_PORT] ${process.env.NILEDB_PORT}`);
     return Number(process.env.NILEDB_PORT);
+  }
+  if (process.env.NILEDB_POSTGRES_URL) {
+    try {
+      const pgUrl = new URL(process.env.NILEDB_POSTGRES_URL);
+      if (pgUrl.port) {
+        return Number(pgUrl.port);
+      }
+    } catch (e) {
+      // ok to fail
+    }
   }
   logger && info(`${logger}[default] 5432`);
   return 5432;
