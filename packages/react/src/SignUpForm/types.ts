@@ -5,6 +5,7 @@ export type SignUpInfo = CreateBasicUserRequest & {
   tenantId?: string;
   fetchURL?: string;
   callbackUrl?: string;
+  newTenantName?: string;
 };
 type SignInSuccess = (response: Response, formValues: SignUpInfo) => void;
 

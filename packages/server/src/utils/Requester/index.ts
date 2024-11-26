@@ -103,7 +103,12 @@ export default class Requester<T> extends Config {
   ): Promise<Response | R> {
     const response = await this.request('POST', url, req, init);
     if (response && response.status >= 200 && response.status < 300) {
-      return response.json();
+      const cloned = response.clone();
+      try {
+        return await cloned.json();
+      } catch (e) {
+        // give back the response
+      }
     }
     return response;
   }
@@ -115,7 +120,12 @@ export default class Requester<T> extends Config {
   ): Promise<Response | R> {
     const response = await this.request('GET', url, req, init);
     if (response && response.status >= 200 && response.status < 300) {
-      return response.json();
+      const cloned = response.clone();
+      try {
+        return await cloned.json();
+      } catch (e) {
+        // give back the response
+      }
     }
     return response;
   }
@@ -127,20 +137,22 @@ export default class Requester<T> extends Config {
   ): Promise<Response | R> {
     const response = await this.request('PUT', url, req, init);
     if (response && response.status >= 200 && response.status < 300) {
-      return response.json();
+      const cloned = response.clone();
+      try {
+        return await cloned.json();
+      } catch (e) {
+        // give back the response
+      }
     }
     return response;
   }
 
-  async delete<R = JSON>(
+  async delete(
     req: T | Headers,
     url: string,
     init?: RequestInit
-  ): Promise<Response | R> {
+  ): Promise<Response> {
     const response = await this.request('DELETE', url, req, init);
-    if (response && response.status >= 200 && response.status < 300) {
-      return response.json();
-    }
     return response;
   }
 }

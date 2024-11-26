@@ -17,6 +17,17 @@ export default class Users extends Config {
   get tenantUsersUrl() {
     return `/tenants/${this.tenantId ?? '{tenantId}'}/users`;
   }
+  get linkUsersUrl() {
+    return `/tenants/${this.tenantId ?? '{tenantId}'}/users/${
+      this.userId ?? '{userId}'
+    }/link`;
+  }
+
+  get tenantUserUrl() {
+    return `/tenants/${this.tenantId ?? '{tenantId}'}/users/${
+      this.userId ?? '{userId}'
+    }`;
+  }
   handleHeaders(init?: RequestInit) {
     if (this.headers) {
       if (init) {
@@ -42,14 +53,35 @@ export default class Users extends Config {
     return await _requester.post(req, this.usersUrl, _init);
   };
 
-  updateUser = async (
-    userId: string,
-    req: NileRequest<User>,
+  createTenantUser = async (
+    req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
   ): Promise<User | Response> => {
     const _requester = new Requester(this);
+
     const _init = this.handleHeaders(init);
-    return await _requester.put(req, `${this.usersUrl}/${userId}`, _init);
+    return await _requester.post(req, this.tenantUsersUrl, _init);
+  };
+
+  updateUser = async (
+    req: NileRequest<
+      Partial<Omit<User, 'email' | 'tenants' | 'created' | 'updated'>>
+    >,
+    init?: RequestInit
+  ): Promise<User | Response> => {
+    let _req;
+    if (req && 'id' in req) {
+      _req = new Request(`${this.api.basePath}${this.tenantUserUrl}`, {
+        body: JSON.stringify(req),
+        method: 'PUT',
+      });
+      this.userId = String(req.id);
+    } else {
+      _req = req;
+    }
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return await _requester.put(_req, this.tenantUserUrl, _init);
   };
 
   listUsers = async (
@@ -62,45 +94,42 @@ export default class Users extends Config {
   };
 
   linkUser = async (
-    req: NileRequest<{ id: string }> | Headers,
+    req: NileRequest<{ id: string; tenantId?: string }> | Headers | string,
     init?: RequestInit
   ): Promise<User | Response> => {
     const _requester = new Requester(this);
-    const _init = this.handleHeaders(init);
-    return await _requester.put(req, this.tenantUsersUrl, _init);
-  };
-
-  tenantUsersDeleteUrl = (userId?: string) => {
-    return `/tenants/${this.tenantId ?? '{tenantId}'}/users/${
-      userId ?? '{userId}'
-    }`;
-  };
-
-  getUserId = async (req: Headers | NileRequest<{ id: string }>) => {
-    if (req instanceof Request) {
-      const body = await new Response(req?.body).json();
-      if (body) {
-        return body.id;
+    if (typeof req === 'string') {
+      this.userId = req;
+    } else {
+      if ('id' in req) {
+        this.userId = req.id;
+      }
+      if ('tenantId' in req) {
+        this.tenantId = req.tenantId;
       }
     }
-    if ('id' in req) {
-      return req.id;
-    }
-    return null;
+
+    const _init = this.handleHeaders(init);
+    return await _requester.put(req, this.linkUsersUrl, _init);
   };
 
   unlinkUser = async (
-    req: NileRequest<{ id: string }> | Headers,
+    req: NileRequest<{ id: string; tenantId?: string }> | Headers | string,
     init?: RequestInit
-  ): Promise<User[] | Response> => {
+  ): Promise<Response> => {
+    if (typeof req === 'string') {
+      this.userId = req;
+    } else {
+      if ('id' in req) {
+        this.userId = req.id;
+      }
+      if ('tenantId' in req) {
+        this.tenantId = req.tenantId;
+      }
+    }
     const _requester = new Requester(this);
-    const userId = await this.getUserId(req);
     const _init = this.handleHeaders(init);
-    return await _requester.delete(
-      req,
-      this.tenantUsersDeleteUrl(userId),
-      _init
-    );
+    return await _requester.delete(req, this.linkUsersUrl, _init);
   };
 
   get meUrl() {
@@ -114,5 +143,19 @@ export default class Users extends Config {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
     return await _requester.get(req, this.meUrl, _init);
+  };
+  updateMe = async (
+    req:
+      | NileRequest<
+          Partial<
+            Omit<User, 'email' | 'id' | 'tenants' | 'created' | 'updated'>
+          >
+        >
+      | Headers,
+    init?: RequestInit
+  ): Promise<User | Response> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return await _requester.put(req, this.meUrl, _init);
   };
 }
