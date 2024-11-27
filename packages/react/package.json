@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/react",
-  "version": "3.0.0-alpha.34",
+  "version": "3.0.0-alpha.35",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -119,7 +119,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
-    "@niledatabase/browser": "^3.0.0-alpha.34",
+    "@niledatabase/browser": "^3.0.0-alpha.35",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-query": "^5.23.0",
