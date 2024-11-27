@@ -111,7 +111,10 @@ export class Server {
     // propagate special config items
     this.tenantId = updatedConfig.tenantId;
     this.userId = updatedConfig.userId;
-    this.token = updatedConfig.api.token;
+    // if we have a token, update it, else use the one that was there
+    if (updatedConfig.api.token) {
+      this.token = updatedConfig.api.token;
+    }
     this.databaseId = updatedConfig.databaseId;
 
     return this;
