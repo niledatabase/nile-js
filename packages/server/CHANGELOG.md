@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.36](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.35...v3.0.0-alpha.36) (2024-11-27)
+
+### Bug Fixes
+
+- **server:** only update the token if there is a value ([824887f](https://github.com/niledatabase/nile-js/commit/824887f50d4d38de82cb767a9caa422b2123d2b7))
+
 # [3.0.0-alpha.35](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.34...v3.0.0-alpha.35) (2024-11-27)
 
 **Note:** Version bump only for package @niledatabase/server
