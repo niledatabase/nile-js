@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.37](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.36...v3.0.0-alpha.37) (2024-12-05)
+
+### Features
+
+- **server:** support postgres creds in postgres url ([6e24c10](https://github.com/niledatabase/nile-js/commit/6e24c107e043456b09a147e5489b889642a65222))
+
 # [3.0.0-alpha.36](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.35...v3.0.0-alpha.36) (2024-11-27)
 
 ### Bug Fixes
