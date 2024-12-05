@@ -41,6 +41,12 @@ export const getUsername = (cfg: EnvConfig) => {
     logger && info(`${logger}[config] ${config.user}`);
     return String(config?.user);
   }
+  if (process.env.NILEDB_POSTGRES_URL) {
+    const url = new URL(process.env.NILEDB_POSTGRES_URL);
+    if (url.username) {
+      return url.username;
+    }
+  }
   logger && info(`${logger}[NILEDB_USER] ${process.env.NILEDB_USER}`);
   return process.env.NILEDB_USER;
 };
@@ -53,6 +59,12 @@ export const getPassword = (cfg: EnvConfig) => {
     log && info(`${logger}[config] ${config.password}`);
 
     return String(config.password);
+  }
+  if (process.env.NILEDB_POSTGRES_URL) {
+    const url = new URL(process.env.NILEDB_POSTGRES_URL);
+    if (url.password) {
+      return url.password;
+    }
   }
 
   logger && info(`${logger}[NILEDB_PASSWORD] ${process.env.NILEDB_PASSWORD}`);
