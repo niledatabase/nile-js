@@ -13,7 +13,7 @@ type SignInSuccess = (response: Response, formValues: SignUpInfo) => void;
 export type AllowedAny = any;
 
 export interface Props {
-  onSuccess: SignInSuccess;
+  onSuccess?: SignInSuccess;
   onError?: (e: Error, info: SignUpInfo) => void;
   beforeMutate?: (data: AllowedAny) => AllowedAny;
   buttonText?: string;
