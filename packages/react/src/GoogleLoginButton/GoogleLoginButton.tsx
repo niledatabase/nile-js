@@ -13,7 +13,7 @@ import { buttonVariants, ButtonProps } from '../../components/ui/button';
  */
 const GoogleSSOButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { callbackUrl: string }
+  ButtonProps & { callbackUrl?: string }
 >(
   (
     { callbackUrl, className, variant, size, asChild = false, ...props },

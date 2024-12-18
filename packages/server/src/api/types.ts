@@ -17,4 +17,5 @@ export type Routes = {
   TENANT_USER: string;
   TENANT_USERS: string;
   SIGNUP: string;
+  VERIFY_REQUEST: string;
 };

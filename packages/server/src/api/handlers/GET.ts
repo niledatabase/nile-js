@@ -58,6 +58,10 @@ export default function GETTER(configRoutes: Routes, config: Config) {
       info('matches signout');
       return authRoutes.handleSignOut(req, config);
     }
+    if (authRoutes.matchesVerifyRequest(configRoutes, req)) {
+      info('matches verify-request');
+      return authRoutes.handleVerifyRequest(req, config);
+    }
     if (authRoutes.matchError(configRoutes, req)) {
       info('matches error');
       return authRoutes.handleError(req, config);
