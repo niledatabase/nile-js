@@ -21,7 +21,7 @@
     "analyze": "size-limit --why",
     "build:storybook": "yarn build:tailwind && storybook build",
     "build:tailwind": "npx tailwindcss -i ./.storybook/globals.css -o ./.storybook/output.css",
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup src/index.ts",
     "dev:tailwind": "npx tailwindcss -i ./.storybook/globals.css -o ./.storybook/output.css --watch",
     "dev": "storybook dev",
     "lint": "eslint src",
@@ -32,8 +32,8 @@
   "peerDependencies": {
     "@tanstack/react-query": "^5.23.0",
     "next-auth": "^4.24.7",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "prettier": {
     "printWidth": 80,
@@ -85,8 +85,8 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.1.2",
     "@types/jest": "^29.5.9",
-    "@types/react": "18.2.38",
-    "@types/react-dom": "18.2.16",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@typescript-eslint/parser": "^6.12.0",
     "autoprefixer": "^10.4.20",
     "babel-jest": "29.7.0",
@@ -123,10 +123,11 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-query": "^5.23.0",
+    "lucide-react": "^0.468.0",
     "next-auth": "^4.24.7",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-hook-form": "^7.53.0",
-    "react-is": "^18.2.0"
+    "react-is": "^19.0.0"
   }
 }

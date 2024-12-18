@@ -13,3 +13,7 @@ export {
 
 export { default as handleSignOut, matches as matchSignOut } from './signout';
 export { default as handleError, matches as matchError } from './error';
+export {
+  default as handleVerifyRequest,
+  matches as matchesVerifyRequest,
+} from './verify-request';

@@ -32,5 +32,6 @@ export interface User {
   picture: string | null;
   created: string;
   updated: string;
+  emailVerified: boolean | null;
   tenants: { id: string }[];
 }
