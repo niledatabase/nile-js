@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.38](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.37...v3.0.0-alpha.38) (2024-12-19)
+
+### Bug Fixes
+
+- **react:** add email login method ([7b1b582](https://github.com/niledatabase/nile-js/commit/7b1b5821ae94691a28cff010c7b2a3fdbc484fbd))
+
 # [3.0.0-alpha.37](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.36...v3.0.0-alpha.37) (2024-12-05)
 
 **Note:** Version bump only for package @niledatabase/react
