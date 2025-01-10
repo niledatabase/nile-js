@@ -8,15 +8,23 @@ import { buttonVariants, ButtonProps } from '../../components/ui/button';
 /**
  * A component for a Google login button, according to their design language.
  * This works when an identity provider is configured in the admin dashboard.
- * @param props href: a string to override the URL provided by the context
+ * @param props callbackUrl: a string to override the URL provided by the context
  * @returns a JSX.Element to render
  */
 const GoogleSSOButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string }
+  ButtonProps & { callbackUrl?: string; buttonText?: string }
 >(
   (
-    { callbackUrl, className, variant, size, asChild = false, ...props },
+    {
+      callbackUrl,
+      className,
+      variant,
+      size,
+      buttonText = 'Continue with Google',
+      asChild = false,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : 'button';
@@ -24,7 +32,7 @@ const GoogleSSOButton = React.forwardRef<
       <Comp
         className={cn(
           buttonVariants({ variant, size, className }),
-          'bg-[#4285f4] hover:bg-[#4285f4] hover:bg-opacity-90 pl-[3px]'
+          'bg-[#4285f4] hover:bg-[#4285f4] hover:bg-opacity-85 pl-[3px]'
         )}
         ref={ref}
         onClick={() => {
@@ -42,7 +50,7 @@ const GoogleSSOButton = React.forwardRef<
           >
             <GoogleLogo />
           </div>
-          <div>Continue with Google</div>
+          {buttonText}
         </div>
       </Comp>
     );

@@ -6,3 +6,4 @@ dist
 yarn.lock
 *storybook.log
 .storybook/output.css
+.yarn

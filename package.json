@@ -48,8 +48,7 @@
     "typescript": "^5.5.0"
   },
   "lint-staged": {
-    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix .",
-    "lib/nile/src/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix  ."
+    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix ."
   },
   "packageManager": "yarn@4.5.0"
 }
