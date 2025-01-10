@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.39](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.38...v3.0.0-alpha.39) (2025-01-10)
+
+### Features
+
+- **react:** add more providers ([ce515e0](https://github.com/niledatabase/nile-js/commit/ce515e020b4fca9c11146fd36092bc302d52d3b4))
+
 # [3.0.0-alpha.38](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.37...v3.0.0-alpha.38) (2024-12-19)
 
 ### Bug Fixes
