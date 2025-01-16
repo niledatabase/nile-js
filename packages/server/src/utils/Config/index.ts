@@ -173,6 +173,25 @@ export class Config {
       };
       info('[config set]', { db: this.db, api: this.api });
       return this;
+    } else {
+      const msg = [];
+      if (!configuredHost) {
+        msg.push('Database host');
+      }
+      if (!this.databaseName) {
+        msg.push('Database name');
+      }
+      if (!this.databaseId) {
+        msg.push('Database id');
+      }
+      if (!basePath) {
+        msg.push('API URL');
+      }
+      info(
+        `[autoconfigure] ${msg.join(', ')} ${
+          msg.length > 1 ? 'are' : 'is'
+        } missing from the config. Autoconfiguration will run.`
+      );
     }
 
     const cp = getControlPlane(envVarConfig);
