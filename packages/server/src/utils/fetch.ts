@@ -113,9 +113,19 @@ export async function _fetch(
       ...opts,
       headers: basicHeaders,
     }).catch((e) => {
-      error('[fetch][response]', { message: e.message, stack: e.stack });
+      error('[fetch][response]', {
+        message: e.message,
+        stack: e.stack,
+        debug: 'Is nile-auth running?',
+      });
+      return new Error(e);
     });
 
+    if (response instanceof Error) {
+      return new ResponseError('Failed to connect to database', {
+        status: 400,
+      });
+    }
     if (response && response.status >= 200 && response.status < 300) {
       if (typeof response.clone === 'function') {
         try {
@@ -160,10 +170,11 @@ export async function _fetch(
       if (errorHandler) {
         msg = await errorHandler.text();
         if (msg) {
-          error(`[fetch][response] status: ${errorHandler.status}]`, {
+          error(`[fetch][response][status: ${errorHandler.status}]`, {
             message: msg,
           });
         }
+        return e as ResponseError;
       }
       if (!msg) {
         error('[fetch][response]', { e });
@@ -175,18 +186,18 @@ export async function _fetch(
 
     if (res && 'message' in res) {
       const { message } = res;
-      error(`[fetch][response] status: ${errorHandler?.status}] ${message}`);
+      error(`[fetch][response][status: ${errorHandler?.status}] ${message}`);
       return new ResponseError(message, { status: 400 });
     }
     if (res && 'errors' in res) {
       const {
         errors: [message],
       } = res;
-      error(`[fetch][response] status: ${errorHandler?.status}] ${message}`);
+      error(`[fetch][response] [status: ${errorHandler?.status}] ${message}`);
       return new ResponseError(message, { status: 400 });
     }
     error(
-      `[fetch][response] status: ${errorHandler?.status}] UNHANDLED ERROR`,
+      `[fetch][response][status: ${errorHandler?.status}] UNHANDLED ERROR`,
       {
         res,
       }
