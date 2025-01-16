@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.40](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.39...v3.0.0-alpha.40) (2025-01-16)
+
+### Bug Fixes
+
+- protect against strings, log errors if nile-auth is missing ([acbf8b4](https://github.com/niledatabase/nile-js/commit/acbf8b4a8e439a7105aeb277f7c265357c370fc4))
+
 # [3.0.0-alpha.39](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.38...v3.0.0-alpha.39) (2025-01-10)
 
 **Note:** Version bump only for package @niledatabase/server
