@@ -24,6 +24,12 @@ export { default as SignUpForm, useSignUp } from './SignUpForm';
 
 export { default as SignInForm, useSignIn } from './SignInForm';
 
+export {
+  useResetPassword,
+  PasswordResetForm,
+  PasswordResetRequestForm,
+} from './resetPassword';
+
 export { Email, Password } from '../components/ui/form';
 
 export { signIn, signOut } from 'next-auth/react';

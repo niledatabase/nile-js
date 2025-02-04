@@ -17,3 +17,7 @@ export {
   default as handleVerifyRequest,
   matches as matchesVerifyRequest,
 } from './verify-request';
+export {
+  default as handlePasswordReset,
+  matches as matchesPasswordReset,
+} from './password-reset';

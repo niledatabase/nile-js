@@ -184,6 +184,7 @@ const Email = () => {
                 placeholder="Email"
                 {...field}
                 autoComplete="current-email"
+                required
               />
             </FormControl>
             <FormDescription>Your email address</FormDescription>
@@ -211,6 +212,7 @@ const Password = () => {
                 {...field}
                 type="password"
                 autoComplete="current-password"
+                required
               />
             </FormControl>
             <FormDescription>The desired password</FormDescription>

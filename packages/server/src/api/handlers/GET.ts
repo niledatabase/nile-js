@@ -50,6 +50,11 @@ export default function GETTER(configRoutes: Routes, config: Config) {
       return authRoutes.handleCsrf(req, config);
     }
 
+    if (authRoutes.matchesPasswordReset(configRoutes, req)) {
+      info('matches password reset');
+      return authRoutes.handlePasswordReset(req, config);
+    }
+
     if (authRoutes.matchCallback(configRoutes, req)) {
       info('matches callback');
       return authRoutes.handleCallback(req, config);
