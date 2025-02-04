@@ -9,6 +9,7 @@ export const appRoutes = (prefix = '/api'): Routes => ({
   SIGNOUT: `${prefix}/auth/signout`,
   ERROR: `${prefix}/auth/error`,
   VERIFY_REQUEST: `${prefix}/auth/verify-request`,
+  PASSWORD_RESET: `${prefix}/auth/reset-password`,
   ME: `${prefix}/me`,
   USERS: `${prefix}/users`,
   TENANTS: `${prefix}/tenants`,

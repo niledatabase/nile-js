@@ -18,4 +18,5 @@ export type Routes = {
   TENANT_USERS: string;
   SIGNUP: string;
   VERIFY_REQUEST: string;
+  PASSWORD_RESET: string;
 };

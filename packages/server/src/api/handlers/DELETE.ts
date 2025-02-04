@@ -17,6 +17,7 @@ export default function DELETER(configRoutes: Routes, config: Config) {
       info('matches tenants');
       return tenants(req, config);
     }
+
     warn('No DELETE routes matched');
     return new Response(null, { status: 404 });
   };
