@@ -29,16 +29,16 @@ export default function ResetPasswordForm(props: Props) {
 }
 
 function ResetForm(props: Props) {
-  const { callbackURL } = props;
+  const { defaultValues, ...params } = props;
   const form = useForm({
     defaultValues: {
       email: '',
       password: '',
       confirmPassword: '',
-      ...props.defaultValues,
+      ...defaultValues,
     },
   });
-  const resetPassword = useResetPassword({ callbackURL });
+  const resetPassword = useResetPassword(params);
   const password = form.watch('password');
   const confirmPassword = form.watch('confirmPassword');
   const [disabled, setDisabled] = useState(true);
