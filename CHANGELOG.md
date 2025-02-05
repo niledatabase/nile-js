@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.43](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.42...v3.0.0-alpha.43) (2025-02-05)
+
+### Features
+
+- **react:** clone next-auth for sign in, improve error messages ([84cf086](https://github.com/niledatabase/nile-js/commit/84cf0866ca9cea4521c4a6411eed3b5023dddaae))
+
 # [3.0.0-alpha.42](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.41...v3.0.0-alpha.42) (2025-02-05)
 
 ### Bug Fixes
