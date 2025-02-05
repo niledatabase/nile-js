@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 
-export type Props = {
+export type Props = Params & {
   client?: QueryClient;
   callbackURL?: string;
   defaultValues?: MutateFnParams & {
