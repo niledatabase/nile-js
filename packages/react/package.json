@@ -22,6 +22,7 @@
     "build:storybook": "yarn build:tailwind && storybook build",
     "build:tailwind": "npx tailwindcss -i ./.storybook/globals.css -o ./.storybook/output.css",
     "build": "tsup src/index.ts",
+    "dev:local": "tsup src/index.ts --watch",
     "dev:tailwind": "npx tailwindcss -i ./.storybook/globals.css -o ./.storybook/output.css --watch",
     "dev": "storybook dev",
     "lint": "eslint src",

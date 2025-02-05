@@ -1,11 +1,11 @@
 'use client';
 import { Slot } from '@radix-ui/react-slot';
-import { signIn } from 'next-auth/react';
 import React from 'react';
 import { Mail } from 'lucide-react';
 
 import { ButtonProps, buttonVariants } from '../../components/ui/button';
 import { cn } from '../../lib/utils';
+import { signIn } from '../../lib/next-auth';
 
 type EmailError = void | {
   error: string;

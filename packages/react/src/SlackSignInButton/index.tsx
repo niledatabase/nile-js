@@ -1,11 +1,11 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
+import { signIn } from '../../lib/next-auth';
 
 const SlackSignInButton = React.forwardRef<
   HTMLButtonElement,

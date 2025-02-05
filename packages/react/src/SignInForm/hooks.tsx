@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { signIn } from 'next-auth/react';
+
+import { signIn } from '../../lib/next-auth';
 
 import { Props, LoginInfo } from './types';
 

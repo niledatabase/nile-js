@@ -1,5 +1,6 @@
-import { signIn } from 'next-auth/react';
 import { useMutation } from '@tanstack/react-query';
+
+import { signIn } from '../../lib/next-auth';
 
 import { Props } from './types';
 
@@ -16,7 +17,11 @@ export function useSignIn(params?: Props) {
       const d = { ..._data, callbackUrl, redirect };
       const possibleData = beforeMutate && beforeMutate(d);
       const data = possibleData ?? d;
-      return (await signIn('email', data)) as unknown as Response;
+      const res = await signIn('email', data);
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+      return res as unknown as Response;
     },
     onSuccess,
     onError,
