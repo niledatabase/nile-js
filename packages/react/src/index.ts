@@ -32,4 +32,13 @@ export {
 
 export { Email, Password } from '../components/ui/form';
 
-export { signIn, signOut } from 'next-auth/react';
+export {
+  getSession,
+  getCsrfToken,
+  getProviders,
+  SessionProvider,
+  SessionContext,
+  useSession,
+  signIn,
+  signOut,
+} from '../lib/next-auth';
