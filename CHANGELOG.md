@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.41](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.40...v3.0.0-alpha.41) (2025-02-05)
+
+### Features
+
+- **react:** add password reset ([f933cd5](https://github.com/niledatabase/nile-js/commit/f933cd533614e97fb15784297f8e2092b9f0c55f))
+
 # [3.0.0-alpha.40](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.39...v3.0.0-alpha.40) (2025-01-16)
 
 ### Bug Fixes
