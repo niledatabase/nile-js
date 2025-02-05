@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.42](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.41...v3.0.0-alpha.42) (2025-02-05)
+
+### Bug Fixes
+
+- **react:** pass props to reset password form ([18c2d72](https://github.com/niledatabase/nile-js/commit/18c2d72bb3e5bc9e0c04d9c4f033c0ea61834e91))
+
 # [3.0.0-alpha.41](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.40...v3.0.0-alpha.41) (2025-02-05)
 
 ### Features
