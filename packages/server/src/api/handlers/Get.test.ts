@@ -43,6 +43,7 @@ describe('getter', () => {
           host: 'http://localhost:3000',
         }),
         url: `http://localhost:3001/api/${key}`,
+        clone: jest.fn(() => ({ body: '{}' })),
       };
 
       //@ts-expect-error - fetch

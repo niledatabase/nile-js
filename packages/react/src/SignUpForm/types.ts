@@ -19,4 +19,5 @@ export interface Props {
   buttonText?: string;
   client?: QueryClient;
   callbackUrl?: string;
+  baseUrl?: string;
 }

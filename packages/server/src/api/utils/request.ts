@@ -1,3 +1,4 @@
+import { X_NILE_TENANT } from '../../utils/fetch';
 import { Config } from '../../utils/Config';
 import Logger from '../../utils/Logger';
 
@@ -9,15 +10,25 @@ export default async function request(
   const { info, error } = Logger(config, '[REQUEST]');
   const { request, ...init } = _init;
   const requestUrl = new URL(request.url);
-  const updatedHeaders = new Headers(request.headers);
+  const updatedHeaders = new Headers({});
+  if (request.headers.get('cookie')) {
+    updatedHeaders.set('cookie', String(request.headers.get('cookie')));
+  }
+  if (request.headers.get(X_NILE_TENANT)) {
+    updatedHeaders.set(
+      X_NILE_TENANT,
+      String(request.headers.get(X_NILE_TENANT))
+    );
+  }
 
   updatedHeaders.set('host', requestUrl.host);
   updatedHeaders.set('niledb-origin', requestUrl.origin);
   const params = { ...init, headers: updatedHeaders };
   if (params.method === 'POST' || params.method === 'PUT') {
-    params.body = init.body ?? request.body;
-    // @ts-expect-error - its there
-    params.duplex = 'half';
+    updatedHeaders.set('content-type', 'application/json');
+    const initBody = await new Response(_init.request.clone().body).json();
+    const requestBody = await new Response(request.clone().body).json();
+    params.body = JSON.stringify(initBody ?? requestBody);
   }
 
   try {

@@ -14,6 +14,7 @@ export type Routes = {
   ME: string;
   USERS: string;
   TENANTS: string;
+  TENANT: string;
   TENANT_USER: string;
   TENANT_USERS: string;
   SIGNUP: string;

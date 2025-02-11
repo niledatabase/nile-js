@@ -13,6 +13,7 @@ export default function DELETER(configRoutes: Routes, config: Config) {
       info('matches tenant users');
       return tenantUsers(req, config);
     }
+
     if (matchesTenants(configRoutes, req)) {
       info('matches tenants');
       return tenants(req, config);

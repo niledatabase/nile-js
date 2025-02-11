@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Pool } from 'pg';
+import pg from 'pg';
 
 import { Config } from '../utils/Config';
 import { evictPool } from '../utils/Event';
@@ -9,7 +9,7 @@ import Logger from '../utils/Logger';
 import { createProxyForPool } from './PoolProxy';
 
 class NileDatabase {
-  pool: Pool;
+  pool: pg.Pool;
   tenantId?: undefined | null | string;
   userId?: undefined | null | string;
   id: string;
@@ -31,7 +31,7 @@ class NileDatabase {
     this.config = config;
     debug(`Connection pool config ${JSON.stringify(this.config.db)}`);
 
-    this.pool = createProxyForPool(new Pool(remaining), this.config);
+    this.pool = createProxyForPool(new pg.Pool(remaining), this.config);
 
     if (typeof afterCreate === 'function') {
       warn(

@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import pg from 'pg';
 
 import { Config } from '../utils/Config';
 import { watchEvictPool } from '../utils/Event';
@@ -42,7 +42,7 @@ export default class DBManager {
     }
   };
 
-  getConnection = (config: ServerConfig): Pool => {
+  getConnection = (config: ServerConfig): pg.Pool => {
     const { info } = Logger(config, '[DBManager]');
     const id = this.makeId(config.tenantId, config.userId);
 

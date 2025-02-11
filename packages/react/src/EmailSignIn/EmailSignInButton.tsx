@@ -19,6 +19,7 @@ type AllProps = ButtonProps & {
   email: string;
   onSent?: () => void;
   onFailure?: (error: EmailError) => void;
+  buttonText?: string;
 };
 
 /**
@@ -40,6 +41,7 @@ const EmailSignInButton = React.forwardRef<HTMLButtonElement, AllProps>(
       size,
       asChild = false,
       redirect = false,
+      buttonText = 'Continue with Email',
       email,
       onFailure,
       onSent,
@@ -68,7 +70,7 @@ const EmailSignInButton = React.forwardRef<HTMLButtonElement, AllProps>(
         ) : (
           <div className="flex flex-row gap-2 items-center">
             <Mail />
-            Continue with Email
+            {buttonText}
           </div>
         )}
       </Comp>
