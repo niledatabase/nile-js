@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/server",
-  "version": "3.0.0-alpha.43",
+  "version": "3.0.0-alpha.44",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
