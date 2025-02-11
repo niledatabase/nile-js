@@ -7,7 +7,13 @@ export function useSignUp<T extends SignUpInfo>(
   params: Props,
   client?: QueryClient
 ) {
-  const { onSuccess, onError, beforeMutate, callbackUrl } = params;
+  const {
+    onSuccess,
+    onError,
+    beforeMutate,
+    callbackUrl,
+    baseUrl = '',
+  } = params;
 
   const mutation = useMutation(
     {
@@ -15,8 +21,7 @@ export function useSignUp<T extends SignUpInfo>(
         const possibleData = beforeMutate && beforeMutate(_data);
         const payload: T = { ..._data, ...possibleData };
         const { tenantId, newTenantName, ...body } = payload;
-        let fetchUrl =
-          payload.fetchURL ?? `${window.location.origin}/api/signup`;
+        let fetchUrl = payload.fetchURL ?? `${baseUrl}/api/signup`;
 
         const searchParams = new URLSearchParams();
 
@@ -34,6 +39,9 @@ export function useSignUp<T extends SignUpInfo>(
         return await fetch(fetchUrl, {
           body: JSON.stringify(body),
           method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
         });
       },
 
@@ -48,8 +56,8 @@ export function useSignUp<T extends SignUpInfo>(
     client
   );
   useEffect(() => {
-    fetch('/api/auth/providers');
-    fetch('/api/auth/csrf');
-  }, []);
+    fetch(`${baseUrl}/api/auth/providers`);
+    fetch(`${baseUrl}/api/auth/csrf`);
+  }, [baseUrl]);
   return mutation.mutate;
 }

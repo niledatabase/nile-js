@@ -39,6 +39,9 @@ export default class Tenants extends Config {
       _req = new Request(`${this.api.basePath}${this.tenantsUrl}`, {
         body: JSON.stringify({ name: req }),
         method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
       });
     } else {
       _req = req;

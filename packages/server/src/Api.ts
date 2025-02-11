@@ -18,6 +18,12 @@ export class Api {
     DELETE: (req: Request) => Promise<void | Response>;
     PUT: (req: Request) => Promise<void | Response>;
   };
+  paths: {
+    get: string[];
+    post: string[];
+    delete: string[];
+    put: string[];
+  };
   constructor(config: Config) {
     this.config = config;
     this.auth = new Auth(config);
@@ -28,6 +34,43 @@ export class Api {
       ...config?.routes,
     };
     this.handlers = Handlers(this.routes, config);
+    this.paths = {
+      get: [
+        this.routes.ME,
+        this.routes.TENANT_USERS,
+        this.routes.TENANTS,
+        this.routes.TENANT,
+        this.routes.SESSION,
+        this.routes.SIGNIN,
+        this.routes.PROVIDERS,
+        this.routes.CSRF,
+        this.routes.PASSWORD_RESET,
+        this.routes.CALLBACK,
+        this.routes.SIGNOUT,
+        this.routes.VERIFY_REQUEST,
+        this.routes.ERROR,
+      ],
+      post: [
+        this.routes.TENANT_USERS,
+        this.routes.SIGNUP,
+        this.routes.USERS,
+        this.routes.TENANTS,
+        this.routes.SESSION,
+        this.routes.SIGNIN,
+        this.routes.PASSWORD_RESET,
+        this.routes.PROVIDERS,
+        this.routes.CSRF,
+        `${this.routes.CALLBACK}/{provider}`,
+        this.routes.SIGNOUT,
+      ],
+      put: [
+        this.routes.TENANT_USERS,
+        this.routes.USERS,
+        this.routes.TENANT,
+        this.routes.PASSWORD_RESET,
+      ],
+      delete: [this.routes.TENANT_USER, this.routes.TENANT],
+    };
   }
 
   updateConfig(config: Config) {

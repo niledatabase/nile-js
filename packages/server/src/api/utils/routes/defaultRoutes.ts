@@ -13,6 +13,7 @@ export const appRoutes = (prefix = '/api'): Routes => ({
   ME: `${prefix}/me`,
   USERS: `${prefix}/users`,
   TENANTS: `${prefix}/tenants`,
+  TENANT: `${prefix}/tenants/{tenantId}`,
   TENANT_USER: `${prefix}/tenants/{tenantId}/users/{userId}`,
   TENANT_USERS: `${prefix}/tenants/{tenantId}/users`,
   SIGNUP: `${prefix}/signup`,

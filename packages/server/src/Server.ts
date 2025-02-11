@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import pg from 'pg';
 
 import { ServerConfig } from './types';
 import { Config } from './utils/Config';
@@ -94,7 +94,7 @@ export class Server {
       }
     }
   }
-  get db(): Pool {
+  get db(): pg.Pool {
     return this.manager.getConnection(this.config);
   }
 
@@ -131,5 +131,3 @@ export async function create(config?: ServerConfig): Promise<Server> {
   }
   return await server.init();
 }
-
-export default create;
