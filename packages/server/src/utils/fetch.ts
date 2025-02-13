@@ -67,7 +67,7 @@ export function makeBasicHeaders(config: Config, opts?: RequestInit) {
   headers.set('content-type', 'application/json; charset=utf-8');
   const cookieKey = config.api?.cookieKey;
 
-  // this is old, but still maybe something worth keeping.
+  // the sdk server side calls use this
   const authHeader = headers.get('Authorization');
   if (!authHeader) {
     const token = getTokenFromCookie(headers, cookieKey);

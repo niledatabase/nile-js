@@ -45,9 +45,6 @@ export default async function route(req: Request, config: Config) {
     headers: req.headers,
   };
   if (req.method === 'POST') {
-    if (typeof req.clone === 'function') {
-      init.body = req.clone().body;
-    }
     const [provider] = new URL(req.url).pathname.split('/').reverse();
 
     url = `${proxyRoutes(config)[key]}/${provider}`;
