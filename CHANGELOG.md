@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.45](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.44...v3.0.0-alpha.45) (2025-02-13)
+
+### Bug Fixes
+
+- **server:** try json, try text, remove extra clone ([79fe502](https://github.com/niledatabase/nile-js/commit/79fe502fabdb4d1e429f7362180c6326f8ff05bb))
+
 # [3.0.0-alpha.44](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.43...v3.0.0-alpha.44) (2025-02-11)
 
 ### Features
