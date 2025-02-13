@@ -8,22 +8,17 @@ import Logger from '../../../utils/Logger';
 const key = 'CALLBACK';
 
 export default async function route(req: Request, config: Config) {
-  const { debug, error } = Logger(
+  const { error } = Logger(
     { ...config, debug: config.debug } as Config,
     `[ROUTES][${key}]`
   );
   const [provider] = new URL(req.url).pathname.split('/').reverse();
-  debug(provider);
   try {
     const passThroughUrl = new URL(req.url);
     const params = new URLSearchParams(passThroughUrl.search);
     const url = `${proxyRoutes(config)[key]}/${provider}${
       params.toString() !== '' ? `?${params.toString()}` : ''
     }`;
-    // req.body isnt there
-    debug('params', { params, passThroughUrl, url, req });
-    // something bad is happening here, its not making it to nile-auth
-    // its something with the query params (it seems, but who knows)
 
     const res = await request(
       url,
@@ -35,7 +30,6 @@ export default async function route(req: Request, config: Config) {
     ).catch((e) => {
       error('an error as occurred', e);
     });
-    debug('did the res come back?', { res });
 
     const location = res?.headers.get('location');
     if (location) {

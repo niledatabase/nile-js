@@ -23,6 +23,13 @@ export const getDatabaseId = (cfg: EnvConfig) => {
     logger && info(`${logger}[config] ${config?.databaseId}`);
     return String(config?.databaseId);
   }
+  const dbFromEnv = stringCheck(process.env.NILEDB_ID);
+
+  if (dbFromEnv) {
+    logger && info(`${logger}[NILEDB_ID] ${dbFromEnv}`);
+    return dbFromEnv;
+  }
+
   const dbId = stringCheck(process.env.NILEDB_API_URL);
   if (dbId) {
     try {
@@ -32,8 +39,7 @@ export const getDatabaseId = (cfg: EnvConfig) => {
       // ok to fail
     }
   }
-  logger && info(`${logger}[NILEDB_ID] ${String(process.env.NILEDB_ID)}`);
-  return process.env.NILEDB_ID;
+  return null;
 };
 export const getUsername = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
@@ -43,15 +49,24 @@ export const getUsername = (cfg: EnvConfig) => {
     logger && info(`${logger}[config] ${config.user}`);
     return String(config?.user);
   }
+  const user = stringCheck(process.env.NILEDB_USER);
+  if (user) {
+    logger && info(`${logger}[NILEDB_USER] ${user}`);
+    return user;
+  }
+
   const pg = stringCheck(process.env.NILEDB_POSTGRES_URL);
   if (pg) {
-    const url = new URL(pg);
-    if (url.username) {
-      return url.username;
+    try {
+      const url = new URL(pg);
+      if (url.username) {
+        return url.username;
+      }
+    } catch (e) {
+      //ok to fail
     }
   }
-  logger && info(`${logger}[NILEDB_USER] ${String(process.env.NILEDB_USER)}`);
-  return process.env.NILEDB_USER;
+  return undefined;
 };
 
 export const getPassword = (cfg: EnvConfig) => {
@@ -62,17 +77,25 @@ export const getPassword = (cfg: EnvConfig) => {
     log && info(`${logger}[config] ${config?.password}`);
     return String(config?.password);
   }
+
+  const pass = stringCheck(process.env.NILEDB_PASSWORD);
+  if (pass) {
+    logger && info(`${logger}[NILEDB_PASSWORD] ${pass}`);
+
+    return pass;
+  }
   const pg = stringCheck(process.env.NILEDB_POSTGRES_URL);
   if (pg) {
-    const url = new URL(pg);
-    if (url.password) {
-      return url.password;
+    try {
+      const url = new URL(pg);
+      if (url.password) {
+        return url.password;
+      }
+    } catch (e) {
+      // ok to fail
     }
   }
-
-  logger &&
-    info(`${logger}[NILEDB_PASSWORD] ${String(process.env.NILEDB_PASSWORD)}`);
-  return process.env.NILEDB_PASSWORD;
+  return undefined;
 };
 
 export const getInfoBearer = (cfg: EnvConfig) => {
@@ -88,8 +111,8 @@ export const getToken = (cfg: EnvConfig) => {
   }
   const token = stringCheck(process.env.NILEDB_TOKEN);
   if (token) {
-    logger && info(`${logger}[NILEDB_TOKEN] ${process.env.NILEDB_TOKEN}`);
-    return process.env.NILEDB_TOKEN;
+    logger && info(`${logger}[NILEDB_TOKEN] ${token}`);
+    return token;
   }
   return undefined;
 };
@@ -103,8 +126,8 @@ export const getDatabaseName = (cfg: EnvConfig) => {
   }
   const name = stringCheck(process.env.NILEDB_NAME);
   if (name) {
-    logger && info(`${logger}[NILEDB_NAME] ${process.env.NILEDB_NAME}`);
-    return process.env.NILEDB_NAME;
+    logger && info(`${logger}[NILEDB_NAME] ${name}`);
+    return name;
   }
 
   if (process.env.NILEDB_POSTGRES_URL) {
@@ -197,6 +220,11 @@ export function getDbHost(cfg: EnvConfig) {
     return String(config?.db?.host);
   }
 
+  if (stringCheck(process.env.NILEDB_HOST)) {
+    logger && info(`${logger}[NILEDB_HOST] ${process.env.NILEDB_HOST}`);
+    return process.env.NILEDB_HOST;
+  }
+
   const pg = stringCheck(process.env.NILEDB_POSTGRES_URL);
   if (pg) {
     try {
@@ -206,11 +234,6 @@ export function getDbHost(cfg: EnvConfig) {
     } catch (e) {
       // ok to fail
     }
-  }
-
-  if (stringCheck(process.env.NILEDB_HOST)) {
-    logger && info(`${logger}[NILEDB_HOST] ${process.env.NILEDB_HOST}`);
-    return process.env.NILEDB_HOST;
   }
 
   logger && info(`${logger}[default] db.thenile.dev`);
