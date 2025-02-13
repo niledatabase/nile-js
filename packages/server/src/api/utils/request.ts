@@ -25,10 +25,17 @@ export default async function request(
   updatedHeaders.set('niledb-origin', requestUrl.origin);
   const params = { ...init, headers: updatedHeaders };
   if (params.method === 'POST' || params.method === 'PUT') {
-    updatedHeaders.set('content-type', 'application/json');
-    const initBody = await new Response(_init.request.clone().body).json();
-    const requestBody = await new Response(request.clone().body).json();
-    params.body = JSON.stringify(initBody ?? requestBody);
+    try {
+      updatedHeaders.set('content-type', 'application/json');
+      const initBody = await new Response(_init.request.clone().body).json();
+      const requestBody = await new Response(request.clone().body).json();
+      params.body = JSON.stringify(initBody ?? requestBody);
+    } catch (e) {
+      updatedHeaders.set('content-type', 'application/x-www-form-urlencoded');
+      const initBody = await new Response(_init.request.clone().body).text();
+      const requestBody = await new Response(request.clone().body).text();
+      params.body = initBody ?? requestBody;
+    }
   }
 
   try {
