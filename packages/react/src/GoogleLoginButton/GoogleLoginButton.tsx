@@ -32,7 +32,7 @@ const GoogleSSOButton = React.forwardRef<
       <Comp
         className={cn(
           buttonVariants({ variant, size, className }),
-          'bg-[#4285f4] hover:bg-[#4285f4] hover:bg-opacity-85 pl-[3px]'
+          'bg-[#4285f4] hover:bg-[#4285f4] hover:bg-opacity-85 pl-[3px] text-white'
         )}
         ref={ref}
         onClick={() => {
