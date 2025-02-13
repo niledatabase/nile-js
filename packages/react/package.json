@@ -15,7 +15,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">=18.0"
+    "node": ">=20.0"
   },
   "scripts": {
     "analyze": "size-limit --why",
@@ -124,7 +124,7 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-query": "^5.23.0",
-    "lucide-react": "^0.468.0",
+    "lucide-react": "^0.447.0",
     "next-auth": "^4.24.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

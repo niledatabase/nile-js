@@ -26,6 +26,12 @@ export { default as SignInForm, useSignIn } from './SignInForm';
 
 export { default as SignOutButton } from './SignOutButton';
 
+export { default as SignedIn } from './SignedIn';
+
+export { default as SignedOut } from './SignedOut';
+
+export { default as UserInfo } from './UserInfo';
+
 export {
   useResetPassword,
   PasswordResetForm,

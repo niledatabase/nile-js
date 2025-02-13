@@ -494,7 +494,6 @@ export function SessionProvider(props: SessionProviderProps) {
     }),
     [session, loading]
   );
-
   return (
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
   );
