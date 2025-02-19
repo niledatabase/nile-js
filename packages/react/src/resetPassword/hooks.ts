@@ -4,24 +4,30 @@ import { useEffect } from 'react';
 import { MutateFnParams, Params } from './types';
 
 export function useResetPassword(params?: Params) {
-  const { onSuccess, onError, beforeMutate, callbackURL } = params ?? {};
+  const {
+    onSuccess,
+    onError,
+    beforeMutate,
+    callbackUrl,
+    baseUrl = '',
+  } = params ?? {};
   const mutation = useMutation({
     mutationFn: async (_data: MutateFnParams) => {
-      const d = { ..._data, callbackURL };
+      const d = { ..._data, callbackUrl };
       const possibleData = beforeMutate && beforeMutate(d);
       const data = possibleData ?? d;
 
-      const fetchURL =
-        params?.fetchURL ?? `${window.location.origin}/api/auth/reset-password`;
+      const fetchURL = params?.fetchUrl ?? `${baseUrl}/api/auth/reset-password`;
 
+      // should fix this in nile-auth one day
       if (
         data &&
         typeof data === 'object' &&
-        'callbackURL' in data &&
-        !data.callbackURL &&
-        callbackURL
+        'callbackUrl' in data &&
+        !data.callbackUrl &&
+        callbackUrl
       ) {
-        data.callbackURL = callbackURL;
+        data.callbackURL = callbackUrl;
       }
 
       data.redirectURL = fetchURL;
@@ -38,8 +44,8 @@ export function useResetPassword(params?: Params) {
   });
 
   useEffect(() => {
-    fetch('/api/auth/csrf');
-  }, []);
+    fetch(`${baseUrl}/api/auth/csrf`);
+  }, [baseUrl]);
 
   return mutation.mutate;
 }

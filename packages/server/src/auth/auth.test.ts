@@ -16,7 +16,7 @@ const baseConfig = [
   'password',
   'routePrefix',
   'routes',
-  'session',
+  'getSession',
   'secureCookies',
   'user',
 ];

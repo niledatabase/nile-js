@@ -26,12 +26,12 @@ export interface LoginUserResponse {
 export interface User {
   id: string;
   email: string;
-  name: string | null;
-  familyName: string | null;
-  givenName: string | null;
-  picture: string | null;
+  name?: string | null;
+  familyName?: string | null;
+  givenName?: string | null;
+  picture?: string | null;
   created: string;
-  updated: string;
-  emailVerified: boolean | null;
+  updated?: string;
+  emailVerified?: string | null;
   tenants: { id: string }[];
 }

@@ -2,29 +2,19 @@
 import { BadgeCheck, CalendarCheck, CircleUserRound, Mail } from 'lucide-react';
 import React from 'react';
 
+import { User } from '../../../server/src/users/types';
+
+import { useMe } from './hooks';
+
+export { useMe } from './hooks';
+
 type Props = {
-  user?: {
-    picture?: string;
-    name?: string;
-    familyName?: string;
-    givenName?: string;
-    emailVerified?: Date | void;
-    email: string;
-    created: Date;
-  };
+  user?: User | undefined | null;
   fetchUrl?: string;
   profilePicturePlaceholder?: React.ReactElement;
 };
 export default function UserInfo(props: Props) {
-  const [user, setUser] = React.useState(props.user);
-  React.useEffect(() => {
-    if (!user) {
-      fetch(props.fetchUrl ?? '/api/me')
-        .then((d) => d.json())
-        .then((u) => setUser(u));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const user = useMe(props);
   const picture = React.useMemo(() => {
     if (user && typeof user === 'object' && 'picture' in user && user.picture) {
       return (

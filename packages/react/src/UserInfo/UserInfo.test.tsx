@@ -8,11 +8,13 @@ describe('Profile info', () => {
     render(
       <Profile
         user={{
+          id: '123',
           email: 'fake@fake.com',
-          created: new Date(),
-          emailVerified: new Date(),
+          created: new Date().toISOString(),
+          emailVerified: new Date().toISOString(),
           name: 'SpongeBob',
           familyName: 'SquarePants',
+          tenants: [],
         }}
       />
     );

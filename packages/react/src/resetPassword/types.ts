@@ -2,7 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 
 export type Props = Params & {
   client?: QueryClient;
-  callbackURL?: string;
+  callbackUrl?: string;
   defaultValues?: MutateFnParams & {
     confirmPassword?: string;
   };
@@ -15,9 +15,10 @@ export interface Params {
   beforeMutate?: (data: AllowedAny) => AllowedAny;
   onSuccess?: (res: Response) => void;
   onError?: (error: Error, data: AllowedAny) => void;
-  callbackURL?: string;
+  callbackUrl?: string;
   client?: QueryClient;
-  fetchURL?: string;
+  fetchUrl?: string;
+  baseUrl?: string;
 }
 
 export type MutateFnParams = {

@@ -149,12 +149,16 @@ export default class Auth extends Config {
   get sessionUrl() {
     return '/auth/session';
   }
-  session = async (
+  getSession = async (
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): Promise<Response | JWT | ActiveSession> => {
+  ): Promise<JWT | ActiveSession | Response | undefined> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return await _requester.get(req, this.sessionUrl, _init);
+    const session = await _requester.get(req, this.sessionUrl, _init);
+    if (Object.keys(session).length === 0) {
+      return undefined;
+    }
+    return session as JWT | ActiveSession | Response;
   };
 }

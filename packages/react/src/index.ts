@@ -30,7 +30,7 @@ export { default as SignedIn } from './SignedIn';
 
 export { default as SignedOut } from './SignedOut';
 
-export { default as UserInfo } from './UserInfo';
+export { default as UserInfo, useMe } from './UserInfo';
 
 export {
   useResetPassword,
