@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.46](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.45...v3.0.0-alpha.46) (2025-02-19)
+
+### Bug Fixes
+
+- **react:** add more components ([5d97335](https://github.com/niledatabase/nile-js/commit/5d973354339790bcbad2526f5fb16ff64d1b6a62))
+- **react:** add more components, reorder env var pickup ([9a68e99](https://github.com/niledatabase/nile-js/commit/9a68e99f995fd0cce1c33f431b51691267acf96b))
+
 # [3.0.0-alpha.45](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.44...v3.0.0-alpha.45) (2025-02-13)
 
 ### Bug Fixes
