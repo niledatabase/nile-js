@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.47](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.46...v3.0.0-alpha.47) (2025-02-19)
+
+### Bug Fixes
+
+- **react:** package css ([fb866ea](https://github.com/niledatabase/nile-js/commit/fb866ea105209fb59d1176b3daa4a0370ca9714f))
+
 # [3.0.0-alpha.46](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.45...v3.0.0-alpha.46) (2025-02-19)
 
 ### Bug Fixes
