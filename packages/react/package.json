@@ -9,8 +9,10 @@
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
-    }
+    },
+    "./styles.css": "./dist/styles.css"
   },
+  "style": "./dist/styles.css",
   "files": [
     "dist"
   ],
@@ -21,7 +23,7 @@
     "analyze": "size-limit --why",
     "build:storybook": "yarn build:tailwind && storybook build",
     "build:tailwind": "npx tailwindcss -i ./.storybook/globals.css -o ./.storybook/output.css",
-    "build": "tsup src/index.ts",
+    "build": "npx tailwindcss -i ./.storybook/globals.css -o ./dist/styles.css --minify && tsup src/index.ts",
     "dev:local": "tsup src/index.ts --watch",
     "dev:tailwind": "npx tailwindcss -i ./.storybook/globals.css -o ./.storybook/output.css --watch",
     "dev": "storybook dev",
