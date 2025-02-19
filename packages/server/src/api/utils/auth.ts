@@ -15,7 +15,7 @@ export type JWT = {
 export type ActiveSession = {
   id: string;
   email: string;
-  expires: Date;
+  expires: string;
   user?: {
     id: string;
     name: string;
@@ -27,7 +27,7 @@ export type ActiveSession = {
 export default async function auth(
   req: Request,
   config: Config
-): Promise<void | ActiveSession> {
+): Promise<null | undefined | ActiveSession> {
   const { info, error } = Logger(config, '[nileauth]');
   info('checking auth');
 
@@ -43,7 +43,11 @@ export default async function auth(
   }
   info('session active');
   try {
-    return await new Response(res.body).json();
+    const session = await new Response(res.body).json();
+    if (Object.keys(session).length === 0) {
+      return undefined;
+    }
+    return session;
   } catch (e) {
     error(e);
     return undefined;

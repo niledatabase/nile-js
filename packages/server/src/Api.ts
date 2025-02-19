@@ -1,5 +1,6 @@
 import Handlers from './api/handlers';
 import { Routes } from './api/types';
+import auth from './api/utils/auth';
 import { appRoutes } from './api/utils/routes/defaultRoutes';
 import Auth, { serverLogin } from './auth';
 import Tenants from './tenants';
@@ -12,6 +13,7 @@ export class Api {
   auth: Auth;
   tenants: Tenants;
   routes: Routes;
+  _headers: undefined | Headers;
   handlers: {
     GET: (req: Request) => Promise<void | Response>;
     POST: (req: Request) => Promise<void | Response>;
@@ -82,8 +84,19 @@ export class Api {
     this.users = new Users(this.config, headers);
     this.tenants = new Tenants(this.config, headers);
     this.auth = new Auth(this.config, headers);
+    this._headers = headers;
   }
+
   async login(payload: { email: string; password: string }) {
     this.headers = await serverLogin(this.config, this.handlers)(payload);
+  }
+
+  async session(req?: Request | Headers | null | undefined) {
+    if (req instanceof Headers) {
+      return this.auth.getSession(req);
+    } else if (req instanceof Request) {
+      return auth(req, this.config);
+    }
+    return this.auth.getSession(this._headers);
   }
 }

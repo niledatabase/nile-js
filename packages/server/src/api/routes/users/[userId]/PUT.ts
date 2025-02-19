@@ -42,7 +42,7 @@ import { Config } from '../../../../utils/Config';
 
 export async function PUT(
   config: Config,
-  session: void | ActiveSession,
+  session: null | undefined | ActiveSession,
   init: RequestInit & { request: Request }
 ) {
   if (!session) {

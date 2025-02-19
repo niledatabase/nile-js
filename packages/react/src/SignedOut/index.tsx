@@ -2,19 +2,26 @@
 import React from 'react';
 import { SessionProviderProps } from 'next-auth/react';
 
-import { useSession, SessionProvider } from '../../lib/next-auth';
+import { useSession, SessionProvider, NileSession } from '../../lib/next-auth';
+import { convertSession } from '../SignedIn';
 
 export default function SignedOut({
   children,
+  session: startSession,
   ...props
-}: SessionProviderProps) {
+}: Omit<SessionProviderProps, 'session'> & {
+  session?: NileSession;
+}) {
+  if (startSession instanceof Response) {
+    return null;
+  }
+  const session = convertSession(startSession);
   return (
-    <SessionProvider {...props}>
+    <SessionProvider {...props} session={session}>
       <SignedOutChecker>{children}</SignedOutChecker>
     </SessionProvider>
   );
 }
-
 function SignedOutChecker({ children }: { children: React.ReactNode }) {
   const { status } = useSession();
   if (status !== 'authenticated') {

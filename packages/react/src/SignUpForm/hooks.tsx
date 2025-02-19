@@ -21,7 +21,7 @@ export function useSignUp<T extends SignUpInfo>(
         const possibleData = beforeMutate && beforeMutate(_data);
         const payload: T = { ..._data, ...possibleData };
         const { tenantId, newTenantName, ...body } = payload;
-        let fetchUrl = payload.fetchURL ?? `${baseUrl}/api/signup`;
+        let fetchUrl = payload.fetchUrl ?? `${baseUrl}/api/signup`;
 
         const searchParams = new URLSearchParams();
 
