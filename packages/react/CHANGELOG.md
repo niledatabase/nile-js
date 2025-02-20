@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.48](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.47...v3.0.0-alpha.48) (2025-02-20)
+
+### Bug Fixes
+
+- **react:** better components, refresh on sign in ([7fbd496](https://github.com/niledatabase/nile-js/commit/7fbd496b9bd399aa0930c68c3957efaa9b9d8911))
+
 # [3.0.0-alpha.47](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.46...v3.0.0-alpha.47) (2025-02-19)
 
 ### Bug Fixes
