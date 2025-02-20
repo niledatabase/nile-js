@@ -77,9 +77,10 @@ export function makeBasicHeaders(config: Config, opts?: RequestInit) {
       headers.set('Authorization', `Bearer ${getToken({ config })}`);
     }
   }
-  if (config.secureCookies) {
-    headers.set(X_NILE_SECURECOOKIES, 'true');
+  if ('secureCookies' in config && config.secureCookies != null) {
+    headers.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
   }
+
   return headers;
 }
 
@@ -97,6 +98,7 @@ export async function _fetch(
   updateTenantId(tenantId);
   const userId = getUserFromHttp(headers, config);
   updateUserId(userId);
+
   if (url.includes('{tenantId}') && !tenantId) {
     return new ResponseError('tenantId is not set for request', {
       status: 400,
