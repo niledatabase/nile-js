@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.49](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.48...v3.0.0-alpha.49) (2025-02-20)
+
+### Bug Fixes
+
+- **server:** support secure cookies in the API ([9e0fb9c](https://github.com/niledatabase/nile-js/commit/9e0fb9ccc66a2c49e3bc4ffc911de572a14c9c52))
+
 # [3.0.0-alpha.48](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.47...v3.0.0-alpha.48) (2025-02-20)
 
 ### Bug Fixes
