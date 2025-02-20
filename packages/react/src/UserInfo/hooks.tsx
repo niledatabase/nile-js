@@ -8,7 +8,7 @@ type Props = {
   user?: User | undefined | null;
 };
 export function useMe(props: Props) {
-  const [user, setUser] = React.useState<User>(props.user ?? ({} as User));
+  const [user, setUser] = React.useState<User | undefined | null>(props.user);
   React.useEffect(() => {
     if (!user) {
       fetch(props.fetchUrl ?? '/api/me')

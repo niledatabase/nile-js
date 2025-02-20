@@ -2,6 +2,7 @@
 import { BadgeCheck, CalendarCheck, CircleUserRound, Mail } from 'lucide-react';
 import React from 'react';
 
+import { cn } from '../../lib/utils';
 import { User } from '../../../server/src/users/types';
 
 import { useMe } from './hooks';
@@ -12,6 +13,7 @@ type Props = {
   user?: User | undefined | null;
   fetchUrl?: string;
   profilePicturePlaceholder?: React.ReactElement;
+  className?: string;
 };
 export default function UserInfo(props: Props) {
   const user = useMe(props);
@@ -46,7 +48,7 @@ export default function UserInfo(props: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-2 items-center">
+    <div className={cn(props.className, 'flex flex-col gap-2 items-center')}>
       <div className="flex flex-col gap-5 pb-2 items-center">
         <div className="flex flex-col gap-2 items-center w-36 mx-auto">
           <div className="rounded-full border border-background overflow-hidden shadow-md">

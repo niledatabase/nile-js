@@ -1,6 +1,8 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
+import { __NEXTAUTH } from '../../lib/next-auth';
+
 import { Props, SignUpInfo } from './types';
 
 export function useSignUp<T extends SignUpInfo>(
@@ -45,9 +47,15 @@ export function useSignUp<T extends SignUpInfo>(
         });
       },
 
-      onSuccess: (data, variables) => {
-        if (callbackUrl) {
-          window.location.href = callbackUrl;
+      onSuccess: async (data, variables) => {
+        if (data.ok) {
+          // consolidate this double session call one day
+          await __NEXTAUTH._getSession({ event: 'storage' });
+          if (callbackUrl) {
+            window.location.href = callbackUrl;
+          } else {
+            window.location.reload();
+          }
         }
         onSuccess && onSuccess(data, variables);
       },
