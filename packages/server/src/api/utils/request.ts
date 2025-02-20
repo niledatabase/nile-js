@@ -1,4 +1,4 @@
-import { X_NILE_TENANT } from '../../utils/fetch';
+import { X_NILE_SECURECOOKIES, X_NILE_TENANT } from '../../utils/fetch';
 import { Config } from '../../utils/Config';
 import Logger from '../../utils/Logger';
 
@@ -19,6 +19,9 @@ export default async function request(
       X_NILE_TENANT,
       String(request.headers.get(X_NILE_TENANT))
     );
+  }
+  if ('secureCookies' in config && config.secureCookies != null) {
+    updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
   }
 
   updatedHeaders.set('host', requestUrl.host);
