@@ -3095,7 +3095,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/browser@npm:^3.0.0-alpha.49, @niledatabase/browser@workspace:packages/browser":
+"@niledatabase/browser@npm:^3.0.0-alpha.50, @niledatabase/browser@workspace:packages/browser":
   version: 0.0.0-use.local
   resolution: "@niledatabase/browser@workspace:packages/browser"
   dependencies:
@@ -3165,7 +3165,7 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.23.3"
     "@chromatic-com/storybook": "npm:^1.9.0"
     "@hookform/resolvers": "npm:^3.9.0"
-    "@niledatabase/browser": "npm:^3.0.0-alpha.49"
+    "@niledatabase/browser": "npm:^3.0.0-alpha.50"
     "@radix-ui/react-label": "npm:^2.1.0"
     "@radix-ui/react-slot": "npm:^1.1.0"
     "@rollup/plugin-babel": "npm:^6.0.4"

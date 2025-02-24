@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.50](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.49...v3.0.0-alpha.50) (2025-02-24)
+
+### Bug Fixes
+
+- **server:** handle more express stuff ([29326cf](https://github.com/niledatabase/nile-js/commit/29326cf0ce57ed9e6e878937f25d7e479a7683c9))
+
 # [3.0.0-alpha.49](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.48...v3.0.0-alpha.49) (2025-02-20)
 
 ### Bug Fixes
