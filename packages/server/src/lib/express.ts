@@ -17,17 +17,24 @@ function expressPaths(nile: Server) {
   };
 }
 
-export async function NileExpressHandler(nile: Server) {
+type HandlerConfig = { muteResponse?: boolean; init?: RequestInit };
+export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
   const { error } = Logger(nile.config, 'nile-express');
   async function handler(
-    req: unknown,
-    init?: RequestInit
-  ): Promise<{
-    body: string;
-    status: number;
-    headers: Record<string, string>;
-    response: Response;
-  } | null> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    req: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    res?: any
+  ): Promise<
+    | {
+        body: string;
+        status: number;
+        headers: Record<string, string | string[]>;
+        response: Response;
+      }
+    | null
+    | undefined
+  > {
     const headers = new Headers();
     if (!req || typeof req !== 'object') {
       return null;
@@ -47,7 +54,7 @@ export async function NileExpressHandler(nile: Server) {
     ) {
       headers.set('cookie', req.headers.cookie);
     }
-    const _init: RequestInit = { method, ...init };
+    const _init: RequestInit = { method, ...config?.init };
 
     if ('body' in req) {
       if (method === 'POST' || method === 'PUT') {
@@ -58,7 +65,18 @@ export async function NileExpressHandler(nile: Server) {
 
     _init.headers = headers;
 
-    const proxyRequest = new Request(req.url, _init);
+    const reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    // be sure its a valid url
+    try {
+      new URL(reqUrl);
+    } catch (e) {
+      error('Invalid URL', {
+        url: reqUrl,
+        error: e,
+      });
+      return null;
+    }
+    const proxyRequest = new Request(reqUrl, _init);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = (await (nile.api.handlers as any)[method](
       proxyRequest
@@ -72,14 +90,34 @@ export async function NileExpressHandler(nile: Server) {
     } catch (e) {
       body = await response.text();
     }
-    const newHeaders: Record<string, string> = {};
+    const newHeaders: Record<string, string | string[]> = {};
     response.headers.forEach((value, key) => {
       if (
         !['content-length', 'transfer-encoding'].includes(key.toLowerCase())
       ) {
-        newHeaders[key] = value;
+        if (newHeaders[key]) {
+          const prev = newHeaders[key];
+          if (Array.isArray(prev)) {
+            newHeaders[key] = [...prev, value];
+          } else {
+            newHeaders[key] = [prev, value];
+          }
+        } else {
+          newHeaders[key] = value;
+        }
       }
     });
+
+    if (config?.muteResponse !== true) {
+      res.status(response.status).set(newHeaders);
+      if (typeof body === 'string') {
+        res.send(body);
+      } else {
+        res.json(body ?? {});
+      }
+      return;
+    }
+
     return {
       body,
       status: response.status,
