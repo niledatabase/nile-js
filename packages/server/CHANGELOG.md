@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.51](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.50...v3.0.0-alpha.51) (2025-02-25)
+
+### Features
+
+- **react:** add tenantId support, org switcher ([04a2d7a](https://github.com/niledatabase/nile-js/commit/04a2d7a5bc1657fa36eefb08a437306ffbb5958c))
+
 # [3.0.0-alpha.50](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.49...v3.0.0-alpha.50) (2025-02-24)
 
 ### Bug Fixes
