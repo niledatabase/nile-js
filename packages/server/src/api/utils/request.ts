@@ -1,4 +1,8 @@
-import { X_NILE_SECURECOOKIES, X_NILE_TENANT } from '../../utils/fetch';
+import {
+  X_NILE_ORIGIN,
+  X_NILE_SECURECOOKIES,
+  X_NILE_TENANT,
+} from '../../utils/constants';
 import { Config } from '../../utils/Config';
 import Logger from '../../utils/Logger';
 
@@ -25,7 +29,7 @@ export default async function request(
   }
 
   updatedHeaders.set('host', requestUrl.host);
-  updatedHeaders.set('niledb-origin', requestUrl.origin);
+  updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
   const params = { ...init, headers: updatedHeaders };
   if (params.method === 'POST' || params.method === 'PUT') {
     try {
@@ -41,8 +45,9 @@ export default async function request(
     }
   }
 
+  const fullUrl = `${url}${requestUrl.search}`;
   try {
-    const res = await fetch(url, { ...params }).catch((e) => {
+    const res = await fetch(fullUrl, { ...params }).catch((e) => {
       error('An error has occurred in the fetch', {
         message: e.message,
         stack: e.stack,
@@ -53,7 +58,7 @@ export default async function request(
       );
     });
     const loggingRes = typeof res?.clone === 'function' ? res?.clone() : null;
-    info(`[${params.method ?? 'GET'}] ${url}`, {
+    info(`[${params.method ?? 'GET'}] ${fullUrl}`, {
       status: res?.status,
       statusText: res?.statusText,
       text: await loggingRes?.text(),

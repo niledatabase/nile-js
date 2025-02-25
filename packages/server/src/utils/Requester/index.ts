@@ -1,6 +1,7 @@
 import { Config } from '../Config';
 import { ResponseError } from '../ResponseError';
-import { X_NILE_TENANT, _fetch } from '../fetch';
+import { X_NILE_TENANT } from '../constants';
+import { _fetch } from '../fetch';
 
 export { NileResponse, NileRequest } from './types';
 

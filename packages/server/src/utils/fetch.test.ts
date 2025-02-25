@@ -1,4 +1,5 @@
 import { Config } from './Config';
+import { X_NILE_SECURECOOKIES } from './constants';
 import { makeBasicHeaders } from './fetch';
 
 describe('fetch wrapper', () => {
@@ -12,7 +13,7 @@ describe('fetch wrapper', () => {
     const config = new Config({ secureCookies: true });
     expect(Object.fromEntries(makeBasicHeaders(config).entries())).toEqual({
       'content-type': 'application/json; charset=utf-8',
-      'niledb-usesecurecookies': 'true',
+      [X_NILE_SECURECOOKIES]: 'true',
     });
   });
   it('passes headers on', () => {
@@ -26,7 +27,7 @@ describe('fetch wrapper', () => {
     ).toEqual({
       'content-type': 'application/json; charset=utf-8',
       cookie: '__Secure.nile-token=blah',
-      'niledb-usesecurecookies': 'true',
+      [X_NILE_SECURECOOKIES]: 'true',
     });
   });
 });

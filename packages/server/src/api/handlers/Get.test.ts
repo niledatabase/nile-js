@@ -1,4 +1,4 @@
-import { X_NILE_TENANT } from '../../utils/fetch';
+import { X_NILE_ORIGIN, X_NILE_TENANT } from '../../utils/constants';
 import { Config } from '../../utils/Config';
 import { appRoutes } from '../utils/routes/defaultRoutes';
 
@@ -65,7 +65,7 @@ describe('getter', () => {
       });
       expect(headersArray).toEqual([
         { key: 'host', value: 'localhost:3001' },
-        { key: 'niledb-origin', value: 'http://localhost:3001' },
+        { key: X_NILE_ORIGIN, value: 'http://localhost:3001' },
         { key: X_NILE_TENANT, value: '123' },
       ]);
     });

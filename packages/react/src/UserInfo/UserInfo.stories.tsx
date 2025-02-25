@@ -15,9 +15,11 @@ export function UserProfile() {
     <div style={{ width: 500 }} className="mx-auto">
       <UserInfo
         user={{
+          id: '1',
+          tenants: [],
           email: 'fake@fake.com',
-          created: new Date(),
-          emailVerified: new Date(),
+          created: new Date().toISOString(),
+          emailVerified: new Date().toISOString(),
           name: 'SpongeBob',
           familyName: 'SquarePants',
         }}

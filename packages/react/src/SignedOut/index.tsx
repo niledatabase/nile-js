@@ -11,6 +11,7 @@ export default function SignedOut({
   ...props
 }: Omit<SessionProviderProps, 'session'> & {
   session?: NileSession;
+  className?: string;
 }) {
   if (startSession instanceof Response) {
     return null;
@@ -18,13 +19,24 @@ export default function SignedOut({
   const session = convertSession(startSession);
   return (
     <SessionProvider {...props} session={session}>
-      <SignedOutChecker>{children}</SignedOutChecker>
+      <SignedOutChecker className={props.className}>
+        {children}
+      </SignedOutChecker>
     </SessionProvider>
   );
 }
-function SignedOutChecker({ children }: { children: React.ReactNode }) {
+function SignedOutChecker({
+  className,
+  children,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const { status } = useSession();
   if (status !== 'authenticated') {
+    if (className) {
+      return <div className={className}>{children}</div>;
+    }
     return children;
   }
   return null;
