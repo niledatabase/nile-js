@@ -6,10 +6,11 @@ import { NileRequest } from './Requester';
 import { updateTenantId, updateUserId } from './Event';
 import { getToken } from './Config/envVars';
 import Logger from './Logger';
-
-export const X_NILE_TENANT = 'niledb-tenant-id';
-export const X_NILE_USER_ID = 'niledb-user-id';
-export const X_NILE_SECURECOOKIES = 'niledb-useSecureCookies';
+import {
+  X_NILE_SECURECOOKIES,
+  X_NILE_TENANT,
+  X_NILE_USER_ID,
+} from './constants';
 
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

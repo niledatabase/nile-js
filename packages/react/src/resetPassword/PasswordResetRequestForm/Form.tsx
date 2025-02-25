@@ -24,7 +24,7 @@ function ResetForm(props: Props) {
   return (
     <Form {...form}>
       <form
-        className="space-y-2"
+        className="py-2"
         onSubmit={form.handleSubmit(({ email }) => {
           resetPassword({ email });
         })}

@@ -1,6 +1,7 @@
 import { ActiveSession, JWT } from '../api/utils/auth';
 import { appRoutes } from '../api/utils/routes/defaultRoutes';
 import { Config } from '../utils/Config';
+import { X_NILE_ORIGIN } from '../utils/constants';
 import Logger from '../utils/Logger';
 import Requester, { NileRequest } from '../utils/Requester';
 
@@ -34,7 +35,7 @@ export function serverLogin(
     const sessionUrl = new URL(`${ORIGIN}${routes.PROVIDERS}`);
     const baseHeaders = {
       host: sessionUrl.host,
-      'niledb-origin': ORIGIN,
+      [X_NILE_ORIGIN]: ORIGIN,
     };
     info(`Obtaining providers for ${email}`);
     const sessionReq = new Request(sessionUrl, {

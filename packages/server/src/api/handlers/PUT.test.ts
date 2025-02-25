@@ -1,6 +1,6 @@
 import { appRoutes } from '../utils/routes/defaultRoutes';
 import { Config } from '../../utils/Config';
-import { X_NILE_TENANT } from '../../utils/fetch';
+import { X_NILE_ORIGIN, X_NILE_TENANT } from '../../utils/constants';
 
 import PUTTER from './PUT';
 
@@ -60,7 +60,7 @@ describe('Putter', () => {
       });
       expect(headersArray).toEqual([
         { key: 'host', value: 'localhost:3001' },
-        { key: 'niledb-origin', value: 'http://localhost:3001' },
+        { key: X_NILE_ORIGIN, value: 'http://localhost:3001' },
       ]);
     });
   });

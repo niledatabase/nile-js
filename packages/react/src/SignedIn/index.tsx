@@ -29,6 +29,7 @@ export default function SignedIn({
   ...props
 }: Omit<SessionProviderProps, 'session'> & {
   session?: NileSession;
+  className?: string;
 }) {
   if (startSession instanceof Response) {
     return null;
@@ -36,14 +37,24 @@ export default function SignedIn({
   const session = convertSession(startSession);
   return (
     <SessionProvider {...props} session={session}>
-      <SignedInChecker>{children}</SignedInChecker>
+      <SignedInChecker className={props.className}>{children}</SignedInChecker>
     </SessionProvider>
   );
 }
 
-function SignedInChecker({ children }: { children: React.ReactNode }) {
+function SignedInChecker({
+  children,
+  className,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   const { status } = useSession();
+
   if (status === 'authenticated') {
+    if (className) {
+      return <div className={className}>{children}</div>;
+    }
     return children;
   }
   return null;

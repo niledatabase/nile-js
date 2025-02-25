@@ -1,5 +1,5 @@
 import { Config } from '../../../utils/Config';
-import { X_NILE_TENANT } from '../../../utils/fetch';
+import { X_NILE_TENANT } from '../../../utils/constants';
 import fetch from '../../utils/request';
 
 import route from '.';

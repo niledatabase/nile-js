@@ -11,7 +11,7 @@ import { Config } from '../../../utils/Config';
  *     - users
  *     summary: lists users in the tenant
  *     description: Returns information about the users within the tenant
- *       provided. You can also pass the a `niledb-tenant-id` in the header or in a cookie.
+ *       provided. You can also pass the a `nile.tenant_id` in the header or in a cookie.
  *     operationId: listUsers
  *     parameters:
  *       - name: tenantId

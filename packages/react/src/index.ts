@@ -30,6 +30,12 @@ export { default as SignedIn } from './SignedIn';
 
 export { default as SignedOut } from './SignedOut';
 
+export {
+  default as TenantSelector,
+  useTenantId,
+  useTenants,
+} from './TenantSelector';
+
 export { default as UserInfo, useMe } from './UserInfo';
 
 export {

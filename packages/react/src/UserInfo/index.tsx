@@ -32,10 +32,15 @@ export default function UserInfo(props: Props) {
       return props.profilePicturePlaceholder;
     }
     return (
-      <div style={{ background: randomGradient() }}>
+      <div
+        className="drop-shadow-md"
+        style={{
+          background: 'linear-gradient(90deg, #F4C587, #D6D3E9, #99D2EC)',
+        }}
+      >
         <CircleUserRound
           size={100}
-          className="opacity-90 stroke-white"
+          className="opacity-70 stroke-black"
           style={{ strokeWidth: '.5px' }}
         />
       </div>
@@ -83,17 +88,4 @@ export default function UserInfo(props: Props) {
       </div>
     </div>
   );
-}
-function randomHexColor() {
-  return `#${Math.floor(Math.random() * 0xffffff)
-    .toString(16)
-    .padStart(6, '0')}`;
-}
-
-function randomGradient() {
-  const color1 = randomHexColor();
-  const color2 = randomHexColor();
-  const angle = Math.floor(Math.random() * 360); // Random angle between 0-360 degrees
-
-  return `linear-gradient(${angle}deg, ${color1}, ${color2})`;
 }

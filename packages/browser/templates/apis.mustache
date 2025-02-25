@@ -127,7 +127,7 @@ export class {{classname}} extends runtime.BaseAPI {
 
         const requestTenantId = localStorage.getItem('tenantId');
         if (requestTenantId) {
-          headerParameters['niledb-tenant-id'] = requestTenantId;
+          headerParameters['nile.tenant_id'] = requestTenantId;
         }
 
         {{#bodyParam}}
@@ -284,7 +284,7 @@ export class {{classname}} extends runtime.BaseAPI {
             {{/hasFormParams}}
         }, initOverrides);
         const headers = new Headers(response.headers);
-        const responseTenantId = headers.get('niledb-tenant-id')
+        const responseTenantId = headers.get('nile.tenant_id')
         if (responseTenantId) {
           localStorage.setItem('tenantId', responseTenantId);
         }
