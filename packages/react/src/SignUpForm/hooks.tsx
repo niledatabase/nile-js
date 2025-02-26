@@ -15,6 +15,7 @@ export function useSignUp<T extends SignUpInfo>(
     beforeMutate,
     callbackUrl,
     baseUrl = '',
+    createTenant,
   } = params;
 
   const mutation = useMutation(
@@ -29,6 +30,12 @@ export function useSignUp<T extends SignUpInfo>(
 
         if (newTenantName) {
           searchParams.set('newTenantName', newTenantName);
+        } else if (createTenant) {
+          if (typeof createTenant === 'boolean') {
+            searchParams.set('newTenantName', payload.email);
+          } else if (typeof createTenant === 'string') {
+            searchParams.set('newTenantName', createTenant);
+          }
         }
         if (tenantId) {
           searchParams.set('tenantId', tenantId);
