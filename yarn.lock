@@ -3133,7 +3133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/browser@npm:^3.0.0-alpha.51, @niledatabase/browser@workspace:packages/browser":
+"@niledatabase/browser@npm:^3.0.0-alpha.52, @niledatabase/browser@workspace:packages/browser":
   version: 0.0.0-use.local
   resolution: "@niledatabase/browser@workspace:packages/browser"
   dependencies:
@@ -3203,7 +3203,7 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.23.3"
     "@chromatic-com/storybook": "npm:^1.9.0"
     "@hookform/resolvers": "npm:^3.9.0"
-    "@niledatabase/browser": "npm:^3.0.0-alpha.51"
+    "@niledatabase/browser": "npm:^3.0.0-alpha.52"
     "@radix-ui/react-dialog": "npm:^1.1.6"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.6"
     "@radix-ui/react-label": "npm:^2.1.0"

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.52](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.51...v3.0.0-alpha.52) (2025-02-26)
+
+### Bug Fixes
+
+- **react:** better create tenant interaction ([7435540](https://github.com/niledatabase/nile-js/commit/7435540b880483ca3d107ced351768fb1b08b789))
+
 # [3.0.0-alpha.51](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.50...v3.0.0-alpha.51) (2025-02-25)
 
 ### Features
