@@ -19,4 +19,5 @@ export interface Props {
   client?: QueryClient;
   callbackUrl?: string;
   baseUrl?: string;
+  createTenant?: string | boolean;
 }

@@ -23,6 +23,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
 import {
@@ -55,6 +56,7 @@ export default function TenantSelector(props: ComponentProps) {
 function SelectTenant(props: ComponentProps) {
   const { data: tenants = [], isLoading, refetch } = useTenants(props);
   const [tenantId, setActiveTenant] = useTenantId();
+  const [open, setOpen] = useState(false);
 
   const tenant = tenants.find((t) => t.id === tenantId);
 
@@ -75,6 +77,7 @@ function SelectTenant(props: ComponentProps) {
         <CreateTenant
           onSuccess={(d) => {
             setActiveTenant(d.id);
+            setOpen(false);
             refetch();
           }}
           trigger={
@@ -95,39 +98,43 @@ function SelectTenant(props: ComponentProps) {
           Switch organization
         </div>
         <div className="flex flex-row w-full flex-1 items-center gap-1">
-          <DropdownMenu>
+          <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger
-              className="group flex-1"
+              className="group w-80"
               disabled={!tenant?.name}
+              onClick={() => {
+                setOpen(true);
+              }}
             >
               {tenant?.name ?? 'Loading...'}
               <ChevronDown className="transition-transform duration-200 ease-in-out group-data-[state=open]:rotate-180" />
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="flex flex-col gap-0.5 max-h-96 overflow-y-scroll custom-scrollbar">
+            <DropdownMenuContent className="flex flex-col gap-0.5 max-h-96 overflow-auto custom-scrollbar w-80">
               {tenants?.map((t) => (
                 <DropdownMenuItem
                   key={t.id}
                   onClick={() => setActiveTenant(t.id)}
                   active={t.id === tenant?.id}
-                  className="min-w-48"
                 >
                   {t.name}
                 </DropdownMenuItem>
               ))}
+              <DropdownMenuSeparator />
+              <CreateTenant
+                onSuccess={(d) => {
+                  setOpen(false);
+                  setActiveTenant(d.id);
+                  refetch();
+                }}
+                trigger={
+                  <Button variant="ghost" className="self-center">
+                    <Plus size={18} /> Create new organization
+                  </Button>
+                }
+              />
             </DropdownMenuContent>
           </DropdownMenu>
-          <CreateTenant
-            onSuccess={async (d) => {
-              await refetch();
-              setActiveTenant(d.id);
-            }}
-            trigger={
-              <Button variant="outline" size="icon">
-                <Plus size={18} />
-              </Button>
-            }
-          />
         </div>
       </div>
     </div>
