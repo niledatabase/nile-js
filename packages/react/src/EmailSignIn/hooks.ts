@@ -4,7 +4,7 @@ import { signIn } from '../../lib/next-auth';
 
 import { Props } from './types';
 
-export function useSignIn(params?: Props) {
+export function useEmailSignIn(params?: Props) {
   const {
     onSuccess,
     onError,

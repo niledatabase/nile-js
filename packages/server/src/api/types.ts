@@ -20,4 +20,5 @@ export type Routes = {
   SIGNUP: string;
   VERIFY_REQUEST: string;
   PASSWORD_RESET: string;
+  LOG: string;
 };

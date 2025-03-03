@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+import { Routes } from '../api/types';
+import urlMatches from '../api/utils/routes/urlMatches';
 import { ServerConfig } from '../types';
 
 import { Config } from './Config';
@@ -50,4 +52,8 @@ export default function Logger(
   const warn = config?.logger?.warn ?? base.warn;
   const error = config?.logger?.error ?? base.error;
   return { info, warn, error, debug };
+}
+
+export function matchesLog(configRoutes: Routes, request: Request): boolean {
+  return urlMatches(request.url, configRoutes.LOG);
 }
