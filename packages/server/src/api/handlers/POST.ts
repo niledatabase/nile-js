@@ -1,4 +1,4 @@
-import Logger from '../../utils/Logger';
+import Logger, { matchesLog } from '../../utils/Logger';
 import users, { matches as matchesUsers } from '../routes/users';
 import tenants, { matches as matchesTenants } from '../routes/tenants';
 import signup, { matches as matchesSignup } from '../routes/signup';
@@ -10,8 +10,13 @@ import { Config } from '../../utils/Config';
 import * as authRoutes from '../routes/auth';
 
 export default function POSTER(configRoutes: Routes, config: Config) {
-  const { info, warn } = Logger(config, '[POST MATCHER]');
+  const { info, warn, error } = Logger(config, '[POST MATCHER]');
   return async function POST(req: Request) {
+    // special case for logging client errors
+    if (matchesLog(configRoutes, req)) {
+      error(req.body && (await req.json()));
+      return new Response(null, { status: 200 });
+    }
     // order matters for tenantUsers
     if (matchesTenantUsers(configRoutes, req)) {
       info('matches tenant users');

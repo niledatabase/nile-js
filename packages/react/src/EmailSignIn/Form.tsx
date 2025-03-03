@@ -8,7 +8,7 @@ import { Email, Form } from '../../components/ui/form';
 import { Button } from '../../components/ui/button';
 
 import { EmailSignInInfo, Props } from './types';
-import { useSignIn } from './hooks';
+import { useEmailSignIn } from './hooks';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +21,7 @@ export default function EmailSigningIn(props: Props) {
   );
 }
 export function EmailSignInForm(props: Props & EmailSignInInfo) {
-  const signIn = useSignIn(props);
+  const signIn = useEmailSignIn(props);
   const form = useForm({ defaultValues: { email: '' } });
   return (
     <Form {...form}>
