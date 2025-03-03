@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.53](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.52...v3.0.0-alpha.53) (2025-03-03)
+
+### Bug Fixes
+
+- **react:** bad import/export, make process.env optional ([470e2e0](https://github.com/niledatabase/nile-js/commit/470e2e0926821b65a5da6186874f90a0c5e387d2))
+
 # [3.0.0-alpha.52](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.51...v3.0.0-alpha.52) (2025-02-26)
 
 **Note:** Version bump only for package @niledatabase/server
