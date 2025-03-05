@@ -67,6 +67,9 @@ export default class DBManager {
     const { info } = Logger(config, '[DBManager]');
     info(`Clearing all connections ${this.connections.size}`);
     this.cleared = true;
+    this.connections.forEach((connection) => {
+      connection.shutdown();
+    });
     this.connections.clear();
   };
 }
