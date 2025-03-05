@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/browser",
-  "version": "3.0.0-alpha.53",
+  "version": "3.0.0-alpha.54",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/browser.esm.js",

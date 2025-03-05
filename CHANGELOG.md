@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.54](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.53...v3.0.0-alpha.54) (2025-03-05)
+
+### Bug Fixes
+
+- **server:** clear out db connections when integration completes ([b61a6f1](https://github.com/niledatabase/nile-js/commit/b61a6f1d096ad27cab9d075ec7cca848a9ba7168))
+
 # [3.0.0-alpha.53](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.52...v3.0.0-alpha.53) (2025-03-03)
 
 ### Bug Fixes
