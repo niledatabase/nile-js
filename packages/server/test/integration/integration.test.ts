@@ -1,9 +1,7 @@
 import { Server } from '../../src/Server';
 import { ServerConfig } from '../../src/types';
 
-const config: ServerConfig = {
-  debug: true,
-};
+const config: ServerConfig = { debug: true };
 
 const primaryUser = {
   email: 'delete@me.com',
@@ -125,16 +123,18 @@ describe('api integration', () => {
     // clean up
     nile.tenantId = '';
 
-    [user.id, secondUser.id, newTenantUser.id].map(async (id) => {
+    for (const id of [user.id, secondUser.id, newTenantUser.id]) {
       await nile.db.query('delete from auth.credentials where user_id = $1', [
         id,
       ]);
       await nile.db.query('delete from users.users where id = $1', [id]);
-    });
+    }
+
     await nile.db.query('delete from users.tenant_users where tenant_id = $1', [
       newTenant.id,
     ]);
     await nile.db.query('delete from tenants where id = $1', [newTenant.id]);
+    await nile.clearConnections();
   }, 10000);
 });
 
@@ -169,6 +169,6 @@ async function initialDebugCleanup(nile: Server) {
   try {
     await Promise.all(commands);
   } catch (e) {
-    // maybe does not matter
+    await Promise.resolve();
   }
 }

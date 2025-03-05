@@ -98,6 +98,10 @@ export class Server {
     return this.manager.getConnection(this.config);
   }
 
+  clearConnections() {
+    this.manager.clear(this.config);
+  }
+
   /**
    * A convenience function that applies a config and ensures whatever was passed is set properly
    */
