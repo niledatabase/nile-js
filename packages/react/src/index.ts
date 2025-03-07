@@ -55,4 +55,5 @@ export {
   useSession,
   signIn,
   signOut,
-} from '../lib/next-auth';
+  auth,
+} from '../lib/auth';

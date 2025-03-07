@@ -1,7 +1,6 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
-
-import { __NEXTAUTH } from '../../lib/next-auth';
+import { usePrefetch } from 'packages/react/lib/utils';
+import { getSession } from 'packages/react/lib/auth';
 
 import { Props, SignUpInfo } from './types';
 
@@ -16,6 +15,7 @@ export function useSignUp<T extends SignUpInfo>(
     callbackUrl,
     baseUrl = '',
     createTenant,
+    init,
   } = params;
 
   const mutation = useMutation(
@@ -51,13 +51,14 @@ export function useSignUp<T extends SignUpInfo>(
           headers: {
             'content-type': 'application/json',
           },
+          ...init,
         });
       },
 
       onSuccess: async (data, variables) => {
         if (data.ok) {
           // consolidate this double session call one day
-          await __NEXTAUTH._getSession({ event: 'storage' });
+          await getSession({ event: 'storage' });
           if (callbackUrl) {
             window.location.href = callbackUrl;
           } else {
@@ -70,9 +71,8 @@ export function useSignUp<T extends SignUpInfo>(
     },
     client
   );
-  useEffect(() => {
-    fetch(`${baseUrl}/api/auth/providers`);
-    fetch(`${baseUrl}/api/auth/csrf`);
-  }, [baseUrl]);
+
+  usePrefetch(params);
+
   return mutation.mutate;
 }

@@ -5,7 +5,7 @@ import { Mail } from 'lucide-react';
 
 import { ButtonProps, buttonVariants } from '../../components/ui/button';
 import { cn } from '../../lib/utils';
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth';
 
 type EmailError = void | {
   error: string;

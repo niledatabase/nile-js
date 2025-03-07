@@ -14,7 +14,9 @@ export default async function route(request: Request, config: Config) {
   if (request.method === 'POST') {
     init.body = request.body;
     const [provider] = new URL(request.url).pathname.split('/').reverse();
-    url = `${proxyRoutes(config)[key]}/${provider}`;
+    url = `${proxyRoutes(config)[key]}${
+      provider !== 'signout' ? `/${provider}` : ''
+    }`;
   }
 
   const res = await fetch(url, { ...init, request }, config);

@@ -20,6 +20,7 @@ import {
   getToken,
   getUsername,
   getSecureCookies,
+  getCallbackUrl,
 } from './envVars';
 
 export type ConfigRoutes = {
@@ -36,21 +37,30 @@ export type ConfigRoutes = {
   USERS?: string;
 };
 
-class ApiConfig {
+export class ApiConfig {
   public cookieKey?: string;
   public basePath?: string | undefined;
+  /**
+   * The client side callback url. Defaults to nothing (so nile.origin will be it), but in the cases of x-origin, you want to set this explicitly to be sure nile-auth does the right thing
+   * If this is set, any `callbackUrl` from the client will be ignored.
+   */
+  public callbackUrl?: string;
+
   private _token?: string;
   constructor({
     basePath,
     cookieKey,
     token,
+    callbackUrl,
   }: {
     basePath?: string | undefined;
     cookieKey: string;
     token: string | undefined;
+    callbackUrl: string | undefined;
   }) {
     this.basePath = basePath;
     this.cookieKey = cookieKey;
+    this.callbackUrl = callbackUrl;
     this._token = token;
   }
 
@@ -123,6 +133,9 @@ export class Config {
     this.debug = Boolean(config?.debug);
     this._userId = config?.userId;
 
+    const callbackUrl =
+      config?.api?.callbackUrl ?? getCallbackUrl(envVarConfig);
+
     const basePath = getBasePath(envVarConfig);
     const { host, port, ...dbConfig } = config?.db ?? {};
     const configuredHost = host ?? getDbHost(envVarConfig);
@@ -132,6 +145,7 @@ export class Config {
       basePath,
       cookieKey: config?.api?.cookieKey ?? 'token',
       token: getToken({ config }),
+      callbackUrl,
     });
     this.db = {
       user: this.user,
@@ -153,6 +167,8 @@ export class Config {
     };
 
     const { host, port, ...dbConfig } = config.db ?? {};
+    const callbackUrl =
+      config?.api?.callbackUrl ?? getCallbackUrl(envVarConfig);
     let configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
     let basePath = getBasePath(envVarConfig);
@@ -162,6 +178,7 @@ export class Config {
         basePath,
         cookieKey: config?.api?.cookieKey ?? 'token',
         token: getToken({ config }),
+        callbackUrl,
       });
       this.db = {
         user: this.user,
@@ -255,6 +272,7 @@ export class Config {
       basePath,
       cookieKey: config?.api?.cookieKey ?? 'token',
       token: getToken({ config }),
+      callbackUrl,
     });
     this.db = {
       user: this.user,

@@ -5,11 +5,15 @@ import { Slot } from '@radix-ui/react-slot';
 
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth';
 
 const XSignInButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
+  ButtonProps & {
+    callbackUrl?: string;
+    buttonText?: string;
+    init?: RequestInit;
+  }
 >(
   (
     {
@@ -18,6 +22,7 @@ const XSignInButton = React.forwardRef<
       buttonText = 'Continue with X',
       variant,
       size,
+      init,
       asChild = false,
       ...props
     },
@@ -32,7 +37,7 @@ const XSignInButton = React.forwardRef<
         )}
         ref={ref}
         onClick={() => {
-          signIn('twitter', { callbackUrl });
+          signIn('twitter', { callbackUrl, init });
         }}
         {...props}
       >

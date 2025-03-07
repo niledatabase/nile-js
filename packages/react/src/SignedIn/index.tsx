@@ -1,18 +1,13 @@
 'use client';
 import React from 'react';
-import { SessionProviderProps } from 'next-auth/react';
-import { Session as NextAuthSession } from 'next-auth/core/types';
+import { NileSession, NonErrorSession } from 'packages/react/lib/auth/types';
+import { SessionProviderProps } from 'packages/react/lib/auth/Authorizer';
 
-import {
-  useSession,
-  SessionProvider,
-  NileSession,
-  NonErrorSession,
-} from '../../lib/next-auth';
+import { useSession, SessionProvider } from '../../lib/auth';
 
 export function convertSession(
-  startSession: NonErrorSession
-): NextAuthSession | undefined | null {
+  startSession: NileSession
+): NonErrorSession | undefined | null {
   if (startSession && 'exp' in startSession) {
     return {
       ...startSession,
@@ -20,15 +15,15 @@ export function convertSession(
     };
   }
 
-  return startSession;
+  // handled previously with `SignedIn`
+  return startSession as NonErrorSession;
 }
 
 export default function SignedIn({
   children,
   session: startSession,
   ...props
-}: Omit<SessionProviderProps, 'session'> & {
-  session?: NileSession;
+}: SessionProviderProps & {
   className?: string;
 }) {
   if (startSession instanceof Response) {

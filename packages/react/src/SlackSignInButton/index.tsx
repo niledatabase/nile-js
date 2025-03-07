@@ -5,11 +5,15 @@ import { Slot } from '@radix-ui/react-slot';
 
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth';
 
 const SlackSignInButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
+  ButtonProps & {
+    callbackUrl?: string;
+    buttonText?: string;
+    init?: ResponseInit;
+  }
 >(
   (
     {
@@ -18,6 +22,7 @@ const SlackSignInButton = React.forwardRef<
       buttonText = 'Continue with Slack',
       variant,
       size,
+      init,
       asChild = false,
       ...props
     },
@@ -32,7 +37,7 @@ const SlackSignInButton = React.forwardRef<
         )}
         ref={ref}
         onClick={() => {
-          signIn('slack', { callbackUrl });
+          signIn('slack', { callbackUrl, init });
         }}
         {...props}
       >

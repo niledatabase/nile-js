@@ -1,0 +1,3 @@
+dist
+# comes from react at build time
+tailwind.config.js 

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useCsrf } from 'packages/react/lib/utils';
 
 import { MutateFnParams, Params } from './types';
 
@@ -43,9 +43,7 @@ export function useResetPassword(params?: Params) {
     onError,
   });
 
-  useEffect(() => {
-    fetch(`${baseUrl}/api/auth/csrf`);
-  }, [baseUrl]);
+  useCsrf(params);
 
   return mutation.mutate;
 }

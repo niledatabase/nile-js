@@ -3,13 +3,17 @@
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 
 const GitHubSignInButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
+  ButtonProps & {
+    callbackUrl?: string;
+    buttonText?: string;
+    init?: RequestInit;
+  }
 >(
   (
     {
@@ -18,6 +22,7 @@ const GitHubSignInButton = React.forwardRef<
       buttonText = 'Continue with GitHub',
       variant,
       size,
+      init,
       asChild = false,
       ...props
     },
@@ -32,7 +37,7 @@ const GitHubSignInButton = React.forwardRef<
         )}
         ref={ref}
         onClick={() => {
-          signIn('github', { callbackUrl });
+          signIn('github', { callbackUrl, init });
         }}
         {...props}
       >
