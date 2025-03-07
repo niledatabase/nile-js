@@ -7,7 +7,9 @@ import type { AuthClientConfig } from 'next-auth/client/_utils';
 //    variable and defaults to 'http://localhost:3000'.
 
 const env = typeof process !== 'undefined' ? process?.env : {};
-export const __NEXTAUTH: AuthClientConfig = {
+export const __NEXTAUTH: AuthClientConfig & {
+  _refetchIntervalTimer: NodeJS.Timeout | undefined;
+} = {
   baseUrl: parseUrl(env.NEXTAUTH_URL ?? env.VERCEL_URL).origin,
   basePath: parseUrl(env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
@@ -17,6 +19,7 @@ export const __NEXTAUTH: AuthClientConfig = {
   _lastSync: 0,
   _session: undefined,
   _getSession: () => undefined,
+  _refetchIntervalTimer: undefined,
 };
 export const NODE_ENV = env.NODE_ENV;
 

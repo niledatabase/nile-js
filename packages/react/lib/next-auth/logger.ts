@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { __NEXTAUTH } from './process';
+
 /* eslint-disable no-console */
 export class UnknownError extends Error {
   code: string;
@@ -128,3 +131,5 @@ export function proxyLogger(
     return _logger;
   }
 }
+
+export const logger = proxyLogger(_logger, __NEXTAUTH.basePath);

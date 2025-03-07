@@ -4,7 +4,8 @@ const { fontFamily } = require('tailwindcss/defaultTheme');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
-  content: ['src/**/*.{ts,tsx}', 'components/ui/*.{ts,tsx}'],
+  // relative to packages for @niledatabase/web
+  content: ['../react/src/**/*.{ts,tsx}', '../react/components/ui/*.{ts,tsx}'],
   theme: {
     container: {
       center: true,

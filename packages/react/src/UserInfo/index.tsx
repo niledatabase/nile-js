@@ -3,15 +3,12 @@ import { BadgeCheck, CalendarCheck, CircleUserRound, Mail } from 'lucide-react';
 import React from 'react';
 
 import { cn } from '../../lib/utils';
-import { User } from '../../../server/src/users/types';
 
-import { useMe } from './hooks';
+import { HookProps, useMe } from './hooks';
 
 export { useMe } from './hooks';
 
-type Props = {
-  user?: User | undefined | null;
-  fetchUrl?: string;
+type Props = HookProps & {
   profilePicturePlaceholder?: React.ReactElement;
   className?: string;
 };

@@ -1,17 +1,18 @@
 'use client';
 import React from 'react';
 
+import { componentFetch, ComponentFetchProps } from '../../lib/utils';
 import { User } from '../../../server/src/users/types';
 
-type Props = {
-  fetchUrl?: string;
+export type HookProps = ComponentFetchProps & {
   user?: User | undefined | null;
+  baseUrl?: string;
 };
-export function useMe(props: Props) {
+export function useMe(props: HookProps) {
   const [user, setUser] = React.useState<User | undefined | null>(props.user);
   React.useEffect(() => {
     if (!user) {
-      fetch(props.fetchUrl ?? '/api/me')
+      componentFetch(`${props?.baseUrl ?? ''}/api/me`, props)
         .then((d) => d?.json())
         .then((u) => setUser(u));
     }
