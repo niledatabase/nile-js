@@ -16,7 +16,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: main
@@ -27,9 +27,9 @@ jobs:
 
       # Setup .npmrc file to publish to GitHub Packages
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "lts/*"
+          node-version: "20.x"
           # registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
           # scope: '@niledatabase'
@@ -63,8 +63,19 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           npx lerna version --force-publish --conventional-prerelease --conventional-commits --yes
 
-      - name: Publish
+      - name: Publish to npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npx lerna publish from-git --yes
+
+      - name: Update npm for git
+        run: |
+          rm -rf .npmrc
+          echo "@niledatabase:registry=https://npm.pkg.github.com/" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN" >> .npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to git
+        run: npx lerna publish from-git --yes --registry=https://npm.pkg.github.com/

@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import pg from 'pg';
 
 import { Config } from '../utils/Config';
 import Logger from '../utils/Logger';
@@ -6,9 +6,9 @@ import Logger from '../utils/Logger';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AllowAny = any;
 
-export function createProxyForPool(pool: Pool, config: Config): Pool {
+export function createProxyForPool(pool: pg.Pool, config: Config): pg.Pool {
   const { info, error } = Logger(config, '[pool]');
-  return new Proxy<Pool>(pool, {
+  return new Proxy<pg.Pool>(pool, {
     get(target: AllowAny, property) {
       if (property === 'query') {
         // give connection string a pass for these problems
@@ -25,7 +25,7 @@ export function createProxyForPool(pool: Pool, config: Config): Pool {
         }
         const caller = target[property];
         return function query(...args: AllowAny) {
-          info(...args);
+          info('query', ...args);
           // @ts-expect-error - not mine
           const called = caller.apply(this, args);
           return called;
@@ -33,5 +33,5 @@ export function createProxyForPool(pool: Pool, config: Config): Pool {
       }
       return target[property];
     },
-  }) as Pool;
+  }) as pg.Pool;
 }

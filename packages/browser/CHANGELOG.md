@@ -3,6 +3,258 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.54](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.53...v3.0.0-alpha.54) (2025-03-05)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.53](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.52...v3.0.0-alpha.53) (2025-03-03)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.52](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.51...v3.0.0-alpha.52) (2025-02-26)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.51](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.50...v3.0.0-alpha.51) (2025-02-25)
+
+### Features
+
+- **react:** add tenantId support, org switcher ([04a2d7a](https://github.com/niledatabsae/nile-js/commit/04a2d7a5bc1657fa36eefb08a437306ffbb5958c))
+
+# [3.0.0-alpha.50](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.49...v3.0.0-alpha.50) (2025-02-24)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.49](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.48...v3.0.0-alpha.49) (2025-02-20)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.48](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.47...v3.0.0-alpha.48) (2025-02-20)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.47](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.46...v3.0.0-alpha.47) (2025-02-19)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.46](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.45...v3.0.0-alpha.46) (2025-02-19)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.45](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.44...v3.0.0-alpha.45) (2025-02-13)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.44](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.43...v3.0.0-alpha.44) (2025-02-11)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.43](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.42...v3.0.0-alpha.43) (2025-02-05)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.42](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.41...v3.0.0-alpha.42) (2025-02-05)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.41](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.40...v3.0.0-alpha.41) (2025-02-05)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.40](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.39...v3.0.0-alpha.40) (2025-01-16)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.39](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.38...v3.0.0-alpha.39) (2025-01-10)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.38](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.37...v3.0.0-alpha.38) (2024-12-19)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.37](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.36...v3.0.0-alpha.37) (2024-12-05)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.36](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.35...v3.0.0-alpha.36) (2024-11-27)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.35](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.34...v3.0.0-alpha.35) (2024-11-27)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.34](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.33...v3.0.0-alpha.34) (2024-10-31)
+
+### Bug Fixes
+
+- **browser:** update test ([854eb63](https://github.com/niledatabsae/nile-js/commit/854eb632defe8b773acf1c3870a05874d16d8f7a))
+
+# [3.0.0-alpha.33](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.32...v3.0.0-alpha.33) (2024-10-18)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.32](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.31...v3.0.0-alpha.32) (2024-10-17)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.31](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.30...v3.0.0-alpha.31) (2024-10-17)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.30](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.29...v3.0.0-alpha.30) (2024-10-17)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.29](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.28...v3.0.0-alpha.29) (2024-10-17)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.28](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.27...v3.0.0-alpha.28) (2024-10-16)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.27](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.26...v3.0.0-alpha.27) (2024-10-16)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.26](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.25...v3.0.0-alpha.26) (2024-10-15)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.25](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.24...v3.0.0-alpha.25) (2024-10-15)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.24](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.23...v3.0.0-alpha.24) (2024-10-14)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.23](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.22...v3.0.0-alpha.23) (2024-10-10)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.22](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.21...v3.0.0-alpha.22) (2024-10-09)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.21](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.20...v3.0.0-alpha.21) (2024-10-09)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.20](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.19...v3.0.0-alpha.20) (2024-10-08)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.19](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.18...v3.0.0-alpha.19) (2024-10-03)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.18](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.17...v3.0.0-alpha.18) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.17](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.16...v3.0.0-alpha.17) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.16](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.15...v3.0.0-alpha.16) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.15](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.14...v3.0.0-alpha.15) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.14](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.13...v3.0.0-alpha.14) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.13](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.12...v3.0.0-alpha.13) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.12](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.11...v3.0.0-alpha.12) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.11](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.10...v3.0.0-alpha.11) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.10](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.9...v3.0.0-alpha.10) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.9](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.8...v3.0.0-alpha.9) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.8](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.7...v3.0.0-alpha.8) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.7](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.6...v3.0.0-alpha.7) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.6](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.5...v3.0.0-alpha.6) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.5](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.4...v3.0.0-alpha.5) (2024-08-26)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.4](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.3...v3.0.0-alpha.4) (2024-08-15)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.3](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.2...v3.0.0-alpha.3) (2024-08-14)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.2](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.1...v3.0.0-alpha.2) (2024-08-13)
+
+### Bug Fixes
+
+- **server:** signup and login ([62897d6](https://github.com/niledatabsae/nile-js/commit/62897d6ebc4dcb4543e5eff5b3a9a9a0c4a8259f))
+
+# [3.0.0-alpha.1](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.0...v3.0.0-alpha.1) (2024-08-13)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+# [3.0.0-alpha.0](https://github.com/niledatabsae/nile-js/compare/v2.5.0-alpha.0...v3.0.0-alpha.0) (2024-08-13)
+
+### Features
+
+- **server:** use new region api ([079415e](https://github.com/niledatabsae/nile-js/commit/079415e17e342e30e63481cee79bcb32ed7042bc))
+
+# [2.5.0-alpha.0](https://github.com/niledatabsae/nile-js/compare/v2.4.2-alpha.4...v2.5.0-alpha.0) (2024-06-27)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+## [2.4.2-alpha.4](https://github.com/niledatabsae/nile-js/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-06-27)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+## [2.4.2-alpha.3](https://github.com/niledatabsae/nile-js/compare/v2.4.2-alpha.2...v2.4.2-alpha.3) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+## [2.4.2-alpha.2](https://github.com/niledatabsae/nile-js/compare/v2.4.2-alpha.1...v2.4.2-alpha.2) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+## [2.4.2-alpha.1](https://github.com/niledatabsae/nile-js/compare/v2.4.2-alpha.0...v2.4.2-alpha.1) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/browser
+
+## [2.4.2-alpha.0](https://github.com/niledatabsae/nile-js/compare/v2.4.1...v2.4.2-alpha.0) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/browser
+
 ## [2.4.1](https://github.com/niledatabsae/nile-js/compare/v2.4.1-alpha.0...v2.4.1) (2024-04-11)
 
 **Note:** Version bump only for package @niledatabase/browser

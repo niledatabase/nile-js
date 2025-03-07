@@ -1,97 +1,161 @@
 import { Config } from '../utils/Config';
-import Requester, { NileRequest, NileResponse } from '../utils/Requester';
+import Requester, { NileRequest } from '../utils/Requester';
 
-export interface CreateBasicUserRequest {
-  email: string;
-  password: string;
-  preferredName?: string;
-  newTenant?: string;
-}
-export const LoginUserResponseTokenTypeEnum = {
-  AccessToken: 'ACCESS_TOKEN',
-  RefreshToken: 'REFRESH_TOKEN',
-  IdToken: 'ID_TOKEN',
-} as const;
-export type LoginUserResponseTokenTypeEnum =
-  (typeof LoginUserResponseTokenTypeEnum)[keyof typeof LoginUserResponseTokenTypeEnum];
-
-export interface LoginUserResponseToken {
-  jwt: string;
-  maxAge: number;
-  type: LoginUserResponseTokenTypeEnum;
-}
-export interface LoginUserResponse {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-  id: string;
-  token: LoginUserResponseToken;
-}
-export interface User {
-  id?: string;
-  tenants?: Set<string>;
-  email?: string;
-  preferredName?: string;
-}
+import { CreateBasicUserRequest, User } from './types';
 
 export default class Users extends Config {
-  constructor(config: Config) {
+  headers?: Headers;
+  constructor(config: Config, headers?: Headers) {
     super(config);
-  }
-
-  get baseUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}`;
+    this.headers = headers;
   }
 
   get usersUrl() {
-    return `${this.baseUrl}/users`;
+    return '/users';
   }
 
   get tenantUsersUrl() {
-    return `${this.baseUrl}/tenants/${this.tenantId ?? '{tenantId}'}/users`;
+    return `/tenants/${this.tenantId ?? '{tenantId}'}/users`;
   }
+  get linkUsersUrl() {
+    return `/tenants/${this.tenantId ?? '{tenantId}'}/users/${
+      this.userId ?? '{userId}'
+    }/link`;
+  }
+
+  get tenantUserUrl() {
+    return `/tenants/${this.tenantId ?? '{tenantId}'}/users/${
+      this.userId ?? '{userId}'
+    }`;
+  }
+  handleHeaders(init?: RequestInit) {
+    if (this.headers) {
+      if (init) {
+        init.headers = new Headers({ ...this.headers, ...init?.headers });
+        return init;
+      } else {
+        init = {
+          headers: this.headers,
+        };
+        return init;
+      }
+    }
+    return undefined;
+  }
+
+  createUser = async (
+    req: NileRequest<CreateBasicUserRequest>,
+    init?: RequestInit
+  ): Promise<User | Response> => {
+    const _requester = new Requester(this);
+
+    const _init = this.handleHeaders(init);
+    return await _requester.post(req, this.usersUrl, _init);
+  };
 
   createTenantUser = async (
     req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
-  ): NileResponse<LoginUserResponse> => {
+  ): Promise<User | Response> => {
     const _requester = new Requester(this);
-    return await _requester.post(req, this.tenantUsersUrl, init);
+
+    const _init = this.handleHeaders(init);
+    return await _requester.post(req, this.tenantUsersUrl, _init);
+  };
+
+  updateUser = async (
+    req: NileRequest<
+      Partial<Omit<User, 'email' | 'tenants' | 'created' | 'updated'>>
+    >,
+    init?: RequestInit
+  ): Promise<User | Response> => {
+    let _req;
+    if (req && 'id' in req) {
+      _req = new Request(`${this.api.basePath}${this.tenantUserUrl}`, {
+        body: JSON.stringify(req),
+        method: 'PUT',
+      });
+      this.userId = String(req.id);
+    } else {
+      _req = req;
+    }
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return await _requester.put(_req, this.tenantUserUrl, _init);
   };
 
   listUsers = async (
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): NileResponse<User[]> => {
+  ): Promise<User[] | Response> => {
     const _requester = new Requester(this);
-    return await _requester.get(req, this.usersUrl, init);
+    const _init = this.handleHeaders(init);
+    return await _requester.get(req, this.tenantUsersUrl, _init);
   };
 
-  updateUser = async (
-    userId: string,
-    req: NileRequest<User>,
+  linkUser = async (
+    req: NileRequest<{ id: string; tenantId?: string }> | Headers | string,
     init?: RequestInit
-  ): NileResponse<User> => {
+  ): Promise<User | Response> => {
     const _requester = new Requester(this);
-    return await _requester.put(req, `${this.usersUrl}/${userId}`, init);
+    if (typeof req === 'string') {
+      this.userId = req;
+    } else {
+      if ('id' in req) {
+        this.userId = req.id;
+      }
+      if ('tenantId' in req) {
+        this.tenantId = req.tenantId;
+      }
+    }
+
+    const _init = this.handleHeaders(init);
+    return await _requester.put(req, this.linkUsersUrl, _init);
   };
 
-  listTenantUsers = async (
-    req: NileRequest<void> | Headers,
+  unlinkUser = async (
+    req: NileRequest<{ id: string; tenantId?: string }> | Headers | string,
     init?: RequestInit
-  ): NileResponse<User[]> => {
+  ): Promise<Response> => {
+    if (typeof req === 'string') {
+      this.userId = req;
+    } else {
+      if ('id' in req) {
+        this.userId = req.id;
+      }
+      if ('tenantId' in req) {
+        this.tenantId = req.tenantId;
+      }
+    }
     const _requester = new Requester(this);
-    return await _requester.get(req, this.tenantUsersUrl, init);
+    const _init = this.handleHeaders(init);
+    return await _requester.delete(req, this.linkUsersUrl, _init);
   };
 
   get meUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/users/me`;
+    return '/me';
   }
 
   me = async (
-    req: NileRequest<void>,
+    req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): NileResponse<User> => {
+  ): Promise<User | Response> => {
     const _requester = new Requester(this);
-    return await _requester.get(req, this.meUrl, init);
+    const _init = this.handleHeaders(init);
+    return await _requester.get(req, this.meUrl, _init);
+  };
+  updateMe = async (
+    req:
+      | NileRequest<
+          Partial<
+            Omit<User, 'email' | 'id' | 'tenants' | 'created' | 'updated'>
+          >
+        >
+      | Headers,
+    init?: RequestInit
+  ): Promise<User | Response> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return await _requester.put(req, this.meUrl, _init);
   };
 }

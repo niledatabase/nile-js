@@ -1,37 +1,107 @@
 import { Config } from '../utils/Config';
-import Requester, { NileRequest, NileResponse } from '../utils/Requester';
+import Requester, { NileRequest } from '../utils/Requester';
 
-export interface Tenant {
-  id: string;
-  name?: string;
-}
+import { Tenant } from './types';
 
 export default class Tenants extends Config {
-  constructor(config: Config) {
+  headers?: Headers;
+  constructor(config: Config, headers?: Headers) {
     super(config);
+    this.headers = headers;
+  }
+  handleHeaders(init?: RequestInit) {
+    if (this.headers) {
+      if (init) {
+        init.headers = new Headers({ ...this.headers, ...init?.headers });
+        return init;
+      } else {
+        init = {
+          headers: this.headers,
+        };
+        return init;
+      }
+    }
+    return undefined;
   }
   get tenantsUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/tenants`;
+    return '/tenants';
   }
   get tenantUrl() {
-    return `/databases/${encodeURIComponent(this.databaseId)}/tenants/${
-      this.tenantId ?? '{tenantId}'
-    }`;
+    return `/tenants/${this.tenantId ?? '{tenantId}'}`;
   }
 
   createTenant = async (
-    req: NileRequest<{ name: string }>,
+    req: NileRequest<{ name: string }> | Headers | string,
     init?: RequestInit
-  ): NileResponse<Tenant> => {
+  ): Promise<Tenant | Response> => {
+    let _req;
+    if (typeof req === 'string') {
+      _req = new Request(`${this.api.basePath}${this.tenantsUrl}`, {
+        body: JSON.stringify({ name: req }),
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    } else {
+      _req = req;
+    }
     const _requester = new Requester(this);
-    return _requester.post(req, this.tenantsUrl, init);
+    const _init = this.handleHeaders(init);
+    return _requester.post(_req, this.tenantsUrl, _init);
   };
 
   getTenant = async (
-    req: NileRequest<void>,
+    req: NileRequest<{ id: string }> | Headers | string | void,
     init?: RequestInit
-  ): NileResponse<Tenant> => {
+  ): Promise<Tenant | Response> => {
+    if (typeof req === 'string') {
+      this.tenantId = req;
+    }
     const _requester = new Requester(this);
-    return _requester.get(req, this.tenantUrl, init);
+    const _init = this.handleHeaders(init);
+    return _requester.get<Tenant>(req, this.tenantUrl, _init);
+  };
+
+  get tenantListUrl() {
+    return `/users/${this.userId ?? '{userId}'}/tenants`;
+  }
+
+  listTenants = async (
+    req: NileRequest<void> | Headers,
+    init?: RequestInit
+  ): Promise<Tenant[] | Response> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return _requester.get<Tenant[]>(req, this.tenantListUrl, _init);
+  };
+
+  deleteTenant = async (
+    req: NileRequest<void> | Headers | string,
+    init?: RequestInit
+  ): Promise<Response> => {
+    if (typeof req === 'string') {
+      this.tenantId = req;
+    }
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return _requester.delete(req, this.tenantUrl, _init);
+  };
+  updateTenant = async (
+    req: NileRequest<void> | Headers | { name: string },
+    init?: RequestInit
+  ): Promise<Tenant | Response> => {
+    let _req;
+    if (req && 'name' in req) {
+      _req = new Request(`${this.api.basePath}${this.tenantUrl}`, {
+        body: JSON.stringify(req),
+        method: 'PUT',
+      });
+    } else {
+      _req = req;
+    }
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return _requester.put<Tenant>(_req, this.tenantUrl, _init);
   };
 }

@@ -4,29 +4,31 @@ describe('nile db', () => {
   it('has expected methods', () => {
     const nile = new Browser({});
     const keys = Object.keys(nile);
-    expect(keys).toEqual(['auth', 'users']);
+    expect(keys).toEqual([
+      'configuration',
+      'middleware',
+      'fetchApi',
+      'auth',
+      'users',
+      'tenants',
+      'me',
+    ]);
     keys.forEach((k) => {
       const props = Object.getOwnPropertyNames(
         // @ts-expect-error testing
         Object.getPrototypeOf(nile[k])
       );
       if (k === 'auth') {
-        expect(props).toEqual([
-          'constructor',
-          'createProvider',
-          'getSSOProviders',
-          'login',
-          'signUp',
-          'updateProvider',
-        ]);
+        expect(props).toEqual(['constructor', 'signin']);
       }
       if (k === 'users') {
         expect(props).toEqual([
           'constructor',
           'createTenantUser',
-          'identifyUser',
+          'createUser',
           'listTenantUsers',
           'listUsers',
+          'signUp',
           'updateUser',
         ]);
       }

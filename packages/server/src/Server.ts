@@ -1,41 +1,19 @@
-import { Pool } from 'pg';
+import pg from 'pg';
 
 import { ServerConfig } from './types';
 import { Config } from './utils/Config';
-import Auth from './auth';
-import Users from './users';
-import Tenants from './tenants';
 import { watchTenantId, watchToken, watchUserId } from './utils/Event';
 import DbManager from './db';
-import { getServerId, makeServerId } from './utils/Server';
-
-type Api = {
-  auth: Auth;
-  users: Users;
-  tenants: Tenants;
-};
-
-const init = (config: Config): Api => {
-  const auth = new Auth(config);
-  const users = new Users(config);
-  const tenants = new Tenants(config);
-  return {
-    auth,
-    users,
-    tenants,
-  };
-};
+import { Api } from './Api';
 
 export class Server {
   config: Config;
   api: Api;
-  private manager: DbManager;
-  private servers: Map<string, Server>;
+  private manager!: DbManager;
 
   constructor(config?: ServerConfig) {
     this.config = new Config(config as ServerConfig, '[initial config]');
-    this.servers = new Map();
-    this.api = init(this.config);
+    this.api = new Api(this.config);
     this.manager = new DbManager(this.config);
 
     watchTenantId((tenantId) => {
@@ -53,6 +31,7 @@ export class Server {
 
   setConfig(cfg: Config) {
     this.config = new Config(cfg);
+    this.api.updateConfig(this.config);
   }
 
   async init(cfg?: Config) {
@@ -61,15 +40,13 @@ export class Server {
       ...cfg,
     });
     this.setConfig(updatedConfig);
-    this.manager = new DbManager(this.config);
-    this.api = init(updatedConfig);
+
     return this;
   }
 
   set databaseId(val: string | void) {
     if (val) {
       this.config.databaseId = val;
-      this.api.auth.databaseId = val;
       this.api.users.databaseId = val;
       this.api.tenants.databaseId = val;
     }
@@ -85,7 +62,6 @@ export class Server {
     this.config.userId = userId;
 
     if (this.api) {
-      this.api.auth.userId = this.config.userId;
       this.api.users.userId = this.config.userId;
       this.api.tenants.userId = this.config.userId;
     }
@@ -100,7 +76,6 @@ export class Server {
     this.config.tenantId = tenantId;
 
     if (this.api) {
-      this.api.auth.tenantId = tenantId;
       this.api.users.tenantId = tenantId;
       this.api.tenants.tenantId = tenantId;
     }
@@ -114,52 +89,49 @@ export class Server {
     if (token) {
       this.config.api.token = token;
       if (this.api) {
-        this.api.auth.api.token = token;
         this.api.users.api.token = token;
         this.api.tenants.api.token = token;
       }
     }
   }
-  get db(): Pool {
-    // only need to interact with the knex object
+  get db(): pg.Pool {
     return this.manager.getConnection(this.config);
   }
 
+  clearConnections() {
+    this.manager.clear(this.config);
+  }
+
   /**
-   * A utility function if you want to manage different NileDB instances yourself
-   * returns the global Server object, an existing server that's already been configured,
-   * or a new one if the config isn't in the cache
+   * A convenience function that applies a config and ensures whatever was passed is set properly
    */
 
   getInstance(config: ServerConfig): Server {
     const _config = { ...this.config, ...config };
-    const serverId = getServerId(_config);
-    const currentServerId = makeServerId(this.config);
-    if (serverId === currentServerId) {
-      return this;
-    }
-    const existing = this.servers.get(serverId);
 
-    if (existing) {
-      // be sure the config is up to date
-      const updatedConfig = new Config(_config);
-      existing.setConfig(updatedConfig);
-      // propagage special config items
-      existing.tenantId = updatedConfig.tenantId;
-      existing.userId = updatedConfig.userId;
-      existing.token = updatedConfig.api.token;
-      existing.databaseId = updatedConfig.databaseId;
-      return existing;
+    // be sure the config is up to date
+    const updatedConfig = new Config(_config);
+    this.setConfig(updatedConfig);
+    // propagate special config items
+    this.tenantId = updatedConfig.tenantId;
+    this.userId = updatedConfig.userId;
+    // if we have a token, update it, else use the one that was there
+    if (updatedConfig.api.token) {
+      this.token = updatedConfig.api.token;
     }
+    this.databaseId = updatedConfig.databaseId;
 
-    this.servers.set(serverId, new Server(_config));
-    return this.servers.get(serverId) as unknown as Server;
+    return this;
   }
 }
 
+let server: Server;
 export async function create(config?: ServerConfig): Promise<Server> {
-  const server = new Server(config);
+  if (!server) {
+    server = new Server(config);
+  }
+  if (config) {
+    return await server.init(new Config(config));
+  }
   return await server.init();
 }
-
-export default create;

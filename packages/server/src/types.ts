@@ -6,6 +6,12 @@ export type Opts = {
 };
 
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
+export type LoggerType = {
+  info?: (args: unknown[]) => void;
+  warn?: (args: unknown[]) => void;
+  error?: (args: unknown[]) => void;
+  debug?: (args: unknown[]) => void;
+};
 export type ServerConfig = {
   databaseId?: string; // process.env.NILEDB_ID
   user?: string; // process.env.NILEDB_USER
@@ -14,12 +20,16 @@ export type ServerConfig = {
   tenantId?: string | null | undefined; // process.env.NILEDB_TENANT
   userId?: string | null | undefined;
   debug?: boolean;
+  configureUrl?: string; // process.env.NILEDB_CONFIGURE
+  secureCookies?: boolean; // process.env.NILEDB_SECURECOOKIES
   db?: NilePoolConfig; // db.host process.env.NILEDB_HOST
   api?: {
+    version?: number;
     basePath?: string; // process.env.NILEDB_API
     cookieKey?: string;
     token?: string; // process.env.NILEDB_TOKEN
   };
+  logger?: LoggerType;
 };
 
 export type NileDb = NilePoolConfig & { tenantId?: string };
@@ -28,3 +38,12 @@ export type AfterCreate = (
   conn: PoolClient,
   done: (err: null | Error, conn: PoolClient) => void
 ) => void;
+
+export type Database = {
+  name: string;
+  apiHost: string;
+  dbHost: string;
+  id: string;
+  message?: string; // is actually an error
+  status: 'READY' | string;
+};

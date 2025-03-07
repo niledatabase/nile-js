@@ -94,4 +94,4 @@ export interface APIError {
   statusCode: number;
 }
 
-export type NileResponse<T> = Promise<NResponse<T & APIError>>;
+export type NileResponse<T> = Promise<T | NResponse<T & APIError>>;

@@ -3,6 +3,349 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.54](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.53...v3.0.0-alpha.54) (2025-03-05)
+
+### Bug Fixes
+
+- **server:** clear out db connections when integration completes ([b61a6f1](https://github.com/niledatabase/nile-js/commit/b61a6f1d096ad27cab9d075ec7cca848a9ba7168))
+
+# [3.0.0-alpha.53](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.52...v3.0.0-alpha.53) (2025-03-03)
+
+### Bug Fixes
+
+- **react:** bad import/export, make process.env optional ([470e2e0](https://github.com/niledatabase/nile-js/commit/470e2e0926821b65a5da6186874f90a0c5e387d2))
+
+# [3.0.0-alpha.52](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.51...v3.0.0-alpha.52) (2025-02-26)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.51](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.50...v3.0.0-alpha.51) (2025-02-25)
+
+### Features
+
+- **react:** add tenantId support, org switcher ([04a2d7a](https://github.com/niledatabase/nile-js/commit/04a2d7a5bc1657fa36eefb08a437306ffbb5958c))
+
+# [3.0.0-alpha.50](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.49...v3.0.0-alpha.50) (2025-02-24)
+
+### Bug Fixes
+
+- **server:** handle more express stuff ([29326cf](https://github.com/niledatabase/nile-js/commit/29326cf0ce57ed9e6e878937f25d7e479a7683c9))
+
+# [3.0.0-alpha.49](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.48...v3.0.0-alpha.49) (2025-02-20)
+
+### Bug Fixes
+
+- **server:** support secure cookies in the API ([9e0fb9c](https://github.com/niledatabase/nile-js/commit/9e0fb9ccc66a2c49e3bc4ffc911de572a14c9c52))
+
+# [3.0.0-alpha.48](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.47...v3.0.0-alpha.48) (2025-02-20)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.47](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.46...v3.0.0-alpha.47) (2025-02-19)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.46](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.45...v3.0.0-alpha.46) (2025-02-19)
+
+### Bug Fixes
+
+- **react:** add more components ([5d97335](https://github.com/niledatabase/nile-js/commit/5d973354339790bcbad2526f5fb16ff64d1b6a62))
+- **react:** add more components, reorder env var pickup ([9a68e99](https://github.com/niledatabase/nile-js/commit/9a68e99f995fd0cce1c33f431b51691267acf96b))
+
+# [3.0.0-alpha.45](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.44...v3.0.0-alpha.45) (2025-02-13)
+
+### Bug Fixes
+
+- **server:** try json, try text, remove extra clone ([79fe502](https://github.com/niledatabase/nile-js/commit/79fe502fabdb4d1e429f7362180c6326f8ff05bb))
+
+# [3.0.0-alpha.44](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.43...v3.0.0-alpha.44) (2025-02-11)
+
+### Features
+
+- add express, sign out button ([0161a50](https://github.com/niledatabase/nile-js/commit/0161a5091870c21d55ea98c82d580f3faa1b02c3))
+
+# [3.0.0-alpha.43](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.42...v3.0.0-alpha.43) (2025-02-05)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.42](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.41...v3.0.0-alpha.42) (2025-02-05)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.41](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.40...v3.0.0-alpha.41) (2025-02-05)
+
+### Features
+
+- **react:** add password reset ([f933cd5](https://github.com/niledatabase/nile-js/commit/f933cd533614e97fb15784297f8e2092b9f0c55f))
+
+# [3.0.0-alpha.40](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.39...v3.0.0-alpha.40) (2025-01-16)
+
+### Bug Fixes
+
+- protect against strings, log errors if nile-auth is missing ([acbf8b4](https://github.com/niledatabase/nile-js/commit/acbf8b4a8e439a7105aeb277f7c265357c370fc4))
+
+# [3.0.0-alpha.39](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.38...v3.0.0-alpha.39) (2025-01-10)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.38](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.37...v3.0.0-alpha.38) (2024-12-19)
+
+### Bug Fixes
+
+- **react:** add email login method ([7b1b582](https://github.com/niledatabase/nile-js/commit/7b1b5821ae94691a28cff010c7b2a3fdbc484fbd))
+
+# [3.0.0-alpha.37](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.36...v3.0.0-alpha.37) (2024-12-05)
+
+### Features
+
+- **server:** support postgres creds in postgres url ([6e24c10](https://github.com/niledatabase/nile-js/commit/6e24c107e043456b09a147e5489b889642a65222))
+
+# [3.0.0-alpha.36](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.35...v3.0.0-alpha.36) (2024-11-27)
+
+### Bug Fixes
+
+- **server:** only update the token if there is a value ([824887f](https://github.com/niledatabase/nile-js/commit/824887f50d4d38de82cb767a9caa422b2123d2b7))
+
+# [3.0.0-alpha.35](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.34...v3.0.0-alpha.35) (2024-11-27)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.34](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.33...v3.0.0-alpha.34) (2024-10-31)
+
+### Bug Fixes
+
+- **server:** change sign up to log in ([928a439](https://github.com/niledatabase/nile-js/commit/928a4393dcd3749f58408480bc87c9de365c22e6))
+
+# [3.0.0-alpha.33](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.32...v3.0.0-alpha.33) (2024-10-18)
+
+### Bug Fixes
+
+- **server:** allow secure cookies to be configured ([5b3250d](https://github.com/niledatabase/nile-js/commit/5b3250deef8dbc7bcb7bc4c82babd0447787fb83))
+
+# [3.0.0-alpha.32](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.31...v3.0.0-alpha.32) (2024-10-17)
+
+### Bug Fixes
+
+- **server:** set auth headers, more type exports ([22ab80e](https://github.com/niledatabase/nile-js/commit/22ab80e9700d584ff5420180fa82f02d55c0bcd3))
+
+# [3.0.0-alpha.31](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.30...v3.0.0-alpha.31) (2024-10-17)
+
+### Bug Fixes
+
+- **server:** export more types ([bbe9b41](https://github.com/niledatabase/nile-js/commit/bbe9b41ddf16f11bc54b1e40f605497bd42f2bec))
+
+# [3.0.0-alpha.30](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.29...v3.0.0-alpha.30) (2024-10-17)
+
+### Bug Fixes
+
+- **server:** update user type ([c2c3b8f](https://github.com/niledatabase/nile-js/commit/c2c3b8fc475b3414866831d1109ad3ed43e3601d))
+
+# [3.0.0-alpha.29](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.28...v3.0.0-alpha.29) (2024-10-17)
+
+### Bug Fixes
+
+- **server:** add server side method for getting the session ([c8d496f](https://github.com/niledatabase/nile-js/commit/c8d496f899236813d02d3d31f64172fb6d9265a1))
+
+# [3.0.0-alpha.28](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.27...v3.0.0-alpha.28) (2024-10-16)
+
+### Bug Fixes
+
+- **server:** pass query params along ([3a450a8](https://github.com/niledatabase/nile-js/commit/3a450a82b9e66ce69db9c0ee6c6c58d7dfde9c7c))
+
+# [3.0.0-alpha.27](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.26...v3.0.0-alpha.27) (2024-10-16)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.26](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.25...v3.0.0-alpha.26) (2024-10-15)
+
+### Bug Fixes
+
+- **server:** allow api config to mutate ([d54208e](https://github.com/niledatabase/nile-js/commit/d54208e3110b7271116c89688c7bb7408e4a987c))
+
+# [3.0.0-alpha.25](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.24...v3.0.0-alpha.25) (2024-10-15)
+
+### Bug Fixes
+
+- **server:** use hostname not host, evict on release ([49e7c7e](https://github.com/niledatabase/nile-js/commit/49e7c7e084625813dc6c682628cd8db1f368134d))
+
+# [3.0.0-alpha.24](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.23...v3.0.0-alpha.24) (2024-10-14)
+
+### Bug Fixes
+
+- **server:** split the set-cookie header correctly ([7588125](https://github.com/niledatabase/nile-js/commit/7588125f7518fdfac2bff3a80e99d911e2216e24))
+
+# [3.0.0-alpha.23](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.22...v3.0.0-alpha.23) (2024-10-10)
+
+### Bug Fixes
+
+- **server:** keep a single API instance ([1cd5eab](https://github.com/niledatabase/nile-js/commit/1cd5eab252dd9557cb5baa21736374432509d3fb))
+
+# [3.0.0-alpha.22](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.21...v3.0.0-alpha.22) (2024-10-09)
+
+### Bug Fixes
+
+- **server:** debug log responses ([aca76ac](https://github.com/niledatabase/nile-js/commit/aca76ac2707fcdb5bb01a231a3fef0847c683a1f))
+
+# [3.0.0-alpha.21](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.20...v3.0.0-alpha.21) (2024-10-09)
+
+### Bug Fixes
+
+- **server:** also find tokens in secure cookies ([9bd4c52](https://github.com/niledatabase/nile-js/commit/9bd4c52b89b5bb8eb0704979e321eebe81f5369e))
+- **server:** fix tests ([5af03ab](https://github.com/niledatabase/nile-js/commit/5af03abcb46e7b080d1dc20120ad66637c34cb2b))
+
+# [3.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.19...v3.0.0-alpha.20) (2024-10-08)
+
+### Bug Fixes
+
+- **server:** support external logging ([059c8c9](https://github.com/niledatabase/nile-js/commit/059c8c99890afb36fd933482f489b0b8e38059f7))
+
+# [3.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.18...v3.0.0-alpha.19) (2024-10-03)
+
+### Bug Fixes
+
+- **repo:** remove turbo/pnp, fix dbmanager, remove mui, use tailwind ([900270c](https://github.com/niledatabase/nile-js/commit/900270cdff5ad5c87997fe6a930e9bcf891784f8))
+- **server:** let the db handle UUIDs, mostly ([0a8bc23](https://github.com/niledatabase/nile-js/commit/0a8bc23f7dedfa3444be583c9ceb923f5d01bded))
+- **server:** remove db creds, allow any UUID ([bbc75bf](https://github.com/niledatabase/nile-js/commit/bbc75bf13b1e5d9d2dc0c1a98e31ecd512743133))
+- **server:** remove dev creds from requests ([d473275](https://github.com/niledatabase/nile-js/commit/d473275320925d7ef3291f3d90bf5133f1a6e3ee))
+- **server:** support random uuids ([2a04619](https://github.com/niledatabase/nile-js/commit/2a04619c43ad8a67c476c421ba721b7823dbb88d))
+
+# [3.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.17...v3.0.0-alpha.18) (2024-08-29)
+
+### Bug Fixes
+
+- **server:** match on path correctly ([753e826](https://github.com/niledatabase/nile-js/commit/753e826c6634aaa64f99952a6c1473f2e2c95133))
+
+# [3.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.16...v3.0.0-alpha.17) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.16](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.15...v3.0.0-alpha.16) (2024-08-29)
+
+### Bug Fixes
+
+- **server:** actually fetch for login ([3f75a81](https://github.com/niledatabase/nile-js/commit/3f75a8101efa4dfad8f15aa33f7de9266d1b0afc))
+
+# [3.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.14...v3.0.0-alpha.15) (2024-08-29)
+
+### Bug Fixes
+
+- **server:** use real proxy routes for server side login ([27f0551](https://github.com/niledatabase/nile-js/commit/27f0551aa7a40d635431a20519df0cdee888729c))
+
+# [3.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.13...v3.0.0-alpha.14) (2024-08-28)
+
+### Bug Fixes
+
+- **server:** consolidate basepath, remove version ([cd3d696](https://github.com/niledatabase/nile-js/commit/cd3d696729d47ea651899f163be49f2830f3cba3))
+
+# [3.0.0-alpha.13](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.12...v3.0.0-alpha.13) (2024-08-28)
+
+### Bug Fixes
+
+- **server:** log requests based on the config again ([155bd31](https://github.com/niledatabase/nile-js/commit/155bd314a1f6c62f17658458af106a857b1db9b3))
+
+# [3.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.11...v3.0.0-alpha.12) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.11](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.10...v3.0.0-alpha.11) (2024-08-28)
+
+### Bug Fixes
+
+- **server:** allow autoconfiguration on basepath for routes ([9ad10f5](https://github.com/niledatabase/nile-js/commit/9ad10f5543b3a6cb01200b17aefcef877d15f3a3))
+
+# [3.0.0-alpha.10](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.9...v3.0.0-alpha.10) (2024-08-28)
+
+### Bug Fixes
+
+- **server:** swap configure preference, debug migration missing on db ([fa0e846](https://github.com/niledatabase/nile-js/commit/fa0e8469212f8db168f9627010a34fd102bc4440))
+
+# [3.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.8...v3.0.0-alpha.9) (2024-08-27)
+
+### Bug Fixes
+
+- **server:** fix server side login debugger, allow configure url to be configured ([803ecc0](https://github.com/niledatabase/nile-js/commit/803ecc0c4820c002bab23f18b78dd522670cba81))
+
+# [3.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.7...v3.0.0-alpha.8) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.6...v3.0.0-alpha.7) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.6](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.5...v3.0.0-alpha.6) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.4...v3.0.0-alpha.5) (2024-08-26)
+
+### Bug Fixes
+
+- **server:** fixes for v3 ([ea360e6](https://github.com/niledatabase/nile-js/commit/ea360e626decb2a0c03e590dff4c890b459e3167))
+
+# [3.0.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.3...v3.0.0-alpha.4) (2024-08-15)
+
+### Bug Fixes
+
+- **server:** add list tenants ([9b96314](https://github.com/niledatabase/nile-js/commit/9b96314ccb0a1a973f71ce46ab2a836c6471623e))
+
+# [3.0.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.2...v3.0.0-alpha.3) (2024-08-14)
+
+### Bug Fixes
+
+- **server:** delete by email ([b228358](https://github.com/niledatabase/nile-js/commit/b228358626f6de9f288c384e955a6f9e0d1f7d67))
+
+# [3.0.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.1...v3.0.0-alpha.2) (2024-08-13)
+
+### Bug Fixes
+
+- **server:** signup and login ([62897d6](https://github.com/niledatabase/nile-js/commit/62897d6ebc4dcb4543e5eff5b3a9a9a0c4a8259f))
+
+# [3.0.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.0...v3.0.0-alpha.1) (2024-08-13)
+
+### Bug Fixes
+
+- **server:** fix the endpoints ([63c71cd](https://github.com/niledatabase/nile-js/commit/63c71cd2bbbe59ff649e31b70139e919da75d63d))
+
+# [3.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.5.0-alpha.0...v3.0.0-alpha.0) (2024-08-13)
+
+### Features
+
+- **server:** use new region api ([079415e](https://github.com/niledatabase/nile-js/commit/079415e17e342e30e63481cee79bcb32ed7042bc))
+- **server:** use the global control plane ([eb86869](https://github.com/niledatabase/nile-js/commit/eb868696b1f47fa8b26c302c2b531b702a6e9128))
+
+### BREAKING CHANGES
+
+- **server:** URLS for auto configuration changed
+
+# [2.5.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.4...v2.5.0-alpha.0) (2024-06-27)
+
+**Note:** Version bump only for package @niledatabase/server
+
+## [2.4.2-alpha.4](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-06-27)
+
+### Bug Fixes
+
+- **server:** evict pool when after create fails ([221ea46](https://github.com/niledatabase/nile-js/commit/221ea464b457245ab7c5b14c90f84e317e06b64f))
+
+## [2.4.2-alpha.3](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.2...v2.4.2-alpha.3) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/server
+
+## [2.4.2-alpha.2](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.1...v2.4.2-alpha.2) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/server
+
+## [2.4.2-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.0...v2.4.2-alpha.1) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/server
+
+## [2.4.2-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.4.1...v2.4.2-alpha.0) (2024-05-22)
+
+### Bug Fixes
+
+- **server:** make eviction work ([f3ca437](https://github.com/niledatabase/nile-js/commit/f3ca4370b5f37e4e2d07fcbeea4165cee7a300b0))
+
 ## [2.4.1](https://github.com/niledatabase/nile-js/compare/v2.4.1-alpha.0...v2.4.1) (2024-04-11)
 
 **Note:** Version bump only for package @niledatabase/server

@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import pg from 'pg';
 
 import { Config } from '../utils/Config';
 import { watchEvictPool } from '../utils/Event';
@@ -9,6 +9,8 @@ import NileDatabase from './NileInstance';
 
 export default class DBManager {
   connections: Map<string, NileDatabase>;
+  cleared: boolean;
+  private poolWatcherFn: (id: undefined | null | string) => void;
 
   private makeId(
     tenantId?: string | undefined | null,
@@ -23,32 +25,51 @@ export default class DBManager {
     return 'base';
   }
   constructor(config: ServerConfig) {
-    const { info } = Logger(config, '[DBManager]');
+    this.cleared = false;
     this.connections = new Map();
-    // add the base one, so you can at least query
-    const id = this.makeId();
-    info('constructor', id);
-    this.connections.set(id, new NileDatabase(new Config(config), id));
-    watchEvictPool((id) => {
-      if (id && this.connections.has(id)) {
-        this.connections.delete(id);
-      }
-    });
+    this.poolWatcherFn = this.poolWatcher(config);
+    watchEvictPool(this.poolWatcherFn);
   }
+  poolWatcher = (config: ServerConfig) => (id: undefined | null | string) => {
+    const { info, warn } = Logger(config, '[DBManager]');
+    if (id && this.connections.has(id)) {
+      info(`Removing ${id} from db connection pool.`);
+      const connection = this.connections.get(id);
+      connection?.shutdown();
+      this.connections.delete(id);
+    } else {
+      warn(`missed eviction of ${id}`);
+    }
+  };
 
-  getConnection(config: ServerConfig): Pool {
+  getConnection = (config: ServerConfig): pg.Pool => {
     const { info } = Logger(config, '[DBManager]');
     const id = this.makeId(config.tenantId, config.userId);
+
     const existing = this.connections.get(id);
-    info('# of instances:', this.connections.size);
+    info(`# of instances: ${this.connections.size}`);
     if (existing) {
-      info('returning existing', id);
+      info(`returning existing ${id}`);
+      existing.startTimeout();
       return existing.pool;
     }
     const newOne = new NileDatabase(new Config(config), id);
     this.connections.set(id, newOne);
-    info('created new', id);
-    info('# of instances:', this.connections.size);
+    info(`created new ${id}`);
+    info(`# of instances: ${this.connections.size}`);
+    if (this.cleared) {
+      this.cleared = false;
+    }
     return newOne.pool;
-  }
+  };
+
+  clear = (config: ServerConfig) => {
+    const { info } = Logger(config, '[DBManager]');
+    info(`Clearing all connections ${this.connections.size}`);
+    this.cleared = true;
+    this.connections.forEach((connection) => {
+      connection.shutdown();
+    });
+    this.connections.clear();
+  };
 }

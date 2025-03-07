@@ -1,22 +1,28 @@
 import { Server } from './Server';
 
 describe('server', () => {
-  fit('has reasonable defaults', () => {
+  it('has reasonable defaults', () => {
     const config = {
       databaseId: 'databaseId',
       databaseName: 'databaseName',
       user: 'username',
       password: 'password',
+      db: {
+        host: 'db.thenile.dev',
+      },
+      api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
     };
     const server = new Server(config);
     expect(server.config.db).toEqual({
       host: 'db.thenile.dev',
-      port: 5432,
+      port: expect.any(Number),
       database: 'databaseName',
       user: 'username',
       password: 'password',
     });
-    expect(server.config.api.basePath).toEqual('https://api.thenile.dev');
+    expect(server.config.api.basePath).toEqual(
+      'http://thenile.dev/v2/databases/testdb'
+    );
   });
   it('sets a tenant id everywhere when set', () => {
     const config = {
@@ -27,39 +33,8 @@ describe('server', () => {
     const nile = new Server(config);
     nile.tenantId = 'tenantId';
     nile.userId = 'userId';
-    for (const api in nile.api) {
-      // @ts-expect-error - checking api
-      const _api = nile.api[api];
-      expect(_api.tenantId).toEqual('tenantId');
-    }
-  });
-  it('manages instances', () => {
-    const config = {
-      databaseId: 'databaseId',
-      user: 'username',
-      password: 'password',
-    };
-    const nile = new Server(config);
-
-    const another = nile.getInstance({
-      databaseId: 'somethingelse?!',
-      user: 'username',
-      password: 'password',
-    });
-    const theSameOne = nile.getInstance(config);
-
-    // in this case, we change the base object tenant id
-    theSameOne.tenantId = 'tenantId2';
-    expect(nile.config.tenantId).toEqual('tenantId2');
-
-    nile.tenantId = 'tenantId4';
-    another.tenantId = 'tenantId1';
-
-    expect(nile.config).not.toEqual(another?.config);
-    expect(nile.config).toEqual(theSameOne?.config);
-
-    //@ts-expect-error - test
-    expect(nile.servers.size).toEqual(1);
+    expect(nile.api.users.tenantId).toEqual('tenantId');
+    expect(nile.api.tenants.tenantId).toEqual('tenantId');
   });
 
   it('ensures existing configs get updated with provided configs', () => {

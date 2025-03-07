@@ -4,3 +4,6 @@ node_modules
 .cache
 dist
 yarn.lock
+*storybook.log
+.storybook/output.css
+.yarn

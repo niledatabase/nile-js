@@ -3,6 +3,8 @@ node_modules
 .eslintcache
 .idea
 
+
+*.yarn/*
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

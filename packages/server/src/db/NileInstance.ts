@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Pool } from 'pg';
+import pg from 'pg';
 
 import { Config } from '../utils/Config';
 import { evictPool } from '../utils/Event';
@@ -9,7 +9,7 @@ import Logger from '../utils/Logger';
 import { createProxyForPool } from './PoolProxy';
 
 class NileDatabase {
-  pool: Pool;
+  pool: pg.Pool;
   tenantId?: undefined | null | string;
   userId?: undefined | null | string;
   id: string;
@@ -17,7 +17,7 @@ class NileDatabase {
   timer: NodeJS.Timeout | undefined;
 
   constructor(config: Config, id: string) {
-    const { warn, info } = Logger(config, '[NileInstance]');
+    const { warn, info, debug } = Logger(config, '[NileInstance]');
     this.id = id;
     const poolConfig = {
       min: 0,
@@ -29,9 +29,9 @@ class NileDatabase {
 
     config.db = poolConfig;
     this.config = config;
-    info(this.config);
+    debug(`Connection pool config ${JSON.stringify(this.config.db)}`);
 
-    this.pool = createProxyForPool(new Pool(remaining), this.config);
+    this.pool = createProxyForPool(new pg.Pool(remaining), this.config);
 
     if (typeof afterCreate === 'function') {
       warn(
@@ -42,39 +42,79 @@ class NileDatabase {
     // start the timer for cleanup
     this.startTimeout();
     this.pool.on('connect', async (client) => {
-      info('pool connected');
-      const afterCreate: AfterCreate = makeAfterCreate(config);
-      afterCreate(client, (err, _client) => {
+      debug(`pool connected ${this.id}`);
+      this.startTimeout();
+      const afterCreate: AfterCreate = makeAfterCreate(
+        config,
+        `${this.id}-${this.timer}`
+      );
+      afterCreate(client, (err) => {
+        const { error } = Logger(config, '[after create callback]');
         if (err) {
-          _client.release();
+          clearTimeout(this.timer);
+          error('after create failed', {
+            message: err.message,
+            stack: err.stack,
+          });
+          evictPool(this.id);
         }
       });
-      this.startTimeout();
     });
-    this.pool.on('error', async (e) => {
-      info('pool failed', e);
+    this.pool.on('error', (err) => {
+      clearTimeout(this.timer);
+      info(`pool ${this.id} failed`, {
+        message: err.message,
+        stack: err.stack,
+      });
+      evictPool(this.id);
+    });
+    this.pool.on('release', (destroy) => {
+      if (destroy) {
+        clearTimeout(this.timer);
+        evictPool(this.id);
+        debug(`destroying pool ${this.id}`);
+      }
     });
   }
 
   startTimeout() {
+    const { debug } = Logger(this.config, '[NileInstance]');
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    this.timer = setTimeout(async () => {
-      await this.pool.end();
-      evictPool(this.id);
-    }, this.config.db.idleTimeoutMillis);
+    this.timer = setTimeout(() => {
+      debug(
+        `Pool reached idleTimeoutMillis. ${this.id} evicted after ${
+          Number(this.config.db.idleTimeoutMillis) ?? 30000
+        }ms`
+      );
+      this.pool.end(() => {
+        clearTimeout(this.timer);
+        evictPool(this.id);
+      });
+    }, Number(this.config.db.idleTimeoutMillis) ?? 30000);
+  }
+  shutdown() {
+    const { debug } = Logger(this.config, '[NileInstance]');
+    debug(`attempting to shut down ${this.id}`);
+    clearTimeout(this.timer);
+    this.pool.end(() => {
+      debug(`${this.id} has been shut down`);
+    });
   }
 }
 
 export default NileDatabase;
 
-function makeAfterCreate(config: Config): AfterCreate {
-  const { warn, info } = Logger(config, '[afterCreate]');
+function makeAfterCreate(config: Config, id: string): AfterCreate {
+  const { error, warn, debug } = Logger(config, '[afterCreate]');
   return (conn, done) => {
-    conn.on('error', function errorHandler(error: Error) {
-      warn('Connection was terminated by server', error);
-      done(error, conn);
+    conn.on('error', function errorHandler(e: Error) {
+      error(`Connection ${id} was terminated by server`, {
+        message: e.message,
+        stack: e.stack,
+      });
+      done(e, conn);
     });
 
     if (config.tenantId) {
@@ -88,12 +128,25 @@ function makeAfterCreate(config: Config): AfterCreate {
 
       // in this example we use pg driver's connection API
       conn.query(query.join(';'), function (err: Error) {
-        if (config.tenantId) {
-          info('[tenant id]', config.tenantId);
+        if (err) {
+          error('query connection failed', {
+            cause: err.cause,
+            stack: err.stack,
+            message: err.message,
+            name: err.name,
+            id,
+          });
+        } else {
+          if (query.length === 1) {
+            debug(`connection context set: tenantId=${config.tenantId}`);
+          }
+          if (query.length === 2) {
+            debug(
+              `connection context set: tenantId=${config.tenantId} userId=${config.userId}`
+            );
+          }
         }
-        if (config.userId) {
-          info('[user id]', config.userId);
-        }
+
         done(err, conn);
       });
     }

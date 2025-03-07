@@ -6,9 +6,11 @@ import { NileRequest } from './Requester';
 import { updateTenantId, updateUserId } from './Event';
 import { getToken } from './Config/envVars';
 import Logger from './Logger';
-
-export const X_NILE_TENANT = 'x-nile-tenantId';
-export const X_NILE_USER_ID = 'x-nile-userId';
+import {
+  X_NILE_SECURECOOKIES,
+  X_NILE_TENANT,
+  X_NILE_USER_ID,
+} from './constants';
 
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,9 +49,9 @@ function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
   }
   return null;
 }
-export function getTenantFromHttp(headers: Headers, config: Config) {
-  const cookieTenant = getTokenFromCookie(headers, 'tenantId');
-  return cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config.tenantId;
+export function getTenantFromHttp(headers: Headers, config?: Config) {
+  const cookieTenant = getTokenFromCookie(headers, X_NILE_TENANT);
+  return cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config?.tenantId;
 }
 
 export function getUserFromHttp(headers: Headers, config: Config) {
@@ -61,32 +63,43 @@ export function getUserFromHttp(headers: Headers, config: Config) {
   return headers?.get(X_NILE_USER_ID) ?? config.userId;
 }
 
+export function makeBasicHeaders(config: Config, opts?: RequestInit) {
+  const headers = new Headers(opts?.headers);
+  headers.set('content-type', 'application/json; charset=utf-8');
+  const cookieKey = config.api?.cookieKey;
+
+  // the sdk server side calls use this
+  const authHeader = headers.get('Authorization');
+  if (!authHeader) {
+    const token = getTokenFromCookie(headers, cookieKey);
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    } else if (getToken({ config })) {
+      headers.set('Authorization', `Bearer ${getToken({ config })}`);
+    }
+  }
+  if ('secureCookies' in config && config.secureCookies != null) {
+    headers.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
+  }
+
+  return headers;
+}
+
 export async function _fetch(
   config: Config,
   path: string,
   opts?: RequestInit
 ): Promise<Response | ResponseError> {
-  const { info, error } = Logger(config, '[server]');
+  const { debug, error } = Logger(config, '[server]');
 
   const url = `${config.api?.basePath}${path}`;
-  const cookieKey = config.api?.cookieKey;
   const headers = new Headers(opts?.headers);
-  const basicHeaders = new Headers();
-  basicHeaders.set('content-type', 'application/json; charset=utf-8');
-  const authHeader = headers.get('Authorization');
-  if (!authHeader) {
-    const token = getTokenFromCookie(headers, cookieKey);
-    if (token) {
-      basicHeaders.set('Authorization', `Bearer ${token}`);
-    } else if (getToken({ config })) {
-      basicHeaders.set('Authorization', `Bearer ${getToken({ config })}`);
-    }
-  }
-
   const tenantId = getTenantFromHttp(headers, config);
+  const basicHeaders = makeBasicHeaders(config, opts);
   updateTenantId(tenantId);
   const userId = getUserFromHttp(headers, config);
   updateUserId(userId);
+
   if (url.includes('{tenantId}') && !tenantId) {
     return new ResponseError('tenantId is not set for request', {
       status: 400,
@@ -96,73 +109,108 @@ export async function _fetch(
     .replace('{tenantId}', encodeURIComponent(String(tenantId)))
     .replace('{userId}', encodeURIComponent(String(userId)));
 
-  info('[fetch]', useableUrl);
+  debug(`[fetch] ${useableUrl}`);
 
-  const response = await fetch(useableUrl, {
-    ...opts,
-    headers: basicHeaders,
-  }).catch((e) => {
-    error('[fetch]', '[response]', e);
-  });
-
-  if (response && response.status >= 200 && response.status < 300) {
-    if (typeof response.clone === 'function') {
-      info('[fetch]', '[response]', await response.clone().json());
-    }
-    return response;
-  }
-
-  let res;
-  const errorHandler =
-    typeof response?.clone === 'function' ? response.clone() : null;
-  let msg = '';
   try {
-    res = await (response as Response)?.json();
-  } catch (e) {
-    if (errorHandler) {
-      msg = await errorHandler.text();
-      if (msg) {
-        error('[fetch]', '[response]', `[status: ${errorHandler.status}]`, msg);
+    const response = await fetch(useableUrl, {
+      ...opts,
+      headers: basicHeaders,
+    }).catch((e) => {
+      error('[fetch][response]', {
+        message: e.message,
+        stack: e.stack,
+        debug: 'Is nile-auth running?',
+      });
+      return new Error(e);
+    });
+
+    if (response instanceof Error) {
+      return new ResponseError('Failed to connect to database', {
+        status: 400,
+      });
+    }
+    if (response && response.status >= 200 && response.status < 300) {
+      if (typeof response.clone === 'function') {
+        try {
+          debug(
+            `[fetch][response][${opts?.method ?? 'GET'}] ${
+              response.status
+            } ${useableUrl}`,
+            {
+              body: await response.clone().json(),
+            }
+          );
+        } catch (e) {
+          debug(
+            `[fetch][response][${opts?.method ?? 'GET'}] ${
+              response.status
+            } ${useableUrl}`,
+            {
+              body: await response.clone().text(),
+            }
+          );
+        }
+      }
+      return response;
+    }
+    if (response?.status === 404) {
+      return new ResponseError('Not found', { status: 404 });
+    }
+
+    if (response?.status === 401) {
+      return new ResponseError('Unauthorized', { status: 401 });
+    }
+    if (response?.status === 405) {
+      return new ResponseError('Method not allowed', { status: 405 });
+    }
+    let res;
+    const errorHandler =
+      typeof response?.clone === 'function' ? response.clone() : null;
+    let msg = '';
+    try {
+      res = await (response as Response)?.json();
+    } catch (e) {
+      if (errorHandler) {
+        msg = await errorHandler.text();
+        if (msg) {
+          error(`[fetch][response][status: ${errorHandler.status}]`, {
+            message: msg,
+          });
+        }
+        return e as ResponseError;
+      }
+      if (!msg) {
+        error('[fetch][response]', { e });
       }
     }
-    if (!msg) {
-      error('[fetch]', '[response]', e);
+    if (msg) {
+      return new ResponseError(msg, { status: errorHandler?.status });
     }
-  }
-  if (msg) {
-    return new ResponseError(msg, { status: errorHandler?.status });
-  }
 
-  if (res && 'message' in res) {
-    const { message } = res;
+    if (res && 'message' in res) {
+      const { message } = res;
+      error(`[fetch][response][status: ${errorHandler?.status}] ${message}`);
+      return new ResponseError(message, { status: 400 });
+    }
+    if (res && 'errors' in res) {
+      const {
+        errors: [message],
+      } = res;
+      error(`[fetch][response] [status: ${errorHandler?.status}] ${message}`);
+      return new ResponseError(message, { status: 400 });
+    }
     error(
-      '[fetch]',
-      '[response]',
-      `[status: ${errorHandler?.status}]`,
-      message
+      `[fetch][response][status: ${errorHandler?.status}] UNHANDLED ERROR`,
+      {
+        res,
+      }
     );
-    return new ResponseError(message, { status: 400 });
+    return new ResponseError(null, {
+      status: (response as Response)?.status ?? 500,
+    });
+  } catch (e) {
+    return new ResponseError('an unexpected error has occurred', {
+      status: 500,
+    });
   }
-  if (res && 'errors' in res) {
-    const {
-      errors: [message],
-    } = res;
-    error(
-      '[fetch]',
-      '[response]',
-      `[status: ${errorHandler?.status}]`,
-      message
-    );
-    return new ResponseError(message, { status: 400 });
-  }
-
-  error(
-    '[fetch]',
-    '[response]',
-    `[status: ${errorHandler?.status}]`,
-    'UNHANDLED ERROR'
-  );
-  return new ResponseError(null, {
-    status: (response as Response)?.status ?? 500,
-  });
 }

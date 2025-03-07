@@ -1,35 +1,34 @@
 import { Config } from '../utils/Config';
 
-import Auth from './';
+import Auth from '.';
 
 const baseConfig = [
   '_tenantId',
   '_userId',
   'api',
-  'createProvider',
+  'configure',
   'databaseId',
   'databaseName',
   'db',
   'debug',
-  'getSSOCallbackUrl',
-  'listProviders',
-  'listTenantProviders',
-  'login',
-  'loginSSO',
-  'loginSSOUrl',
-  'signUp',
-  'updateProvider',
-  'configure',
-  'user',
+  'headers',
+  'logger',
   'password',
+  'routePrefix',
+  'routes',
+  'getSession',
+  'secureCookies',
+  'user',
 ];
-it('has expected methods', () => {
-  const auth = new Auth(
-    new Config({
-      databaseId: 'databaseId',
-      user: 'username',
-      password: 'password',
-    })
-  );
-  expect(Object.keys(auth).sort()).toEqual(baseConfig.sort());
+const config = {
+  databaseId: 'databaseId',
+  tenantId: 'tenant',
+  user: 'username',
+  password: 'password',
+};
+describe('users', () => {
+  it('has expected methods', () => {
+    const methods = new Auth(new Config(config));
+    expect(Object.keys(methods).sort()).toEqual(baseConfig.sort());
+  });
 });

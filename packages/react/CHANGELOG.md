@@ -3,6 +3,289 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.54](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.53...v3.0.0-alpha.54) (2025-03-05)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.53](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.52...v3.0.0-alpha.53) (2025-03-03)
+
+### Bug Fixes
+
+- **react:** bad import/export, make process.env optional ([470e2e0](https://github.com/niledatabase/nile-js/commit/470e2e0926821b65a5da6186874f90a0c5e387d2))
+
+# [3.0.0-alpha.52](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.51...v3.0.0-alpha.52) (2025-02-26)
+
+### Bug Fixes
+
+- **react:** better create tenant interaction ([7435540](https://github.com/niledatabase/nile-js/commit/7435540b880483ca3d107ced351768fb1b08b789))
+
+# [3.0.0-alpha.51](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.50...v3.0.0-alpha.51) (2025-02-25)
+
+### Features
+
+- **react:** add tenantId support, org switcher ([04a2d7a](https://github.com/niledatabase/nile-js/commit/04a2d7a5bc1657fa36eefb08a437306ffbb5958c))
+
+# [3.0.0-alpha.50](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.49...v3.0.0-alpha.50) (2025-02-24)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.49](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.48...v3.0.0-alpha.49) (2025-02-20)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.48](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.47...v3.0.0-alpha.48) (2025-02-20)
+
+### Bug Fixes
+
+- **react:** better components, refresh on sign in ([7fbd496](https://github.com/niledatabase/nile-js/commit/7fbd496b9bd399aa0930c68c3957efaa9b9d8911))
+
+# [3.0.0-alpha.47](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.46...v3.0.0-alpha.47) (2025-02-19)
+
+### Bug Fixes
+
+- **react:** package css ([fb866ea](https://github.com/niledatabase/nile-js/commit/fb866ea105209fb59d1176b3daa4a0370ca9714f))
+
+# [3.0.0-alpha.46](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.45...v3.0.0-alpha.46) (2025-02-19)
+
+### Bug Fixes
+
+- **react:** add more components ([5d97335](https://github.com/niledatabase/nile-js/commit/5d973354339790bcbad2526f5fb16ff64d1b6a62))
+- **react:** add more components, reorder env var pickup ([9a68e99](https://github.com/niledatabase/nile-js/commit/9a68e99f995fd0cce1c33f431b51691267acf96b))
+
+# [3.0.0-alpha.45](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.44...v3.0.0-alpha.45) (2025-02-13)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.44](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.43...v3.0.0-alpha.44) (2025-02-11)
+
+### Features
+
+- add express, sign out button ([0161a50](https://github.com/niledatabase/nile-js/commit/0161a5091870c21d55ea98c82d580f3faa1b02c3))
+
+# [3.0.0-alpha.43](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.42...v3.0.0-alpha.43) (2025-02-05)
+
+### Features
+
+- **react:** clone next-auth for sign in, improve error messages ([84cf086](https://github.com/niledatabase/nile-js/commit/84cf0866ca9cea4521c4a6411eed3b5023dddaae))
+
+# [3.0.0-alpha.42](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.41...v3.0.0-alpha.42) (2025-02-05)
+
+### Bug Fixes
+
+- **react:** pass props to reset password form ([18c2d72](https://github.com/niledatabase/nile-js/commit/18c2d72bb3e5bc9e0c04d9c4f033c0ea61834e91))
+
+# [3.0.0-alpha.41](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.40...v3.0.0-alpha.41) (2025-02-05)
+
+### Features
+
+- **react:** add password reset ([f933cd5](https://github.com/niledatabase/nile-js/commit/f933cd533614e97fb15784297f8e2092b9f0c55f))
+
+# [3.0.0-alpha.40](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.39...v3.0.0-alpha.40) (2025-01-16)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.39](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.38...v3.0.0-alpha.39) (2025-01-10)
+
+### Features
+
+- **react:** add more providers ([ce515e0](https://github.com/niledatabase/nile-js/commit/ce515e020b4fca9c11146fd36092bc302d52d3b4))
+
+# [3.0.0-alpha.38](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.37...v3.0.0-alpha.38) (2024-12-19)
+
+### Bug Fixes
+
+- **react:** add email login method ([7b1b582](https://github.com/niledatabase/nile-js/commit/7b1b5821ae94691a28cff010c7b2a3fdbc484fbd))
+
+# [3.0.0-alpha.37](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.36...v3.0.0-alpha.37) (2024-12-05)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.36](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.35...v3.0.0-alpha.36) (2024-11-27)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.35](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.34...v3.0.0-alpha.35) (2024-11-27)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.34](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.33...v3.0.0-alpha.34) (2024-10-31)
+
+### Bug Fixes
+
+- **server:** change sign up to log in ([928a439](https://github.com/niledatabase/nile-js/commit/928a4393dcd3749f58408480bc87c9de365c22e6))
+
+# [3.0.0-alpha.33](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.32...v3.0.0-alpha.33) (2024-10-18)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.32](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.31...v3.0.0-alpha.32) (2024-10-17)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.31](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.30...v3.0.0-alpha.31) (2024-10-17)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.30](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.29...v3.0.0-alpha.30) (2024-10-17)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.29](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.28...v3.0.0-alpha.29) (2024-10-17)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.28](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.27...v3.0.0-alpha.28) (2024-10-16)
+
+### Bug Fixes
+
+- **server:** pass query params along ([3a450a8](https://github.com/niledatabase/nile-js/commit/3a450a82b9e66ce69db9c0ee6c6c58d7dfde9c7c))
+
+# [3.0.0-alpha.27](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.26...v3.0.0-alpha.27) (2024-10-16)
+
+### Bug Fixes
+
+- **react:** support qps for sign up ([aef23b7](https://github.com/niledatabase/nile-js/commit/aef23b7ccd550fd8fc9502c1cd4ff526f40a1e91))
+
+# [3.0.0-alpha.26](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.25...v3.0.0-alpha.26) (2024-10-15)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.25](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.24...v3.0.0-alpha.25) (2024-10-15)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.24](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.23...v3.0.0-alpha.24) (2024-10-14)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.23](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.22...v3.0.0-alpha.23) (2024-10-10)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.22](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.21...v3.0.0-alpha.22) (2024-10-09)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.21](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.20...v3.0.0-alpha.21) (2024-10-09)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.19...v3.0.0-alpha.20) (2024-10-08)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.18...v3.0.0-alpha.19) (2024-10-03)
+
+### Bug Fixes
+
+- **repo:** remove turbo/pnp, fix dbmanager, remove mui, use tailwind ([900270c](https://github.com/niledatabase/nile-js/commit/900270cdff5ad5c87997fe6a930e9bcf891784f8))
+
+# [3.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.17...v3.0.0-alpha.18) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.16...v3.0.0-alpha.17) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.16](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.15...v3.0.0-alpha.16) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.14...v3.0.0-alpha.15) (2024-08-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.13...v3.0.0-alpha.14) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.13](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.12...v3.0.0-alpha.13) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.11...v3.0.0-alpha.12) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.11](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.10...v3.0.0-alpha.11) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.10](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.9...v3.0.0-alpha.10) (2024-08-28)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.8...v3.0.0-alpha.9) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.7...v3.0.0-alpha.8) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.6...v3.0.0-alpha.7) (2024-08-27)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.6](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.5...v3.0.0-alpha.6) (2024-08-27)
+
+### Bug Fixes
+
+- **react:** make callbackURL a first class citizen ([3ec8797](https://github.com/niledatabase/nile-js/commit/3ec8797c7bfdf04b39a80beee1c088d530610ff4))
+
+# [3.0.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.4...v3.0.0-alpha.5) (2024-08-26)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.3...v3.0.0-alpha.4) (2024-08-15)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.2...v3.0.0-alpha.3) (2024-08-14)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.1...v3.0.0-alpha.2) (2024-08-13)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.0...v3.0.0-alpha.1) (2024-08-13)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [3.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.5.0-alpha.0...v3.0.0-alpha.0) (2024-08-13)
+
+### Features
+
+- **server:** use new region api ([079415e](https://github.com/niledatabase/nile-js/commit/079415e17e342e30e63481cee79bcb32ed7042bc))
+
+# [2.5.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.4...v2.5.0-alpha.0) (2024-06-27)
+
+### Features
+
+- **react:** export nextauth for simplicity ([9e356d3](https://github.com/niledatabase/nile-js/commit/9e356d3d2f5bbb237e24dca83c0e3c7ffccb2ac5))
+
+## [2.4.2-alpha.4](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-06-27)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [2.4.2-alpha.3](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.2...v2.4.2-alpha.3) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [2.4.2-alpha.2](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.1...v2.4.2-alpha.2) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [2.4.2-alpha.1](https://github.com/niledatabase/nile-js/compare/v2.4.2-alpha.0...v2.4.2-alpha.1) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [2.4.2-alpha.0](https://github.com/niledatabase/nile-js/compare/v2.4.1...v2.4.2-alpha.0) (2024-05-22)
+
+**Note:** Version bump only for package @niledatabase/react
+
 ## [2.4.1](https://github.com/niledatabase/nile-js/compare/v2.4.1-alpha.0...v2.4.1) (2024-04-11)
 
 **Note:** Version bump only for package @niledatabase/react

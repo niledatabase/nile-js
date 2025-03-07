@@ -1,10 +1,11 @@
 import { Config } from '../Config';
 import { ResponseError } from '../ResponseError';
-import { X_NILE_TENANT, _fetch } from '../fetch';
+import { X_NILE_TENANT } from '../constants';
+import { _fetch } from '../fetch';
 
 export { NileResponse, NileRequest } from './types';
 
-type Methods = 'POST' | 'GET' | 'PUT';
+type Methods = 'DELETE' | 'POST' | 'GET' | 'PUT';
 export default class Requester<T> extends Config {
   constructor(config: Config) {
     super(config);
@@ -32,7 +33,7 @@ export default class Requester<T> extends Config {
   }
 
   /**
-   * three optios here
+   * three options here
    * 1) pass in headers for a server side request
    * 2) pass in the payload that matches the api
    * 3) pass in the request object sent by a browser
@@ -96,27 +97,63 @@ export default class Requester<T> extends Config {
     return await this.rawRequest(method, url, _init, body);
   }
 
-  post = async (
+  async post<R = JSON>(
     req: T | Headers,
     url: string,
     init?: RequestInit
-  ): Promise<Response> => {
-    return await this.request('POST', url, req, init);
-  };
+  ): Promise<Response | R> {
+    const response = await this.request('POST', url, req, init);
+    if (response && response.status >= 200 && response.status < 300) {
+      const cloned = response.clone();
+      try {
+        return await cloned.json();
+      } catch (e) {
+        // give back the response
+      }
+    }
+    return response;
+  }
 
-  get = async (
+  async get<R = JSON>(
     req: T | Headers,
     url: string,
     init?: RequestInit
-  ): Promise<Response> => {
-    return await this.request('GET', url, req, init);
-  };
+  ): Promise<Response | R> {
+    const response = await this.request('GET', url, req, init);
+    if (response && response.status >= 200 && response.status < 300) {
+      const cloned = response.clone();
+      try {
+        return await cloned.json();
+      } catch (e) {
+        // give back the response
+      }
+    }
+    return response;
+  }
 
-  put = async (
+  async put<R = JSON>(
     req: T | Headers,
     url: string,
     init?: RequestInit
-  ): Promise<Response> => {
-    return await this.request('PUT', url, req, init);
-  };
+  ): Promise<Response | R> {
+    const response = await this.request('PUT', url, req, init);
+    if (response && response.status >= 200 && response.status < 300) {
+      const cloned = response.clone();
+      try {
+        return await cloned.json();
+      } catch (e) {
+        // give back the response
+      }
+    }
+    return response;
+  }
+
+  async delete(
+    req: T | Headers,
+    url: string,
+    init?: RequestInit
+  ): Promise<Response> {
+    const response = await this.request('DELETE', url, req, init);
+    return response;
+  }
 }

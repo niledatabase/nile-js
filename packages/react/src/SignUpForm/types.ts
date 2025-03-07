@@ -1,20 +1,23 @@
-import { SignUp201Response } from '@niledatabase/browser';
+import { CreateBasicUserRequest } from '@niledatabase/browser';
+import { QueryClient } from '@tanstack/react-query';
 
-import { Attribute } from '../lib/SimpleForm/types';
-
-export type LoginInfo = SignUp201Response;
-type SignInSuccess = (
-  response: void | SignUp201Response,
-  formValues: LoginInfo
-) => void;
+export type SignUpInfo = CreateBasicUserRequest & {
+  tenantId?: string;
+  fetchUrl?: string;
+  callbackUrl?: string;
+  newTenantName?: string;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
 
 export interface Props {
-  onSuccess: SignInSuccess;
-  onError?: (e: Error, info: LoginInfo) => void;
+  onSuccess?: (response: Response, formValues: SignUpInfo) => void;
+  onError?: (e: Error, info: SignUpInfo) => void;
   beforeMutate?: (data: AllowedAny) => AllowedAny;
-  attributes?: Attribute[];
   buttonText?: string;
+  client?: QueryClient;
+  callbackUrl?: string;
+  baseUrl?: string;
+  createTenant?: string | boolean;
 }

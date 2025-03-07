@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const specFilePath = path.join(process.cwd(), '../server/openapi/spec.json');
+const specFilePath = path.join(process.cwd(), '../server/public/swagger.json');
 const outputFilePath = path.join(process.cwd(), 'src/spec.json');
 const specFile = fs.readFileSync(specFilePath, 'utf-8');
 

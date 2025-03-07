@@ -1,4 +1,9 @@
-import { NilePoolConfig, ServerConfig } from '../../types';
+import {
+  Database,
+  LoggerType,
+  NilePoolConfig,
+  ServerConfig,
+} from '../../types';
 import Logger from '../Logger';
 
 import {
@@ -6,7 +11,7 @@ import {
   getBasePath,
   getControlPlane,
   getDatabaseName,
-  getDatbaseId,
+  getDatabaseId,
   getDbHost,
   getDbPort,
   getInfoBearer,
@@ -14,26 +19,33 @@ import {
   getTenantId,
   getToken,
   getUsername,
+  getSecureCookies,
 } from './envVars';
 
-type Database = {
-  name: string;
-  apiHost: string;
-  dbHost: string;
-  id: string;
-  message?: string; // is actually an error
-  status: 'READY' | string;
+export type ConfigRoutes = {
+  SIGNIN?: string;
+  SESSION?: string;
+  PROVIDERS?: string;
+  CSRF?: string;
+  CALLBACK?: string;
+  SIGNOUT?: string;
+  ME?: string;
+  ERROR?: string;
+  TENANTS?: string;
+  TENANT_USERS?: string;
+  USERS?: string;
 };
+
 class ApiConfig {
   public cookieKey?: string;
-  public basePath?: string;
+  public basePath?: string | undefined;
   private _token?: string;
   constructor({
     basePath,
     cookieKey,
     token,
   }: {
-    basePath: string;
+    basePath?: string | undefined;
     cookieKey: string;
     token: string | undefined;
   }) {
@@ -56,6 +68,10 @@ export class Config {
   password: string;
   databaseId: string;
   databaseName: string;
+  routePrefix?: string;
+  routes?: ConfigRoutes;
+  logger?: LoggerType;
+  secureCookies?: boolean | undefined;
 
   debug: boolean;
 
@@ -84,10 +100,24 @@ export class Config {
 
   constructor(config?: ServerConfig, logger?: string) {
     const envVarConfig: EnvConfig = { config, logger };
-
-    this.databaseId = getDatbaseId(envVarConfig) as string;
     this.user = getUsername(envVarConfig) as string;
+    this.logger = config?.logger;
     this.password = getPassword(envVarConfig) as string;
+    if (process.env.NODE_ENV !== 'TEST') {
+      if (!this.user) {
+        throw new Error(
+          'User is required. Set NILEDB_USER as an environment variable or set `user` in the config options.'
+        );
+      }
+      if (!this.password) {
+        throw new Error(
+          'Password is required. Set NILEDB_PASSWORD as an environment variable or set `password` in the config options.'
+        );
+      }
+    }
+
+    this.secureCookies = getSecureCookies(envVarConfig);
+    this.databaseId = getDatabaseId(envVarConfig) as string;
     this.databaseName = getDatabaseName(envVarConfig) as string;
     this._tenantId = getTenantId(envVarConfig);
     this.debug = Boolean(config?.debug);
@@ -116,7 +146,7 @@ export class Config {
   }
 
   configure = async (config: ServerConfig): Promise<Config> => {
-    const { info, error } = Logger(config, '[init]');
+    const { info, error, debug } = Logger(config, '[init]');
 
     const envVarConfig: EnvConfig = {
       config,
@@ -125,12 +155,45 @@ export class Config {
     const { host, port, ...dbConfig } = config.db ?? {};
     let configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
-    if (configuredHost && this.databaseName && this.databaseId) {
-      info('Alreaady configured, aborting fetch');
+    let basePath = getBasePath(envVarConfig);
+    if (configuredHost && this.databaseName && this.databaseId && basePath) {
+      info('Already configured, aborting fetch');
+      this.api = new ApiConfig({
+        basePath,
+        cookieKey: config?.api?.cookieKey ?? 'token',
+        token: getToken({ config }),
+      });
+      this.db = {
+        user: this.user,
+        password: this.password,
+        host: configuredHost,
+        port: configuredPort,
+        database: this.databaseName,
+        ...dbConfig,
+      };
+      info('[config set]', { db: this.db, api: this.api });
       return this;
+    } else {
+      const msg = [];
+      if (!configuredHost) {
+        msg.push('Database host');
+      }
+      if (!this.databaseName) {
+        msg.push('Database name');
+      }
+      if (!this.databaseId) {
+        msg.push('Database id');
+      }
+      if (!basePath) {
+        msg.push('API URL');
+      }
+      info(
+        `[autoconfigure] ${msg.join(', ')} ${
+          msg.length > 1 ? 'are' : 'is'
+        } missing from the config. Autoconfiguration will run.`
+      );
     }
 
-    let basePath = getBasePath(envVarConfig);
     const cp = getControlPlane(envVarConfig);
 
     const databaseName = getDatabaseName({ config, logger: 'getInfo' });
@@ -138,12 +201,17 @@ export class Config {
     if (databaseName) {
       url.searchParams.set('databaseName', databaseName);
     }
-    info(url.href);
+    info(`configuring from ${url.href}`);
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${getInfoBearer({ config })}`,
       },
+    }).catch(() => {
+      error(`Unable to auto-configure. is ${url} available?`);
     });
+    if (!res) {
+      return this;
+    }
     let database: Database;
     const possibleError = res.clone();
     try {
@@ -158,6 +226,7 @@ export class Config {
       }
     } catch (e) {
       const message = await possibleError.text();
+      debug('Unable to auto-configure');
       error(message);
       database = { message } as Database;
     }
@@ -166,21 +235,20 @@ export class Config {
       if ('message' in database) {
         if ('statusCode' in database) {
           error(database);
-          throw new Error('HTTP error has occured');
+          throw new Error('HTTP error has occurred');
         } else {
           throw new Error(
-            'Unable to auto-configure. Please set or remove NILEDB_API, NILEDB_NAME, and NILEDB_HOST in your .env file.'
+            'Unable to auto-configure. Please remove NILEDB_NAME, NILEDB_API_URL, NILEDB_POSTGRES_URL, and/or NILEDB_HOST from your environment variables.'
           );
         }
       }
       if (typeof database === 'object') {
         const { apiHost, dbHost, name, id } = database;
+        basePath = basePath || apiHost;
         this.databaseId = id;
         this.databaseName = name;
         const dburl = new URL(dbHost);
-        const apiurl = new URL(apiHost);
-        configuredHost = dburl.host;
-        basePath = apiurl.origin;
+        configuredHost = dburl.hostname;
       }
     }
     this.api = new ApiConfig({
@@ -196,7 +264,7 @@ export class Config {
       database: this.databaseName,
       ...dbConfig,
     };
-    info('[config set]', this);
+    info('[config set]', { db: this.db, api: this.api });
     return this;
   };
 }
