@@ -2,7 +2,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
-import { Params, Props } from '../types';
+import { Params } from '../types';
 
 import PasswordResetForm from './Form';
 
@@ -17,7 +17,7 @@ export default function ResetPasswordForm(params: Params) {
   );
 }
 
-function ResetForm(props: Omit<Props, 'client'>) {
+function ResetForm(props: Params) {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="font-sans text-3xl">Reset password</h2>

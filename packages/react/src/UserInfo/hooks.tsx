@@ -1,22 +1,28 @@
 'use client';
-import React from 'react';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 
+import { componentFetch, ComponentFetchProps } from '../../lib/utils';
 import { User } from '../../../server/src/users/types';
 
-type Props = {
-  fetchUrl?: string;
+export type HookProps = ComponentFetchProps & {
   user?: User | undefined | null;
+  baseUrl?: string;
+  client?: QueryClient;
+  fetchUrl?: string;
 };
-export function useMe(props: Props) {
-  const [user, setUser] = React.useState<User | undefined | null>(props.user);
-  React.useEffect(() => {
-    if (!user) {
-      fetch(props.fetchUrl ?? '/api/me')
-        .then((d) => d?.json())
-        .then((u) => setUser(u));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+export function useMe(props: HookProps) {
+  const { baseUrl, fetchUrl, init, client, user } = props;
+  const { data } = useQuery(
+    {
+      queryKey: ['me', baseUrl],
+      queryFn: async () => {
+        const res = await componentFetch(fetchUrl ?? `${baseUrl}/api/me`, init);
+        return await res.json();
+      },
+      enabled: user == null,
+    },
+    client
+  );
 
-  return user;
+  return user ?? data;
 }

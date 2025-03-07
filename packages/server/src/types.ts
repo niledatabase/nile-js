@@ -1,5 +1,7 @@
 import { PoolClient, PoolConfig } from 'pg';
 
+import { ApiConfig } from './utils/Config';
+
 export type Opts = {
   basePath?: string;
   fetch?: typeof fetch;
@@ -23,12 +25,7 @@ export type ServerConfig = {
   configureUrl?: string; // process.env.NILEDB_CONFIGURE
   secureCookies?: boolean; // process.env.NILEDB_SECURECOOKIES
   db?: NilePoolConfig; // db.host process.env.NILEDB_HOST
-  api?: {
-    version?: number;
-    basePath?: string; // process.env.NILEDB_API
-    cookieKey?: string;
-    token?: string; // process.env.NILEDB_TOKEN
-  };
+  api?: ApiConfig;
   logger?: LoggerType;
 };
 

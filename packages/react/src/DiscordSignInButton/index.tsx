@@ -3,13 +3,17 @@
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 
 const DiscordSignInButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
+  ButtonProps & {
+    callbackUrl?: string;
+    buttonText?: string;
+    init?: RequestInit;
+  }
 >(
   (
     {
@@ -19,6 +23,7 @@ const DiscordSignInButton = React.forwardRef<
       variant,
       size,
       asChild = false,
+      init,
       ...props
     },
     ref
@@ -32,7 +37,7 @@ const DiscordSignInButton = React.forwardRef<
         )}
         ref={ref}
         onClick={() => {
-          signIn('discord', { callbackUrl });
+          signIn('discord', { callbackUrl, init });
         }}
         {...props}
       >

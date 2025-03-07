@@ -1,16 +1,15 @@
 'use client';
 import React from 'react';
-import { SessionProviderProps } from 'next-auth/react';
+import { SessionProviderProps } from 'packages/react/lib/auth/Authorizer';
 
-import { useSession, SessionProvider, NileSession } from '../../lib/next-auth';
+import { useSession, SessionProvider } from '../../lib/auth';
 import { convertSession } from '../SignedIn';
 
 export default function SignedOut({
   children,
   session: startSession,
   ...props
-}: Omit<SessionProviderProps, 'session'> & {
-  session?: NileSession;
+}: SessionProviderProps & {
   className?: string;
 }) {
   if (startSession instanceof Response) {

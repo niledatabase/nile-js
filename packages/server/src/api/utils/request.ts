@@ -29,7 +29,12 @@ export default async function request(
   }
 
   updatedHeaders.set('host', requestUrl.host);
-  updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
+  if (config.api.callbackUrl) {
+    updatedHeaders.set(X_NILE_ORIGIN, config.api.callbackUrl);
+  } else {
+    updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
+  }
+
   const params = { ...init, headers: updatedHeaders };
   if (params.method === 'POST' || params.method === 'PUT') {
     try {

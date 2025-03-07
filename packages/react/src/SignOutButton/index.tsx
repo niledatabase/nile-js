@@ -4,16 +4,19 @@ import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { LogOut } from 'lucide-react';
 
+import { ComponentFetchProps } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signOut } from '../../lib/next-auth';
+import { signOut } from '../../lib/auth';
 
 const SignOutButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & {
-    redirect?: boolean;
-    callbackUrl?: string;
-    buttonText?: string;
-  }
+  ButtonProps &
+    ComponentFetchProps & {
+      redirect?: boolean;
+      callbackUrl?: string;
+      buttonText?: string;
+      baseUrl?: string;
+    }
 >(
   (
     {
@@ -23,6 +26,8 @@ const SignOutButton = React.forwardRef<
       buttonText = 'Sign out',
       variant,
       size,
+      baseUrl,
+      init,
       asChild = false,
       ...props
     },
@@ -34,7 +39,7 @@ const SignOutButton = React.forwardRef<
         className={buttonVariants({ variant, size, className })}
         ref={ref}
         onClick={() => {
-          signOut({ callbackUrl, redirect });
+          signOut({ callbackUrl, redirect, baseUrl, init });
         }}
         {...props}
       >

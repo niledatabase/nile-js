@@ -7,7 +7,7 @@ type SignInSuccess = (response: Response) => void;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
 
-export interface Props {
+export type Props = {
   redirect?: boolean;
   onSuccess?: SignInSuccess;
   onError?: (e: Error, info: EmailSignInInfo) => void;
@@ -15,4 +15,5 @@ export interface Props {
   buttonText?: string;
   client?: QueryClient;
   callbackUrl?: string;
-}
+  init?: RequestInit;
+};

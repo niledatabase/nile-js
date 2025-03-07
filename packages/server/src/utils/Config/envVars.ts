@@ -7,6 +7,14 @@ export type EnvConfig = {
   config?: ServerConfig;
 };
 
+export const getCallbackUrl = (cfg: EnvConfig) => {
+  const { config } = cfg;
+  if (stringCheck(process.env.NILEDB_CALLBACK_URL)) {
+    return process.env.NILEDB_CALLBACK_URL;
+  }
+  return config?.api?.callbackUrl;
+};
+
 export const getSecureCookies = (cfg: EnvConfig) => {
   const { config } = cfg;
   if (stringCheck(process.env.NILEDB_SECURECOOKIES)) {

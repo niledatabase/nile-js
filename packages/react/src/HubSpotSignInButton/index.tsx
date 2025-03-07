@@ -3,13 +3,17 @@
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 
 const HubSpotSignInButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
+  ButtonProps & {
+    callbackUrl?: string;
+    buttonText?: string;
+    init?: RequestInit;
+  }
 >(
   (
     {
@@ -18,6 +22,7 @@ const HubSpotSignInButton = React.forwardRef<
       buttonText = 'Continue with HubSpot',
       variant,
       size,
+      init,
       asChild = false,
       ...props
     },
@@ -32,7 +37,7 @@ const HubSpotSignInButton = React.forwardRef<
         )}
         ref={ref}
         onClick={() => {
-          signIn('hubspot', { callbackUrl });
+          signIn('hubspot', { callbackUrl, init });
         }}
         {...props}
       >
