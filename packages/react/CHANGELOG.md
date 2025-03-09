@@ -3,7 +3,9 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [3.0.0-alpha.55](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.54...v3.0.0-alpha.55) (2025-03-09)
+# [3.0.0](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.55...v3.0.0) (2025-03-07)
+
+# [3.0.0-alpha.55](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.54...v3.0.0-alpha.55) (2025-03-09)
 
 **Note:** Version bump only for package @niledatabase/react
 
