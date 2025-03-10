@@ -19,7 +19,7 @@ Nile's Javascript SDK provides a seamless way to build multi-tenant B2B applicat
 ### Install dependencies
 
 ```bash
-yarn add @niledatabase/server @niledatabase/react
+npm install @niledatabase/server @niledatabase/react
 ```
 
 ### Instantiate Nile Server SDK
