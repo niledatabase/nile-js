@@ -20,4 +20,5 @@ export interface Props {
   callbackUrl?: string;
   baseUrl?: string;
   createTenant?: string | boolean;
+  className?: string;
 }

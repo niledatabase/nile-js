@@ -3,6 +3,7 @@ import { QueryClient, useQuery } from '@tanstack/react-query';
 
 import { Tenant } from '../../../server/src/tenants/types';
 import { X_NILE_TENANT } from '../../../server/src/utils/constants';
+import { componentFetch } from '../../lib/utils';
 
 import { HookProps } from './types';
 
@@ -14,11 +15,15 @@ export function useTenants(
 
   const fetchTenants = async () => {
     const fetchUrl = `${baseUrl}/api/tenants`;
-    const response = await fetch(fetchUrl, {
-      headers: {
-        'content-type': 'application/json',
+    const response = await componentFetch(
+      fetchUrl,
+      {
+        headers: {
+          'content-type': 'application/json',
+        },
       },
-    });
+      params
+    );
 
     if (!response.ok) {
       throw new Error('Failed to fetch tenants');
@@ -41,13 +46,13 @@ export function useTenants(
 }
 
 export function useTenantId(
-  params?: HookProps & { tenant: Tenant },
+  params?: HookProps & { tenant?: Tenant },
   client?: QueryClient
 ): [string | undefined, (tenant: string) => void] {
   const [tenant, setTenant] = React.useState<string | undefined>(
-    params?.tenant.id
+    params?.tenant?.id
   );
-  const { refetch } = useTenants({ disableQuery: true }, client);
+  const { refetch } = useTenants({ disableQuery: true, ...params }, client);
   const { baseUrl = '' } = params ?? {};
 
   useEffect(() => {

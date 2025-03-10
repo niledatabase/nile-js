@@ -16,4 +16,5 @@ export interface Props {
   onError?: (error: Error, data: AllowedAny) => void;
   callbackUrl?: string;
   client?: QueryClient;
+  className?: string;
 }

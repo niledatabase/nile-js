@@ -51,6 +51,7 @@ export function useSignUp<T extends SignUpInfo>(
           headers: {
             'content-type': 'application/json',
           },
+          credentials: 'include',
         });
       },
 
@@ -71,8 +72,12 @@ export function useSignUp<T extends SignUpInfo>(
     client
   );
   useEffect(() => {
-    fetch(`${baseUrl}/api/auth/providers`);
-    fetch(`${baseUrl}/api/auth/csrf`);
+    fetch(`${baseUrl}/api/auth/providers`, {
+      credentials: 'include',
+    });
+    fetch(`${baseUrl}/api/auth/csrf`, {
+      credentials: 'include',
+    });
   }, [baseUrl]);
   return mutation.mutate;
 }
