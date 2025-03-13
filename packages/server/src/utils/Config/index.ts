@@ -37,6 +37,12 @@ export type ConfigRoutes = {
   USERS?: string;
 };
 
+export type ApiParams = {
+  basePath?: string | undefined;
+  cookieKey?: string;
+  token?: string | undefined;
+  callbackUrl?: string | undefined;
+};
 export class ApiConfig {
   public cookieKey?: string;
   public basePath?: string | undefined;
@@ -47,17 +53,7 @@ export class ApiConfig {
   public callbackUrl?: string;
 
   private _token?: string;
-  constructor({
-    basePath,
-    cookieKey,
-    token,
-    callbackUrl,
-  }: {
-    basePath?: string | undefined;
-    cookieKey: string;
-    token: string | undefined;
-    callbackUrl: string | undefined;
-  }) {
+  constructor({ basePath, cookieKey, token, callbackUrl }: ApiParams) {
     this.basePath = basePath;
     this.cookieKey = cookieKey;
     this.callbackUrl = callbackUrl;
