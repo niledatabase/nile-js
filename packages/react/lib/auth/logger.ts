@@ -118,7 +118,7 @@ export function proxyLogger(
           metadata = formatError(metadata) as Error;
         }
         (metadata as any).client = true;
-        const url = `${authorizer.auth.basePath}/_log`;
+        const url = `${authorizer.state.basePath}/_log`;
         const body = new URLSearchParams({ level, code, ...(metadata as any) });
         if (navigator.sendBeacon) {
           return navigator.sendBeacon(url, body);

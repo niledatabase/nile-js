@@ -1,4 +1,4 @@
-import { PrefetchParams } from 'packages/react/lib/utils';
+import { PrefetchParams } from '../../lib/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;

@@ -13,14 +13,17 @@ import type {
   RedirectableProviderType,
 } from 'next-auth/providers/index';
 
-import { NileSession, NonErrorSession } from './types';
+import {
+  AuthConfig,
+  AuthState,
+  Listener,
+  NileSession,
+  NonErrorSession,
+} from './types';
 import { logger, LoggerInstance } from './logger';
 import { broadcast } from './broadcast';
+import { createObservableObject } from './observable';
 
-type Config = {
-  basePath: string;
-  baseUrl: string;
-};
 export type FetchInit = CtxOrReq & { init?: RequestInit };
 
 export type GetSessionParams = CtxOrReq & {
@@ -33,7 +36,7 @@ export type GetSessionParams = CtxOrReq & {
 
 export interface SessionProviderProps {
   children: React.ReactNode;
-  session?: NileSession | null | undefined;
+  session?: NileSession;
   baseUrl?: string;
   basePath?: string;
   /**
@@ -53,28 +56,36 @@ export interface SessionProviderProps {
    */
   refetchWhenOffline?: false;
 }
+enum State {
+  SESSION = 'getSession',
+}
 
 export default class Authorizer {
-  auth: {
-    basePath: string;
-    baseUrl: string;
-    lastSync: number;
-    getSession: (...args: any[]) => void;
-    session: NonErrorSession | undefined | null;
-    loading: boolean;
-  };
+  state: AuthState;
   logger: LoggerInstance;
   init?: RequestInit;
-  constructor(config?: Config) {
-    this.auth = {
-      basePath: parseUrl(config?.basePath).path,
-      baseUrl: parseUrl(config?.baseUrl).origin,
-      lastSync: 0,
-      getSession: () => undefined,
-      session: undefined,
-      loading: true,
-    };
+  addListener: (cb: Listener) => void;
+  removeListener: (cb: Listener) => void;
+  status: null | State;
+  constructor(config?: AuthConfig) {
+    const { proxy, addListener, removeListener } =
+      createObservableObject<AuthState>(
+        {
+          basePath: parseUrl(config?.basePath).path,
+          baseUrl: parseUrl(config?.baseUrl).origin,
+          lastSync: 0,
+          getSession: () => undefined,
+          session: undefined,
+          loading: true,
+        },
+        config?.listenerKeys,
+        'auth'
+      );
+    this.state = proxy;
+    this.addListener = addListener;
+    this.removeListener = removeListener;
     this.logger = logger(this);
+    this.status = null;
   }
 
   async sync(
@@ -82,22 +93,22 @@ export default class Authorizer {
   ) {
     try {
       const storageEvent = event === 'storage';
-      if (storageEvent || !this.auth.session) {
-        this.auth.getSession = await this.getSession;
-        this.auth.lastSync = now();
+      if (storageEvent || !this.state.session) {
+        this.state.getSession = await this.getSession;
+        this.state.lastSync = now();
       }
-      if (!event || this.auth.session == null || now() < this.auth.lastSync) {
+      if (!event || this.state.session == null || now() < this.state.lastSync) {
         return;
       }
-      this.auth.lastSync = Date.now();
-      this.auth.session = await this.getSession();
+      this.state.lastSync = Date.now();
+      this.state.session = await this.getSession();
     } catch (error) {
       this.logger.error('CLIENT_SESSION_ERROR', error as Error);
     }
   }
 
   set baseUrl(val: string) {
-    this.auth.baseUrl = val;
+    this.state.baseUrl = val;
     this.logger = logger(this);
   }
 
@@ -110,15 +121,15 @@ export default class Authorizer {
 
     const hasInitialSession = session !== undefined;
 
-    this.auth.loading = !hasInitialSession;
-    this.auth.lastSync = hasInitialSession ? now() : 0;
-    this.auth.session = session;
+    this.state.loading = !hasInitialSession;
+    this.state.lastSync = hasInitialSession ? now() : 0;
+    this.state.session = session;
 
     await this.sync();
   }
 
   get apiBaseUrl() {
-    return `${this.auth.baseUrl}${this.auth.basePath}`;
+    return `${this.state.baseUrl}${this.state.basePath}`;
   }
 
   async fetchData<T = any>(
@@ -143,7 +154,7 @@ export default class Authorizer {
 
       const res = await fetch(url, options);
       const data = await res.json();
-      this.auth.loading = false;
+      this.state.loading = false;
       if (!res.ok) throw data;
       return Object.keys(data).length > 0 ? data : undefined;
     } catch (error) {
@@ -198,6 +209,10 @@ export default class Authorizer {
   }
 
   async getSession(params?: GetSessionParams): Promise<NonErrorSession> {
+    if (this.status === State.SESSION) {
+      return;
+    }
+    this.status = State.SESSION;
     if (params?.init) {
       this.init = params.init;
     }
@@ -206,11 +221,11 @@ export default class Authorizer {
       this.baseUrl = params.baseUrl;
     }
 
-    if (this.auth.session) {
-      return this.auth.session;
+    if (this.state.session && now() < this.state.lastSync) {
+      return this.state.session;
     }
+    this.state.loading = true;
 
-    this.auth.loading = true;
     const session = await this.fetchData<NonErrorSession | undefined>(
       'session',
       params
@@ -218,22 +233,23 @@ export default class Authorizer {
     if (params?.broadcast ?? true) {
       broadcast.post({ event: 'session', data: { trigger: 'getSession' } });
     }
+    this.status = null;
     if (session) {
-      this.auth.session = session;
+      this.state.session = session;
       await this.sync('storage');
-      return { ...session, loading: this.auth.loading };
+      return { ...session, loading: this.state.loading };
     }
-    return { loading: this.auth.loading } as NonErrorSession;
+    return { loading: this.state.loading } as NonErrorSession;
   }
   async refreshSession(params: any) {
-    this.auth.loading = true;
+    this.state.loading = true;
     const session = await this.fetchData<NonErrorSession | undefined>(
       'session',
       params
     );
 
     broadcast.post({ event: 'session', data: { trigger: 'getSession' } });
-    this.auth.session = session;
+    this.state.session = session;
     await this.sync('storage');
     return session;
   }
@@ -287,7 +303,7 @@ export default class Authorizer {
       return undefined as R extends true ? undefined : SignOutResponse;
     }
 
-    await this.auth.getSession({ event: 'storage' });
+    await this.state.getSession({ event: 'storage' });
 
     return res?.data as R extends true ? undefined : SignOutResponse;
   }
@@ -372,7 +388,7 @@ export default class Authorizer {
 
     if (data?.ok) {
       await this.initialize();
-      await this.auth.getSession({ event: 'storage' });
+      await this.state.getSession({ event: 'storage' });
     }
     return {
       error,

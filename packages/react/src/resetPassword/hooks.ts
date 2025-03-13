@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { useCsrf } from 'packages/react/lib/utils';
+
+import { useCsrf } from '../../lib/utils';
 
 import { MutateFnParams, Params } from './types';
 

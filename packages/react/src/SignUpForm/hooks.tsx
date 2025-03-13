@@ -1,6 +1,7 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { usePrefetch } from 'packages/react/lib/utils';
-import { getSession } from 'packages/react/lib/auth';
+
+import { usePrefetch } from '../../lib/utils';
+import { getSession } from '../../lib/auth';
 
 import { Props, SignUpInfo } from './types';
 
