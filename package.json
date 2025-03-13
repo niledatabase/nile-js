@@ -14,7 +14,7 @@
     "build:web": "yarn workspace @niledatabase/web build",
     "build:server": "yarn workspace @niledatabase/server build",
     "build:edge": "yarn workspace @niledatabase/edge build",
-    "build": "yarn build:server && yarn build:edge && yarn build:browser && yarn build:react",
+    "build": "yarn build:server && yarn build:edge && yarn build:browser && yarn build:react && yarn build:web",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "husky install",
     "prepare": "husky install",

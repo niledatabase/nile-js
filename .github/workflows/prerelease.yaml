@@ -54,6 +54,10 @@ jobs:
         working-directory: packages/react
         run: yarn install --immutable
 
+      - name: Install @niledatabase/web
+        working-directory: packages/web
+        run: yarn install --immutable
+
       - name: Build @niledatabase/packages
         run: yarn build
 
