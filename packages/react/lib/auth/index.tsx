@@ -20,36 +20,37 @@ import Authorizer, {
   SessionProviderProps,
 } from './Authorizer';
 import { getStatus } from './status';
-import { NonErrorSession } from './types';
+import { ListenerParams, NonErrorSession } from './types';
 
 export const authorizer = new Authorizer();
-export const auth = () => {
+const _auth = () => {
   return authorizer;
 };
+export const auth = _auth();
 
 export const getSession = async function getSession(params?: GetSessionParams) {
-  return await auth().getSession(params);
+  return await auth.getSession(params);
 };
 
 export const getCsrfToken = async function getCsrfToken(params?: FetchInit) {
-  return auth().getCsrfToken(params);
+  return auth.getCsrfToken(params);
 };
 
 export const getProviders = async function getProviders(params?: FetchInit) {
-  return auth().getProviders(params);
+  return auth.getProviders(params);
 };
 
 export const signOut: typeof authorizer.signOut = async function signOut(
   options
 ) {
-  return auth().signOut(options);
+  return auth.signOut(options);
 };
 export const signIn: typeof authorizer.signIn = async function signOut(
   provider,
   options,
   authParams
 ) {
-  return auth().signIn(provider, options, authParams);
+  return auth.signIn(provider, options, authParams);
 };
 function useOnline() {
   const [isOnline, setIsOnline] = React.useState(
@@ -160,7 +161,7 @@ export function SessionProvider(props: SessionProviderProps) {
   if (!SessionContext) {
     throw new Error('React Context is unavailable in Server Components');
   }
-
+  const [loading, setLoading] = React.useState(auth.state.loading);
   const {
     children,
     refetchWhenOffline,
@@ -168,26 +169,52 @@ export function SessionProvider(props: SessionProviderProps) {
     refetchOnWindowFocus,
   } = props;
 
+  const [session, setSession] = React.useState(
+    props.session && !(props.session instanceof Response) ? props.session : null
+  );
+
+  // hook into mutating config methods
+  React.useEffect(() => {
+    const authHandler = (params: ListenerParams) => {
+      const { key, next } = params;
+      if (key === 'loading') {
+        setLoading(next);
+      }
+      if (key === 'session') {
+        setSession(next);
+      }
+    };
+    auth.addListener(authHandler);
+
+    return () => {
+      auth.removeListener(authHandler);
+    };
+  }, []);
+
   React.useEffect(() => {
     if (props.session && !(props.session instanceof Response)) {
-      auth().initialize({ baseUrl: props.baseUrl, session: props.session });
+      auth.initialize({ baseUrl: props.baseUrl, session: props.session });
+    } else {
+      if (!auth.status) {
+        auth.getSession();
+      }
     }
-  });
+  }, [props.baseUrl, props.session]);
 
   const isOnline = useOnline();
   const shouldRefetch = refetchWhenOffline !== false || isOnline;
 
   const visibilityHandler = useCallback(() => {
     if (document.visibilityState === 'visible') {
-      auth().sync('visibilitychange');
+      auth.sync('visibilitychange');
     }
   }, []);
 
   React.useEffect(() => {
     if (refetchInterval && shouldRefetch) {
       const refetchIntervalTimer = setInterval(() => {
-        if (auth().auth.session) {
-          auth().auth.getSession({ event: 'poll' });
+        if (auth.state.session) {
+          auth.state.getSession({ event: 'poll' });
         }
       }, refetchInterval * 1000);
       return () => clearInterval(refetchIntervalTimer);
@@ -195,20 +222,18 @@ export function SessionProvider(props: SessionProviderProps) {
   }, [refetchInterval, shouldRefetch]);
 
   React.useEffect(() => {
-    auth().sync();
-
     if (refetchOnWindowFocus) {
       document.addEventListener('visibilitychange', visibilityHandler, false);
     } else {
       document.removeEventListener('visibilitychange', visibilityHandler);
     }
 
-    const unsubscribe = broadcast.receive(() => auth().sync('storage'));
+    const unsubscribe = broadcast.receive(() => auth.sync('storage'));
 
     return () => {
-      auth().auth.lastSync = 0;
-      auth().auth.session = undefined;
-      auth().auth.getSession = () => undefined;
+      auth.state.lastSync = 0;
+      auth.state.session = undefined;
+      auth.state.getSession = () => undefined;
       unsubscribe();
       document.removeEventListener(
         'visibilitychange',
@@ -218,17 +243,17 @@ export function SessionProvider(props: SessionProviderProps) {
     };
   }, [refetchOnWindowFocus, visibilityHandler]);
 
+  const value = React.useMemo(() => {
+    return {
+      data: session ? session : null,
+      status: getStatus(loading, session),
+      async update(data: any) {
+        return await auth.refreshSession(data);
+      },
+    };
+  }, [loading, session]);
   return (
-    <SessionContext.Provider
-      value={{
-        data: auth().auth.session,
-        // @ts-expect-error - all three but not really
-        loading: getStatus(auth.auth.loading, auth.auth.session),
-        async update(data) {
-          return await auth().refreshSession(data);
-        },
-      }}
-    >
+    <SessionContext.Provider value={value as any}>
       {children}
     </SessionContext.Provider>
   );

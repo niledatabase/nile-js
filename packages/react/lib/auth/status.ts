@@ -1,6 +1,9 @@
-import { AuthSession } from './Authorizer';
+import { NonErrorSession } from './types';
 
-export function getStatus(load: boolean, sess: AuthSession | null | undefined) {
+export function getStatus(
+  load: boolean,
+  sess: NonErrorSession | null | undefined
+) {
   if (load) {
     return 'loading';
   }

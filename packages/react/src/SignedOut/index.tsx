@@ -32,7 +32,7 @@ function SignedOutChecker({
   className?: string;
 }) {
   const { status } = useSession();
-  if (status !== 'authenticated') {
+  if (status === 'unauthenticated') {
     if (className) {
       return <div className={className}>{children}</div>;
     }
