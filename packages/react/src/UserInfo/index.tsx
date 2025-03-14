@@ -85,13 +85,15 @@ function UserInfoC(props: Props) {
           {user.email}{' '}
         </div>
       </div>
-      <div className="flex flex-row gap-5 justify-between w-full">
-        <div className="flex flex-row gap-2 text-sm items-center w-36">
-          <CalendarCheck size={14} />
-          Created:
+      {user.created ? (
+        <div className="flex flex-row gap-5 justify-between w-full">
+          <div className="flex flex-row gap-2 text-sm items-center w-36">
+            <CalendarCheck size={14} />
+            Created:
+          </div>
+          {new Date(user.created).toLocaleString()}
         </div>
-        {new Date(user.created).toLocaleString()}
-      </div>
+      ) : null}
     </div>
   );
 }

@@ -4,7 +4,6 @@ export type Props = Record<
 >;
 
 export const BASE_INTERFACE: Props = {
+  auth: 'json',
   className: 'string',
-  init: 'json',
-  baseUrl: 'string',
 };

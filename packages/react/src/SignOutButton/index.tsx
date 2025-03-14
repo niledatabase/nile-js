@@ -6,7 +6,7 @@ import { LogOut } from 'lucide-react';
 
 import { ComponentFetchProps } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signOut } from '../../lib/auth';
+import { signOut } from '../../lib/auth/Authorizer';
 
 const SignOutButton = React.forwardRef<
   HTMLButtonElement,
@@ -27,7 +27,7 @@ const SignOutButton = React.forwardRef<
       variant,
       size,
       baseUrl,
-      init,
+      auth,
       asChild = false,
       ...props
     },
@@ -39,7 +39,7 @@ const SignOutButton = React.forwardRef<
         className={buttonVariants({ variant, size, className })}
         ref={ref}
         onClick={() => {
-          signOut({ callbackUrl, redirect, baseUrl, init });
+          signOut({ callbackUrl, redirect, baseUrl, auth });
         }}
         {...props}
       >

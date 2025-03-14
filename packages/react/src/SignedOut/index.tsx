@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { SessionProviderProps } from 'packages/react/lib/auth/Authorizer';
+import { SessionProviderProps } from 'packages/react/lib/auth';
 
 import { useSession, SessionProvider } from '../../lib/auth';
 import { convertSession } from '../SignedIn';
