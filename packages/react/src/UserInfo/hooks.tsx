@@ -3,6 +3,7 @@ import { QueryClient, useQuery } from '@tanstack/react-query';
 
 import { componentFetch, ComponentFetchProps } from '../../lib/utils';
 import { User } from '../../../server/src/users/types';
+import { ActiveSession } from '../../lib/auth/types';
 
 export type HookProps = ComponentFetchProps & {
   user?: User | undefined | null;
@@ -11,12 +12,15 @@ export type HookProps = ComponentFetchProps & {
   fetchUrl?: string;
 };
 export function useMe(props: HookProps) {
-  const { baseUrl = '', fetchUrl, init, client, user } = props;
-  const { data } = useQuery(
+  const { baseUrl = '', fetchUrl, client, user, auth } = props;
+  const { data, isLoading } = useQuery(
     {
       queryKey: ['me', baseUrl],
       queryFn: async () => {
-        const res = await componentFetch(fetchUrl ?? `${baseUrl}/api/me`, init);
+        const res = await componentFetch(
+          fetchUrl ?? `${baseUrl}/api/me`,
+          props
+        );
         return await res.json();
       },
       enabled: user == null,
@@ -24,5 +28,12 @@ export function useMe(props: HookProps) {
     client
   );
 
-  return user ?? data;
+  if (user || data) {
+    return user ?? data;
+  }
+  // we possibly have email, so return that while we wait for `me` to load
+  if (auth && !(user && isLoading)) {
+    return (auth.state?.session as ActiveSession)?.user ?? data;
+  }
+  return null;
 }

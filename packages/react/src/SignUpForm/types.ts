@@ -19,4 +19,5 @@ export type Props = PrefetchParams & {
   callbackUrl?: string;
   createTenant?: string | boolean;
   className?: string;
+  redirect?: boolean;
 };

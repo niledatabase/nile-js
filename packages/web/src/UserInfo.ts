@@ -8,6 +8,7 @@ const componentName = 'nile-user-info';
 const props: Props = {
   ...BASE_INTERFACE,
   user: 'json',
+  auth: 'json',
 };
 
 const Component = r2wc(UserInfo, {
