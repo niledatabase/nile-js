@@ -10,48 +10,36 @@
 //
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import type { UseSessionOptions } from 'next-auth/react';
 
 import { broadcast } from './broadcast';
-import Authorizer, {
-  FetchInit,
-  GetSessionParams,
-  SessionProviderProps,
-} from './Authorizer';
+import { auth } from './Authorizer';
 import { getStatus } from './status';
-import { ListenerParams, NonErrorSession } from './types';
+import { ListenerParams, NileSession, NonErrorSession } from './types';
 
-export const authorizer = new Authorizer();
-const _auth = () => {
-  return authorizer;
-};
-export const auth = _auth();
-
-export const getSession = async function getSession(params?: GetSessionParams) {
-  return await auth.getSession(params);
-};
-
-export const getCsrfToken = async function getCsrfToken(params?: FetchInit) {
-  return auth.getCsrfToken(params);
-};
-
-export const getProviders = async function getProviders(params?: FetchInit) {
-  return auth.getProviders(params);
-};
-
-export const signOut: typeof authorizer.signOut = async function signOut(
-  options
-) {
-  return auth.signOut(options);
-};
-export const signIn: typeof authorizer.signIn = async function signOut(
-  provider,
-  options,
-  authParams
-) {
-  return auth.signIn(provider, options, authParams);
-};
+export interface SessionProviderProps {
+  children: React.ReactNode;
+  session?: NileSession;
+  baseUrl?: string;
+  basePath?: string;
+  /**
+   * A time interval (in seconds) after which the session will be re-fetched.
+   * If set to `0` (default), the session is not polled.
+   */
+  refetchInterval?: number;
+  /**
+   * `SessionProvider` automatically refetches the session when the user switches between windows.
+   * This option activates this behaviour if set to `true` (default).
+   */
+  refetchOnWindowFocus?: boolean;
+  /**
+   * Set to `false` to stop polling when the device has no internet access offline (determined by `navigator.onLine`)
+   *
+   * [`navigator.onLine` documentation](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine)
+   */
+  refetchWhenOffline?: false;
+}
 function useOnline() {
   const [isOnline, setIsOnline] = React.useState(
     typeof navigator !== 'undefined' ? navigator.onLine : false
@@ -204,7 +192,7 @@ export function SessionProvider(props: SessionProviderProps) {
   const isOnline = useOnline();
   const shouldRefetch = refetchWhenOffline !== false || isOnline;
 
-  const visibilityHandler = useCallback(() => {
+  const visibilityHandler = React.useCallback(() => {
     if (document.visibilityState === 'visible') {
       auth.sync('visibilitychange');
     }
@@ -247,8 +235,8 @@ export function SessionProvider(props: SessionProviderProps) {
     return {
       data: session ? session : null,
       status: getStatus(loading, session),
-      async update(data: any) {
-        return await auth.refreshSession(data);
+      async update() {
+        return await auth.refreshSession();
       },
     };
   }, [loading, session]);

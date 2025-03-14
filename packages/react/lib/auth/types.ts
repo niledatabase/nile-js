@@ -9,7 +9,7 @@ export type JWT = {
   loading: boolean;
 };
 
-type ActiveSession = {
+export type ActiveSession = {
   loading: boolean;
   id: string;
   email: string;
@@ -41,15 +41,29 @@ export type ListenerParams = {
   prev: any;
 };
 export type Listener = (callback: ListenerParams) => void;
-type ListenerKeys =
+export type ListenerKeys =
   | 'basePath'
   | 'baseUrl'
   | 'lastSync'
   | 'getSession'
   | 'session'
   | 'loading';
-export type AuthConfig = {
-  basePath: string;
-  baseUrl: string;
-  listenerKeys: Array<ListenerKeys>;
+
+export type AuthConfig = Config & {
+  listenerKeys?: Array<ListenerKeys>;
+};
+
+export type Config = {
+  basePath?: string;
+  baseUrl?: string;
+  init?: RequestInit;
+};
+export type PartialAuthorizer = null | {
+  state?: {
+    baseUrl?: string;
+    session?: {
+      user?: { email?: string | undefined };
+    };
+  };
+  requestInit?: RequestInit | undefined;
 };

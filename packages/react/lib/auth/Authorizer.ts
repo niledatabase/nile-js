@@ -14,17 +14,17 @@ import type {
 } from 'next-auth/providers/index';
 
 import {
+  ActiveSession,
   AuthConfig,
   AuthState,
+  Config,
   Listener,
-  NileSession,
   NonErrorSession,
+  PartialAuthorizer,
 } from './types';
 import { logger, LoggerInstance } from './logger';
 import { broadcast } from './broadcast';
 import { createObservableObject } from './observable';
-
-export type FetchInit = CtxOrReq & { init?: RequestInit };
 
 export type GetSessionParams = CtxOrReq & {
   event?: 'storage' | 'timer' | 'hidden' | string;
@@ -34,28 +34,6 @@ export type GetSessionParams = CtxOrReq & {
   init?: RequestInit;
 };
 
-export interface SessionProviderProps {
-  children: React.ReactNode;
-  session?: NileSession;
-  baseUrl?: string;
-  basePath?: string;
-  /**
-   * A time interval (in seconds) after which the session will be re-fetched.
-   * If set to `0` (default), the session is not polled.
-   */
-  refetchInterval?: number;
-  /**
-   * `SessionProvider` automatically refetches the session when the user switches between windows.
-   * This option activates this behaviour if set to `true` (default).
-   */
-  refetchOnWindowFocus?: boolean;
-  /**
-   * Set to `false` to stop polling when the device has no internet access offline (determined by `navigator.onLine`)
-   *
-   * [`navigator.onLine` documentation](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine)
-   */
-  refetchWhenOffline?: false;
-}
 enum State {
   SESSION = 'getSession',
 }
@@ -63,7 +41,7 @@ enum State {
 export default class Authorizer {
   state: AuthState;
   logger: LoggerInstance;
-  init?: RequestInit;
+  requestInit?: RequestInit;
   addListener: (cb: Listener) => void;
   removeListener: (cb: Listener) => void;
   status: null | State;
@@ -112,11 +90,40 @@ export default class Authorizer {
     this.logger = logger(this);
   }
 
+  get baseUrl() {
+    this.logger = logger(this);
+    return this.state.baseUrl;
+  }
+
+  configure(config?: Config) {
+    if (config?.basePath) this.state.basePath = parseUrl(config?.basePath).path;
+    if (config?.baseUrl) this.baseUrl = config.baseUrl;
+    if (config?.init) this.requestInit = config.init;
+
+    return this;
+  }
+  // return the bare minimum config for convenience
+  // this is useful for `@niledatabase/web`
+  sanitize(): PartialAuthorizer {
+    return {
+      state: {
+        baseUrl: this.baseUrl,
+        session: {
+          user: {
+            email: (this.state.session as ActiveSession)?.user?.email,
+          },
+        },
+      },
+      requestInit: this.requestInit,
+    };
+  }
+
   async initialize(params?: {
     baseUrl?: string;
     session?: NonErrorSession | null | undefined;
   }) {
     const { baseUrl, session } = params ?? {};
+
     if (baseUrl) this.baseUrl = baseUrl;
 
     const hasInitialSession = session !== undefined;
@@ -129,28 +136,21 @@ export default class Authorizer {
   }
 
   get apiBaseUrl() {
-    return `${this.state.baseUrl}${this.state.basePath}`;
+    return `${this.baseUrl}${this.state.basePath}`;
   }
 
   async fetchData<T = any>(
-    path: string,
-    { ctx, req = ctx?.req, init }: FetchInit = {}
+    url: string,
+    init?: RequestInit
   ): Promise<T | undefined> {
-    const url = `${this.apiBaseUrl}/${path}`;
     try {
       const options: RequestInit = {
         headers: {
           'Content-Type': 'application/json',
-          ...(req?.headers?.cookie ? { cookie: req.headers.cookie } : {}),
         },
-        ...(this.init ? this.init : {}),
-        ...(init ? init : {}),
+        ...(this.requestInit ? this.requestInit : {}),
+        ...init,
       };
-
-      if (req?.body) {
-        options.body = JSON.stringify(req.body);
-        options.method = 'POST';
-      }
 
       const res = await fetch(url, options);
       const data = await res.json();
@@ -176,7 +176,7 @@ export default class Authorizer {
   > {
     try {
       const res = await fetch(url, {
-        ...this.init,
+        ...this.requestInit,
         ...init,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -194,16 +194,15 @@ export default class Authorizer {
     }
   }
 
-  async getProviders(params?: FetchInit) {
+  async getProviders() {
     return await this.fetchData<
       Record<LiteralUnion<BuiltInProviderType>, ClientSafeProvider>
-    >('providers', params);
+    >(`${this.apiBaseUrl}/auth/providers`);
   }
 
-  async getCsrfToken(params?: FetchInit) {
+  async getCsrfToken() {
     const response = await this.fetchData<{ csrfToken: string }>(
-      'csrf',
-      params
+      `${this.apiBaseUrl}/auth/csrf`
     );
     return response?.csrfToken;
   }
@@ -214,7 +213,7 @@ export default class Authorizer {
     }
     this.status = State.SESSION;
     if (params?.init) {
-      this.init = params.init;
+      this.requestInit = params.init;
     }
 
     if (params?.baseUrl) {
@@ -222,13 +221,13 @@ export default class Authorizer {
     }
 
     if (this.state.session && now() < this.state.lastSync) {
+      this.status = null;
       return this.state.session;
     }
     this.state.loading = true;
 
     const session = await this.fetchData<NonErrorSession | undefined>(
-      'session',
-      params
+      `${this.apiBaseUrl}/auth/session`
     );
     if (params?.broadcast ?? true) {
       broadcast.post({ event: 'session', data: { trigger: 'getSession' } });
@@ -241,11 +240,10 @@ export default class Authorizer {
     }
     return { loading: this.state.loading } as NonErrorSession;
   }
-  async refreshSession(params: any) {
+  async refreshSession() {
     this.state.loading = true;
     const session = await this.fetchData<NonErrorSession | undefined>(
-      'session',
-      params
+      `${this.apiBaseUrl}/auth/session`
     );
 
     broadcast.post({ event: 'session', data: { trigger: 'getSession' } });
@@ -256,41 +254,44 @@ export default class Authorizer {
   async signOut<R extends boolean = true>(
     options?: SignOutParams<R> & {
       baseUrl?: string;
-      init?: RequestInit;
+      auth?: Authorizer | PartialAuthorizer;
       fetchUrl?: string;
     }
   ): Promise<R extends true ? undefined : SignOutResponse> {
     const {
       callbackUrl = window.location.href,
       baseUrl,
-      init,
+      auth,
       fetchUrl,
     } = options ?? {};
     if (baseUrl) {
       this.baseUrl = baseUrl;
     }
 
-    if (init) {
-      this.init = init;
+    if (auth) {
+      this.requestInit = auth.requestInit;
+      if (auth.state?.baseUrl) {
+        this.baseUrl = auth.state.baseUrl;
+      }
     }
-    const baseFetch = fetchUrl ?? this.apiBaseUrl;
+    const baseFetch = fetchUrl ?? `${this.apiBaseUrl}/auth/signout`;
     const fetchOptions: RequestInit = {
       method: 'post',
       body: new URLSearchParams({
-        csrfToken: String(await this.getCsrfToken(options)),
+        csrfToken: String(await this.getCsrfToken()),
         callbackUrl,
         json: String(true),
       }),
     };
     const res = await this.fetchFormData<SignOutResponse>(
-      `${baseFetch}/signout`,
+      baseFetch,
       fetchOptions
     );
 
     broadcast.post({ event: 'session', data: { trigger: 'signout' } });
 
     // in the case you are going x-origin, we don't want to trust the nile.callback-url, so we will not redirect and just refresh the page
-    if (this.init?.credentials) {
+    if (this.requestInit?.credentials) {
       window.location.href = callbackUrl;
       if (callbackUrl.includes('#')) window.location.reload();
       return undefined as R extends true ? undefined : SignOutResponse;
@@ -317,6 +318,7 @@ export default class Authorizer {
       baseUrl?: string;
       init?: ResponseInit;
       fetchUrl?: string;
+      auth?: Authorizer | PartialAuthorizer;
     },
     authorizationParams?: SignInAuthorizationParams
   ): Promise<
@@ -327,6 +329,7 @@ export default class Authorizer {
       baseUrl,
       fetchUrl,
       init,
+      auth,
       redirect = true,
       ...remaining
     } = options ?? {};
@@ -334,10 +337,19 @@ export default class Authorizer {
     if (baseUrl) {
       this.baseUrl = baseUrl;
     }
-    if (init) {
-      this.init = init;
+    if (auth) {
+      if (auth.requestInit) {
+        this.requestInit = auth.requestInit;
+      }
+      if (auth.state?.baseUrl) {
+        this.baseUrl = auth.state.baseUrl;
+      }
     }
-    const baseFetch = fetchUrl ?? this.apiBaseUrl;
+    if (init) {
+      this.requestInit = init;
+    }
+
+    const baseFetch = fetchUrl ?? `${this.apiBaseUrl}/auth`;
     const providers = await this.getProviders();
 
     if (!providers) {
@@ -370,7 +382,7 @@ export default class Authorizer {
       }),
     });
 
-    if (this.init?.credentials) {
+    if (this.requestInit?.credentials) {
       window.location.reload();
       return;
     }
@@ -397,6 +409,89 @@ export default class Authorizer {
       url: error ? null : data?.url,
     } as any;
   }
+  async signUp(options: {
+    baseUrl?: string;
+    init?: ResponseInit;
+    fetchUrl?: string;
+    newTenantName?: string;
+    createTenant?: string | boolean;
+    email: string;
+    password: string;
+    auth?: Authorizer | PartialAuthorizer;
+    tenantId?: string;
+    callbackUrl?: string;
+    redirect?: boolean;
+  }) {
+    const {
+      password,
+      tenantId,
+      fetchUrl,
+      newTenantName,
+      createTenant,
+      baseUrl,
+      init,
+      email,
+      auth,
+    } = options;
+
+    if (baseUrl) {
+      this.baseUrl = baseUrl;
+    }
+
+    if (auth) {
+      if (auth.requestInit) {
+        this.requestInit = auth.requestInit;
+      }
+      if (auth.state?.baseUrl) {
+        this.baseUrl = auth.state.baseUrl;
+      }
+    }
+
+    if (init) {
+      this.requestInit = init;
+    }
+
+    const searchParams = new URLSearchParams();
+
+    if (newTenantName) {
+      searchParams.set('newTenantName', newTenantName);
+    } else if (createTenant) {
+      if (typeof createTenant === 'boolean') {
+        searchParams.set('newTenantName', email);
+      } else if (typeof createTenant === 'string') {
+        searchParams.set('newTenantName', createTenant);
+      }
+    }
+    if (tenantId) {
+      searchParams.set('tenantId', tenantId);
+    }
+
+    let signUpUrl = fetchUrl ?? `${this.apiBaseUrl}/signup`;
+    if (searchParams.size > 0) {
+      signUpUrl += `?${searchParams}`;
+    }
+    const data = await this.fetchData(signUpUrl, {
+      method: 'post',
+      body: JSON.stringify({ email, password }),
+    });
+    if (data) {
+      await this.initialize();
+      await this.state.getSession({ event: 'storage' });
+    }
+    const error = data?.url
+      ? new URL(data.url).searchParams.get('error')
+      : 'Unable to parse response from server';
+
+    if (this.requestInit?.credentials) {
+      window.location.reload();
+      return;
+    }
+
+    return {
+      data,
+      error,
+    } as any;
+  }
 }
 export interface InternalUrl {
   /** @default "http://localhost:3000" */
@@ -412,7 +507,7 @@ export interface InternalUrl {
 }
 
 function parseUrl(url?: string): InternalUrl {
-  const defaultUrl = new URL('http://localhost:3000/api/auth');
+  const defaultUrl = new URL('http://localhost:3000/api');
 
   if (url && !url.startsWith('http')) {
     url = `https://${url}`;
@@ -433,3 +528,40 @@ function parseUrl(url?: string): InternalUrl {
     toString: () => base,
   };
 }
+
+export const authorizer = new Authorizer();
+
+const _auth = () => {
+  return authorizer;
+};
+
+export const auth = _auth();
+
+export const getSession = async function getSession(params?: GetSessionParams) {
+  return await auth.getSession(params);
+};
+
+export const getCsrfToken = async function getCsrfToken() {
+  return auth.getCsrfToken();
+};
+
+export const getProviders = async function getProviders() {
+  return auth.getProviders();
+};
+
+export const signOut: typeof authorizer.signOut = async function signOut(
+  options
+) {
+  return auth.signOut(options);
+};
+export const signIn: typeof authorizer.signIn = async function signOut(
+  provider,
+  options,
+  authParams
+) {
+  return auth.signIn(provider, options, authParams);
+};
+
+export const signUp: typeof authorizer.signUp = async function signUp(options) {
+  return auth.signUp(options);
+};

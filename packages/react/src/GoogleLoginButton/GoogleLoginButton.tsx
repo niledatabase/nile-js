@@ -1,7 +1,7 @@
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 
-import { signIn } from '../../lib/auth';
+import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 

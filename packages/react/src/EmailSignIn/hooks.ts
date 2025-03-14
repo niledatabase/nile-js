@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { signIn } from '../../lib/auth';
+import { signIn } from '../../lib/auth/Authorizer';
 
 import { Props } from './types';
 
