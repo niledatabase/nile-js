@@ -3052,6 +3052,7 @@ __metadata:
     eslint: "npm:^8.54.0"
     eslint-config-prettier: "npm:^8.10.0"
     eslint-plugin-prettier: "npm:^4.2.1"
+    h3: "npm:^1.15.1"
     husky: "npm:^8.0.3"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
@@ -8718,6 +8719,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cookie-es@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "cookie-es@npm:1.2.2"
+  checksum: 10/0fd742c11caa185928e450543f84df62d4b2c1fc7b5041196b57b7db04e1c6ac6585fb40e4f579a2819efefd2d6a9cbb4d17f71240d05f4dcd8f74ae81341a20
+  languageName: node
+  linkType: hard
+
 "cookie-signature@npm:1.0.6":
   version: 1.0.6
   resolution: "cookie-signature@npm:1.0.6"
@@ -8859,6 +8867,15 @@ __metadata:
     shebang-command: "npm:^2.0.0"
     which: "npm:^2.0.1"
   checksum: 10/0d52657d7ae36eb130999dffff1168ec348687b48dd38e2ff59992ed916c88d328cf1d07ff4a4a10bc78de5e1c23f04b306d569e42f7a2293915c081e4dfee86
+  languageName: node
+  linkType: hard
+
+"crossws@npm:^0.3.3":
+  version: 0.3.4
+  resolution: "crossws@npm:0.3.4"
+  dependencies:
+    uncrypto: "npm:^0.1.3"
+  checksum: 10/4226588a51835640e904f760e3b3d8d673c5176191d50449f5cde65bfd4c68fc1cd0db489fa46088ddde4bacec0407e00d9acab0a2abf40806dbd4dc81c1fc32
   languageName: node
   linkType: hard
 
@@ -9274,6 +9291,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"defu@npm:^6.1.4":
+  version: 6.1.4
+  resolution: "defu@npm:6.1.4"
+  checksum: 10/aeffdb47300f45b4fdef1c5bd3880ac18ea7a1fd5b8a8faf8df29350ff03bf16dd34f9800205cab513d476e4c0a3783aa0cff0a433aff0ac84a67ddc4c8a2d64
+  languageName: node
+  linkType: hard
+
 "degenerator@npm:^5.0.0":
   version: 5.0.1
   resolution: "degenerator@npm:5.0.1"
@@ -9333,6 +9357,13 @@ __metadata:
   version: 2.0.3
   resolution: "dequal@npm:2.0.3"
   checksum: 10/6ff05a7561f33603df87c45e389c9ac0a95e3c056be3da1a0c4702149e3a7f6fe5ffbb294478687ba51a9e95f3a60e8b6b9005993acd79c292c7d15f71964b6b
+  languageName: node
+  linkType: hard
+
+"destr@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "destr@npm:2.0.3"
+  checksum: 10/dbb756baa876810ec0ca4bcb702d86cc3b480ed14f36bf5747718ed211f96bca5520b63a4109eb181ad940ee2a645677d9a63d4a0ed11a7510619dae97317201
   languageName: node
   linkType: hard
 
@@ -11902,6 +11933,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"h3@npm:^1.15.1":
+  version: 1.15.1
+  resolution: "h3@npm:1.15.1"
+  dependencies:
+    cookie-es: "npm:^1.2.2"
+    crossws: "npm:^0.3.3"
+    defu: "npm:^6.1.4"
+    destr: "npm:^2.0.3"
+    iron-webcrypto: "npm:^1.2.1"
+    node-mock-http: "npm:^1.0.0"
+    radix3: "npm:^1.1.2"
+    ufo: "npm:^1.5.4"
+    uncrypto: "npm:^0.1.3"
+  checksum: 10/abd373449d8fb36fba7dea66071f5c5badaea489c1762995a94ca95b7c5eefd470ba47bb9ba3507405c231547d421366abe6e55d6645bb7e8dbd1a9717f1e1cb
+  languageName: node
+  linkType: hard
+
 "handlebars@npm:^4.7.7":
   version: 4.7.8
   resolution: "handlebars@npm:4.7.8"
@@ -12483,6 +12531,13 @@ __metadata:
   version: 1.9.1
   resolution: "ipaddr.js@npm:1.9.1"
   checksum: 10/864d0cced0c0832700e9621913a6429ccdc67f37c1bd78fb8c6789fff35c9d167cb329134acad2290497a53336813ab4798d2794fd675d5eb33b5fdf0982b9ca
+  languageName: node
+  linkType: hard
+
+"iron-webcrypto@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "iron-webcrypto@npm:1.2.1"
+  checksum: 10/c1f52ccfe2780efa5438c134538ee4b26c96a87d22f351d896781219efbce25b4fe716d1cb7f248e02da96881760541135acbcc7c0622ffedf71cb0e227bebf9
   languageName: node
   linkType: hard
 
@@ -15453,6 +15508,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-mock-http@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "node-mock-http@npm:1.0.0"
+  checksum: 10/338a94e4027e96f7d33af8f7012aeff095740a89df168950d7c39a968d6edb253b145eab41bc83738db4898581d941d96d855254c344a72c8609ee69f888ce86
+  languageName: node
+  linkType: hard
+
 "node-releases@npm:^2.0.19":
   version: 2.0.19
   resolution: "node-releases@npm:2.0.19"
@@ -17395,6 +17457,13 @@ __metadata:
   version: 4.0.1
   resolution: "quick-lru@npm:4.0.1"
   checksum: 10/5c7c75f1c696750f619b165cc9957382f919e4207dabf04597a64f0298861391cdc5ee91a1dde1a5d460ecf7ee1af7fc36fef6d155bef2be66f05d43fd63d4f0
+  languageName: node
+  linkType: hard
+
+"radix3@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "radix3@npm:1.1.2"
+  checksum: 10/5ed01a8e4b753e325c6ecb01d993de77f690e548ef9e149e7dc403ee7b109c2cb41e3d09bc3ce004d872c67c8dca1d556dbf7808b1ac7df9f86994e57d757557
   languageName: node
   linkType: hard
 
@@ -20367,6 +20436,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ufo@npm:^1.5.4":
+  version: 1.5.4
+  resolution: "ufo@npm:1.5.4"
+  checksum: 10/a885ed421e656aea6ca64e9727b8118a9488715460b6f1a0f0427118adfe2f2830fe7c1d5bd9c5c754a332e6807516551cd663ea67ce9ed6a4e3edc739916335
+  languageName: node
+  linkType: hard
+
 "uglify-js@npm:^3.1.4":
   version: 3.19.3
   resolution: "uglify-js@npm:3.19.3"
@@ -20394,6 +20470,13 @@ __metadata:
     has-symbols: "npm:^1.1.0"
     which-boxed-primitive: "npm:^1.1.1"
   checksum: 10/fadb347020f66b2c8aeacf8b9a79826fa34cc5e5457af4eb0bbc4e79bd87fed0fa795949825df534320f7c13f199259516ad30abc55a6e7b91d8d996ca069e50
+  languageName: node
+  linkType: hard
+
+"uncrypto@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "uncrypto@npm:0.1.3"
+  checksum: 10/0020f74b0ce34723196d8982a73bb7f40cff455a41b8f88ae146b86885f4e66e41a1241fe80a887505c3bd2c7f07ed362b6ed041968370073c40a98496e6a737
   languageName: node
   linkType: hard
 
