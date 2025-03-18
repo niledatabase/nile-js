@@ -4,6 +4,11 @@ import { twMerge } from 'tailwind-merge';
 
 import Authorizer from './auth/Authorizer';
 import { PartialAuthorizer } from './auth/types';
+import {
+  buildProvidersQuery,
+  buildCsrfQuery,
+  QueryBuilderParams,
+} from './requestMaker';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -55,37 +60,17 @@ export function componentFetch(
   return fetch(url, newOpts);
 }
 
-export type PrefetchParams = {
-  baseUrl?: string;
-  disableQuery?: boolean;
-  init?: RequestInit;
+export type PrefetchParams = QueryBuilderParams & {
   client?: QueryClient;
-  fetchUrl?: string;
 };
+
 export function usePrefetch(params?: PrefetchParams) {
-  const { baseUrl = '', disableQuery, init, client, fetchUrl } = params ?? {};
-  useQuery(
-    {
-      queryKey: ['providers', baseUrl],
-      queryFn: async () => {
-        await fetch(fetchUrl ?? `${baseUrl}/api/auth/providers`, init);
-      },
-      enabled: disableQuery === true,
-    },
-    client
-  );
-  useCsrf(params);
+  const { client } = params ?? {};
+  useQuery(buildProvidersQuery(params), client);
+  useQuery(buildCsrfQuery(params), client);
 }
+
 export function useCsrf(params?: PrefetchParams) {
-  const { baseUrl = '', disableQuery, init, client, fetchUrl } = params ?? {};
-  useQuery(
-    {
-      queryKey: ['csrf', baseUrl],
-      queryFn: async () => {
-        await fetch(fetchUrl ?? `${baseUrl}/api/auth/csrf`, init);
-      },
-      enabled: disableQuery === true,
-    },
-    client
-  );
+  const { client } = params ?? {};
+  useQuery(buildCsrfQuery(params), client);
 }

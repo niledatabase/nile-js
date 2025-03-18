@@ -1,0 +1,71 @@
+{
+  "name": "@niledatabase/vue",
+  "version": "3.1.0-alpha.0",
+  "license": "MIT",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "style": "./dist/styles.css",
+  "files": [
+    "dist/index.mjs",
+    "dist/styles.css"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vue-tsc --emitDeclarationOnly",
+    "build:tailwind": "npx tailwindcss -i ./src/styles.css -o ./dist/styles.css"
+  },
+  "engines": {
+    "node": ">=20.0"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "author": "jrea",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niledatabase/nile-js.git",
+    "directory": "packages/vue"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@tanstack/vue-query": "^5.23.0",
+    "@tsconfig/node22": "^22.0.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.21",
+    "dd": "^0.26.0",
+    "tailwindcss": "3",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.2",
+    "vue": "^3.5.13",
+    "vue-tsc": "^3.0.0-alpha.2"
+  },
+  "dependencies": {
+    "@tanstack/vue-table": "^8.21.2",
+    "@vee-validate/zod": "^4.15.0",
+    "@vueuse/core": "^13.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-vue-next": "^0.482.0",
+    "reka-ui": "^2.1.0",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7",
+    "vee-validate": "^4.15.0",
+    "zod": "^3.24.2"
+  }
+}

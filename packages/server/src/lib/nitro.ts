@@ -26,9 +26,10 @@ export async function convertToRequest(
   const request = new Request(url, {
     method,
     headers,
-    body: body ? JSON.stringify(body) : null,
+    // this is already a string
+    body: body ? body : null,
   });
-  switch (request.method) {
+  switch (method) {
     case 'GET':
       return handlers.GET(request);
     case 'POST':
