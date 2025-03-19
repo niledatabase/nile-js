@@ -78,8 +78,8 @@ export function makeBasicHeaders(config: Config, opts?: RequestInit) {
       headers.set('Authorization', `Bearer ${getToken({ config })}`);
     }
   }
-  if ('secureCookies' in config && config.secureCookies != null) {
-    headers.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
+  if (config && config.api.secureCookies != null) {
+    headers.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
   }
 
   return headers;

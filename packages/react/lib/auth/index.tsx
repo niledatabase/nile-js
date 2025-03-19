@@ -157,6 +157,8 @@ export function SessionProvider(props: SessionProviderProps) {
     refetchOnWindowFocus,
   } = props;
 
+  if (props.basePath) auth.state.basePath = props.basePath;
+
   const [session, setSession] = React.useState(
     props.session && !(props.session instanceof Response) ? props.session : null
   );

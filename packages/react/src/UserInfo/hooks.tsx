@@ -17,10 +17,7 @@ export function useMe(props: HookProps) {
     {
       queryKey: ['me', baseUrl],
       queryFn: async () => {
-        const res = await componentFetch(
-          fetchUrl ?? `${baseUrl}/api/me`,
-          props
-        );
+        const res = await componentFetch(fetchUrl ?? '/me', props);
         return await res.json();
       },
       enabled: user == null,

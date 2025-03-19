@@ -61,6 +61,7 @@ export type Config = {
 export type PartialAuthorizer = null | {
   state?: {
     baseUrl?: string;
+    basePath?: string;
     session?: {
       user?: { email?: string | undefined };
     };

@@ -2,7 +2,7 @@ import { QueryClient, useQuery } from '@tanstack/react-query';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-import Authorizer from './auth/Authorizer';
+import Authorizer, { auth as authorizer } from './auth/Authorizer';
 import { PartialAuthorizer } from './auth/types';
 
 export function cn(...inputs: ClassValue[]) {
@@ -48,9 +48,9 @@ export function componentFetch(
   if (!('fetchUrl' in opts) && fetchUrl.startsWith('/')) {
     const auth: Authorizer | PartialAuthorizer | undefined =
       'auth' in opts ? opts.auth : props?.auth;
-    if (auth) {
-      url = `${auth?.state?.baseUrl}${fetchUrl}`;
-    }
+    const basePath = auth?.state?.basePath ?? authorizer.state.basePath;
+    const baseUrl = auth?.state?.baseUrl ?? authorizer.state.baseUrl;
+    url = `${baseUrl}${basePath}${fetchUrl}`;
   }
   return fetch(url, newOpts);
 }

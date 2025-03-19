@@ -18,9 +18,8 @@ export function useTenants(
     {
       queryKey: ['tenants', baseUrl],
       queryFn: async () => {
-        const fetchUrl = params.fetchUrl ?? `${baseUrl}/api/tenants`;
         const response = await componentFetch(
-          fetchUrl,
+          params.fetchUrl ?? '/tenants',
           {
             headers: {
               'content-type': 'application/json',

@@ -16,6 +16,8 @@ const SignOutButton = React.forwardRef<
       callbackUrl?: string;
       buttonText?: string;
       baseUrl?: string;
+      fetchUrl?: string;
+      basePath?: string;
     }
 >(
   (
@@ -27,6 +29,8 @@ const SignOutButton = React.forwardRef<
       variant,
       size,
       baseUrl,
+      fetchUrl,
+      basePath,
       auth,
       asChild = false,
       ...props
@@ -39,7 +43,7 @@ const SignOutButton = React.forwardRef<
         className={buttonVariants({ variant, size, className })}
         ref={ref}
         onClick={() => {
-          signOut({ callbackUrl, redirect, baseUrl, auth });
+          signOut({ callbackUrl, redirect, baseUrl, auth, fetchUrl, basePath });
         }}
         {...props}
       >

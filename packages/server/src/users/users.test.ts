@@ -19,13 +19,19 @@ const baseConfig = [
   'configure',
   'updateUser',
   'logger',
-  'routePrefix',
-  'routes',
-  'secureCookies',
   'unlinkUser',
   'updateMe',
   'user',
   'password',
+];
+const apiConfig = [
+  '_token',
+  'basePath',
+  'callbackUrl',
+  'cookieKey',
+  'routePrefix',
+  'routes',
+  'secureCookies',
 ];
 const config = {
   databaseId: 'databaseId',
@@ -37,5 +43,6 @@ describe('users', () => {
   it('has expected methods', () => {
     const methods = new Users(new Config(config));
     expect(Object.keys(methods).sort()).toEqual(baseConfig.sort());
+    expect(Object.keys(methods.api).sort()).toEqual(apiConfig.sort());
   });
 });

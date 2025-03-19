@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useCsrf } from '../../lib/utils';
+import { componentFetch, useCsrf } from '../../lib/utils';
 
 import { MutateFnParams, Params } from './types';
 
@@ -11,6 +11,7 @@ export function useResetPassword(params?: Params) {
     beforeMutate,
     callbackUrl,
     baseUrl = '',
+    basePath = 'api',
   } = params ?? {};
   const mutation = useMutation({
     mutationFn: async (_data: MutateFnParams) => {
@@ -18,7 +19,8 @@ export function useResetPassword(params?: Params) {
       const possibleData = beforeMutate && beforeMutate(d);
       const data = possibleData ?? d;
 
-      const fetchURL = params?.fetchUrl ?? `${baseUrl}/api/auth/reset-password`;
+      const fetchURL =
+        params?.fetchUrl ?? `${baseUrl}/${basePath}/auth/reset-password`;
 
       // should fix this in nile-auth one day
       if (
@@ -33,10 +35,11 @@ export function useResetPassword(params?: Params) {
 
       data.redirectURL = fetchURL;
 
-      return await fetch(fetchURL, {
-        method: data.password ? 'put' : 'post',
-        body: JSON.stringify(data),
-      });
+      return await componentFetch(
+        '/auth/reset-password',
+        { method: data.password ? 'put' : 'post', body: JSON.stringify(data) },
+        params
+      );
     },
     onSuccess: (data) => {
       onSuccess && onSuccess(data);

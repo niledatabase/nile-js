@@ -1,3 +1,4 @@
+import { Routes } from '../../api/types';
 import {
   Database,
   LoggerType,
@@ -21,31 +22,24 @@ import {
   getUsername,
   getSecureCookies,
   getCallbackUrl,
+  getCookieKey,
 } from './envVars';
-
-export type ConfigRoutes = {
-  SIGNIN?: string;
-  SESSION?: string;
-  PROVIDERS?: string;
-  CSRF?: string;
-  CALLBACK?: string;
-  SIGNOUT?: string;
-  ME?: string;
-  ERROR?: string;
-  TENANTS?: string;
-  TENANT_USERS?: string;
-  USERS?: string;
-};
 
 export type ApiParams = {
   basePath?: string | undefined;
   cookieKey?: string;
   token?: string | undefined;
   callbackUrl?: string | undefined;
+  routes?: Partial<Routes>;
+  routePrefix?: string | undefined;
+  secureCookies?: boolean;
 };
 export class ApiConfig {
   public cookieKey?: string;
   public basePath?: string | undefined;
+  public routes?: Partial<Routes>;
+  public routePrefix?: string;
+  public secureCookies?: boolean;
   /**
    * The client side callback url. Defaults to nothing (so nile.origin will be it), but in the cases of x-origin, you want to set this explicitly to be sure nile-auth does the right thing
    * If this is set, any `callbackUrl` from the client will be ignored.
@@ -53,11 +47,17 @@ export class ApiConfig {
   public callbackUrl?: string;
 
   private _token?: string;
-  constructor({ basePath, cookieKey, token, callbackUrl }: ApiParams) {
-    this.basePath = basePath;
-    this.cookieKey = cookieKey;
-    this.callbackUrl = callbackUrl;
-    this._token = token;
+  constructor(config?: ServerConfig, logger?: string) {
+    const envVarConfig: EnvConfig = { config, logger };
+
+    this.cookieKey = getCookieKey(envVarConfig);
+    this._token = getToken(envVarConfig);
+    this.callbackUrl = getCallbackUrl(envVarConfig);
+    this.secureCookies = getSecureCookies(envVarConfig);
+    this.basePath = getBasePath(envVarConfig);
+
+    this.routes = config?.api?.routes;
+    this.routePrefix = config?.api?.routePrefix;
   }
 
   public get token(): string | undefined {
@@ -74,10 +74,7 @@ export class Config {
   password: string;
   databaseId: string;
   databaseName: string;
-  routePrefix?: string;
-  routes?: ConfigRoutes;
   logger?: LoggerType;
-  secureCookies?: boolean | undefined;
 
   debug: boolean;
 
@@ -122,27 +119,17 @@ export class Config {
       }
     }
 
-    this.secureCookies = getSecureCookies(envVarConfig);
     this.databaseId = getDatabaseId(envVarConfig) as string;
     this.databaseName = getDatabaseName(envVarConfig) as string;
     this._tenantId = getTenantId(envVarConfig);
     this.debug = Boolean(config?.debug);
     this._userId = config?.userId;
 
-    const callbackUrl =
-      config?.api?.callbackUrl ?? getCallbackUrl(envVarConfig);
-
-    const basePath = getBasePath(envVarConfig);
     const { host, port, ...dbConfig } = config?.db ?? {};
     const configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
 
-    this.api = new ApiConfig({
-      basePath,
-      cookieKey: config?.api?.cookieKey ?? 'token',
-      token: getToken({ config }),
-      callbackUrl,
-    });
+    this.api = new ApiConfig(config, logger);
     this.db = {
       user: this.user,
       password: this.password,
@@ -163,19 +150,12 @@ export class Config {
     };
 
     const { host, port, ...dbConfig } = config.db ?? {};
-    const callbackUrl =
-      config?.api?.callbackUrl ?? getCallbackUrl(envVarConfig);
     let configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
     let basePath = getBasePath(envVarConfig);
     if (configuredHost && this.databaseName && this.databaseId && basePath) {
       info('Already configured, aborting fetch');
-      this.api = new ApiConfig({
-        basePath,
-        cookieKey: config?.api?.cookieKey ?? 'token',
-        token: getToken({ config }),
-        callbackUrl,
-      });
+      this.api = new ApiConfig(config);
       this.db = {
         user: this.user,
         password: this.password,
@@ -264,12 +244,7 @@ export class Config {
         configuredHost = dburl.hostname;
       }
     }
-    this.api = new ApiConfig({
-      basePath,
-      cookieKey: config?.api?.cookieKey ?? 'token',
-      token: getToken({ config }),
-      callbackUrl,
-    });
+    this.api = new ApiConfig(config);
     this.db = {
       user: this.user,
       password: this.password,
