@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2025-03-19)
+
+### Bug Fixes
+
+- **react:** remove type module ([ef7d6a3](https://github.com/niledatabase/nile-js/commit/ef7d6a317f2a0ea0f91ea503649fd55dcfdf45a4))
+
 # [4.0.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2025-03-19)
 
 ### Bug Fixes
