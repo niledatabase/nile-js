@@ -121,8 +121,9 @@ export default class Authorizer {
   async initialize(params?: {
     baseUrl?: string;
     session?: NonErrorSession | null | undefined;
+    event?: 'storage' | 'timer' | 'hidden' | 'poll' | 'visibilitychange';
   }) {
-    const { baseUrl, session } = params ?? {};
+    const { baseUrl, session, event } = params ?? {};
 
     if (baseUrl) this.baseUrl = baseUrl;
 
@@ -132,7 +133,7 @@ export default class Authorizer {
     this.state.lastSync = hasInitialSession ? now() : 0;
     this.state.session = session;
 
-    await this.sync();
+    await this.sync(event);
   }
 
   get apiBaseUrl() {
@@ -256,6 +257,7 @@ export default class Authorizer {
       baseUrl?: string;
       auth?: Authorizer | PartialAuthorizer;
       fetchUrl?: string;
+      basePath?: string;
     }
   ): Promise<R extends true ? undefined : SignOutResponse> {
     const {
@@ -263,7 +265,13 @@ export default class Authorizer {
       baseUrl,
       auth,
       fetchUrl,
+      basePath,
     } = options ?? {};
+
+    if (basePath) {
+      this.state.basePath = basePath;
+    }
+
     if (baseUrl) {
       this.baseUrl = baseUrl;
     }
@@ -475,8 +483,8 @@ export default class Authorizer {
       body: JSON.stringify({ email, password }),
     });
     if (data) {
-      await this.initialize();
-      await this.state.getSession({ event: 'storage' });
+      await this.initialize({ event: 'storage' });
+      await this.getSession({ event: 'storage' });
     }
     const error = data?.url
       ? new URL(data.url).searchParams.get('error')
@@ -535,7 +543,7 @@ const _auth = () => {
   return authorizer;
 };
 
-export const auth = _auth();
+export const auth: Authorizer = _auth();
 
 export const getSession = async function getSession(params?: GetSessionParams) {
   return await auth.getSession(params);

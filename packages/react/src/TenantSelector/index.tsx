@@ -156,17 +156,15 @@ type CreateTenantProps = ComponentFetchProps & {
 type FormValues = { name: string };
 function CreateTenant(props: CreateTenantProps) {
   const [open, setOpen] = useState(false);
-  const { trigger, beforeMutate, onSuccess, onError, baseUrl = '' } = props;
+  const { trigger, beforeMutate, onSuccess, onError } = props;
   const form = useForm<FormValues>({ defaultValues: { name: '' } });
   const mutation = useMutation({
     mutationFn: async (_data) => {
       const possibleData = beforeMutate && beforeMutate(_data);
       const data = possibleData ?? _data;
 
-      const fetchURL = props?.fetchUrl ?? `${baseUrl}/api/tenants`;
-
       const response = await componentFetch(
-        fetchURL,
+        props?.fetchUrl ?? '/tenants',
         {
           method: 'POST',
           body: JSON.stringify(data),

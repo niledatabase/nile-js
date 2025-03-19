@@ -8,6 +8,7 @@ export type Params = PrefetchParams & {
   onSuccess?: (res: Response) => void;
   onError?: (error: Error, data: AllowedAny) => void;
   callbackUrl?: string;
+  basePath?: string;
 };
 
 export type MutateFnParams = {

@@ -32,8 +32,8 @@ export class Api {
     this.users = new Users(config);
     this.tenants = new Tenants(config);
     this.routes = {
-      ...appRoutes(config?.routePrefix),
-      ...config?.routes,
+      ...appRoutes(config?.api.routePrefix),
+      ...config?.api.routes,
     };
     this.handlers = Handlers(this.routes, config);
     this.paths = {

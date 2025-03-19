@@ -20,7 +20,7 @@ export function serverLogin(
   }
 ) {
   const { info, error, debug } = Logger(config, '[server side login]');
-  const routes = appRoutes(config.routePrefix);
+  const routes = appRoutes(config.api.routePrefix);
   return async function login({
     email,
     password,

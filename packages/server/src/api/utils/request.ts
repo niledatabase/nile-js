@@ -24,8 +24,8 @@ export default async function request(
       String(request.headers.get(X_NILE_TENANT))
     );
   }
-  if ('secureCookies' in config && config.secureCookies != null) {
-    updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
+  if (config.api.secureCookies != null) {
+    updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
   }
 
   updatedHeaders.set('host', requestUrl.host);

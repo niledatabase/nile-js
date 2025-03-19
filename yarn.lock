@@ -3027,6 +3027,7 @@ __metadata:
     zod: "npm:^3.23.8"
   peerDependencies:
     "@tanstack/react-query": ^5.23.0
+    lodash: ^4.17.21
     next-auth: ^4.24.7
     react: ^19.0.0
     react-dom: ^19.0.0
