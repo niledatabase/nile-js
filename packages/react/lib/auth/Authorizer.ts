@@ -515,7 +515,10 @@ export interface InternalUrl {
 }
 
 function parseUrl(url?: string): InternalUrl {
-  const defaultUrl = new URL('http://localhost:3000/api');
+  let defaultUrl = new URL('http://localhost:3000');
+  if (typeof window !== 'undefined') {
+    defaultUrl = new URL(`${window.location.origin}/api`);
+  }
 
   if (url && !url.startsWith('http')) {
     url = `https://${url}`;
