@@ -1,4 +1,31 @@
-import isEqual from 'lodash/isEqual';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function isEqual(a: any, b: any): boolean {
+  if (a === b) return true; // Same reference or primitive value
+
+  if (
+    typeof a !== 'object' ||
+    typeof b !== 'object' ||
+    a === null ||
+    b === null
+  ) {
+    return false; // If one of them is not an object (or is null), return false
+  }
+
+  if (Array.isArray(a) !== Array.isArray(b)) return false; // One is an array, the other isn't
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  if (keysA.length !== keysB.length) return false; // Different number of keys
+
+  for (const key of keysA) {
+    if (!keysB.includes(key) || !isEqual(a[key], b[key])) {
+      return false; // Key missing or values are not deeply equal
+    }
+  }
+
+  return true;
+}
 
 import { Listener } from './types';
 
