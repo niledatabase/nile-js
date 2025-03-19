@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2025-03-19)
+
+### Bug Fixes
+
+- **server:** move route config to server config ([f177236](https://github.com/niledatabase/nile-js/commit/f177236918faa226eb3a18cd993c8a59563b132b))
+
 # [4.0.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.0...v4.0.0-alpha.1) (2025-03-17)
 
 ### Features

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.2](https://github.com/niledatabsae/nile-js/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2025-03-19)
+
+**Note:** Version bump only for package @niledatabase/browser
+
 # [4.0.0-alpha.1](https://github.com/niledatabsae/nile-js/compare/v4.0.0-alpha.0...v4.0.0-alpha.1) (2025-03-17)
 
 **Note:** Version bump only for package @niledatabase/browser
