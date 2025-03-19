@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2025-03-19)
+
+### Bug Fixes
+
+- **react:** use lodash-es protect against missing window ([86e4b24](https://github.com/niledatabase/nile-js/commit/86e4b24f2bbfdffec5d70078f4eece3ea5e06ece))
+
 # [4.0.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2025-03-19)
 
 ### Bug Fixes
