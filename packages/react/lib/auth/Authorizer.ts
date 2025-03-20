@@ -390,20 +390,20 @@ export default class Authorizer {
       }),
     });
 
-    if (this.requestInit?.credentials) {
+    if (this.requestInit?.credentials && isSupportingReturn) {
       window.location.reload();
       return;
     }
 
     if (redirect || !isSupportingReturn) {
-      const url = data?.url ?? callbackUrl;
+      const url = data?.data.url ?? callbackUrl;
       window.location.href = url;
       if (url.includes('#')) window.location.reload();
       return;
     }
 
     const error = data?.url
-      ? new URL(data.url).searchParams.get('error')
+      ? new URL(String(data?.url)).searchParams.get('error')
       : 'Unable to parse response from server';
 
     if (data?.ok) {
