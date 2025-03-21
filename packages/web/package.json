@@ -33,7 +33,7 @@
   },
   "style": "./dist/styles.css",
   "scripts": {
-    "build": "tsup --config tsup.config.ts && cp ../react/tailwind.config.js . && yarn tailwindcss -i ../react/.storybook/globals.css -o ./dist/styles.css --minify"
+    "build": "tsup --config tsup.config.ts && npx @tailwindcss/cli -i ../react/.storybook/globals.css -o ./dist/styles.css --minify"
   },
   "dependencies": {
     "@r2wc/react-to-web-component": "^2.0.4"
