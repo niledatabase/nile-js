@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2025-03-21)
+
+### Bug Fixes
+
+- **react:** use css media for theme ([f8e38d1](https://github.com/niledatabase/nile-js/commit/f8e38d13748d54b92c89739334a7b9f4527f48db))
+
 # [4.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2025-03-21)
 
 **Note:** Version bump only for package @niledatabase/packages
