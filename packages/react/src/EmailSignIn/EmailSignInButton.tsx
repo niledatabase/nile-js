@@ -32,51 +32,46 @@ type AllProps = ButtonProps & {
  * @returns a JSX.Element to render
  */
 
-const EmailSignInButton = React.forwardRef<HTMLButtonElement, AllProps>(
-  (
-    {
-      callbackUrl,
-      className,
-      variant,
-      size,
-      asChild = false,
-      redirect = false,
-      buttonText = 'Continue with Email',
-      email,
-      onFailure,
-      onSent,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        onClick={async () => {
-          const res = await signIn('email', { email, callbackUrl, redirect });
+const EmailSignInButton = ({
+  callbackUrl,
+  className,
+  variant,
+  size,
+  asChild = false,
+  redirect = false,
+  buttonText = 'Continue with Email',
+  email,
+  onFailure,
+  onSent,
+  ...props
+}: AllProps) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className }))}
+      data-slot="email-signin-button"
+      onClick={async () => {
+        const res = await signIn('email', { email, callbackUrl, redirect });
 
-          if (res && 'error' in res) {
-            onFailure && onFailure(res as EmailError);
-          } else {
-            onSent && onSent();
-          }
-        }}
-        {...props}
-      >
-        {props.children ? (
-          props.children
-        ) : (
-          <div className="flex flex-row gap-2 items-center">
-            <Mail />
-            {buttonText}
-          </div>
-        )}
-      </Comp>
-    );
-  }
-);
+        if (res && 'error' in res) {
+          onFailure && onFailure(res as EmailError);
+        } else {
+          onSent && onSent();
+        }
+      }}
+      {...props}
+    >
+      {props.children ? (
+        props.children
+      ) : (
+        <div className="flex flex-row gap-2 items-center">
+          <Mail />
+          {buttonText}
+        </div>
+      )}
+    </Comp>
+  );
+};
 
 EmailSignInButton.displayName = 'EmailSignInButton';
 export default EmailSignInButton;
