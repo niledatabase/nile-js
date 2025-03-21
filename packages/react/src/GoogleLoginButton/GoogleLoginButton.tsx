@@ -11,56 +11,48 @@ import { buttonVariants, ButtonProps } from '../../components/ui/button';
  * @param props callbackUrl: a string to override the URL provided by the context
  * @returns a JSX.Element to render
  */
-const GoogleSSOButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & {
-    callbackUrl?: string;
-    buttonText?: string;
-    init?: RequestInit;
-  }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      variant,
-      size,
-      buttonText = 'Continue with Google',
-      asChild = false,
-      init,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-[#4285f4] hover:bg-[#4285f4] hover:bg-opacity-85 pl-[3px] text-white'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('google', { callbackUrl, init });
-        }}
-        {...props}
-      >
-        <div className="inline-flex items-center flex-1 justify-between font-roboto rounded-[4px] gap-4 google-logo">
-          <div
-            style={{
-              background: 'white',
-              borderRadius: '4px',
-              padding: '0.5rem',
-            }}
-          >
-            <GoogleLogo />
-          </div>
-          {buttonText}
+const GoogleSSOButton = ({
+  callbackUrl,
+  className,
+  variant,
+  size,
+  buttonText = 'Continue with Google',
+  asChild = false,
+  init,
+  ...props
+}: ButtonProps & {
+  callbackUrl?: string;
+  buttonText?: string;
+  init?: RequestInit;
+}) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      data-slot="google-button"
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-[#4285f4] hover:bg-[#4285f4] hover:bg-opacity-85 pl-[3px] text-white'
+      )}
+      onClick={() => {
+        signIn('google', { callbackUrl, init });
+      }}
+      {...props}
+    >
+      <div className="inline-flex items-center flex-1 justify-between font-roboto rounded-[4px] gap-4 google-logo">
+        <div
+          style={{
+            background: 'white',
+            borderRadius: '4px',
+            padding: '0.5rem',
+          }}
+        >
+          <GoogleLogo />
         </div>
-      </Comp>
-    );
-  }
-);
+        {buttonText}
+      </div>
+    </Comp>
+  );
+};
 GoogleSSOButton.displayName = 'GoogleSSOButton';
 export default GoogleSSOButton;
 

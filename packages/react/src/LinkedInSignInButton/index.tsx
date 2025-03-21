@@ -7,46 +7,38 @@ import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 import { signIn } from '../../lib/auth/Authorizer';
 
-const LinkedInSignInButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & {
-    callbackUrl?: string;
-    buttonText?: string;
-    init?: RequestInit;
-  }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      buttonText = 'Continue with LinkedIn',
-      variant,
-      size,
-      asChild = false,
-      init,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-[#0288D1] hover:bg-[#0288D1] pl-[3px] hover:bg-opacity-85 gap-4 transition-colors shadow-md text-white'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('linkedin', { callbackUrl, init });
-        }}
-        {...props}
-      >
-        <Icon />
-        {buttonText}
-      </Comp>
-    );
-  }
-);
+const LinkedInSignInButton = ({
+  callbackUrl,
+  className,
+  buttonText = 'Continue with LinkedIn',
+  variant,
+  size,
+  asChild = false,
+  init,
+  ...props
+}: ButtonProps & {
+  callbackUrl?: string;
+  buttonText?: string;
+  init?: RequestInit;
+}) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      data-slot="linkedin-button"
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-[#0288D1] hover:bg-[#0288D1] pl-[3px] hover:bg-opacity-85 gap-4 transition-colors shadow-md text-white'
+      )}
+      onClick={() => {
+        signIn('linkedin', { callbackUrl, init });
+      }}
+      {...props}
+    >
+      <Icon />
+      {buttonText}
+    </Comp>
+  );
+};
 
 LinkedInSignInButton.displayName = 'LinkedInSignInButton';
 export default LinkedInSignInButton;

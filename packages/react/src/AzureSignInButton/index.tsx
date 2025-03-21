@@ -7,46 +7,38 @@ import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 
-const AzureSignInButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & {
-    callbackUrl?: string;
-    buttonText?: string;
-    init?: RequestInit;
-  }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      buttonText = 'Continue with Microsoft',
-      variant,
-      size,
-      init,
-      asChild = false,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-[#0078d4] hover:bg-[#0078d4] hover:bg-opacity-85 pl-[3px] text-white gap-4 transition-colors shadow-md'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('azure-ad', { callbackUrl, init });
-        }}
-        {...props}
-      >
-        <MicrosoftIcon />
-        {buttonText}
-      </Comp>
-    );
-  }
-);
+const AzureSignInButton = ({
+  callbackUrl,
+  className,
+  buttonText = 'Continue with Microsoft',
+  variant,
+  size,
+  init,
+  asChild = false,
+  ...props
+}: ButtonProps & {
+  callbackUrl?: string;
+  buttonText?: string;
+  init?: RequestInit;
+}) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      data-slot="azure-button"
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-[#0078d4] hover:bg-[#0078d4] hover:bg-opacity-85 pl-[3px] text-white gap-4 transition-colors shadow-md'
+      )}
+      onClick={() => {
+        signIn('azure-ad', { callbackUrl, init });
+      }}
+      {...props}
+    >
+      <MicrosoftIcon />
+      {buttonText}
+    </Comp>
+  );
+};
 
 AzureSignInButton.displayName = 'AzureSignInButton';
 export default AzureSignInButton;

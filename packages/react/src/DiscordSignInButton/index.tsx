@@ -7,46 +7,38 @@ import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 
-const DiscordSignInButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & {
-    callbackUrl?: string;
-    buttonText?: string;
-    init?: RequestInit;
-  }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      buttonText = 'Continue with Discord',
-      variant,
-      size,
-      asChild = false,
-      init,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-[#5865F2] hover:bg-[#5865F2] hover:bg-opacity-85 pl-[3px] gap-4 transition-colors border shadow-md text-white'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('discord', { callbackUrl, init });
-        }}
-        {...props}
-      >
-        <Icon />
-        {buttonText}
-      </Comp>
-    );
-  }
-);
+const DiscordSignInButton = ({
+  callbackUrl,
+  className,
+  buttonText = 'Continue with Discord',
+  variant,
+  size,
+  asChild = false,
+  init,
+  ...props
+}: ButtonProps & {
+  callbackUrl?: string;
+  buttonText?: string;
+  init?: RequestInit;
+}) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-[#5865F2] hover:bg-[#5865F2] hover:bg-opacity-85 pl-[3px] gap-4 transition-colors border shadow-md text-white'
+      )}
+      data-slot="discord-button"
+      onClick={() => {
+        signIn('discord', { callbackUrl, init });
+      }}
+      {...props}
+    >
+      <Icon />
+      {buttonText}
+    </Comp>
+  );
+};
 
 DiscordSignInButton.displayName = 'DiscordSignInButton';
 export default DiscordSignInButton;

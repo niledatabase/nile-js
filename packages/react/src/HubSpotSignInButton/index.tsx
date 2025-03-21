@@ -7,46 +7,38 @@ import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 
-const HubSpotSignInButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & {
-    callbackUrl?: string;
-    buttonText?: string;
-    init?: RequestInit;
-  }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      buttonText = 'Continue with HubSpot',
-      variant,
-      size,
-      init,
-      asChild = false,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-[#ff7a59] hover:bg-[#ff7a59] hover:bg-opacity-85 pl-[3px] text-white gap-4 transition-colors shadow-md'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('hubspot', { callbackUrl, init });
-        }}
-        {...props}
-      >
-        <Icon />
-        {buttonText}
-      </Comp>
-    );
-  }
-);
+const HubSpotSignInButton = ({
+  callbackUrl,
+  className,
+  buttonText = 'Continue with HubSpot',
+  variant,
+  size,
+  init,
+  asChild = false,
+  ...props
+}: ButtonProps & {
+  callbackUrl?: string;
+  buttonText?: string;
+  init?: RequestInit;
+}) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      data-slot="hubspot-button"
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-[#ff7a59] hover:bg-[#ff7a59] hover:bg-opacity-85 pl-[3px] text-white gap-4 transition-colors shadow-md'
+      )}
+      onClick={() => {
+        signIn('hubspot', { callbackUrl, init });
+      }}
+      {...props}
+    >
+      <Icon />
+      {buttonText}
+    </Comp>
+  );
+};
 
 HubSpotSignInButton.displayName = 'HubSpotSignInButton';
 export default HubSpotSignInButton;
