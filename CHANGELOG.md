@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.6](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2025-03-21)
+
+### Features
+
+- **react:** use tailwind v4 ([93f59bc](https://github.com/niledatabase/nile-js/commit/93f59bc3f6d3898714cad7c41bbc482b2771f3aa))
+
 # [4.0.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2025-03-20)
 
 ### Bug Fixes
