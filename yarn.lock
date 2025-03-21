@@ -3016,7 +3016,7 @@ __metadata:
     storybook: "npm:^8.0.0"
     tailwind: "npm:^4.0.0"
     tailwind-merge: "npm:^2.5.2"
-    tailwindcss: "npm:^3.4.13"
+    tailwindcss: "npm:^4.0.15"
     tailwindcss-animate: "npm:^1.0.7"
     ts-jest: "npm:^29.1.1"
     tslib: "npm:^2.6.2"
@@ -19666,6 +19666,13 @@ __metadata:
     tailwind: lib/cli.js
     tailwindcss: lib/cli.js
   checksum: 10/b0e00533ae3800223b5b71af9cb1dd9bfea5ef5ffa01300f1ced99de9511487aa41e03106173e4168c56c8f6600ee21c98c1d75a5def23cddf9b39b4ad71210d
+  languageName: node
+  linkType: hard
+
+"tailwindcss@npm:^4.0.15":
+  version: 4.0.15
+  resolution: "tailwindcss@npm:4.0.15"
+  checksum: 10/b04c0136267146ed38d68a3c59b34dc676836a05f12c545a0cc0819146c36b0d5d63138d91b3fe2e4f3477b900218d6e86c8c4675c3297a7fb5d7a5880a08f3f
   languageName: node
   linkType: hard
 
