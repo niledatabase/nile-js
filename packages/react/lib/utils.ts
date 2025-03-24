@@ -66,9 +66,9 @@ export function usePrefetch(params?: PrefetchParams) {
   const { baseUrl = '', disableQuery, init, client, fetchUrl } = params ?? {};
   useQuery(
     {
-      queryKey: ['providers', baseUrl ? baseUrl : window.location.hostname],
+      queryKey: ['providers', baseUrl],
       queryFn: async () => {
-        await fetch(fetchUrl ?? `${baseUrl}/api/auth/providers`, init);
+        return await fetch(fetchUrl ?? `${baseUrl}/api/auth/providers`, init);
       },
       enabled: disableQuery !== true,
     },
@@ -80,9 +80,9 @@ export function useCsrf(params?: PrefetchParams) {
   const { baseUrl = '', disableQuery, init, client, fetchUrl } = params ?? {};
   useQuery(
     {
-      queryKey: ['csrf', baseUrl ? baseUrl : window.location.hostname],
+      queryKey: ['csrf', baseUrl],
       queryFn: async () => {
-        await fetch(fetchUrl ?? `${baseUrl}/api/auth/csrf`, init);
+        return await fetch(fetchUrl ?? `${baseUrl}/api/auth/csrf`, init);
       },
       enabled: disableQuery !== true,
     },
