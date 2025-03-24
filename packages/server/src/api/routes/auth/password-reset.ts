@@ -6,13 +6,8 @@ import { Config } from '../../../utils/Config';
 
 const key = 'PASSWORD_RESET';
 export default async function route(req: Request, config: Config) {
-  let url = proxyRoutes(config)[key];
+  const url = proxyRoutes(config)[key];
 
-  const { searchParams } = new URL(req.url);
-
-  if (searchParams.size > 0) {
-    url = `${url}?${searchParams.toString()}`;
-  }
   const res = await request(
     url,
     {
