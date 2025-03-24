@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2025-03-24)
+
+### Bug Fixes
+
+- **react:** enable csrf fetch by default ([6b84c56](https://github.com/niledatabase/nile-js/commit/6b84c5674fab16b4da3fd2ec80c50a3d6d7204ea))
+
 # [4.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2025-03-21)
 
 ### Bug Fixes
