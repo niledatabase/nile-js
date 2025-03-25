@@ -1,10 +1,47 @@
-# @niledatabase/server
+<p align="center">
+  <img width="1434" alt="Screen Shot 2024-09-18 at 9 20 04 AM" src="https://github.com/user-attachments/assets/20585883-5cdc-4f15-93d3-dc150e87bc11">
+</p>
 
-Consolidates the API and DB for working with Nile.
+---
+
+# Nile's Server-Side SDK
+
+This package (`@niledatabase/server`) is part of [Nile's Javascript SDK](https://github.com/niledatabase/nile-js/tree/main).
+
+Nile's server-side Javascript package provides:
+
+- 🔐 Methods for working with Nile's user and tenant APIs
+- 🔑 Generated routes for authentication
+- 🔍 SQL query execution with tenant and user context management
+
+**Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports vertical and horizontal scaling globally to ship B2B applications fast while being safe with limitless scale.** All B2B applications are multi-tenant. A tenant/customer is primarily a company, an organization, or a workspace in your product that contains a group of users. A B2B application provides services to multiple tenants. Tenant is the basic building block of all B2B applications.
 
 ## Usage
 
-### With configuration object
+### Installation
+
+```ts
+npm install @niledatabase/server 
+```
+
+### Initialize SDK with env vars
+
+The recommended way to initialize Nile SDK is with `.env` file. You can copy the environment variables from [Nile console](https://console.thenile.dev). It should look similar to this:
+
+```bash
+NILEDB_USER=username
+NILEDB_PASSWORD=password
+NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/DBID
+NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/dbname
+```
+
+```ts
+import Nile from '@niledatabase/server';
+
+const nile = await Nile();
+```
+
+### Initialize SDK with configuration object
 
 ```ts
 import Nile from '@niledatabase/server';
@@ -12,28 +49,35 @@ import Nile from '@niledatabase/server';
 const nile = await Nile({
   user: 'username',
   password: 'password',
+  debug: true
 });
-
-await nile.api.createTenant({ name: 'name' });
-
-await nile.db.query('select * from todo');
 ```
 
-### With env vars
+### Call Nile APIs
 
-```bash
-NILEDB_USER=username
-NILEDB_PASSWORD=password
+```typescript
+const tenant = await nile.api.tenants.createTenant(tenantName);
+if (tenant instanceof Response) {
+  const err = await tenant.text()
+  console.log("ERROR creating tenant: ", tenant, err);
+  return { message: "Error creating tenant" };
+}
+nile.tenant_id = tenant.id // set context
+// Get tenant name doesn't need any input parameters 
+// because it uses the tenant ID and user token from the context
+const checkTenant = await tenantNile.api.tenants.getTenant();
 ```
 
-```ts
-import Nile from '@niledatabase/server';
+### Query the database
 
-const nile = await Nile();
+```typescript
+  nile.tenant_id = tenant.id // set context
 
-await nile.api.createTenant({ name: 'name' });
-
-await nile.db.query('select * from todo');
+  const todos = await nile.db
+    .query("select * from todos order by title")
+    .catch((e: Error) => {
+      console.error(e);
+    }); // no need for where clause if you previously set Nile context
 ```
 
 ## Initialization
@@ -59,3 +103,9 @@ Configuration passed to `Server` takes precedence over `.env` vars.
 | api.cookieKey | `string`     |                 | Key for API cookie. Default is `token`.                                  |
 | api.token     | `string`     | NILEDB_TOKEN    | Token for API authentication. Mostly for debugging.                      |
 | debug         | `boolean`    |                 | Flag for enabling debug logging.                                         |
+
+## Learn more
+
+- You can learn more about Nile and the SDK in [https://thenile.dev/docs]
+- You can find detailed code examples in [our main repo](https://github.com/niledatabase/niledatabase)
+- Nile SDK interacts with APIs in Nile Auth service. You can learn more about it in the [repository](https://github.com/niledatabase/nile-auth) and the [docs](https://thenile.dev/docs/auth)

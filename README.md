@@ -6,7 +6,7 @@
 
 # Nile's Javascript SDK
 
-Nile's Javascript SDK provides a seamless way to build multi-tenant B2B applications with built-in tenant isolation and user management. Built on top of Nile's Postgres platform, it offers:
+Nile's Javascript SDK is for building multi-tenant B2B applications with built-in tenant isolation and user management. Built on top of [Nile's Postgres platform](https://thenile.dev), it offers:
 
 - 🔐 Tenant virtualization and isolation out of the box
 - 👥 Built-in user management and authentication with drop-in customizable components
