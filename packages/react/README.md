@@ -1,143 +1,103 @@
-# @niledatabase/react
+<p align="center">
+  <img width="1434" alt="Screen Shot 2024-09-18 at 9 20 04 AM" src="https://github.com/user-attachments/assets/20585883-5cdc-4f15-93d3-dc150e87bc11">
+</p>
 
-## Storybook
+---
 
-[Storybook](https://storybook.thenile.dev)
+# Nile's React SDK
+
+This package (`@niledatabase/react`) is part of [Nile's Javascript SDK](https://github.com/niledatabase/nile-js/tree/main).
+
+Nile's React package provides:
+
+- 🎨 UI components for authentication, user management, and tenant management (customizable with Tailwind CSS)
+- 🪝 React hooks for authentication, user management, and tenant management functionality
+
+You can browse all the components and explore their properties in [Nile's documentation](https://www.thenile.dev/docs/auth/components/signin) or in [Storybook](https://storybook.thenile.dev). 
+
+The components and hooks are designed to work best and provide a secure user experience when used with the generated routes provided by [Nile's Server-Side SDK](https://www.npmjs.com/package/@niledatabase/server).
+
+**Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports vertical and horizontal scaling globally to ship B2B applications fast while being safe with limitless scale.** All B2B applications are multi-tenant. A tenant/customer is primarily a company, an organization, or a workspace in your product that contains a group of users. A B2B application provides services to multiple tenants. Tenant is the basic building block of all B2B applications.
 
 ## Usage
 
-In the root of your react application, add a Nile provider. This will add a [QueryClientProvider](https://tanstack.com/query/v4/docs/quick-start) and a [CssVarsProvider](https://mui.com/joy-ui/getting-started/usage/) to your application.
+### Installation
 
-```typescript
-import { NileProvider } from '@niledatabase/react';
+```bash
+npm install @niledatabase/react
+```
+
+### Signup / User Info page
+
+This example uses several components to build a one-page signup / user profile example.
+
+- `<SignedIn>` component renders for authenticated users while `<SignedOut>` renders for un-authenticated users.
+- `<SignUpForm>` component shows a standard email/password signup.
+- `<UserInfo />` component shows information about currently authenticated user - their image, email, name, etc.
+- `<TenantSelector>` component shows the current tenant, allows to switch between tenants and to create new tenants.
+- `<SignOutButton />` component expires the current session
+
+```tsx
+import {
+SignOutButton,
+SignUpForm,
+SignedIn,
+SignedOut,
+TenantSelector,
+UserInfo,
+} from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
+
+export default function SignUpPage() {
+return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+    <SignedIn className="flex flex-col gap-4">
+        <UserInfo />
+        <TenantSelector className="py-6 mb-10" />
+        <SignOutButton />
+    </SignedIn>
+    <SignedOut>
+        <SignUpForm createTenant />
+    </SignedOut>
+    </div>
+);
+}
+```
+
+### Social Login (SSO)
+
+Nile-Auth supports multiple social providers. You configure and enable them in [Nile console](https://console.thenile.dev), and then simply drop-in the components. For example, for Discord authentication:
+
+```tsx
+import { DiscordSignInButton } from '@niledatabase/react';
 
 function App() {
   return (
-    <NileProvider>
-      <div>Welcome to my great app</div>
-    </NileProvider>
+    <div>
+      <DiscordSignInButton callbackUrl="/" />
+    </div>
   );
 }
 ```
 
-## Configuration
+### Customizing the components
 
-| Property | Type     | Description                                                       |
-| -------- | -------- | ----------------------------------------------------------------- |
-| tenantId | `string` | ID of the tenant associated.                                      |
-| appUrl   | `string` | the FQDN for a service running a `@niledatabase/server`-like API. |
-| apiUrl   | `string` | the API URL of your database                                      |
+Nile’s react package includes a CSS file that you can use to provide a nice default style to the components:
 
-## Dependencies
-
-### React query
-
-The components of this library use [react-query](https://react-query.tanstack.com/) to request data. The `<QueryClientProvider />` used can be customized via the optional `QueryProvider` prop of the `<NileProvider />`.
-
-```typescript
-import { QueryClient, QueryClientProvider } from 'react-query';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
-function MyQueryProvider({ children }) {
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
-}
-
-function App() {
-  return (
-    <NileProvider QueryProvider={MyQueryProvider}>
-      <div>Welcome to my great app</div>
-    </NileProvider>
-  );
-}
+```ts
+import "@niledatabase/react/styles.css";
 ```
 
-### @mui/joy
+Nile Auth components use CSS variables for theming. This means that you can override the colors and other styles by setting the CSS variables. We support the same CSS variables that [Shadcn uses](https://ui.shadcn.com/docs/theming#list-of-variables). You can modify them in your `global.css` file.
 
-Out of the box [mui joy](https://mui.com/joy-ui/getting-started/overview/) is available for use. No set up is required, simply add the dependencies to your code, then use components and functions provided by those libraries.
+For "spot changes", you can use the `className` prop of a component to customize it individually:
 
-A custom theme can be given to the `NileProvider`, which will theme all components:
-
-```typescript
-function App() {
-  return (
-    <NileProvider theme={theme}>
-      <div>Welcome to my great app</div>
-    </NileProvider>
-  );
-}
+```tsx
+<SignOutButton className="bg-red-500" />
 ```
 
-### useNile
+## Learn more
 
-A method exposing the configuration created in `<NileProvider />`. The methods on the instance can be found in [the client src readme](../../lib/nile/src/README.md), or found in the auto-complete of visual studio code.
-
-### Making requests
-
-[react-query](https://react-query.tanstack.com/) should be used used to handle loading, error, and cacheing of data.
-
-```typescript
-import React, { useEffect } from 'react';
-import { useNile, Queries } from '@niledatabase/react';
-import { useQuery } from '@tanstack/react-query';
-
-export default function UserTable() {
-  const nile = useNile();
-  const [users, setUsers] = useState();
-  const { data: users = [] } = useQuery(Queries.ListUsers, () => nile.users.listUsers());
-  // with multiple requests
-  // const [{ data: users = [] }, { data: invites = [] }] = useQueries([
-  //   { queryKey: Queries.ListUsers, queryFn: () => nile.users.listUsers({}) },
-  //   { queryKey: Queries.ListInvites, queryFn: () => nile.organizations.listInvites({}) },
-  // ]);
-
-  return (
-    users.map((user) => {
-      return <div id={user.id}>{`Email: ${user.email}`</div>;
-    })
-  );
-}
-```
-
-### UI customization
-
-For theming and display, A combination of [mui joy](https://mui.com/joy-ui/getting-started/overview/) and [material ui](https://mui.com/material-ui/getting-started/overview/) is used. As joy approaches feature parity with material, it will be removed from this codebase. For now, there are helper functions in the theme to support both, with the theming function preferring mui joy settings and colors over material.
-
-For details on theming, see their [theming documentation](https://mui.com/joy-ui/customization/approaches/). You can pass a custom `theme` object to the `NileProvider` and it will merge it with the combined material and joy themes in the `<NileProvider />`.
-
-```typescript
-import { NileProvider } from '@niledatabase/react';
-import { extendTheme } from '@mui/joy/styles';
-const customTheme = extendTheme({
-  colorSchemes: {
-    light: {
-      palette: {
-        primary: {
-          solidBg: '#0078D4',
-          solidHoverBg: '#106EBE',
-          solidActiveBg: '#005A9E',
-          solidDisabledBg: '#F3F2F1',
-          solidDisabledColor: '#A19F9D',
-        },
-      },
-    },
-  },
-});
-
-function App() {
-  return (
-    <NileProvider theme={customTheme}>
-      <div>Welcome to my great app</div>
-    </NileProvider>
-  );
-}
-```
+- You can learn more about Nile and the SDK in [https://thenile.dev/docs]
+- You can find detailed code examples in [our main repo](https://github.com/niledatabase/niledatabase)
+- Nile SDK interacts with APIs in Nile Auth service. You can learn more about it in the [repository](https://github.com/niledatabase/nile-auth) and the [docs](https://thenile.dev/docs/auth)

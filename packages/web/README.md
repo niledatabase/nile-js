@@ -1,6 +1,17 @@
-# @niledatabase/web
+<p align="center">
+  <img width="1434" alt="Screen Shot 2024-09-18 at 9 20 04 AM" src="https://github.com/user-attachments/assets/20585883-5cdc-4f15-93d3-dc150e87bc11">
+</p>
 
-`@niledatabase/web` is a library that provides web components for authentication and tenant management in Nile applications. It wraps React components from `@niledatabase/react` into custom elements using `@r2wc/react-to-web-component`, making them usable in any web environment.
+---
+
+# Nile's Web Components
+
+This package (`@niledatabase/web`) provides web components for Nile and is part of [Nile's Javascript SDK](https://github.com/niledatabase/nile-js/tree/main).
+
+Nile's web components include:
+
+- 🎨 Authentication and tenant management components usable in any web environment
+- ⚛️ Wrapped versions of `@niledatabase/react` components using `@r2wc/react-to-web-component`
 
 ## Installation
 
@@ -12,6 +23,22 @@ or
 
 ```sh
 yarn add @niledatabase/web
+```
+
+## Usage
+
+Simply include the custom elements in your HTML or JavaScript:
+
+```html
+<nile-sign-in-form buttonText="Sign In"></nile-sign-in-form>
+```
+
+or in JavaScript:
+
+```js
+const signInForm = document.createElement('nile-sign-in-form');
+signInForm.setAttribute('buttonText', 'Sign In');
+document.body.appendChild(signInForm);
 ```
 
 ## Available Components
@@ -88,18 +115,8 @@ export const BASE_INTERFACE: Props = {
 };
 ```
 
-## Usage
+## Learn more
 
-Simply include the custom elements in your HTML or JavaScript:
-
-```html
-<nile-sign-in-form buttonText="Sign In"></nile-sign-in-form>
-```
-
-or in JavaScript:
-
-```js
-const signInForm = document.createElement('nile-sign-in-form');
-signInForm.setAttribute('buttonText', 'Sign In');
-document.body.appendChild(signInForm);
-```
+- You can learn more about Nile and the SDK in [https://thenile.dev/docs]
+- You can find detailed code examples in [our main repo](https://github.com/niledatabase/niledatabase)
+- Nile SDK interacts with APIs in Nile Auth service. You can learn more about it in the [repository](https://github.com/niledatabase/nile-auth) and the [docs](https://thenile.dev/docs/auth)
