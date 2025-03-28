@@ -13,6 +13,7 @@ export function useSignIn(params?: Props) {
     init,
     baseUrl,
     fetchUrl,
+    resetUrl,
     auth,
   } = params ?? {};
   const mutation = useMutation({
@@ -25,6 +26,7 @@ export function useSignIn(params?: Props) {
         auth,
         baseUrl,
         fetchUrl,
+        resetUrl,
         ...data,
       });
     },

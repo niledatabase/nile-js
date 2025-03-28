@@ -6,6 +6,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
+import { SSOButtonProps } from '../types';
 
 const DiscordSignInButton = ({
   callbackUrl,
@@ -15,12 +16,9 @@ const DiscordSignInButton = ({
   size,
   asChild = false,
   init,
+  onClick,
   ...props
-}: ButtonProps & {
-  callbackUrl?: string;
-  buttonText?: string;
-  init?: RequestInit;
-}) => {
+}: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
   return (
     <Comp
@@ -29,8 +27,9 @@ const DiscordSignInButton = ({
         'bg-[#5865F2] hover:bg-[#5865F2] hover:bg-opacity-85 pl-[3px] gap-4 transition-colors border shadow-md text-white'
       )}
       data-slot="discord-button"
-      onClick={() => {
-        signIn('discord', { callbackUrl, init });
+      onClick={async (e) => {
+        const res = await signIn('discord', { callbackUrl, init });
+        onClick && onClick(e, res);
       }}
       {...props}
     >

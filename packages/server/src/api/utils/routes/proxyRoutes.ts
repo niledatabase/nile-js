@@ -12,6 +12,7 @@ export const proxyRoutes = (config: Config) => ({
   ERROR: makeRestUrl(config, '/auth/error'),
   VERIFY_REQUEST: makeRestUrl(config, '/auth/verify-request'),
   PASSWORD_RESET: makeRestUrl(config, '/auth/reset-password'),
+  VERIFY_EMAIL: makeRestUrl(config, '/auth/verify-email'),
 });
 
 type ProxyKeys = keyof typeof proxyRoutes;

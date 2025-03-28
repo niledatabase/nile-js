@@ -53,6 +53,7 @@ export class Api {
         this.routes.SIGNOUT,
         this.routes.VERIFY_REQUEST,
         this.routes.ERROR,
+        this.routes.VERIFY_EMAIL,
       ],
       post: [
         this.routes.TENANT_USERS,

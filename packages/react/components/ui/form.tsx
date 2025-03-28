@@ -169,13 +169,17 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = 'FormMessage';
 
-const Email = () => {
+const Email = ({ hide }: { hide?: boolean }) => {
   const form = useFormContext();
+
   return (
     <FormField
       control={form.control}
       name="email"
       render={({ field }) => {
+        if (hide) {
+          return <input type="hidden" {...field} />;
+        }
         return (
           <FormItem>
             <FormLabel>Email</FormLabel>
