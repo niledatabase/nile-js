@@ -231,8 +231,12 @@ function getCallbackUrl(headers: Headers | void) {
         .split('; ')
         .map((cookie) => cookie.split('=').map(decodeURIComponent))
     );
+<<<<<<< HEAD
     return (
       cookies['__Secure-nile.callback-url'] || cookies['nile.callback-url']
     );
+=======
+    return cookies['nile.callback-url'];
+>>>>>>> 5af96e2c (feat(server): add sign out)
   }
 }
