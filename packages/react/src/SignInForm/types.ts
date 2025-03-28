@@ -17,6 +17,7 @@ export type Props = ComponentFetchProps & {
   onSuccess?: LoginSuccess;
   onError?: (error: Error, data: AllowedAny) => void;
   callbackUrl?: string;
+  resetUrl?: string;
   client?: QueryClient;
   className?: string;
   baseUrl?: string;

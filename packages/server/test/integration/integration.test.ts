@@ -32,7 +32,6 @@ describe('api integration', () => {
     // debugging clean up
     await initialDebugCleanup(nile);
     // make this user for later
-
     const tenantUser = await nile.auth.signUp<User>(tu);
     expect(tenantUser).toMatchObject({ email: tu.email });
     // signs up a user to a tenant
@@ -80,9 +79,22 @@ describe('api integration', () => {
     expect(deleted.status).toEqual(204);
     expect((await nile.users.getSelf(true)).status).toEqual(401);
 
+    const updatedPassword = randomString(64);
+    expect(user.id).toBeTruthy();
+
+    await nile.auth.signIn('credentials', primaryUser);
+    const savedHeaders = nile.getContext().headers;
+    primaryUser.password = updatedPassword;
+    const reset = await nile.auth.resetPassword(primaryUser);
+    expect(reset.headers.get('set-cookie')).not.toBeNull();
+    expect(nile.getContext().headers?.get('cookie')).not.toEqual(
+      savedHeaders?.get('cookie')
+    );
+
     // Updating session user
     await nile.auth.signIn('credentials', primaryUser);
     user = await nile.users.getSelf<User>();
+
     expect(user.name).toEqual(null);
     const update = {
       name: 'updatedName',
@@ -208,4 +220,10 @@ function generateUUIDv7(): string {
       .padStart(2, '0') + hex.slice(18, 20), // variant
     hex.slice(20, 32),
   ].join('-');
+}
+export function randomString(size: number) {
+  const i2hex = (i: number) => ('0' + i.toString(16)).slice(-2);
+  const r = (a: string, i: number): string => a + i2hex(i);
+  const bytes = crypto.getRandomValues(new Uint8Array(size));
+  return Array.from(bytes).reduce(r, '');
 }
