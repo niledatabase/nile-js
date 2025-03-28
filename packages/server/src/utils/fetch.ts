@@ -191,14 +191,18 @@ export async function _fetch(
 
     if (res && 'message' in res) {
       const { message } = res;
-      error(`[fetch][response][status: ${errorHandler?.status}] ${message}`);
+      error(
+        `[fetch][response][status: ${errorHandler?.status}] ${message ?? ''}`
+      );
       return new ResponseError(message, { status: 400 });
     }
     if (res && 'errors' in res) {
       const {
         errors: [message],
       } = res;
-      error(`[fetch][response] [status: ${errorHandler?.status}] ${message}`);
+      error(
+        `[fetch][response][status: ${errorHandler?.status}] ${message ?? ''}`
+      );
       return new ResponseError(message, { status: 400 });
     }
     error(

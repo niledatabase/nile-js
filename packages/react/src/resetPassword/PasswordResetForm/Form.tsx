@@ -29,7 +29,7 @@ export default function ResetPasswordForm(props: Props) {
 }
 
 function ResetForm(props: Props) {
-  const { defaultValues, ...params } = props;
+  const { defaultValues, hideEmail, ...params } = props;
   const form = useForm({
     defaultValues: {
       email: '',
@@ -69,7 +69,7 @@ function ResetForm(props: Props) {
         })}
         className="py-2"
       >
-        <Email />
+        <Email hide={hideEmail} />
         <Password />
         <FormField
           control={form.control}
@@ -86,7 +86,7 @@ function ResetForm(props: Props) {
                     autoComplete="new-password"
                   />
                 </FormControl>
-                <FormDescription>An updated password</FormDescription>
+                <FormDescription>Confirm your new password</FormDescription>
                 <FormMessage />
               </FormItem>
             );

@@ -1,11 +1,13 @@
 import { fetchCallback } from '../api/routes/auth/callback';
 import { fetchCsrf } from '../api/routes/auth/csrf';
+import { fetchResetPassword } from '../api/routes/auth/password-reset';
 import { fetchProviders } from '../api/routes/auth/providers';
 import { fetchSession } from '../api/routes/auth/session';
 import { fetchSignIn } from '../api/routes/auth/signin';
 import { fetchSignOut } from '../api/routes/auth/signout';
 import { fetchSignUp } from '../api/routes/signup';
 import { ActiveSession, JWT, Provider, ProviderName } from '../api/utils/auth';
+import { NileAuthRoutes } from '../api/utils/routes';
 import { User } from '../users/types';
 import { Config } from '../utils/Config';
 import { updateHeaders } from '../utils/Event';
@@ -205,6 +207,86 @@ export default class Auth {
     }
   }
 
+  async resetPassword(
+    req:
+      | Request
+      | {
+          email: string;
+          password: string;
+          callbackUrl?: string;
+          redirectUrl?: string;
+        }
+  ): Promise<Response> {
+    let email = '';
+    let password = '';
+    let callbackUrl = null;
+    if (req instanceof Request) {
+      const body = await req.json();
+      email = body.email;
+      password = body.password;
+      const cbFromHeaders = parseCallback(req.headers);
+      if (cbFromHeaders) {
+        callbackUrl = cbFromHeaders;
+      }
+      if (body.callbackUrl) {
+        callbackUrl = body.callbackUrl;
+      }
+    } else {
+      if ('email' in req) {
+        email = req.email;
+      }
+      if ('password' in req) {
+        password = req.password;
+      }
+      if ('callbackUrl' in req) {
+        callbackUrl = req.callbackUrl ? req.callbackUrl : null;
+      }
+    }
+    const body = JSON.stringify({
+      email,
+      password,
+      redirectUrl: NileAuthRoutes.PASSWORD_RESET,
+      callbackUrl,
+    });
+    const data = await fetchResetPassword(this.#config, 'POST', body);
+
+    const { url: urlWithParams } = await data.json();
+    let token;
+    try {
+      const worthyParams = new URL(urlWithParams).searchParams;
+      const answer = await fetchResetPassword(
+        this.#config,
+        'GET',
+        null,
+        worthyParams
+      );
+      token = parseResetToken(answer.headers);
+    } catch {
+      this.#logger.warn(
+        'Unable to parse reset password url. Password not reset.'
+      );
+    }
+
+    // this only needs to happen on the local config
+    const cookie = this.#config.headers.get('cookie')?.split('; ');
+    if (token) {
+      cookie?.push(token);
+    }
+    this.#config.headers = new Headers({
+      ...this.#config.headers,
+      cookie: cookie?.join('; '),
+    });
+    const res = await fetchResetPassword(this.#config, 'PUT', body);
+    // remove the token
+    cookie?.pop();
+    const cleaned: string[] =
+      cookie?.filter((c) => !c.includes('nile.session')) ?? [];
+    cleaned.push(String(parseToken(res.headers)));
+    const updatedHeaders = new Headers({ cookie: cleaned.join('; ') });
+    updateHeaders(updatedHeaders);
+
+    return res;
+  }
   /**
    * The return value from this will be a redirect for the client
    * In most cases, you should forward the response directly to the client
@@ -357,5 +439,16 @@ export function parseToken(headers?: Headers) {
   }
   const [, token] =
     /((__Secure-)?nile\.session-token=[^;]+)/.exec(authCookie) ?? [];
+  return token;
+}
+function parseResetToken(headers: Headers | void): string | void {
+  let authCookie = headers?.get('set-cookie');
+  if (!authCookie) {
+    authCookie = headers?.get('cookie');
+  }
+  if (!authCookie) {
+    return undefined;
+  }
+  const [, token] = /((__Secure-)?nile\.reset=[^;]+)/.exec(authCookie) ?? [];
   return token;
 }
