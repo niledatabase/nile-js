@@ -135,7 +135,15 @@ export default class Auth extends Config {
   handleHeaders(init?: RequestInit) {
     if (this.headers) {
       const cburl = getCallbackUrl(this.headers);
-      this.headers.set(X_NILE_ORIGIN, new URL(cburl).origin);
+      if (cburl) {
+        try {
+          this.headers.set(X_NILE_ORIGIN, new URL(cburl).origin);
+        } catch (e) {
+          if (this.logger?.debug) {
+            this.logger.debug('Invalid URL supplied by cookie header');
+          }
+        }
+      }
       if (init) {
         init.headers = new Headers({ ...this.headers, ...init?.headers });
         return init;
@@ -223,7 +231,7 @@ export default class Auth extends Config {
     });
   };
 }
-function getCallbackUrl(headers: Headers | void) {
+function getCallbackUrl(headers: Headers | void): string | void {
   if (headers) {
     const cookieHeader = headers.get('cookie') || '';
     const cookies = Object.fromEntries(

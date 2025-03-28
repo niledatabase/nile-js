@@ -9,10 +9,10 @@ export type Opts = {
 
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
 export type LoggerType = {
-  info?: (args: unknown[]) => void;
-  warn?: (args: unknown[]) => void;
-  error?: (args: unknown[]) => void;
-  debug?: (args: unknown[]) => void;
+  info?: (args: unknown | unknown[]) => void;
+  warn?: (args: unknown | unknown[]) => void;
+  error?: (args: unknown | unknown[]) => void;
+  debug?: (args: unknown | unknown[]) => void;
 };
 export type ServerConfig = {
   databaseId?: string; // process.env.NILEDB_ID
