@@ -1,9 +1,5 @@
 import { Routes } from '../../types';
-import {
-  ProxyNileAuthRoutes,
-  proxyRoutes,
-  urlMatches,
-} from '../../utils/routes';
+import { NileAuthRoutes, proxyRoutes, urlMatches } from '../../utils/routes';
 import request from '../../utils/request';
 import { Config } from '../../../utils/Config';
 
@@ -22,7 +18,7 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 }
 
 export async function fetchCsrf(config: Config): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${ProxyNileAuthRoutes.CSRF}`;
+  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.CSRF}`;
   const req = new Request(clientUrl, {
     method: 'GET',
     headers: config.headers,

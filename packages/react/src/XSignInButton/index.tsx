@@ -15,6 +15,7 @@ const XSignInButton = ({
   variant,
   size,
   init,
+  onClick,
   asChild = false,
   auth,
   fetchUrl,
@@ -29,8 +30,15 @@ const XSignInButton = ({
         'bg-black hover:bg-slate-800 pl-[3px] text-white gap-4 transition-colors shadow-md'
       )}
       data-slot="twitter-button"
-      onClick={() => {
-        signIn('twitter', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      onClick={async (e) => {
+        const res = await signIn('twitter', {
+          callbackUrl,
+          init,
+          auth,
+          fetchUrl,
+          baseUrl,
+        });
+        onClick && onClick(e, res);
       }}
       {...props}
     >

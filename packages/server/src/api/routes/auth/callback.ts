@@ -1,8 +1,4 @@
-import {
-  ProxyNileAuthRoutes,
-  proxyRoutes,
-  urlMatches,
-} from '../../utils/routes';
+import { NileAuthRoutes, proxyRoutes, urlMatches } from '../../utils/routes';
 import request from '../../utils/request';
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
@@ -61,7 +57,7 @@ export async function fetchCallback(
   provider: ProviderName,
   body: string
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${ProxyNileAuthRoutes.CALLBACK}/${provider}`;
+  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.CALLBACK}/${provider}`;
   const req = new Request(clientUrl, {
     method: 'POST',
     headers: config.headers,

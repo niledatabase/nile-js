@@ -1,5 +1,5 @@
 import { Routes } from '../../types';
-import { urlMatches, proxyRoutes } from '../../utils/routes';
+import { urlMatches, proxyRoutes, NileAuthRoutes } from '../../utils/routes';
 import request from '../../utils/request';
 import { Config } from '../../../utils/Config';
 
@@ -30,4 +30,26 @@ export default async function route(req: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes.PASSWORD_RESET);
+}
+
+export async function fetchResetPassword(
+  config: Config,
+  method: 'POST' | 'GET' | 'PUT',
+  body: null | string,
+  params?: URLSearchParams
+) {
+  const authParams = new URLSearchParams(params ?? {});
+  authParams?.set('json', 'true');
+  const clientUrl = `${config.origin}${config.routePrefix}${
+    NileAuthRoutes.PASSWORD_RESET
+  }?${authParams?.toString()}`;
+  const init: RequestInit = {
+    method,
+    headers: config.headers,
+  };
+  if (body && method !== 'GET') {
+    init.body = body;
+  }
+  const req = new Request(clientUrl, init);
+  return (await config.handlers[method](req)) as Response;
 }

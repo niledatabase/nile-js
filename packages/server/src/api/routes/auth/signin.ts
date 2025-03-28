@@ -31,11 +31,7 @@
 
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
-import {
-  ProxyNileAuthRoutes,
-  proxyRoutes,
-  urlMatches,
-} from '../../utils/routes';
+import { NileAuthRoutes, proxyRoutes, urlMatches } from '../../utils/routes';
 import request from '../../utils/request';
 
 const key = 'SIGNIN';
@@ -72,7 +68,7 @@ export async function fetchSignIn(
   provider: string,
   body: string
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${ProxyNileAuthRoutes.SIGNIN}/${provider}`;
+  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.SIGNIN}/${provider}`;
   const req = new Request(clientUrl, {
     method: 'POST',
     headers: config.headers,

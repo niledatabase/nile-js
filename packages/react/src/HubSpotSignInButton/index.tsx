@@ -19,6 +19,7 @@ const HubSpotSignInButton = ({
   auth,
   fetchUrl,
   baseUrl,
+  onClick,
   ...props
 }: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
@@ -29,8 +30,15 @@ const HubSpotSignInButton = ({
         buttonVariants({ variant, size, className }),
         'bg-[#ff7a59] hover:bg-[#ff7a59] hover:bg-opacity-85 pl-[3px] text-white gap-4 transition-colors shadow-md'
       )}
-      onClick={() => {
-        signIn('hubspot', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      onClick={async (e) => {
+        const res = await signIn('hubspot', {
+          callbackUrl,
+          init,
+          auth,
+          fetchUrl,
+          baseUrl,
+        });
+        onClick && onClick(e, res);
       }}
       {...props}
     >
