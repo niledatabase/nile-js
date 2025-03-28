@@ -13,6 +13,7 @@ export function useSignIn(params?: Props) {
     init,
     baseUrl,
     fetchUrl,
+    resetUrl,
     auth,
     redirect,
   } = params ?? {};
@@ -27,6 +28,7 @@ export function useSignIn(params?: Props) {
         baseUrl,
         fetchUrl,
         redirect,
+        resetUrl,
         ...data,
       });
       if (!res?.ok && res?.error) {

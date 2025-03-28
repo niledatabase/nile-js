@@ -19,6 +19,7 @@ const LinkedInSignInButton = ({
   auth,
   fetchUrl,
   baseUrl,
+  onClick,
   ...props
 }: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
@@ -29,8 +30,15 @@ const LinkedInSignInButton = ({
         buttonVariants({ variant, size, className }),
         'bg-[#0288D1] hover:bg-[#0288D1] pl-[3px] hover:bg-opacity-85 gap-4 transition-colors shadow-md text-white'
       )}
-      onClick={() => {
-        signIn('linkedin', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      onClick={async (e) => {
+        const res = await signIn('linkedin', {
+          callbackUrl,
+          init,
+          auth,
+          fetchUrl,
+          baseUrl,
+        });
+        onClick && onClick(e, res);
       }}
       {...props}
     >

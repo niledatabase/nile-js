@@ -88,7 +88,6 @@ export async function NileExpressHandler(
       return null;
     }
     const proxyRequest = new Request(reqUrl, _init);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let response;
     try {
       response = await nile.handlers[
