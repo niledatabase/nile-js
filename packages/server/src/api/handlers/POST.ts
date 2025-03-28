@@ -14,7 +14,12 @@ export default function POSTER(configRoutes: Routes, config: Config) {
   return async function POST(req: Request) {
     // special case for logging client errors
     if (matchesLog(configRoutes, req)) {
-      error(req.body && (await req.json()));
+      try {
+        const json = await req.clone().json();
+        error(req.body && json);
+      } catch (e) {
+        error(await req.text());
+      }
       return new Response(null, { status: 200 });
     }
     // order matters for tenantUsers
