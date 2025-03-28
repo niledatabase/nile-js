@@ -17,5 +17,5 @@ export const appRoutes = (prefix = '/api'): Routes => ({
   TENANT_USER: `${prefix}/tenants/{tenantId}/users/{userId}`,
   TENANT_USERS: `${prefix}/tenants/{tenantId}/users`,
   SIGNUP: `${prefix}/signup`,
-  LOG: `${prefix}/auth/_log`,
+  LOG: `${prefix}/_log`,
 });

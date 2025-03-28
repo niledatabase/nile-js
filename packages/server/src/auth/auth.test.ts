@@ -14,8 +14,10 @@ const baseConfig = [
   'headers',
   'logger',
   'password',
+  'listProviders',
   'getSession',
   'user',
+  'signOut',
 ];
 const apiConfig = [
   '_token',

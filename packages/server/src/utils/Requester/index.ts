@@ -18,9 +18,9 @@ export default class Requester<T> extends Config {
     body?: string
   ): Promise<Response> {
     const _init = {
-      ...init,
       body,
       method,
+      ...init,
     };
 
     const res = await _fetch(this, url, _init);

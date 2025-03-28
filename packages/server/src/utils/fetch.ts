@@ -168,7 +168,9 @@ export async function _fetch(
       typeof response?.clone === 'function' ? response.clone() : null;
     let msg = '';
     try {
-      res = await (response as Response)?.json();
+      res = await (response as Response)?.json().catch(() => {
+        // handle below
+      });
     } catch (e) {
       if (errorHandler) {
         msg = await errorHandler.text();
@@ -202,7 +204,8 @@ export async function _fetch(
     error(
       `[fetch][response][status: ${errorHandler?.status}] UNHANDLED ERROR`,
       {
-        res,
+        response,
+        message: await response.text(),
       }
     );
     return new ResponseError(null, {
