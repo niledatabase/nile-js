@@ -3,6 +3,29 @@ import Logger from '../../utils/Logger';
 
 import request from './request';
 
+type ProviderName =
+  | 'discord'
+  | 'github'
+  | 'google'
+  | 'hubspot'
+  | 'linkedin'
+  | 'slack'
+  | 'twitter'
+  | 'email'
+  | 'credentials'
+  | 'azure';
+
+export type Providers = {
+  [providerName in ProviderName]: Provider;
+};
+export type Provider = {
+  id: string;
+  name: string;
+  type: string;
+  signinUrl: string;
+  callbackUr: string;
+};
+
 export type JWT = {
   email: string;
   sub: string;

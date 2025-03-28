@@ -1,4 +1,4 @@
-import { ActiveSession, JWT } from '../api/utils/auth';
+import { ActiveSession, JWT, Provider } from '../api/utils/auth';
 import { appRoutes } from '../api/utils/routes/defaultRoutes';
 import { Config } from '../utils/Config';
 import { X_NILE_ORIGIN } from '../utils/constants';
@@ -134,6 +134,8 @@ export default class Auth extends Config {
   }
   handleHeaders(init?: RequestInit) {
     if (this.headers) {
+      const cburl = getCallbackUrl(this.headers);
+      this.headers.set(X_NILE_ORIGIN, new URL(cburl).origin);
       if (init) {
         init.headers = new Headers({ ...this.headers, ...init?.headers });
         return init;
@@ -150,6 +152,7 @@ export default class Auth extends Config {
   get sessionUrl() {
     return '/auth/session';
   }
+
   getSession = async (
     req: NileRequest<void> | Headers,
     init?: RequestInit
@@ -162,4 +165,74 @@ export default class Auth extends Config {
     }
     return session as JWT | ActiveSession | Response;
   };
+
+  get getCsrfUrl() {
+    return '/auth/csrf';
+  }
+
+  async getCsrf(req: NileRequest<void> | Headers, init?: RequestInit) {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return await _requester.get(req, this.getCsrfUrl, _init);
+  }
+  get listProvidersUrl() {
+    return '/auth/providers';
+  }
+
+  listProviders = async (
+    req: NileRequest<void> | Headers,
+    init?: RequestInit
+  ): Promise<Response | { [key: string]: Provider }> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return await _requester.get(req, this.listProvidersUrl, _init);
+  };
+
+  get signOutUrl() {
+    return '/auth/signout';
+  }
+
+  signOut = async (
+    req: NileRequest<void | { callbackUrl?: string }> | Headers,
+    init?: RequestInit
+  ): Promise<Response | JSON> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+
+    const csrf = await this.getCsrf(req as NileRequest<void>);
+
+    const callbackUrl =
+      req && 'callbackUrl' in req ? String(req.callbackUrl) : '/';
+    if (csrf instanceof Request) {
+      return csrf;
+    }
+    const csrfToken = 'csrfToken' in csrf ? String(csrf.csrfToken) : '';
+
+    if (!csrfToken) {
+      return new Response('Request blocked', { status: 400 });
+    }
+
+    return await _requester.post(req, this.signOutUrl, {
+      method: 'post',
+      body: JSON.stringify({
+        csrfToken,
+        callbackUrl,
+        json: String(true),
+      }),
+      ..._init,
+    });
+  };
+}
+function getCallbackUrl(headers: Headers | void) {
+  if (headers) {
+    const cookieHeader = headers.get('cookie') || '';
+    const cookies = Object.fromEntries(
+      cookieHeader
+        .split('; ')
+        .map((cookie) => cookie.split('=').map(decodeURIComponent))
+    );
+    return (
+      cookies['__Secure-nile.callback-url'] || cookies['nile.callback-url']
+    );
+  }
 }
