@@ -21,3 +21,7 @@ export {
   default as handlePasswordReset,
   matches as matchesPasswordReset,
 } from './password-reset';
+export {
+  default as handleVerifyEmail,
+  matches as matchesVerifyEmail,
+} from './verify-email';
