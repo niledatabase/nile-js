@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.13](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2025-03-28)
+
+### Bug Fixes
+
+- **server:** support bad urls in cookie header for sign in ([ab1d377](https://github.com/niledatabase/nile-js/commit/ab1d377ea3722161251830d11bb18f6f2e187c24))
+
 # [4.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2025-03-28)
 
 ### Features
