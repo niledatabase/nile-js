@@ -63,7 +63,9 @@ export class ApiConfig {
 
     this.routes = config?.api?.routes;
     this.routePrefix = config?.api?.routePrefix;
-    this.origin = config?.api?.origin;
+    this.origin = config?.api?.origin
+      ? config.api.origin
+      : 'http://localhost:3000';
   }
 
   public get token(): string | undefined {

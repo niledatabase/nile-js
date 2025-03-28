@@ -116,10 +116,10 @@ export function serverLogin(
       error('Unable to obtain auth token', { authCookie });
       throw new Error('Server login failed');
     }
-    info('Server login successful', { authCookie, csrfCookie });
+    info('Server login successful');
     const headers = new Headers({
       ...baseHeaders,
-      cookie: [token, csrfCookie].join('; '),
+      cookie: parseCookies([token, csrfCookie].join(', ')).join('; '),
     });
     return [headers, loginRes] as T;
   };
@@ -137,6 +137,17 @@ export function parseToken(headers?: Headers) {
     /((__Secure-)?nile\.session-token=[^;]+)/.exec(authCookie) ?? [];
   return token;
 }
+
+function parseCookies(cookieString: string | null): string[] {
+  if (!cookieString) return [];
+
+  return cookieString
+    .split(/,\s*(?=[^;]+=[^;,]+)/) // Split correctly when multiple cookies are present
+    .flatMap(
+      (cookie) => cookie.split('; ').slice(0, 1) // Extract only key=value pair
+    );
+}
+
 export default class Auth extends Config {
   headers?: Headers;
   resetHeaders?: (headers?: Headers) => void;
@@ -279,7 +290,119 @@ export default class Auth extends Config {
 
     return res as T;
   };
+
+  get resetPasswordUrl() {
+    return '/auth/reset-password';
+  }
+
+  resetPassword = async <T = Response | { url: string }>(
+    req:
+      | NileRequest<{
+          email: string;
+          password: string;
+          callbackUrl?: string;
+          redirectUrl?: string;
+        }>
+      | Headers,
+    init?: RequestInit
+  ): Promise<T> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    const headers = new Headers(_init?.headers);
+
+    let email = '';
+    let password = '';
+    let callbackUrl = null;
+    if (req instanceof Request) {
+      const body = await req.json();
+      email = body.email;
+      password = body.password;
+      const cbFromHeaders = getCallbackUrl(req.headers);
+      if (cbFromHeaders) {
+        callbackUrl = cbFromHeaders;
+      }
+      if (body.callbackUrl) {
+        callbackUrl = body.callbackUrl;
+      }
+    } else {
+      if ('email' in req) {
+        email = req.email;
+      }
+      if ('password' in req) {
+        password = req.password;
+      }
+      if ('callbackUrl' in req) {
+        callbackUrl = req.callbackUrl ? req.callbackUrl : null;
+      }
+    }
+
+    // get verification token
+    const data = await _requester.post<{ url: string }>(
+      req,
+      `${this.resetPasswordUrl}?json=true`,
+      {
+        method: 'post',
+        body: JSON.stringify({
+          email,
+          password,
+          redirectUrl: this.resetPasswordUrl,
+          callbackUrl,
+        }),
+        ..._init,
+      }
+    );
+    const { url: urlWithParams } = data;
+    const worthyParams = new URL(urlWithParams).searchParams;
+    const answer = await _requester.get<Response>(
+      req,
+      `${this.resetPasswordUrl}?${worthyParams}`,
+      _init,
+      true
+    );
+
+    const token = getResetToken(answer.headers);
+
+    const cookie = headers.get('cookie')?.split('; ');
+    if (token) {
+      const callback = getCallbackUrl(headers);
+      if (callback) {
+        cookie?.push(
+          `${
+            callback.startsWith('https://') ? '__Secure-' : ''
+          }nile.reset=${encodeURIComponent(token)}`
+        );
+      }
+    }
+    if (cookie) {
+      headers.set('cookie', cookie.join('; '));
+    }
+    const res = await _requester.put<Response>(req, this.resetPasswordUrl, {
+      ..._init,
+      headers,
+    });
+    const newCookie = [
+      getCallbackUrl(headers),
+      getCsrfToken(headers),
+      getSessionToken(res.headers),
+    ];
+    const refreshedHeaders = new Headers({ cookie: newCookie.join(';') });
+
+    this.resetHeaders && this.resetHeaders(refreshedHeaders);
+
+    return res as T;
+  };
 }
+function getSessionToken(headers: Headers | void): string | void {
+  if (headers) {
+    const cookies = getCookies(headers);
+    if (cookies) {
+      return (
+        cookies['__Secure-nile.session-token'] || cookies['nile.session-token']
+      );
+    }
+  }
+}
+
 function getCallbackUrl(headers: Headers | void): string | void {
   if (headers) {
     const cookies = getCookies(headers);
@@ -310,6 +433,14 @@ function getCsrfToken(
     const cookies = getCookies(initHeaders);
     if (cookies) {
       return cookies['__Secure-nile.csrf-token'] || cookies['nile.csrf-token'];
+    }
+  }
+}
+function getResetToken(headers: Headers | void): string | void {
+  if (headers) {
+    const cookies = getCookies(headers);
+    if (cookies) {
+      return cookies['__Secure-nile.reset'] || cookies['nile.reset'];
     }
   }
 }

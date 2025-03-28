@@ -14,17 +14,13 @@ export default function POSTER(configRoutes: Routes, config: Config) {
   return async function POST(req: Request) {
     // special case for logging client errors
     if (matchesLog(configRoutes, req)) {
-      if (req.body) {
-        try {
-          const text = await req.text();
-          error(text);
-          return new Response(null, {
-            status: 200,
-          });
-        } catch (e) {
-          //noop
-        }
+      try {
+        const json = await req.clone().json();
+        error(req.body && json);
+      } catch (e) {
+        error(await req.text());
       }
+      return new Response(null, { status: 200 });
     }
     // order matters for tenantUsers
     if (matchesTenantUsers(configRoutes, req)) {

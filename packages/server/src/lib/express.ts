@@ -77,7 +77,6 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
       return null;
     }
     const proxyRequest = new Request(reqUrl, _init);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let response;
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
