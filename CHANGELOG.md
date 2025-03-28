@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2025-03-28)
+
+### Features
+
+- **server:** add sign out ([edc728c](https://github.com/niledatabase/nile-js/commit/edc728cac554f759bce2d52117643618f1cd000e))
+
 # [4.0.0-alpha.11](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2025-03-25)
 
 **Note:** Version bump only for package @niledatabase/packages
