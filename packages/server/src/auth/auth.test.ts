@@ -17,6 +17,7 @@ const baseConfig = [
   'listProviders',
   'getSession',
   'user',
+  'resetHeaders',
   'signOut',
 ];
 const apiConfig = [

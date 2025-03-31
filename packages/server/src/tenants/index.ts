@@ -30,10 +30,10 @@ export default class Tenants extends Config {
     return `/tenants/${this.tenantId ?? '{tenantId}'}`;
   }
 
-  createTenant = async (
+  createTenant = async <T = Tenant | Response>(
     req: NileRequest<{ name: string }> | Headers | string,
     init?: RequestInit
-  ): Promise<Tenant | Response> => {
+  ): Promise<T> => {
     let _req;
     if (typeof req === 'string') {
       _req = new Request(`${this.api.basePath}${this.tenantsUrl}`, {
@@ -48,49 +48,49 @@ export default class Tenants extends Config {
     }
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return _requester.post(_req, this.tenantsUrl, _init);
+    return _requester.post(_req, this.tenantsUrl, _init) as T;
   };
 
-  getTenant = async (
+  getTenant = async <T = Tenant | Response>(
     req: NileRequest<{ id: string }> | Headers | string | void,
     init?: RequestInit
-  ): Promise<Tenant | Response> => {
+  ): Promise<T> => {
     if (typeof req === 'string') {
       this.tenantId = req;
     }
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return _requester.get<Tenant>(req, this.tenantUrl, _init);
+    return _requester.get<Tenant>(req, this.tenantUrl, _init) as T;
   };
 
   get tenantListUrl() {
     return `/users/${this.userId ?? '{userId}'}/tenants`;
   }
 
-  listTenants = async (
+  listTenants = async <T = Tenant[] | Response>(
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): Promise<Tenant[] | Response> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return _requester.get<Tenant[]>(req, this.tenantListUrl, _init);
+    return _requester.get<Tenant[]>(req, this.tenantListUrl, _init) as T;
   };
 
-  deleteTenant = async (
+  deleteTenant = async <T = Response>(
     req: NileRequest<void> | Headers | string,
     init?: RequestInit
-  ): Promise<Response> => {
+  ): Promise<T> => {
     if (typeof req === 'string') {
       this.tenantId = req;
     }
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return _requester.delete(req, this.tenantUrl, _init);
+    return _requester.delete(req, this.tenantUrl, _init) as T;
   };
-  updateTenant = async (
+  updateTenant = async <T = Tenant | Response>(
     req: NileRequest<void> | Headers | { name: string },
     init?: RequestInit
-  ): Promise<Tenant | Response> => {
+  ): Promise<T> => {
     let _req;
     if (req && 'name' in req) {
       _req = new Request(`${this.api.basePath}${this.tenantUrl}`, {
@@ -102,6 +102,6 @@ export default class Tenants extends Config {
     }
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return _requester.put<Tenant>(_req, this.tenantUrl, _init);
+    return _requester.put<Tenant>(_req, this.tenantUrl, _init) as T;
   };
 }
