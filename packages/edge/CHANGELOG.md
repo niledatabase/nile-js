@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.14...v4.0.0-alpha.15) (2025-04-02)
+
+**Note:** Version bump only for package @niledatabase/edge
+
 # [4.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2025-03-31)
 
 **Note:** Version bump only for package @niledatabase/edge
