@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2025-03-31)
+
+### Features
+
+- **server:** add sign out, return raw res for login ([6962514](https://github.com/niledatabase/nile-js/commit/6962514e88f2a8c0f7bcd3bf5c549493f2cd6ca9))
+
 # [4.0.0-alpha.13](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2025-03-28)
 
 ### Bug Fixes
