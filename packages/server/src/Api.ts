@@ -28,7 +28,9 @@ export class Api {
   };
   constructor(config: Config) {
     this.config = config;
-    this.auth = new Auth(config);
+    this.auth = new Auth(config, undefined, {
+      resetHeaders: this.resetHeaders,
+    });
     this.users = new Users(config);
     this.tenants = new Tenants(config);
     this.routes = {
@@ -75,28 +77,49 @@ export class Api {
     };
   }
 
-  updateConfig(config: Config) {
+  reset = () => {
+    this.users = new Users(this.config, this._headers);
+    this.tenants = new Tenants(this.config, this._headers);
+    this.auth = new Auth(this.config, this._headers, {
+      resetHeaders: this.resetHeaders,
+    });
+  };
+
+  updateConfig = (config: Config) => {
     this.config = config;
     this.handlers = Handlers(this.routes, config);
-  }
+  };
+
+  resetHeaders = () => {
+    this._headers = new Headers();
+    this.reset();
+  };
 
   set headers(headers: Headers) {
-    this.users = new Users(this.config, headers);
-    this.tenants = new Tenants(this.config, headers);
-    this.auth = new Auth(this.config, headers);
     this._headers = headers;
+    this.reset();
   }
 
-  async login(payload: { email: string; password: string }) {
-    this.headers = await serverLogin(this.config, this.handlers)(payload);
+  get headers(): Headers | undefined {
+    return this._headers;
   }
 
-  async session(req?: Request | Headers | null | undefined) {
+  login = async (
+    payload: { email: string; password: string },
+    config?: { setCookie?: boolean }
+  ) => {
+    this.headers = await serverLogin(this.config, this.handlers)(
+      payload,
+      config
+    );
+  };
+
+  session = async (req?: Request | Headers | null | undefined) => {
     if (req instanceof Headers) {
       return this.auth.getSession(req);
     } else if (req instanceof Request) {
       return auth(req, this.config);
     }
     return this.auth.getSession(this._headers);
-  }
+  };
 }

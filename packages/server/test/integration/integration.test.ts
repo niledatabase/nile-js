@@ -41,6 +41,18 @@ describe('api integration', () => {
     const update = {
       name: 'updatedName',
     };
+
+    const res = await nile.api.auth.signOut();
+
+    expect(res.url).not.toBeNull();
+
+    const failedUpdatedFirstUser = await nile.api.users.updateMe<Response>(
+      update
+    );
+    expect(failedUpdatedFirstUser.status).toEqual(401);
+
+    await nile.api.login(primaryUser);
+
     const updatedFirstUser = await nile.api.users.updateMe(update);
 
     expect(updatedFirstUser).toMatchObject({
