@@ -104,14 +104,8 @@ export class Api {
     return this._headers;
   }
 
-  login = async (
-    payload: { email: string; password: string },
-    config?: { setCookie?: boolean }
-  ) => {
-    this.headers = await serverLogin(this.config, this.handlers)(
-      payload,
-      config
-    );
+  login = async (payload: { email: string; password: string }) => {
+    this.headers = await serverLogin(this.config, this.handlers)(payload);
     return this.headers;
   };
 
