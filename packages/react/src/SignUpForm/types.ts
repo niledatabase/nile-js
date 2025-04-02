@@ -1,5 +1,11 @@
-import { CreateBasicUserRequest } from '@niledatabase/browser';
 import { PrefetchParams } from 'packages/react/lib/utils';
+
+export interface CreateBasicUserRequest {
+  email: string;
+  password: string;
+  preferredName?: string;
+  newTenant?: string;
+}
 
 export type SignUpInfo = CreateBasicUserRequest & {
   tenantId?: string;
