@@ -112,6 +112,7 @@ export class Api {
       payload,
       config
     );
+    return this.headers;
   };
 
   session = async (req?: Request | Headers | null | undefined) => {

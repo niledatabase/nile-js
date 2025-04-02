@@ -34,7 +34,8 @@ describe('api integration', () => {
 
     expect(user.id).toBeTruthy();
 
-    await nile.api.login(primaryUser);
+    const loginRes = await nile.api.login(primaryUser);
+    expect(loginRes.get('cookie')).toBeDefined();
 
     // Updating session user
     expect(user.name).toEqual(null);

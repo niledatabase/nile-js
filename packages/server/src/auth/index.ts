@@ -21,18 +21,13 @@ export function serverLogin(
 ) {
   const { info, error, debug } = Logger(config, '[server side login]');
   const routes = appRoutes(config.api.routePrefix);
-  return async function login<T = Response | Headers | Error>(
-    {
-      email,
-      password,
-    }: {
-      email: string;
-      password: string;
-    },
-    loginConfig?: {
-      setCookie?: boolean;
-    }
-  ) {
+  return async function login<T = Response | Headers | Error>({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) {
     if (!email || !password) {
       throw new Error('Server side login requires a user email and password.');
     }
@@ -115,10 +110,6 @@ export function serverLogin(
     const authCookie = loginRes?.headers.get('set-cookie');
     if (!authCookie) {
       throw new Error('authentication failed');
-    }
-
-    if (loginConfig?.setCookie) {
-      return loginRes as T;
     }
 
     const [, token] =
