@@ -186,7 +186,7 @@ export function SessionProvider(props: SessionProviderProps) {
       auth.initialize({ baseUrl: props.baseUrl, session: props.session });
     } else {
       if (!auth.status) {
-        auth.getSession();
+        auth.getSession({ baseUrl: props.baseUrl });
       }
     }
   }, [props.baseUrl, props.session]);
