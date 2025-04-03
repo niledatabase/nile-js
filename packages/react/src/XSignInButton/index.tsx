@@ -6,6 +6,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 import { signIn } from '../../lib/auth/Authorizer';
+import { SSOButtonProps } from '../types';
 
 const XSignInButton = ({
   callbackUrl,
@@ -15,12 +16,11 @@ const XSignInButton = ({
   size,
   init,
   asChild = false,
+  auth,
+  fetchUrl,
+  baseUrl,
   ...props
-}: ButtonProps & {
-  callbackUrl?: string;
-  buttonText?: string;
-  init?: RequestInit;
-}) => {
+}: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
   return (
     <Comp
@@ -30,7 +30,7 @@ const XSignInButton = ({
       )}
       data-slot="twitter-button"
       onClick={() => {
-        signIn('twitter', { callbackUrl, init });
+        signIn('twitter', { callbackUrl, init, auth, fetchUrl, baseUrl });
       }}
       {...props}
     >
