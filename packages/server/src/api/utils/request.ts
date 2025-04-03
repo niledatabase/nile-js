@@ -31,6 +31,8 @@ export default async function request(
   updatedHeaders.set('host', requestUrl.host);
   if (config.api.callbackUrl) {
     updatedHeaders.set(X_NILE_ORIGIN, config.api.callbackUrl);
+  } else if (config.api.origin) {
+    updatedHeaders.set(X_NILE_ORIGIN, config.api.origin);
   } else {
     updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
   }

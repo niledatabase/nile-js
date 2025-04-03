@@ -6,6 +6,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
+import { SSOButtonProps } from '../types';
 
 const AzureSignInButton = ({
   callbackUrl,
@@ -15,12 +16,9 @@ const AzureSignInButton = ({
   size,
   init,
   asChild = false,
+  onClick,
   ...props
-}: ButtonProps & {
-  callbackUrl?: string;
-  buttonText?: string;
-  init?: RequestInit;
-}) => {
+}: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
   return (
     <Comp
@@ -29,8 +27,9 @@ const AzureSignInButton = ({
         buttonVariants({ variant, size, className }),
         'bg-[#0078d4] hover:bg-[#0078d4] hover:bg-opacity-85 pl-[3px] text-white gap-4 transition-colors shadow-md'
       )}
-      onClick={() => {
-        signIn('azure-ad', { callbackUrl, init });
+      onClick={async (e) => {
+        const res = await signIn('azure-ad', { callbackUrl, init });
+        onClick && onClick(e, res);
       }}
       {...props}
     >

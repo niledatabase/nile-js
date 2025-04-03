@@ -77,53 +77,63 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
       return null;
     }
     const proxyRequest = new Request(reqUrl, _init);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const response = (await (nile.api.handlers as any)[method](
-      proxyRequest
-    )) as Response;
+    let response;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      response = await (nile.api.handlers as any)[method](proxyRequest);
+    } catch (e) {
+      error(e);
+    }
 
     let body;
 
-    try {
-      const tryJson = await response.clone();
-      body = await tryJson.json();
-    } catch (e) {
-      body = await response.text();
-    }
-    const newHeaders: Record<string, string | string[]> = {};
-    response.headers.forEach((value, key) => {
-      if (
-        !['content-length', 'transfer-encoding'].includes(key.toLowerCase())
-      ) {
-        if (newHeaders[key]) {
-          const prev = newHeaders[key];
-          if (Array.isArray(prev)) {
-            newHeaders[key] = [...prev, value];
+    if (response instanceof Response) {
+      try {
+        const tryJson = await response.clone();
+        body = await tryJson.json();
+      } catch (e) {
+        body = await response.text();
+      }
+      const newHeaders: Record<string, string | string[]> = {};
+      response.headers.forEach((value, key) => {
+        if (
+          !['content-length', 'transfer-encoding'].includes(key.toLowerCase())
+        ) {
+          if (newHeaders[key]) {
+            const prev = newHeaders[key];
+            if (Array.isArray(prev)) {
+              newHeaders[key] = [...prev, value];
+            } else {
+              newHeaders[key] = [prev, value];
+            }
           } else {
-            newHeaders[key] = [prev, value];
+            newHeaders[key] = value;
           }
-        } else {
-          newHeaders[key] = value;
         }
-      }
-    });
+      });
 
-    if (config?.muteResponse !== true) {
-      res.status(response.status).set(newHeaders);
-      if (typeof body === 'string') {
-        res.send(body);
-      } else {
-        res.json(body ?? {});
+      if (config?.muteResponse !== true) {
+        if (res) {
+          res.status(response.status).set(newHeaders);
+          if (typeof body === 'string') {
+            res.send(body);
+          } else {
+            res.json(body ?? {});
+          }
+        }
+        return;
       }
+
+      return {
+        body,
+        status: response.status,
+        headers: newHeaders,
+        response,
+      };
+    } else {
+      error('Bad response', { response });
       return;
     }
-
-    return {
-      body,
-      status: response.status,
-      headers: newHeaders,
-      response,
-    };
   }
   const { paths } = expressPaths(nile);
   return { handler, paths };

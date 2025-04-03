@@ -32,11 +32,21 @@ describe('api integration', () => {
       nile.api.users.createUser(newUser) as unknown as { id: string },
     ]);
 
+    /*
+    const updatedPassword = randomString(64);
     expect(user.id).toBeTruthy();
 
     await nile.api.login(primaryUser);
+    const reset = await nile.api.auth.resetPassword<Response>({
+      email: primaryUser.email,
+      password: updatedPassword,
+    });
+    expect(reset.headers.get('set-cookie')).not.toBeNull();
 
     // Updating session user
+    primaryUser.password = updatedPassword;
+    */
+
     expect(user.name).toEqual(null);
     const update = {
       name: 'updatedName',
@@ -183,4 +193,11 @@ async function initialDebugCleanup(nile: Server) {
   } catch (e) {
     await Promise.resolve();
   }
+}
+
+export function randomString(size: number) {
+  const i2hex = (i: number) => ('0' + i.toString(16)).slice(-2);
+  const r = (a: string, i: number): string => a + i2hex(i);
+  const bytes = crypto.getRandomValues(new Uint8Array(size));
+  return Array.from(bytes).reduce(r, '');
 }

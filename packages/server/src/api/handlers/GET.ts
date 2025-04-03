@@ -59,14 +59,22 @@ export default function GETTER(configRoutes: Routes, config: Config) {
       info('matches callback');
       return authRoutes.handleCallback(req, config);
     }
+
     if (authRoutes.matchSignOut(configRoutes, req)) {
       info('matches signout');
       return authRoutes.handleSignOut(req, config);
     }
+
     if (authRoutes.matchesVerifyRequest(configRoutes, req)) {
       info('matches verify-request');
       return authRoutes.handleVerifyRequest(req, config);
     }
+
+    if (authRoutes.matchesVerifyEmail(configRoutes, req)) {
+      info('matches verify-request');
+      return authRoutes.handleVerifyEmail(req, config);
+    }
+
     if (authRoutes.matchError(configRoutes, req)) {
       info('matches error');
       return authRoutes.handleError(req, config);
