@@ -146,6 +146,7 @@ export default class Auth extends Config {
   ) {
     super(config);
     this.headers = headers;
+    this.logger = Logger(config, '[auth]');
     this.resetHeaders = params?.resetHeaders;
   }
   handleHeaders(init?: RequestInit) {
@@ -232,11 +233,13 @@ export default class Auth extends Config {
       undefined,
       true
     );
-    const csrfHeader = getCsrfToken(csrf.headers);
+    const csrfHeader = getCsrfToken(csrf.headers, this.headers);
     const callbackUrl =
       req && 'callbackUrl' in req ? String(req.callbackUrl) : '/';
 
     if (!csrfHeader) {
+      this.logger?.debug &&
+        this.logger.debug('Request blocked from invalid csrf header');
       return new Response('Request blocked', { status: 400 }) as T;
     }
 
@@ -258,6 +261,7 @@ export default class Auth extends Config {
         .map((key) => `${key}=${cooks[key]}`)
         .join('; ')
     );
+
     const res = await _requester.post(req, this.signOutUrl, {
       method: 'post',
       body: JSON.stringify({
@@ -285,31 +289,50 @@ function getCallbackUrl(headers: Headers | void): string | void {
   }
 }
 
-function getCsrfToken(headers: Headers | void): string | void {
+function getCsrfToken(
+  headers: Headers | void,
+  initHeaders: Headers | void
+): string | void {
   if (headers) {
     const cookies = getCookies(headers);
+    let validCookie = '';
+    if (cookies) {
+      validCookie =
+        cookies['__Secure-nile.csrf-token'] || cookies['nile.csrf-token'];
+    }
+    if (validCookie) {
+      return validCookie;
+    }
+  }
+  if (initHeaders) {
+    const cookies = getCookies(initHeaders);
     if (cookies) {
       return cookies['__Secure-nile.csrf-token'] || cookies['nile.csrf-token'];
     }
   }
 }
 
-const getCookies = (headers: Headers | void) => {
+const getCookies = (headers: Headers | void): Record<string, string> => {
   if (!headers) return {};
 
-  // Retrieve 'cookie' or 'set-cookie' headers
-  const cookieHeader = headers.get('cookie') || headers.get('set-cookie');
+  // Get 'cookie' and 'set-cookie' headers
+  const cookieHeader = headers.get('cookie') || '';
+  const setCookieHeaders = headers.get('set-cookie') || '';
 
-  if (!cookieHeader) return {};
+  // Merge both headers into an array
+  const allCookies = [
+    ...cookieHeader.split('; '), // Regular 'cookie' header (semicolon-separated)
+    ...setCookieHeaders.split(/,\s*(?=[^;, ]+=)/), // Smart split for 'set-cookie'
+  ].filter(Boolean); // Remove empty entries
 
-  // Split by comma only if multiple Set-Cookie headers are merged into one
+  // Convert cookies into an object
   return Object.fromEntries(
-    cookieHeader
-      .split(/,\s*(?=[^;]+=[^;,]+)/) // Correctly splits cookies while ignoring commas in attributes
-      .flatMap((cookie) =>
-        cookie.split('; ')[0].split('=').length === 2
-          ? [cookie.split('; ')[0].split('=').map(decodeURIComponent)]
-          : []
-      )
+    allCookies.map((cookie) => {
+      const [key, ...val] = cookie.split('=');
+      return [
+        decodeURIComponent(key.trim()),
+        decodeURIComponent(val.join('=').trim()),
+      ];
+    })
   );
 };
