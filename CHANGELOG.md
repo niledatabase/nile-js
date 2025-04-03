@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.16](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2025-04-03)
+
+### Bug Fixes
+
+- bring back the parameter and return raw response ([df57def](https://github.com/niledatabase/nile-js/commit/df57def579859fbfdc841faf13c62ef8adbc5d7f))
+- making sure login returned the auth info all the way to the caller ([b2f654a](https://github.com/niledatabase/nile-js/commit/b2f654a8dd42a78be01614c0aef4a5728775a1b1))
+- missed a place during config removal ([6a388cb](https://github.com/niledatabase/nile-js/commit/6a388cb3b98300ec240f932dd692b9ae0ebf5490))
+- **server:** support random origin ([7ac191b](https://github.com/niledatabase/nile-js/commit/7ac191b6dba0ff9c203b52775fb4d5048c134f3b))
+- **server:** use both headers for csrf ([21bdb1d](https://github.com/niledatabase/nile-js/commit/21bdb1de0d87254df66316aad400cfa8722c9ead))
+
 # [4.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.14...v4.0.0-alpha.15) (2025-04-02)
 
 ### Bug Fixes
