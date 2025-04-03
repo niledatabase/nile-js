@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2025-04-03)
+
+### Bug Fixes
+
+- **react:** support more random backends, SSO for express: ([26e23b1](https://github.com/niledatabase/nile-js/commit/26e23b175ce65238bbb9ff0faaf4a8a2f8782669))
+
 # [4.0.0-alpha.16](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2025-04-03)
 
 **Note:** Version bump only for package @niledatabase/react
