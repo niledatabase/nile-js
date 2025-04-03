@@ -21,7 +21,7 @@ export function serverLogin(
 ) {
   const { info, error, debug } = Logger(config, '[server side login]');
   const routes = appRoutes(config.api.routePrefix);
-  return async function login<T = Response | Headers | Error>({
+  return async function login<T extends [Headers, Response]>({
     email,
     password,
   }: {
@@ -123,7 +123,7 @@ export function serverLogin(
       ...baseHeaders,
       cookie: [token, csrfCookie].join('; '),
     });
-    return headers as T;
+    return [headers, loginRes] as T;
   };
 }
 

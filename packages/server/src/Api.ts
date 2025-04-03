@@ -104,9 +104,19 @@ export class Api {
     return this._headers;
   }
 
-  login = async (payload: { email: string; password: string }) => {
-    this.headers = await serverLogin(this.config, this.handlers)(payload);
-    return this.headers;
+  login = async (
+    payload: { email: string; password: string },
+    config?: { returnResponse?: boolean }
+  ) => {
+    const [headers, loginRes] = await serverLogin(
+      this.config,
+      this.handlers
+    )(payload);
+    this.headers = headers;
+    if (config?.returnResponse) {
+      return loginRes;
+    }
+    return undefined; // preserve existing behavior where login returns undefined
   };
 
   session = async (req?: Request | Headers | null | undefined) => {
