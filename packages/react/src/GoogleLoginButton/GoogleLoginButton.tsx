@@ -4,6 +4,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
+import { SSOButtonProps } from '../types';
 
 /**
  * A component for a Google login button, according to their design language.
@@ -19,12 +20,11 @@ const GoogleSSOButton = ({
   buttonText = 'Continue with Google',
   asChild = false,
   init,
+  auth,
+  fetchUrl,
+  baseUrl,
   ...props
-}: ButtonProps & {
-  callbackUrl?: string;
-  buttonText?: string;
-  init?: RequestInit;
-}) => {
+}: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
   return (
     <Comp
@@ -34,7 +34,7 @@ const GoogleSSOButton = ({
         'bg-[#4285f4] hover:bg-[#4285f4] hover:bg-opacity-85 pl-[3px] text-white'
       )}
       onClick={() => {
-        signIn('google', { callbackUrl, init });
+        signIn('google', { callbackUrl, init, auth, fetchUrl, baseUrl });
       }}
       {...props}
     >

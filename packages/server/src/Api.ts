@@ -60,7 +60,7 @@ export class Api {
         this.routes.USERS,
         this.routes.TENANTS,
         this.routes.SESSION,
-        this.routes.SIGNIN,
+        `${this.routes.SIGNIN}/{provider}`,
         this.routes.PASSWORD_RESET,
         this.routes.PROVIDERS,
         this.routes.CSRF,
