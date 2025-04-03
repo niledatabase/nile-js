@@ -5,8 +5,6 @@ import { X_NILE_ORIGIN } from '../utils/constants';
 import Logger from '../utils/Logger';
 import Requester, { NileRequest } from '../utils/Requester';
 
-// url host does not matter, we only match on the 1st leg by path
-const ORIGIN = 'https://us-west-2.api.dev.thenile.dev';
 /**
  * a helper function to log in server side.
  */
@@ -19,6 +17,7 @@ export function serverLogin(
     PUT: (req: Request) => Promise<void | Response>;
   }
 ) {
+  const ORIGIN = config.api.origin ?? 'http://localhost:3000';
   const { info, error, debug } = Logger(config, '[server side login]');
   const routes = appRoutes(config.api.routePrefix);
   return async function login<T = Response | Headers | Error>(
@@ -138,13 +137,14 @@ export function serverLogin(
 
 export default class Auth extends Config {
   headers?: Headers;
-  resetHeaders?: () => void;
+  resetHeaders?: (headers?: Headers) => void;
   constructor(
     config: Config,
     headers?: Headers,
     params?: { resetHeaders: () => void }
   ) {
     super(config);
+    this.logger = Logger(config, '[auth]');
     this.headers = headers;
     this.logger = Logger(config, '[auth]');
     this.resetHeaders = params?.resetHeaders;

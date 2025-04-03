@@ -27,6 +27,7 @@ const apiConfig = [
   'cookieKey',
   'routePrefix',
   'routes',
+  'origin',
   'secureCookies',
 ];
 const config = {

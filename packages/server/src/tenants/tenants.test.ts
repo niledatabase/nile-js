@@ -25,6 +25,7 @@ const apiConfig = [
   '_token',
   'basePath',
   'callbackUrl',
+  'origin',
   'cookieKey',
   'routePrefix',
   'routes',
