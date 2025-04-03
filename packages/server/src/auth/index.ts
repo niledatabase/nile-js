@@ -5,8 +5,6 @@ import { X_NILE_ORIGIN } from '../utils/constants';
 import Logger from '../utils/Logger';
 import Requester, { NileRequest } from '../utils/Requester';
 
-// url host does not matter, we only match on the 1st leg by path
-const ORIGIN = 'https://us-west-2.api.dev.thenile.dev';
 /**
  * a helper function to log in server side.
  */
@@ -19,6 +17,8 @@ export function serverLogin(
     PUT: (req: Request) => Promise<void | Response>;
   }
 ) {
+  // this really matters now for reset password.
+  const ORIGIN = config.api.origin;
   const { info, error, debug } = Logger(config, '[server side login]');
   const routes = appRoutes(config.api.routePrefix);
   return async function login<T = Response | Headers | Error>(
@@ -127,18 +127,28 @@ export function serverLogin(
       error('Unable to obtain auth token', { authCookie });
       throw new Error('Server login failed');
     }
-    info('Server login successful', { authCookie, csrfCookie });
+    info('Server login successful');
     const headers = new Headers({
       ...baseHeaders,
-      cookie: [token, csrfCookie].join('; '),
+      cookie: parseCookies([token, csrfCookie].join(', ')).join('; '),
     });
     return headers as T;
   };
 }
 
+function parseCookies(cookieString: string | null): string[] {
+  if (!cookieString) return [];
+
+  return cookieString
+    .split(/,\s*(?=[^;]+=[^;,]+)/) // Split correctly when multiple cookies are present
+    .flatMap(
+      (cookie) => cookie.split('; ').slice(0, 1) // Extract only key=value pair
+    );
+}
+
 export default class Auth extends Config {
   headers?: Headers;
-  resetHeaders?: () => void;
+  resetHeaders?: (headers?: Headers) => void;
   constructor(
     config: Config,
     headers?: Headers,
@@ -273,7 +283,119 @@ export default class Auth extends Config {
 
     return res as T;
   };
+
+  get resetPasswordUrl() {
+    return '/auth/reset-password';
+  }
+
+  resetPassword = async <T = Response | { url: string }>(
+    req:
+      | NileRequest<{
+          email: string;
+          password: string;
+          callbackUrl?: string;
+          redirectUrl?: string;
+        }>
+      | Headers,
+    init?: RequestInit
+  ): Promise<T> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    const headers = new Headers(_init?.headers);
+
+    let email = '';
+    let password = '';
+    let callbackUrl = null;
+    if (req instanceof Request) {
+      const body = await req.json();
+      email = body.email;
+      password = body.password;
+      const cbFromHeaders = getCallbackUrl(req.headers);
+      if (cbFromHeaders) {
+        callbackUrl = cbFromHeaders;
+      }
+      if (body.callbackUrl) {
+        callbackUrl = body.callbackUrl;
+      }
+    } else {
+      if ('email' in req) {
+        email = req.email;
+      }
+      if ('password' in req) {
+        password = req.password;
+      }
+      if ('callbackUrl' in req) {
+        callbackUrl = req.callbackUrl ? req.callbackUrl : null;
+      }
+    }
+
+    // get verification token
+    const data = await _requester.post<{ url: string }>(
+      req,
+      `${this.resetPasswordUrl}?json=true`,
+      {
+        method: 'post',
+        body: JSON.stringify({
+          email,
+          password,
+          redirectUrl: this.resetPasswordUrl,
+          callbackUrl,
+        }),
+        ..._init,
+      }
+    );
+    const { url: urlWithParams } = data;
+    const worthyParams = new URL(urlWithParams).searchParams;
+    const answer = await _requester.get<Response>(
+      req,
+      `${this.resetPasswordUrl}?${worthyParams}`,
+      _init,
+      true
+    );
+
+    const token = getResetToken(answer.headers);
+
+    const cookie = headers.get('cookie')?.split('; ');
+    if (token) {
+      const callback = getCallbackUrl(headers);
+      if (callback) {
+        cookie?.push(
+          `${
+            callback.startsWith('https://') ? '__Secure-' : ''
+          }nile.reset=${encodeURIComponent(token)}`
+        );
+      }
+    }
+    if (cookie) {
+      headers.set('cookie', cookie.join('; '));
+    }
+    const res = await _requester.put<Response>(req, this.resetPasswordUrl, {
+      ..._init,
+      headers,
+    });
+    const newCookie = [
+      getCallbackUrl(headers),
+      getCsrfToken(headers),
+      getSessionToken(res.headers),
+    ];
+    const refreshedHeaders = new Headers({ cookie: newCookie.join(';') });
+
+    this.resetHeaders && this.resetHeaders(refreshedHeaders);
+
+    return res as T;
+  };
 }
+function getSessionToken(headers: Headers | void): string | void {
+  if (headers) {
+    const cookies = getCookies(headers);
+    if (cookies) {
+      return (
+        cookies['__Secure-nile.session-token'] || cookies['nile.session-token']
+      );
+    }
+  }
+}
+
 function getCallbackUrl(headers: Headers | void): string | void {
   if (headers) {
     const cookies = getCookies(headers);
@@ -293,23 +415,36 @@ function getCsrfToken(headers: Headers | void): string | void {
     }
   }
 }
+function getResetToken(headers: Headers | void): string | void {
+  if (headers) {
+    const cookies = getCookies(headers);
+    if (cookies) {
+      return cookies['__Secure-nile.reset'] || cookies['nile.reset'];
+    }
+  }
+}
 
 const getCookies = (headers: Headers | void) => {
   if (!headers) return {};
 
-  // Retrieve 'cookie' or 'set-cookie' headers
+  // this needs fixed, one does commas, so remove that one
   const cookieHeader = headers.get('cookie') || headers.get('set-cookie');
 
   if (!cookieHeader) return {};
 
   // Split by comma only if multiple Set-Cookie headers are merged into one
   return Object.fromEntries(
-    cookieHeader
-      .split(/,\s*(?=[^;]+=[^;,]+)/) // Correctly splits cookies while ignoring commas in attributes
-      .flatMap((cookie) =>
-        cookie.split('; ')[0].split('=').length === 2
-          ? [cookie.split('; ')[0].split('=').map(decodeURIComponent)]
-          : []
-      )
+    cookieHeader.split(';').flatMap((cookie) => {
+      const validCookie = cookie.split('; ')[0].split('=').length === 2;
+      if (validCookie) {
+        return [
+          cookie
+            .split('; ')[0]
+            .split('=')
+            .map((s) => decodeURIComponent(s.trim())),
+        ];
+      }
+      return [];
+    })
   );
 };

@@ -91,8 +91,8 @@ export class Api {
     this.handlers = Handlers(this.routes, config);
   };
 
-  resetHeaders = () => {
-    this._headers = new Headers();
+  resetHeaders = (headers?: Headers) => {
+    this._headers = new Headers(headers ?? {});
     this.reset();
   };
 

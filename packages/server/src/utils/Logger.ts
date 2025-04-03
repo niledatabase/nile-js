@@ -37,7 +37,7 @@ const baseLogger = (config: void | ServerConfig, ...params: unknown[]) => ({
   error(message: string | unknown, meta?: Record<string, unknown>) {
     console.error(
       `${red}[niledb][ERROR]${reset}${params.join('')} ${message}`,
-      meta
+      meta ? meta : ''
     );
   },
 });

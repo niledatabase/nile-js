@@ -33,6 +33,8 @@ export type ApiParams = {
   routes?: Partial<Routes>;
   routePrefix?: string | undefined;
   secureCookies?: boolean;
+  // the origin for the requests. Allows the setting of the callback url to your FE (in the browser, the server side cookie simply handles this)
+  origin?: string;
 };
 export class ApiConfig {
   public cookieKey?: string;
@@ -40,6 +42,7 @@ export class ApiConfig {
   public routes?: Partial<Routes>;
   public routePrefix?: string;
   public secureCookies?: boolean;
+  public origin: string;
   /**
    * The client side callback url. Defaults to nothing (so nile.origin will be it), but in the cases of x-origin, you want to set this explicitly to be sure nile-auth does the right thing
    * If this is set, any `callbackUrl` from the client will be ignored.
@@ -58,6 +61,9 @@ export class ApiConfig {
 
     this.routes = config?.api?.routes;
     this.routePrefix = config?.api?.routePrefix;
+    this.origin = config?.api?.origin
+      ? config.api.origin
+      : 'http://localhost:3000';
   }
 
   public get token(): string | undefined {
