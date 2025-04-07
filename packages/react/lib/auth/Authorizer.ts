@@ -159,7 +159,15 @@ export default class Authorizer {
       if (!res.ok) throw data;
       return Object.keys(data).length > 0 ? data : undefined;
     } catch (error) {
-      this.logger.error('CLIENT_FETCH_ERROR', { error: error as Error, url });
+      if (error instanceof Error) {
+        // this is fine
+        if (!error.message.includes('is not valid JSON')) {
+          this.logger.error('CLIENT_FETCH_ERROR', {
+            error: error as Error,
+            url,
+          });
+        }
+      }
       return undefined;
     }
   }
@@ -190,7 +198,15 @@ export default class Authorizer {
         url: url,
       };
     } catch (error) {
-      this.logger.error('CLIENT_FETCH_ERROR', { error: error as Error, url });
+      if (error instanceof Error) {
+        // this is fine
+        if (!error.message.includes('is not valid JSON')) {
+          this.logger.error('CLIENT_FETCH_ERROR', {
+            error: error as Error,
+            url,
+          });
+        }
+      }
       return undefined;
     }
   }
