@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2025-04-07)
+
+### Bug Fixes
+
+- **server:** support /me casting on function ([4fa49d1](https://github.com/niledatabase/nile-js/commit/4fa49d1165af25fe73edd0c198f57377d1b38cac))
+
 # [4.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2025-04-07)
 
 ### Bug Fixes
