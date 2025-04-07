@@ -136,13 +136,13 @@ export default class Users extends Config {
     return '/me';
   }
 
-  me = async (
+  me = async <T = User | Response>(
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): Promise<User | Response> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return await _requester.get(req, this.meUrl, _init);
+    return (await _requester.get(req, this.meUrl, _init)) as T;
   };
   updateMe = async <T = User | Response>(
     req:
