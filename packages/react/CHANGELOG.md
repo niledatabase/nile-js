@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2025-04-07)
+
+### Bug Fixes
+
+- **react:** clean up log client errors ([f5ab51d](https://github.com/niledatabase/nile-js/commit/f5ab51d81332921a0203be52db8b77c3cd0c5037))
+- **react:** support callbackUrl in sign up ([f3c380d](https://github.com/niledatabase/nile-js/commit/f3c380d167bc97dd0e597894a72d6fb6bfa3c778))
+
 # [4.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2025-04-03)
 
 ### Bug Fixes
