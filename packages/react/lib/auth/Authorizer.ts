@@ -456,6 +456,7 @@ export default class Authorizer {
       init,
       email,
       auth,
+      callbackUrl = window.location.href,
     } = options;
 
     if (baseUrl) {
@@ -509,6 +510,13 @@ export default class Authorizer {
     if (this.requestInit?.credentials) {
       window.location.reload();
       return;
+    }
+
+    if (options?.redirect ?? true) {
+      const url = callbackUrl;
+      window.location.href = url;
+      // If url contains a hash, the browser does not reload the page. We reload manually
+      if (url.includes('#')) window.location.reload();
     }
 
     return {
