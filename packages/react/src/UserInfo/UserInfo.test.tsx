@@ -12,8 +12,7 @@ describe('Profile info', () => {
           email: 'fake@fake.com',
           created: new Date().toISOString(),
           emailVerified: new Date().toISOString(),
-          name: 'SpongeBob',
-          familyName: 'SquarePants',
+          name: 'SpongeBob SquarePants',
           tenants: [],
         }}
       />
