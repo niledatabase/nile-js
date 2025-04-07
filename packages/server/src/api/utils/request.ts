@@ -11,7 +11,7 @@ export default async function request(
   _init: RequestInit & { request: Request },
   config: Config
 ) {
-  const { info, error } = Logger(config, '[REQUEST]');
+  const { debug, info, error } = Logger(config, '[REQUEST]');
   const { request, ...init } = _init;
   const requestUrl = new URL(request.url);
   const updatedHeaders = new Headers({});
@@ -36,6 +36,7 @@ export default async function request(
   } else {
     updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
   }
+  debug(`Using origin ${updatedHeaders.get(X_NILE_ORIGIN)}`);
 
   const params = { ...init, headers: updatedHeaders };
   if (params.method === 'POST' || params.method === 'PUT') {
