@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import Authorizer from './Authorizer';
+
 /* eslint-disable no-console */
 export class UnknownError extends Error {
   code: string;
@@ -99,7 +102,7 @@ export default _logger;
 /** Serializes client-side log messages and sends them to the server */
 export function proxyLogger(
   logger: LoggerInstance = _logger,
-  basePath?: string
+  authorizer: Authorizer
 ): LoggerInstance {
   try {
     if (typeof window === 'undefined') {
@@ -115,7 +118,7 @@ export function proxyLogger(
           metadata = formatError(metadata) as Error;
         }
         (metadata as any).client = true;
-        const url = `${basePath}/_log`;
+        const url = `${authorizer.state.basePath}/_log`;
         const body = new URLSearchParams({ level, code, ...(metadata as any) });
         if (navigator.sendBeacon) {
           return navigator.sendBeacon(url, body);
@@ -128,3 +131,6 @@ export function proxyLogger(
     return _logger;
   }
 }
+
+export const logger = (authorizer: Authorizer) =>
+  proxyLogger(_logger, authorizer);

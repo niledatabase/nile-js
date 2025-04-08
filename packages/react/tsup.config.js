@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   minify: true,
-  target: 'es2018',
+  target: 'es2022',
   external: ['react'],
   sourcemap: true,
   dts: true,

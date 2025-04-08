@@ -46,13 +46,23 @@ export {
 
 export { Email, Password } from '../components/ui/form';
 
+export { SessionProvider, SessionContext, useSession } from '../lib/auth';
 export {
   getSession,
   getCsrfToken,
   getProviders,
-  SessionProvider,
-  SessionContext,
-  useSession,
   signIn,
   signOut,
-} from '../lib/next-auth';
+  auth,
+  default as Authorizer,
+} from '../lib/auth/Authorizer';
+export type {
+  AuthState,
+  Listener,
+  ListenerParams,
+  AuthConfig,
+  ListenerKeys,
+  ActiveSession,
+  JWT,
+  NonErrorSession as Session,
+} from '../lib/auth/types';

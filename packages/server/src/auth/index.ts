@@ -1,12 +1,10 @@
-import { ActiveSession, JWT } from '../api/utils/auth';
+import { ActiveSession, JWT, Provider } from '../api/utils/auth';
 import { appRoutes } from '../api/utils/routes/defaultRoutes';
 import { Config } from '../utils/Config';
 import { X_NILE_ORIGIN } from '../utils/constants';
 import Logger from '../utils/Logger';
 import Requester, { NileRequest } from '../utils/Requester';
 
-// url host does not matter, we only match on the 1st leg by path
-const ORIGIN = 'https://us-west-2.api.dev.thenile.dev';
 /**
  * a helper function to log in server side.
  */
@@ -19,9 +17,10 @@ export function serverLogin(
     PUT: (req: Request) => Promise<void | Response>;
   }
 ) {
+  const ORIGIN = config.api.origin ?? 'http://localhost:3000';
   const { info, error, debug } = Logger(config, '[server side login]');
-  const routes = appRoutes(config.routePrefix);
-  return async function login({
+  const routes = appRoutes(config.api.routePrefix);
+  return async function login<T extends [Headers, Response]>({
     email,
     password,
   }: {
@@ -111,6 +110,7 @@ export function serverLogin(
     if (!authCookie) {
       throw new Error('authentication failed');
     }
+
     const [, token] =
       /((__Secure-)?nile\.session-token=.+?);/.exec(authCookie) ?? [];
     if (!token) {
@@ -122,18 +122,36 @@ export function serverLogin(
       ...baseHeaders,
       cookie: [token, csrfCookie].join('; '),
     });
-    return headers;
+    return [headers, loginRes] as T;
   };
 }
 
 export default class Auth extends Config {
   headers?: Headers;
-  constructor(config: Config, headers?: Headers) {
+  resetHeaders?: (headers?: Headers) => void;
+  constructor(
+    config: Config,
+    headers?: Headers,
+    params?: { resetHeaders: () => void }
+  ) {
     super(config);
+    this.logger = Logger(config, '[auth]');
     this.headers = headers;
+    this.logger = Logger(config, '[auth]');
+    this.resetHeaders = params?.resetHeaders;
   }
   handleHeaders(init?: RequestInit) {
     if (this.headers) {
+      const cburl = getCallbackUrl(this.headers);
+      if (cburl) {
+        try {
+          this.headers.set(X_NILE_ORIGIN, new URL(cburl).origin);
+        } catch (e) {
+          if (this.logger?.debug) {
+            this.logger.debug('Invalid URL supplied by cookie header');
+          }
+        }
+      }
       if (init) {
         init.headers = new Headers({ ...this.headers, ...init?.headers });
         return init;
@@ -150,16 +168,162 @@ export default class Auth extends Config {
   get sessionUrl() {
     return '/auth/session';
   }
-  getSession = async (
+
+  getSession = async <T = JWT | ActiveSession | Response | undefined>(
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): Promise<JWT | ActiveSession | Response | undefined> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
     const session = await _requester.get(req, this.sessionUrl, _init);
     if (Object.keys(session).length === 0) {
-      return undefined;
+      return undefined as T;
     }
-    return session as JWT | ActiveSession | Response;
+    return session as T;
+  };
+
+  get getCsrfUrl() {
+    return '/auth/csrf';
+  }
+
+  async getCsrf<T = Response | JSON>(
+    req: NileRequest<void> | Headers,
+    init?: RequestInit,
+    raw = false
+  ) {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return (await _requester.get(req, this.getCsrfUrl, _init, raw)) as T;
+  }
+  get listProvidersUrl() {
+    return '/auth/providers';
+  }
+
+  listProviders = async <T = Response | { [key: string]: Provider }>(
+    req: NileRequest<void> | Headers,
+    init?: RequestInit
+  ): Promise<T> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+    return (await _requester.get(req, this.listProvidersUrl, _init)) as T;
+  };
+
+  get signOutUrl() {
+    return '/auth/signout';
+  }
+
+  signOut = async <T = Response | { url: string }>(
+    req: NileRequest<void | { callbackUrl?: string }> | Headers,
+    init?: RequestInit
+  ): Promise<T> => {
+    const _requester = new Requester(this);
+    const _init = this.handleHeaders(init);
+
+    const csrf = await this.getCsrf<Response>(
+      req as NileRequest<void>,
+      undefined,
+      true
+    );
+    const csrfHeader = getCsrfToken(csrf.headers, this.headers);
+    const callbackUrl =
+      req && 'callbackUrl' in req ? String(req.callbackUrl) : '/';
+
+    if (!csrfHeader) {
+      this.logger?.debug &&
+        this.logger.debug('Request blocked from invalid csrf header');
+      return new Response('Request blocked', { status: 400 }) as T;
+    }
+
+    const headers = new Headers(_init?.headers);
+    const { csrfToken } = (await csrf.json()) ?? {};
+    const cooks = getCookies(headers);
+    if (csrfHeader) {
+      if (cooks['__Secure-nile.csrf-token']) {
+        cooks['__Secure-nile.csrf-token'] = encodeURIComponent(csrfHeader);
+      }
+      if (cooks['nile.csrf-token']) {
+        cooks['nile.csrf-token'] = encodeURIComponent(csrfHeader);
+      }
+    }
+
+    headers.set(
+      'cookie',
+      Object.keys(cooks)
+        .map((key) => `${key}=${cooks[key]}`)
+        .join('; ')
+    );
+
+    const res = await _requester.post(req, this.signOutUrl, {
+      method: 'post',
+      body: JSON.stringify({
+        csrfToken,
+        callbackUrl,
+        json: String(true),
+      }),
+      ..._init,
+      headers,
+    });
+
+    this.resetHeaders && this.resetHeaders();
+
+    return res as T;
   };
 }
+function getCallbackUrl(headers: Headers | void): string | void {
+  if (headers) {
+    const cookies = getCookies(headers);
+    if (cookies) {
+      return (
+        cookies['__Secure-nile.callback-url'] || cookies['nile.callback-url']
+      );
+    }
+  }
+}
+
+function getCsrfToken(
+  headers: Headers | void,
+  initHeaders: Headers | void
+): string | void {
+  if (headers) {
+    const cookies = getCookies(headers);
+    let validCookie = '';
+    if (cookies) {
+      validCookie =
+        cookies['__Secure-nile.csrf-token'] || cookies['nile.csrf-token'];
+    }
+    if (validCookie) {
+      return validCookie;
+    }
+  }
+  if (initHeaders) {
+    const cookies = getCookies(initHeaders);
+    if (cookies) {
+      return cookies['__Secure-nile.csrf-token'] || cookies['nile.csrf-token'];
+    }
+  }
+}
+
+const getCookies = (headers: Headers | void): Record<string, string> => {
+  if (!headers) return {};
+
+  // Get 'cookie' and 'set-cookie' headers
+  const cookieHeader = headers.get('cookie') || '';
+  const setCookieHeaders = headers.get('set-cookie') || '';
+
+  // Merge both headers into an array
+  const allCookies = [
+    ...cookieHeader.split('; '), // Regular 'cookie' header (semicolon-separated)
+    ...setCookieHeaders.split(/,\s*(?=[^;, ]+=)/), // Smart split for 'set-cookie'
+  ].filter(Boolean); // Remove empty entries
+
+  // Convert cookies into an object
+  return Object.fromEntries(
+    allCookies.map((cookie) => {
+      const [key, ...val] = cookie.split('=');
+      return [
+        decodeURIComponent(key.trim()),
+        decodeURIComponent(val.join('=').trim()),
+      ];
+    })
+  );
+};

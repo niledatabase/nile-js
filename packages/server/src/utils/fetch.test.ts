@@ -10,14 +10,14 @@ describe('fetch wrapper', () => {
     });
   });
   it('makes the correct headers based on the config', () => {
-    const config = new Config({ secureCookies: true });
+    const config = new Config({ api: { secureCookies: true } });
     expect(Object.fromEntries(makeBasicHeaders(config).entries())).toEqual({
       'content-type': 'application/json; charset=utf-8',
       [X_NILE_SECURECOOKIES]: 'true',
     });
   });
   it('passes headers on', () => {
-    const config = new Config({ secureCookies: true });
+    const config = new Config({ api: { secureCookies: true } });
     expect(
       Object.fromEntries(
         makeBasicHeaders(config, {

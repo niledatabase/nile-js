@@ -3,45 +3,42 @@
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
+import { SSOButtonProps } from '../types';
 
-const GitHubSignInButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      buttonText = 'Continue with GitHub',
-      variant,
-      size,
-      asChild = false,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-black hover:bg-slate-800 pl-[3px] text-white gap-4 transition-colors shadow-md'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('github', { callbackUrl });
-        }}
-        {...props}
-      >
-        <Icon />
-        {buttonText}
-      </Comp>
-    );
-  }
-);
+const GitHubSignInButton = ({
+  callbackUrl,
+  className,
+  buttonText = 'Continue with GitHub',
+  variant,
+  size,
+  init,
+  asChild = false,
+  auth,
+  fetchUrl,
+  baseUrl,
+  ...props
+}: ButtonProps & SSOButtonProps) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      data-slot="github-button"
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-black hover:bg-slate-800 pl-[3px] text-white gap-4 transition-colors shadow-md'
+      )}
+      onClick={() => {
+        signIn('github', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      }}
+      {...props}
+    >
+      <Icon />
+      {buttonText}
+    </Comp>
+  );
+};
 
 GitHubSignInButton.displayName = 'GitHubSignInButton';
 export default GitHubSignInButton;

@@ -43,32 +43,32 @@ export default class Users extends Config {
     return undefined;
   }
 
-  createUser = async (
+  createUser = async <T = User | Response>(
     req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
-  ): Promise<User | Response> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
 
     const _init = this.handleHeaders(init);
-    return await _requester.post(req, this.usersUrl, _init);
+    return (await _requester.post(req, this.usersUrl, _init)) as T;
   };
 
-  createTenantUser = async (
+  createTenantUser = async <T = User | Response>(
     req: NileRequest<CreateBasicUserRequest>,
     init?: RequestInit
-  ): Promise<User | Response> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
 
     const _init = this.handleHeaders(init);
-    return await _requester.post(req, this.tenantUsersUrl, _init);
+    return (await _requester.post(req, this.tenantUsersUrl, _init)) as T;
   };
 
-  updateUser = async (
+  updateUser = async <T = User[] | Response>(
     req: NileRequest<
       Partial<Omit<User, 'email' | 'tenants' | 'created' | 'updated'>>
     >,
     init?: RequestInit
-  ): Promise<User | Response> => {
+  ): Promise<T> => {
     let _req;
     if (req && 'id' in req) {
       _req = new Request(`${this.api.basePath}${this.tenantUserUrl}`, {
@@ -81,22 +81,22 @@ export default class Users extends Config {
     }
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return await _requester.put(_req, this.tenantUserUrl, _init);
+    return (await _requester.put(_req, this.tenantUserUrl, _init)) as T;
   };
 
-  listUsers = async (
+  listUsers = async <T = User[] | Response>(
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): Promise<User[] | Response> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return await _requester.get(req, this.tenantUsersUrl, _init);
+    return (await _requester.get(req, this.tenantUsersUrl, _init)) as T;
   };
 
-  linkUser = async (
+  linkUser = async <T = User | Response>(
     req: NileRequest<{ id: string; tenantId?: string }> | Headers | string,
     init?: RequestInit
-  ): Promise<User | Response> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
     if (typeof req === 'string') {
       this.userId = req;
@@ -110,13 +110,13 @@ export default class Users extends Config {
     }
 
     const _init = this.handleHeaders(init);
-    return await _requester.put(req, this.linkUsersUrl, _init);
+    return (await _requester.put(req, this.linkUsersUrl, _init)) as T;
   };
 
-  unlinkUser = async (
+  unlinkUser = async <T = Response>(
     req: NileRequest<{ id: string; tenantId?: string }> | Headers | string,
     init?: RequestInit
-  ): Promise<Response> => {
+  ): Promise<T> => {
     if (typeof req === 'string') {
       this.userId = req;
     } else {
@@ -129,22 +129,22 @@ export default class Users extends Config {
     }
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return await _requester.delete(req, this.linkUsersUrl, _init);
+    return (await _requester.delete(req, this.linkUsersUrl, _init)) as T;
   };
 
   get meUrl() {
     return '/me';
   }
 
-  me = async (
+  me = async <T = User | Response>(
     req: NileRequest<void> | Headers,
     init?: RequestInit
-  ): Promise<User | Response> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return await _requester.get(req, this.meUrl, _init);
+    return (await _requester.get(req, this.meUrl, _init)) as T;
   };
-  updateMe = async (
+  updateMe = async <T = User | Response>(
     req:
       | NileRequest<
           Partial<
@@ -153,9 +153,9 @@ export default class Users extends Config {
         >
       | Headers,
     init?: RequestInit
-  ): Promise<User | Response> => {
+  ): Promise<T> => {
     const _requester = new Requester(this);
     const _init = this.handleHeaders(init);
-    return await _requester.put(req, this.meUrl, _init);
+    return (await _requester.put(req, this.meUrl, _init)) as T;
   };
 }

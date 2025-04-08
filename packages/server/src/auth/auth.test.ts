@@ -14,11 +14,21 @@ const baseConfig = [
   'headers',
   'logger',
   'password',
+  'listProviders',
+  'getSession',
+  'user',
+  'resetHeaders',
+  'signOut',
+];
+const apiConfig = [
+  '_token',
+  'basePath',
+  'callbackUrl',
+  'cookieKey',
   'routePrefix',
   'routes',
-  'getSession',
+  'origin',
   'secureCookies',
-  'user',
 ];
 const config = {
   databaseId: 'databaseId',
@@ -26,9 +36,10 @@ const config = {
   user: 'username',
   password: 'password',
 };
-describe('users', () => {
+describe('auth', () => {
   it('has expected methods', () => {
     const methods = new Auth(new Config(config));
     expect(Object.keys(methods).sort()).toEqual(baseConfig.sort());
+    expect(Object.keys(methods.api).sort()).toEqual(apiConfig.sort());
   });
 });

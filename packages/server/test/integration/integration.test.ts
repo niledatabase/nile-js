@@ -34,13 +34,28 @@ describe('api integration', () => {
 
     expect(user.id).toBeTruthy();
 
-    await nile.api.login(primaryUser);
+    const loginRes = await nile.api.login(primaryUser, {
+      returnResponse: true,
+    });
+    expect(loginRes?.headers.get('cookie')).toBeDefined();
 
     // Updating session user
     expect(user.name).toEqual(null);
     const update = {
       name: 'updatedName',
     };
+
+    const res = await nile.api.auth.signOut();
+
+    expect(res.url).not.toBeNull();
+
+    const failedUpdatedFirstUser = await nile.api.users.updateMe<Response>(
+      update
+    );
+    expect(failedUpdatedFirstUser.status).toEqual(401);
+
+    await nile.api.login(primaryUser);
+
     const updatedFirstUser = await nile.api.users.updateMe(update);
 
     expect(updatedFirstUser).toMatchObject({

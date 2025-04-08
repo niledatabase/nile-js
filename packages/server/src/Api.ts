@@ -28,12 +28,14 @@ export class Api {
   };
   constructor(config: Config) {
     this.config = config;
-    this.auth = new Auth(config);
+    this.auth = new Auth(config, undefined, {
+      resetHeaders: this.resetHeaders,
+    });
     this.users = new Users(config);
     this.tenants = new Tenants(config);
     this.routes = {
-      ...appRoutes(config?.routePrefix),
-      ...config?.routes,
+      ...appRoutes(config?.api.routePrefix),
+      ...config?.api.routes,
     };
     this.handlers = Handlers(this.routes, config);
     this.paths = {
@@ -58,7 +60,7 @@ export class Api {
         this.routes.USERS,
         this.routes.TENANTS,
         this.routes.SESSION,
-        this.routes.SIGNIN,
+        `${this.routes.SIGNIN}/{provider}`,
         this.routes.PASSWORD_RESET,
         this.routes.PROVIDERS,
         this.routes.CSRF,
@@ -75,28 +77,54 @@ export class Api {
     };
   }
 
-  updateConfig(config: Config) {
+  reset = () => {
+    this.users = new Users(this.config, this._headers);
+    this.tenants = new Tenants(this.config, this._headers);
+    this.auth = new Auth(this.config, this._headers, {
+      resetHeaders: this.resetHeaders,
+    });
+  };
+
+  updateConfig = (config: Config) => {
     this.config = config;
     this.handlers = Handlers(this.routes, config);
-  }
+  };
+
+  resetHeaders = (headers?: Headers) => {
+    this._headers = new Headers(headers ?? {});
+    this.reset();
+  };
 
   set headers(headers: Headers) {
-    this.users = new Users(this.config, headers);
-    this.tenants = new Tenants(this.config, headers);
-    this.auth = new Auth(this.config, headers);
     this._headers = headers;
+    this.reset();
   }
 
-  async login(payload: { email: string; password: string }) {
-    this.headers = await serverLogin(this.config, this.handlers)(payload);
+  get headers(): Headers | undefined {
+    return this._headers;
   }
 
-  async session(req?: Request | Headers | null | undefined) {
+  login = async (
+    payload: { email: string; password: string },
+    config?: { returnResponse?: boolean }
+  ) => {
+    const [headers, loginRes] = await serverLogin(
+      this.config,
+      this.handlers
+    )(payload);
+    this.headers = headers;
+    if (config?.returnResponse) {
+      return loginRes;
+    }
+    return undefined; // preserve existing behavior where login returns undefined
+  };
+
+  session = async (req?: Request | Headers | null | undefined) => {
     if (req instanceof Headers) {
       return this.auth.getSession(req);
     } else if (req instanceof Request) {
       return auth(req, this.config);
     }
     return this.auth.getSession(this._headers);
-  }
+  };
 }

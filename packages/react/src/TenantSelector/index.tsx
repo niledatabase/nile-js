@@ -35,7 +35,7 @@ import {
   DialogTrigger,
 } from '../../components/ui/dialog';
 import { Button } from '../../components/ui/button';
-import { cn } from '../../lib/utils';
+import { cn, componentFetch, ComponentFetchProps } from '../../lib/utils';
 
 import { useTenantId, useTenants } from './hooks';
 import { ComponentProps } from './types';
@@ -55,7 +55,7 @@ export default function TenantSelector(props: ComponentProps) {
 
 function SelectTenant(props: ComponentProps) {
   const { data: tenants = [], isLoading, refetch } = useTenants(props);
-  const [tenantId, setActiveTenant] = useTenantId();
+  const [tenantId, setActiveTenant] = useTenantId(props);
   const [open, setOpen] = useState(false);
 
   const tenant = tenants.find((t) => t.id === tenantId);
@@ -69,12 +69,13 @@ function SelectTenant(props: ComponentProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.tenants?.length, tenants]);
 
-  if (!isLoading && !tenantId) {
+  if ((!isLoading && !tenantId) || !tenant?.name) {
     // the user isn't part of any tenants, so ask them to add one
     return (
       <div className={cn('flex flex-col items-center gap-2', props.className)}>
         <p>You are not part of an organization.</p>
         <CreateTenant
+          {...props}
           onSuccess={(d) => {
             setActiveTenant(d.id);
             setOpen(false);
@@ -122,6 +123,7 @@ function SelectTenant(props: ComponentProps) {
               ))}
               <DropdownMenuSeparator />
               <CreateTenant
+                {...props}
                 onSuccess={(d) => {
                   setOpen(false);
                   setActiveTenant(d.id);
@@ -143,7 +145,7 @@ function SelectTenant(props: ComponentProps) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
-type CreateTenantProps = {
+type CreateTenantProps = ComponentFetchProps & {
   trigger: React.ReactElement;
   fetchUrl?: string;
   beforeMutate?: (data: AllowedAny) => AllowedAny;
@@ -154,19 +156,21 @@ type CreateTenantProps = {
 type FormValues = { name: string };
 function CreateTenant(props: CreateTenantProps) {
   const [open, setOpen] = useState(false);
-  const { trigger, beforeMutate, onSuccess, onError, baseUrl = '' } = props;
+  const { trigger, beforeMutate, onSuccess, onError } = props;
   const form = useForm<FormValues>({ defaultValues: { name: '' } });
   const mutation = useMutation({
     mutationFn: async (_data) => {
       const possibleData = beforeMutate && beforeMutate(_data);
       const data = possibleData ?? _data;
 
-      const fetchURL = props?.fetchUrl ?? `${baseUrl}/api/tenants`;
-
-      const response = await fetch(fetchURL, {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      const response = await componentFetch(
+        props?.fetchUrl ?? '/tenants',
+        {
+          method: 'POST',
+          body: JSON.stringify(data),
+        },
+        props
+      );
       if (!response.ok) {
         throw new Error('Failed to fetch tenants');
       }

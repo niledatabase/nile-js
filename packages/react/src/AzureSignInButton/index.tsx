@@ -3,45 +3,42 @@
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
+import { SSOButtonProps } from '../types';
 
-const AzureSignInButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      buttonText = 'Continue with Microsoft',
-      variant,
-      size,
-      asChild = false,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-[#0078d4] hover:bg-[#0078d4] hover:bg-opacity-85 pl-[3px] text-white gap-4 transition-colors shadow-md'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('azure-ad', { callbackUrl });
-        }}
-        {...props}
-      >
-        <MicrosoftIcon />
-        {buttonText}
-      </Comp>
-    );
-  }
-);
+const AzureSignInButton = ({
+  callbackUrl,
+  className,
+  buttonText = 'Continue with Microsoft',
+  variant,
+  size,
+  init,
+  asChild = false,
+  auth,
+  fetchUrl,
+  baseUrl,
+  ...props
+}: ButtonProps & SSOButtonProps) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      data-slot="azure-button"
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-[#0078d4] hover:bg-[#0078d4] hover:bg-opacity-85 pl-[3px] text-white gap-4 transition-colors shadow-md'
+      )}
+      onClick={() => {
+        signIn('azure-ad', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      }}
+      {...props}
+    >
+      <MicrosoftIcon />
+      {buttonText}
+    </Comp>
+  );
+};
 
 AzureSignInButton.displayName = 'AzureSignInButton';
 export default AzureSignInButton;

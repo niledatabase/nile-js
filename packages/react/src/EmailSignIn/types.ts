@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
-import { SignInOptions } from 'next-auth/react';
+
+import { SignInOptions } from '../../lib/auth/types';
 
 export type EmailSignInInfo = SignInOptions;
 type SignInSuccess = (response: Response) => void;
@@ -7,7 +8,7 @@ type SignInSuccess = (response: Response) => void;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
 
-export interface Props {
+export type Props = {
   redirect?: boolean;
   onSuccess?: SignInSuccess;
   onError?: (e: Error, info: EmailSignInInfo) => void;
@@ -15,4 +16,5 @@ export interface Props {
   buttonText?: string;
   client?: QueryClient;
   callbackUrl?: string;
-}
+  init?: RequestInit;
+};

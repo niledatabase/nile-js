@@ -11,27 +11,35 @@ const baseConfig = [
   'db',
   'headers',
   'deleteTenant',
-  'routePrefix',
-  'routes',
   'debug',
   'logger',
   'databaseId',
   'databaseName',
   'user',
   'updateTenant',
-  'secureCookies',
   'listTenants',
   'configure',
   'password',
+];
+const apiConfig = [
+  '_token',
+  'basePath',
+  'callbackUrl',
+  'origin',
+  'cookieKey',
+  'routePrefix',
+  'routes',
+  'secureCookies',
 ];
 const config = {
   databaseId: 'databaseId',
   user: 'username',
   password: 'password',
 };
-describe('users', () => {
+describe('tenants', () => {
   it('has expected methods', () => {
     const methods = new Tenants(new Config(config));
     expect(Object.keys(methods).sort()).toEqual(baseConfig.sort());
+    expect(Object.keys(methods.api).sort()).toEqual(apiConfig.sort());
   });
 });

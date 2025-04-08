@@ -3,7 +3,103 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.19...v4.0.0-alpha.20) (2025-04-08)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2025-04-07)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2025-04-07)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2025-04-03)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.16](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2025-04-03)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.14...v4.0.0-alpha.15) (2025-04-02)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2025-03-31)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.13](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2025-03-28)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2025-03-28)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.11](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2025-03-25)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.10](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2025-03-24)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2025-03-24)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2025-03-21)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2025-03-21)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.6](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2025-03-21)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2025-03-20)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2025-03-19)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2025-03-19)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2025-03-19)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.0...v4.0.0-alpha.1) (2025-03-17)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [4.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v3.1.0-alpha.0...v4.0.0-alpha.0) (2025-03-17)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [3.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v3.0.1-alpha.0...v3.1.0-alpha.0) (2025-03-13)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+## [3.0.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.55...v3.0.1-alpha.0) (2025-03-10)
+
 # [3.0.0](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.54...v3.0.0) (2025-03-07)
+
+**Note:** Version bump only for package @niledatabase/edge
+
+# [3.0.0](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.55...v3.0.0) (2025-03-07)
+
+# [3.0.0-alpha.55](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.54...v3.0.0-alpha.55) (2025-03-09)
 
 **Note:** Version bump only for package @niledatabase/edge
 

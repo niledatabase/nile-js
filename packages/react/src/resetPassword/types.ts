@@ -1,27 +1,23 @@
-import { QueryClient } from '@tanstack/react-query';
-
-export type Props = Params & {
-  client?: QueryClient;
-  callbackUrl?: string;
-  defaultValues?: MutateFnParams & {
-    confirmPassword?: string;
-  };
-};
+import { PrefetchParams } from '../../lib/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
 
-export interface Params {
+export type Params = PrefetchParams & {
   beforeMutate?: (data: AllowedAny) => AllowedAny;
   onSuccess?: (res: Response) => void;
   onError?: (error: Error, data: AllowedAny) => void;
   callbackUrl?: string;
-  client?: QueryClient;
-  fetchUrl?: string;
-  baseUrl?: string;
-}
+  basePath?: string;
+};
 
 export type MutateFnParams = {
   email?: string;
   password?: string;
+};
+
+export type Props = Params & {
+  defaultValues?: MutateFnParams & {
+    confirmPassword?: string;
+  };
 };

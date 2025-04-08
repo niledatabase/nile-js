@@ -1,22 +1,36 @@
 'use client';
-import React from 'react';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 
+import { componentFetch, ComponentFetchProps } from '../../lib/utils';
 import { User } from '../../../server/src/users/types';
+import { ActiveSession } from '../../lib/auth/types';
 
-type Props = {
-  fetchUrl?: string;
+export type HookProps = ComponentFetchProps & {
   user?: User | undefined | null;
+  baseUrl?: string;
+  client?: QueryClient;
+  fetchUrl?: string;
 };
-export function useMe(props: Props) {
-  const [user, setUser] = React.useState<User | undefined | null>(props.user);
-  React.useEffect(() => {
-    if (!user) {
-      fetch(props.fetchUrl ?? '/api/me')
-        .then((d) => d?.json())
-        .then((u) => setUser(u));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+export function useMe(props: HookProps) {
+  const { baseUrl = '', fetchUrl, client, user, auth } = props;
+  const { data, isLoading } = useQuery(
+    {
+      queryKey: ['me', baseUrl],
+      queryFn: async () => {
+        const res = await componentFetch(fetchUrl ?? '/me', props);
+        return await res.json();
+      },
+      enabled: user == null,
+    },
+    client
+  );
 
-  return user;
+  if (user || data) {
+    return user ?? data;
+  }
+  // we possibly have email, so return that while we wait for `me` to load
+  if (auth && !(user && isLoading)) {
+    return (auth.state?.session as ActiveSession)?.user ?? data;
+  }
+  return null;
 }

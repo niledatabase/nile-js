@@ -1,5 +1,7 @@
 import { PoolClient, PoolConfig } from 'pg';
 
+import { ApiParams } from './utils/Config';
+
 export type Opts = {
   basePath?: string;
   fetch?: typeof fetch;
@@ -7,10 +9,10 @@ export type Opts = {
 
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
 export type LoggerType = {
-  info?: (args: unknown[]) => void;
-  warn?: (args: unknown[]) => void;
-  error?: (args: unknown[]) => void;
-  debug?: (args: unknown[]) => void;
+  info?: (args: unknown | unknown[]) => void;
+  warn?: (args: unknown | unknown[]) => void;
+  error?: (args: unknown | unknown[]) => void;
+  debug?: (args: unknown | unknown[]) => void;
 };
 export type ServerConfig = {
   databaseId?: string; // process.env.NILEDB_ID
@@ -21,14 +23,8 @@ export type ServerConfig = {
   userId?: string | null | undefined;
   debug?: boolean;
   configureUrl?: string; // process.env.NILEDB_CONFIGURE
-  secureCookies?: boolean; // process.env.NILEDB_SECURECOOKIES
   db?: NilePoolConfig; // db.host process.env.NILEDB_HOST
-  api?: {
-    version?: number;
-    basePath?: string; // process.env.NILEDB_API
-    cookieKey?: string;
-    token?: string; // process.env.NILEDB_TOKEN
-  };
+  api?: ApiParams;
   logger?: LoggerType;
 };
 

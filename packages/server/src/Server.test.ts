@@ -1,4 +1,5 @@
 import { Server } from './Server';
+import { ServerConfig } from './types';
 
 describe('server', () => {
   it('has reasonable defaults', () => {
@@ -62,5 +63,52 @@ describe('server', () => {
       password: 'password',
     });
     expect(sameOne.tenantId).toEqual(null);
+  });
+  beforeEach(() => {
+    // @ts-expect-error - test
+    jest.spyOn(global, 'fetch').mockImplementation(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(),
+      })
+    );
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks(); // Reset fetch after each test
+  });
+  it('allows for route overriding', async () => {
+    const config: ServerConfig = {
+      api: {
+        routePrefix: '/nile/api',
+        routes: {
+          ME: '/profile',
+          TENANT_USERS: '/tenants/:tenantId/users',
+        },
+      },
+    };
+
+    const nile = new Server(config);
+    const matcher = {
+      CALLBACK: '/nile/api/auth/callback',
+      ME: config?.api?.routes?.ME,
+      TENANT_USERS: config?.api?.routes?.TENANT_USERS,
+    };
+    expect(nile.api.routes).toMatchObject(matcher);
+    for (const [, value] of Object.entries(nile.api)) {
+      if (value?.api !== undefined) {
+        expect(value.api.routes).toEqual({
+          ME: config?.api?.routes?.ME,
+          TENANT_USERS: config?.api?.routes?.TENANT_USERS,
+        });
+      }
+    }
+    const me = await nile.api.handlers.GET(
+      new Request(`http://localhost:3000${String(matcher.ME)}`)
+    );
+    // we are eating the fetch, but a 404 would mean the new route isn't used
+    expect(me?.status).toBeUndefined();
+
+    // routes are not configurable server side
+    expect(nile.api.users.tenantUsersUrl).toEqual('/tenants/{tenantId}/users');
   });
 });

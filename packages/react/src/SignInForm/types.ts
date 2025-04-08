@@ -1,5 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 
+import { ComponentFetchProps } from '../../lib/utils';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
 
@@ -10,10 +12,13 @@ type LoginSuccess = (
   ...args: AllowedAny
 ) => void;
 
-export interface Props {
+export type Props = ComponentFetchProps & {
   beforeMutate?: (data: AllowedAny) => AllowedAny;
   onSuccess?: LoginSuccess;
   onError?: (error: Error, data: AllowedAny) => void;
   callbackUrl?: string;
   client?: QueryClient;
-}
+  className?: string;
+  baseUrl?: string;
+  fetchUrl?: string;
+};

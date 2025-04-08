@@ -7,12 +7,20 @@ export type EnvConfig = {
   config?: ServerConfig;
 };
 
+export const getCallbackUrl = (cfg: EnvConfig) => {
+  const { config } = cfg;
+  if (stringCheck(process.env.NILEDB_CALLBACK_URL)) {
+    return process.env.NILEDB_CALLBACK_URL;
+  }
+  return config?.api?.callbackUrl;
+};
+
 export const getSecureCookies = (cfg: EnvConfig) => {
   const { config } = cfg;
   if (stringCheck(process.env.NILEDB_SECURECOOKIES)) {
     return Boolean(process.env.NILEDB_SECURECOOKIES);
   }
-  return config?.secureCookies;
+  return config?.api?.secureCookies;
 };
 
 export const getDatabaseId = (cfg: EnvConfig) => {
@@ -155,6 +163,23 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
   }
 
   return null;
+};
+
+export const getCookieKey = (cfg: EnvConfig): string => {
+  const { config, logger } = cfg;
+  const { info } = Logger(config, '[cookieKey]');
+  if (stringCheck(config?.api?.cookieKey)) {
+    logger && info(`${logger}[config] ${config?.api?.cookieKey}`);
+    return String(config?.api?.cookieKey);
+  }
+
+  if (stringCheck(process.env.NILEDB_COOKIE_KEY)) {
+    logger &&
+      info(`${logger}[NILEDB_COOKIE_KEY] ${process.env.NILEDB_COOKIE_KEY}`);
+    return String(process.env.NILEDB_COOKIE_KEY);
+  }
+
+  return 'token';
 };
 
 /**

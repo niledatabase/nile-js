@@ -5,43 +5,40 @@ import { Slot } from '@radix-ui/react-slot';
 
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth/Authorizer';
 
-const SlackSignInButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      buttonText = 'Continue with Slack',
-      variant,
-      size,
-      asChild = false,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-[#4A154B] hover:bg-[#4A154B] pl-[3px] hover:bg-opacity-85 gap-4 transition-colors shadow-md text-white'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('slack', { callbackUrl });
-        }}
-        {...props}
-      >
-        <Icon />
-        {buttonText}
-      </Comp>
-    );
-  }
-);
+const SlackSignInButton = ({
+  callbackUrl,
+  className,
+  buttonText = 'Continue with Slack',
+  variant,
+  size,
+  init,
+  asChild = false,
+  ...props
+}: ButtonProps & {
+  callbackUrl?: string;
+  buttonText?: string;
+  init?: RequestInit;
+}) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-[#4A154B] hover:bg-[#4A154B] pl-[3px] hover:bg-opacity-85 gap-4 transition-colors shadow-md text-white'
+      )}
+      data-slot="slack-button"
+      onClick={() => {
+        signIn('slack', { callbackUrl, init });
+      }}
+      {...props}
+    >
+      <Icon />
+      {buttonText}
+    </Comp>
+  );
+};
 
 SlackSignInButton.displayName = 'SlackSignInButton';
 export default SlackSignInButton;

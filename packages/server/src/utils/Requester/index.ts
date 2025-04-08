@@ -18,9 +18,9 @@ export default class Requester<T> extends Config {
     body?: string
   ): Promise<Response> {
     const _init = {
-      ...init,
       body,
       method,
+      ...init,
     };
 
     const res = await _fetch(this, url, _init);
@@ -117,9 +117,13 @@ export default class Requester<T> extends Config {
   async get<R = JSON>(
     req: T | Headers,
     url: string,
-    init?: RequestInit
+    init?: RequestInit,
+    raw = false
   ): Promise<Response | R> {
     const response = await this.request('GET', url, req, init);
+    if (raw) {
+      return response;
+    }
     if (response && response.status >= 200 && response.status < 300) {
       const cloned = response.clone();
       try {

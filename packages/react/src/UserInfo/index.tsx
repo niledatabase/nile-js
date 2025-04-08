@@ -1,21 +1,27 @@
 'use client';
 import { BadgeCheck, CalendarCheck, CircleUserRound, Mail } from 'lucide-react';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { cn } from '../../lib/utils';
-import { User } from '../../../server/src/users/types';
 
-import { useMe } from './hooks';
+import { HookProps, useMe } from './hooks';
 
 export { useMe } from './hooks';
 
-type Props = {
-  user?: User | undefined | null;
-  fetchUrl?: string;
+type Props = HookProps & {
   profilePicturePlaceholder?: React.ReactElement;
   className?: string;
 };
+const queryClient = new QueryClient();
 export default function UserInfo(props: Props) {
+  return (
+    <QueryClientProvider client={queryClient ?? props.client}>
+      <UserInfoC {...props} />
+    </QueryClientProvider>
+  );
+}
+function UserInfoC(props: Props) {
   const user = useMe(props);
   const picture = React.useMemo(() => {
     if (user && typeof user === 'object' && 'picture' in user && user.picture) {
@@ -48,6 +54,20 @@ export default function UserInfo(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user == null]);
 
+  const name = useMemo(() => {
+    if (user.name) {
+      return user.name;
+    }
+    let out = '';
+    if (user.givenName) {
+      out = user.givenName;
+    }
+    if (user.familyName) {
+      out = `${out} ${user.familyName}`;
+    }
+    return out;
+  }, [user.familyName, user.givenName, user.name]);
+
   if (!user) {
     return 'Loading...';
   }
@@ -60,10 +80,7 @@ export default function UserInfo(props: Props) {
             {picture}
           </div>
         </div>
-        <div className="font-bold flex flex-row gap-1 capitalize">
-          {user.name ? user.name : user.givenName}{' '}
-          {user.familyName ? user.familyName : null}
-        </div>
+        <div className="font-bold flex flex-row gap-1 capitalize">{name}</div>
       </div>
       <div className="flex flex-row gap-5 justify-between w-full">
         <div className="flex flex-row gap-2 text-sm items-center w-36">
@@ -79,13 +96,15 @@ export default function UserInfo(props: Props) {
           {user.email}{' '}
         </div>
       </div>
-      <div className="flex flex-row gap-5 justify-between w-full">
-        <div className="flex flex-row gap-2 text-sm items-center w-36">
-          <CalendarCheck size={14} />
-          Created:
+      {user.created ? (
+        <div className="flex flex-row gap-5 justify-between w-full">
+          <div className="flex flex-row gap-2 text-sm items-center w-36">
+            <CalendarCheck size={14} />
+            Created:
+          </div>
+          {new Date(user.created).toLocaleString()}
         </div>
-        {new Date(user.created).toLocaleString()}
-      </div>
+      ) : null}
     </div>
   );
 }

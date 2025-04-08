@@ -3,7 +3,131 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.19...v4.0.0-alpha.20) (2025-04-08)
+
+### Bug Fixes
+
+- **server:** handle strings from nile-auth errors ([536fc85](https://github.com/niledatabase/nile-js/commit/536fc855204d13115508ec144b58ab702b06e41a))
+
+# [4.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2025-04-07)
+
+### Bug Fixes
+
+- **server:** support /me casting on function ([4fa49d1](https://github.com/niledatabase/nile-js/commit/4fa49d1165af25fe73edd0c198f57377d1b38cac))
+
+# [4.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2025-04-07)
+
+### Bug Fixes
+
+- **react:** clean up log client errors ([f5ab51d](https://github.com/niledatabase/nile-js/commit/f5ab51d81332921a0203be52db8b77c3cd0c5037))
+
+# [4.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2025-04-03)
+
+### Bug Fixes
+
+- **react:** support more random backends, SSO for express: ([26e23b1](https://github.com/niledatabase/nile-js/commit/26e23b175ce65238bbb9ff0faaf4a8a2f8782669))
+
+# [4.0.0-alpha.16](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2025-04-03)
+
+### Bug Fixes
+
+- bring back the parameter and return raw response ([df57def](https://github.com/niledatabase/nile-js/commit/df57def579859fbfdc841faf13c62ef8adbc5d7f))
+- making sure login returned the auth info all the way to the caller ([b2f654a](https://github.com/niledatabase/nile-js/commit/b2f654a8dd42a78be01614c0aef4a5728775a1b1))
+- missed a place during config removal ([6a388cb](https://github.com/niledatabase/nile-js/commit/6a388cb3b98300ec240f932dd692b9ae0ebf5490))
+- **server:** support random origin ([7ac191b](https://github.com/niledatabase/nile-js/commit/7ac191b6dba0ff9c203b52775fb4d5048c134f3b))
+- **server:** use both headers for csrf ([21bdb1d](https://github.com/niledatabase/nile-js/commit/21bdb1de0d87254df66316aad400cfa8722c9ead))
+
+# [4.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.14...v4.0.0-alpha.15) (2025-04-02)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2025-03-31)
+
+### Features
+
+- **server:** add sign out, return raw res for login ([6962514](https://github.com/niledatabase/nile-js/commit/6962514e88f2a8c0f7bcd3bf5c549493f2cd6ca9))
+
+# [4.0.0-alpha.13](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2025-03-28)
+
+### Bug Fixes
+
+- **server:** support bad urls in cookie header for sign in ([ab1d377](https://github.com/niledatabase/nile-js/commit/ab1d377ea3722161251830d11bb18f6f2e187c24))
+
+# [4.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2025-03-28)
+
+### Features
+
+- **server:** add sign out ([edc728c](https://github.com/niledatabase/nile-js/commit/edc728cac554f759bce2d52117643618f1cd000e))
+
+# [4.0.0-alpha.11](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2025-03-25)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.10](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2025-03-24)
+
+### Bug Fixes
+
+- **server:** remove extra qps ([82a3a5f](https://github.com/niledatabase/nile-js/commit/82a3a5ff3791144b83af9ad3551b48627dbdae0f))
+
+# [4.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2025-03-24)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2025-03-21)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2025-03-21)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.6](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2025-03-21)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2025-03-20)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2025-03-19)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2025-03-19)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.0.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2025-03-19)
+
+### Bug Fixes
+
+- **server:** move route config to server config ([f177236](https://github.com/niledatabase/nile-js/commit/f177236918faa226eb3a18cd993c8a59563b132b))
+
+# [4.0.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.0...v4.0.0-alpha.1) (2025-03-17)
+
+### Features
+
+- **server:** add nitro converter ([33f1970](https://github.com/niledatabase/nile-js/commit/33f1970c1b64e9a78179476e699475e8bd304bb6))
+
+# [4.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v3.1.0-alpha.0...v4.0.0-alpha.0) (2025-03-17)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v3.0.1-alpha.0...v3.1.0-alpha.0) (2025-03-13)
+
+### Features
+
+- add web components, support x-origin ([3203aa4](https://github.com/niledatabase/nile-js/commit/3203aa49c9d8eccd194f404da7a8a87d8c6996f1))
+
+## [3.0.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.55...v3.0.1-alpha.0) (2025-03-10)
+
 # [3.0.0](https://github.com/niledatabase/nile-js/compare/v3.0.0-alpha.54...v3.0.0) (2025-03-07)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [3.0.0](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.55...v3.0.0) (2025-03-07)
+
+# [3.0.0-alpha.55](https://github.com/niledatabsae/nile-js/compare/v3.0.0-alpha.54...v3.0.0-alpha.55) (2025-03-09)
 
 **Note:** Version bump only for package @niledatabase/server
 

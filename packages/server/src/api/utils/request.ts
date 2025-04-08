@@ -11,7 +11,7 @@ export default async function request(
   _init: RequestInit & { request: Request },
   config: Config
 ) {
-  const { info, error } = Logger(config, '[REQUEST]');
+  const { debug, info, error } = Logger(config, '[REQUEST]');
   const { request, ...init } = _init;
   const requestUrl = new URL(request.url);
   const updatedHeaders = new Headers({});
@@ -24,12 +24,25 @@ export default async function request(
       String(request.headers.get(X_NILE_TENANT))
     );
   }
-  if ('secureCookies' in config && config.secureCookies != null) {
-    updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
+  if (config.api.secureCookies != null) {
+    updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
   }
 
   updatedHeaders.set('host', requestUrl.host);
-  updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
+  if (config.api.callbackUrl) {
+    const cbUrl = new URL(config.api.callbackUrl);
+    debug(
+      `Obtained origin from config.api.callbackUrl ${config.api.callbackUrl}`
+    );
+    updatedHeaders.set(X_NILE_ORIGIN, cbUrl.origin);
+  } else if (config.api.origin) {
+    debug(`Obtained origin from config.api.origin ${config.api.origin}`);
+    updatedHeaders.set(X_NILE_ORIGIN, config.api.origin);
+  } else {
+    updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
+    debug(`Obtained origin from request ${requestUrl.origin}`);
+  }
+
   const params = { ...init, headers: updatedHeaders };
   if (params.method === 'POST' || params.method === 'PUT') {
     try {

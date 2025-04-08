@@ -5,43 +5,40 @@ import { Slot } from '@radix-ui/react-slot';
 
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signIn } from '../../lib/next-auth';
+import { signIn } from '../../lib/auth/Authorizer';
+import { SSOButtonProps } from '../types';
 
-const XSignInButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & { callbackUrl?: string; buttonText?: string }
->(
-  (
-    {
-      callbackUrl,
-      className,
-      buttonText = 'Continue with X',
-      variant,
-      size,
-      asChild = false,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          'bg-black hover:bg-slate-800 pl-[3px] text-white gap-4 transition-colors shadow-md'
-        )}
-        ref={ref}
-        onClick={() => {
-          signIn('twitter', { callbackUrl });
-        }}
-        {...props}
-      >
-        <Icon />
-        {buttonText}
-      </Comp>
-    );
-  }
-);
+const XSignInButton = ({
+  callbackUrl,
+  className,
+  buttonText = 'Continue with X',
+  variant,
+  size,
+  init,
+  asChild = false,
+  auth,
+  fetchUrl,
+  baseUrl,
+  ...props
+}: ButtonProps & SSOButtonProps) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        'bg-black hover:bg-slate-800 pl-[3px] text-white gap-4 transition-colors shadow-md'
+      )}
+      data-slot="twitter-button"
+      onClick={() => {
+        signIn('twitter', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      }}
+      {...props}
+    >
+      <Icon />
+      {buttonText}
+    </Comp>
+  );
+};
 
 XSignInButton.displayName = 'XSignInButton';
 export default XSignInButton;

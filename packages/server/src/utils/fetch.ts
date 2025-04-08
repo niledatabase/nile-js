@@ -78,8 +78,8 @@ export function makeBasicHeaders(config: Config, opts?: RequestInit) {
       headers.set('Authorization', `Bearer ${getToken({ config })}`);
     }
   }
-  if ('secureCookies' in config && config.secureCookies != null) {
-    headers.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
+  if (config && config.api.secureCookies != null) {
+    headers.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
   }
 
   return headers;
@@ -163,13 +163,10 @@ export async function _fetch(
     if (response?.status === 405) {
       return new ResponseError('Method not allowed', { status: 405 });
     }
-    let res;
     const errorHandler =
       typeof response?.clone === 'function' ? response.clone() : null;
     let msg = '';
-    try {
-      res = await (response as Response)?.json();
-    } catch (e) {
+    const res = await (response as Response)?.json().catch(async (e) => {
       if (errorHandler) {
         msg = await errorHandler.text();
         if (msg) {
@@ -182,7 +179,9 @@ export async function _fetch(
       if (!msg) {
         error('[fetch][response]', { e });
       }
-    }
+      return e;
+    });
+
     if (msg) {
       return new ResponseError(msg, { status: errorHandler?.status });
     }
@@ -202,7 +201,8 @@ export async function _fetch(
     error(
       `[fetch][response][status: ${errorHandler?.status}] UNHANDLED ERROR`,
       {
-        res,
+        response,
+        message: await response.text(),
       }
     );
     return new ResponseError(null, {

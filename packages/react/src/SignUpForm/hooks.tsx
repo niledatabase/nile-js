@@ -1,7 +1,7 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
 
-import { __NEXTAUTH } from '../../lib/next-auth';
+import { usePrefetch } from '../../lib/utils';
+import { signUp } from '../../lib/auth/Authorizer';
 
 import { Props, SignUpInfo } from './types';
 
@@ -9,70 +9,28 @@ export function useSignUp<T extends SignUpInfo>(
   params: Props,
   client?: QueryClient
 ) {
-  const {
-    onSuccess,
-    onError,
-    beforeMutate,
-    callbackUrl,
-    baseUrl = '',
-    createTenant,
-  } = params;
+  const { onSuccess, onError, beforeMutate, ...remaining } = params;
 
   const mutation = useMutation(
     {
       mutationFn: async (_data) => {
         const possibleData = beforeMutate && beforeMutate(_data);
         const payload: T = { ..._data, ...possibleData };
-        const { tenantId, newTenantName, ...body } = payload;
-        let fetchUrl = payload.fetchUrl ?? `${baseUrl}/api/signup`;
-
-        const searchParams = new URLSearchParams();
-
-        if (newTenantName) {
-          searchParams.set('newTenantName', newTenantName);
-        } else if (createTenant) {
-          if (typeof createTenant === 'boolean') {
-            searchParams.set('newTenantName', payload.email);
-          } else if (typeof createTenant === 'string') {
-            searchParams.set('newTenantName', createTenant);
-          }
-        }
-        if (tenantId) {
-          searchParams.set('tenantId', tenantId);
-        }
-
-        if (searchParams.size > 0) {
-          fetchUrl += `?${searchParams}`;
-        }
-
-        return await fetch(fetchUrl, {
-          body: JSON.stringify(body),
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
+        return await signUp({
+          ...remaining,
+          ...payload,
         });
       },
 
       onSuccess: async (data, variables) => {
-        if (data.ok) {
-          // consolidate this double session call one day
-          await __NEXTAUTH._getSession({ event: 'storage' });
-          if (callbackUrl) {
-            window.location.href = callbackUrl;
-          } else {
-            window.location.reload();
-          }
-        }
         onSuccess && onSuccess(data, variables);
       },
       onError,
     },
     client
   );
-  useEffect(() => {
-    fetch(`${baseUrl}/api/auth/providers`);
-    fetch(`${baseUrl}/api/auth/csrf`);
-  }, [baseUrl]);
+
+  usePrefetch(params);
+
   return mutation.mutate;
 }
