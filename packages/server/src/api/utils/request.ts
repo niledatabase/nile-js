@@ -30,13 +30,18 @@ export default async function request(
 
   updatedHeaders.set('host', requestUrl.host);
   if (config.api.callbackUrl) {
-    updatedHeaders.set(X_NILE_ORIGIN, config.api.callbackUrl);
+    const cbUrl = new URL(config.api.callbackUrl);
+    debug(
+      `Obtained origin from config.api.callbackUrl ${config.api.callbackUrl}`
+    );
+    updatedHeaders.set(X_NILE_ORIGIN, cbUrl.origin);
   } else if (config.api.origin) {
+    debug(`Obtained origin from config.api.origin ${config.api.origin}`);
     updatedHeaders.set(X_NILE_ORIGIN, config.api.origin);
   } else {
     updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
+    debug(`Obtained origin from request ${requestUrl.origin}`);
   }
-  debug(`Using origin ${updatedHeaders.get(X_NILE_ORIGIN)}`);
 
   const params = { ...init, headers: updatedHeaders };
   if (params.method === 'POST' || params.method === 'PUT') {
