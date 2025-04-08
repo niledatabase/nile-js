@@ -11,7 +11,6 @@
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import React from 'react';
-import type { UseSessionOptions } from 'next-auth/react';
 
 import { broadcast } from './broadcast';
 import { auth } from './Authorizer';
@@ -89,6 +88,11 @@ export const SessionContext = React.createContext?.<
   SessionContextValue | undefined
 >(undefined);
 
+export interface UseSessionOptions<R extends boolean> {
+  required: R;
+  /** Defaults to `signIn` */
+  onUnauthenticated?: () => void;
+}
 /**
  * React Hook that gives you access
  * to the logged in user's session data.

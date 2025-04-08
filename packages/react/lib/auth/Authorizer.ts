@@ -1,29 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CtxOrReq, now } from 'next-auth/client/_utils';
-import { SignOutParams, SignOutResponse } from 'next-auth/react';
-import {
-  ClientSafeProvider,
-  type SignInAuthorizationParams,
-  type SignInOptions,
-  type LiteralUnion,
-  type SignInResponse,
-} from 'next-auth/react';
-import type {
-  BuiltInProviderType,
-  RedirectableProviderType,
-} from 'next-auth/providers/index';
 
 import {
   ActiveSession,
   AuthConfig,
   AuthState,
   Config,
+  CtxOrReq,
+  BuiltInProviderType,
+  RedirectableProviderType,
+  ClientSafeProvider,
+  SignInAuthorizationParams,
+  SignInOptions,
+  LiteralUnion,
+  SignInResponse,
   Listener,
   NonErrorSession,
   PartialAuthorizer,
+  SignOutParams,
+  SignOutResponse,
 } from './types';
 import { logger, LoggerInstance } from './logger';
-import { broadcast } from './broadcast';
+import { broadcast, now } from './broadcast';
 import { createObservableObject } from './observable';
 
 export type GetSessionParams = CtxOrReq & {

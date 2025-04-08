@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
-import { SignInOptions } from 'next-auth/react';
+
+import { SignInOptions } from '../../lib/auth/types';
 
 export type EmailSignInInfo = SignInOptions;
 type SignInSuccess = (response: Response) => void;
