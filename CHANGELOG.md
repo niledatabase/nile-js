@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.19...v4.0.0-alpha.20) (2025-04-08)
+
+### Bug Fixes
+
+- **server:** handle strings from nile-auth errors ([536fc85](https://github.com/niledatabase/nile-js/commit/536fc855204d13115508ec144b58ab702b06e41a))
+
 # [4.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2025-04-07)
 
 ### Bug Fixes
