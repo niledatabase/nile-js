@@ -163,15 +163,10 @@ export async function _fetch(
     if (response?.status === 405) {
       return new ResponseError('Method not allowed', { status: 405 });
     }
-    let res;
     const errorHandler =
       typeof response?.clone === 'function' ? response.clone() : null;
     let msg = '';
-    try {
-      res = await (response as Response)?.json().catch(() => {
-        // handle below
-      });
-    } catch (e) {
+    const res = await (response as Response)?.json().catch(async (e) => {
       if (errorHandler) {
         msg = await errorHandler.text();
         if (msg) {
@@ -184,7 +179,9 @@ export async function _fetch(
       if (!msg) {
         error('[fetch][response]', { e });
       }
-    }
+      return e;
+    });
+
     if (msg) {
       return new ResponseError(msg, { status: errorHandler?.status });
     }
