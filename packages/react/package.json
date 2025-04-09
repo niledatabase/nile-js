@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/react",
-  "version": "4.0.4",
+  "version": "4.1.0-alpha.2",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
