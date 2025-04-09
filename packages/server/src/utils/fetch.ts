@@ -1,5 +1,7 @@
 import { decodeJwt } from 'jose';
 
+import { getCookie, getOrigin } from '../context/asyncStorage';
+
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
 import { NileRequest } from './Requester';
@@ -26,7 +28,7 @@ export function handleTenantId(
 }
 
 function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
-  const cookie = headers.get('cookie')?.split('; ');
+  const cookie = headers.get('cookie')?.split('; ') ?? getCookie()?.split('; ');
   const _cookies: Record<string, string> = {};
   if (cookie) {
     for (const parts of cookie) {
@@ -64,7 +66,12 @@ export function getUserFromHttp(headers: Headers, config: Config) {
   return headers?.get(X_NILE_USER_ID) ?? config.userId;
 }
 
-export function makeBasicHeaders(config: Config, opts?: RequestInit) {
+export function makeBasicHeaders(
+  config: Config,
+  url: string,
+  opts?: RequestInit
+) {
+  const { warn, error } = Logger(config, '[headers]');
   const headers = new Headers(opts?.headers);
   headers.set('content-type', 'application/json; charset=utf-8');
   const cookieKey = config.api?.cookieKey;
@@ -79,12 +86,34 @@ export function makeBasicHeaders(config: Config, opts?: RequestInit) {
       headers.set('Authorization', `Bearer ${getToken({ config })}`);
     }
   }
+  const cookie = headers.get('cookie');
+  if (!cookie) {
+    const contextCookie = getCookie();
+    if (contextCookie) {
+      headers.set('cookie', contextCookie);
+    } else {
+      // routes that do not require a cookie (non-auth)
+      if (!url.endsWith('/users')) {
+        error(
+          'Missing cookie header from request. Call nile.api.setContext(request) before making additional calls.'
+        );
+      }
+    }
+  }
   if (config && config.api.secureCookies != null) {
     headers.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
   }
 
+  const savedOrigin = getOrigin();
+
   if (config && config.api.origin) {
     headers.set(X_NILE_ORIGIN, config.api.origin);
+  } else if (savedOrigin) {
+    headers.set(X_NILE_ORIGIN, savedOrigin);
+  } else {
+    warn(
+      'nile.origin missing from header, which defaults to secure cookies only.'
+    );
   }
   return headers;
 }
@@ -99,7 +128,7 @@ export async function _fetch(
   const url = `${config.api?.basePath}${path}`;
   const headers = new Headers(opts?.headers);
   const tenantId = getTenantFromHttp(headers, config);
-  const basicHeaders = makeBasicHeaders(config, opts);
+  const basicHeaders = makeBasicHeaders(config, url, opts);
   updateTenantId(tenantId);
   const userId = getUserFromHttp(headers, config);
   updateUserId(userId);
