@@ -13,7 +13,7 @@ export class Api {
   auth: Auth;
   tenants: Tenants;
   routes: Routes;
-  _headers: undefined | Headers;
+  #headers: undefined | Headers;
   handlers: {
     GET: (req: Request) => Promise<void | Response>;
     POST: (req: Request) => Promise<void | Response>;
@@ -78,9 +78,9 @@ export class Api {
   }
 
   reset = () => {
-    this.users = new Users(this.config, this._headers);
-    this.tenants = new Tenants(this.config, this._headers);
-    this.auth = new Auth(this.config, this._headers, {
+    this.users = new Users(this.config, this.#headers);
+    this.tenants = new Tenants(this.config, this.#headers);
+    this.auth = new Auth(this.config, this.#headers, {
       resetHeaders: this.resetHeaders,
     });
   };
@@ -91,17 +91,42 @@ export class Api {
   };
 
   resetHeaders = (headers?: Headers) => {
-    this._headers = new Headers(headers ?? {});
+    this.#headers = new Headers(headers ?? {});
     this.reset();
   };
 
-  set headers(headers: Headers) {
-    this._headers = headers;
+  set headers(headers: Headers | Record<string, string>) {
+    const updates: [string, string][] = [];
+
+    if (headers instanceof Headers) {
+      headers.forEach((value, key) => {
+        updates.push([key.toLowerCase(), value]);
+      });
+    } else {
+      for (const [key, value] of Object.entries(headers)) {
+        updates.push([key.toLowerCase(), value]);
+      }
+    }
+
+    const merged: Record<string, string> = {};
+    this.#headers?.forEach((value, key) => {
+      merged[key.toLowerCase()] = value;
+    });
+
+    for (const [key, value] of updates) {
+      merged[key] = value;
+    }
+
+    this.#headers = new Headers();
+    for (const [key, value] of Object.entries(merged)) {
+      this.#headers.set(key, value);
+    }
+
     this.reset();
   }
 
   get headers(): Headers | undefined {
-    return this._headers;
+    return this.#headers;
   }
 
   login = async (
@@ -125,6 +150,6 @@ export class Api {
     } else if (req instanceof Request) {
       return auth(req, this.config);
     }
-    return this.auth.getSession(this._headers);
+    return this.auth.getSession(this.#headers);
   };
 }
