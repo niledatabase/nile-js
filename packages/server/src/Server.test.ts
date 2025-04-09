@@ -111,4 +111,23 @@ describe('server', () => {
     // routes are not configurable server side
     expect(nile.api.users.tenantUsersUrl).toEqual('/tenants/{tenantId}/users');
   });
+  it('merges headers', () => {
+    const nile = new Server();
+    expect(nile.api.headers).toEqual(undefined);
+    nile.api.headers = { cookie: '123' };
+    let update: [string, string][] = [];
+    nile.api.headers?.forEach((value, key) => {
+      update.push([key.toLowerCase(), value]);
+    });
+    expect(update).toEqual([['cookie', '123']]);
+    update = [];
+    nile.api.headers = { host: 'localhost:3000' };
+    nile.api.headers?.forEach((value, key) => {
+      update.push([key.toLowerCase(), value]);
+    });
+    expect(update).toEqual([
+      ['cookie', '123'],
+      ['host', 'localhost:3000'],
+    ]);
+  });
 });
