@@ -7,6 +7,7 @@ import { updateTenantId, updateUserId } from './Event';
 import { getToken } from './Config/envVars';
 import Logger from './Logger';
 import {
+  X_NILE_ORIGIN,
   X_NILE_SECURECOOKIES,
   X_NILE_TENANT,
   X_NILE_USER_ID,
@@ -82,6 +83,9 @@ export function makeBasicHeaders(config: Config, opts?: RequestInit) {
     headers.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
   }
 
+  if (config && config.api.origin) {
+    headers.set(X_NILE_ORIGIN, config.api.origin);
+  }
   return headers;
 }
 

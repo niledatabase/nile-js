@@ -3,7 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.0.1-alpha.0...v4.0.1-alpha.1) (2025-04-09)
+
+### Bug Fixes
+
+- **server:** ensure config origin is passed to all server requests ([0bcf0a2](https://github.com/niledatabase/nile-js/commit/0bcf0a20d6ced2620a36580a283cca95ff58e672))
+
+## [4.0.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.0.0...v4.0.1-alpha.0) (2025-04-09)
+
+### Bug Fixes
+
+- **server:** surgically update headers ([6a7c39b](https://github.com/niledatabase/nile-js/commit/6a7c39b00b8df99967eb9d1d3c0a8d4c9a7c44c1))
+
+# [4.0.0-alpha.21](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.20...v4.0.0-alpha.21) (2025-04-08)
+
 # [4.0.0](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.20...v4.0.0) (2025-04-08)
+
+# [4.0.0-alpha.21](https://github.com/niledatabase/nile-js/compare/v4.0.0-alpha.20...v4.0.0-alpha.21) (2025-04-08)
 
 **Note:** Version bump only for package @niledatabase/server
 
