@@ -10,10 +10,20 @@ const meta: Meta = {
 
 export default meta;
 
-/*
-This looks really bad in storybook for some reason
-*/
 export function SelectTenant() {
+  document.cookie = 'nile.tenant_id=1';
+  const tenants = [
+    { id: '1', name: 'Tenant 1' },
+    { id: '2', name: 'Tenant 2' },
+  ];
+  return (
+    <div style={{ width: 500 }} className="mx-auto">
+      <TenantSelector activeTenant={tenants[0].name} tenants={tenants} />
+    </div>
+  );
+}
+export function EmptyState() {
+  document.cookie = 'nile.tenant_id=';
   const tenants = [
     { id: '1', name: 'Tenant 1' },
     { id: '2', name: 'Tenant 2' },

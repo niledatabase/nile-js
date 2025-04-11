@@ -34,7 +34,8 @@ export function useTenants(
 
         return response.json();
       },
-      enabled: !disableQuery || !tenants || tenants.length === 0,
+      enabled: !disableQuery || tenants?.length === 0,
+      initialData: tenants,
     },
     client
   );
