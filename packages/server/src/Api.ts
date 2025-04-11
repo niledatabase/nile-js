@@ -2,7 +2,7 @@ import Handlers from './api/handlers';
 import { Routes } from './api/types';
 import auth from './api/utils/auth';
 import { appRoutes } from './api/utils/routes/defaultRoutes';
-import Auth, { serverLogin } from './auth';
+import Auth, { parseToken, serverLogin } from './auth';
 import Tenants from './tenants';
 import Users from './users';
 import { Config } from './utils/Config';
@@ -37,6 +37,7 @@ export class Api {
       ...appRoutes(config?.api.routePrefix),
       ...config?.api.routes,
     };
+
     this.handlers = Handlers(this.routes, config);
     this.paths = {
       get: [
@@ -127,6 +128,15 @@ export class Api {
 
   get headers(): Headers | undefined {
     return this.#headers;
+  }
+
+  getCookie(req?: Request | Headers) {
+    if (req instanceof Headers) {
+      return parseToken(req);
+    } else if (req instanceof Request) {
+      return parseToken(req.headers);
+    }
+    return null;
   }
 
   login = async (

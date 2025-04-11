@@ -1,7 +1,7 @@
 import { Config } from '../utils/Config';
 import Requester, { NileRequest } from '../utils/Requester';
 
-import { CreateBasicUserRequest, User } from './types';
+import { CreateBasicUserRequest, CreateTenantUserRequest, User } from './types';
 
 export default class Users extends Config {
   headers?: Headers;
@@ -10,8 +10,15 @@ export default class Users extends Config {
     this.headers = headers;
   }
 
-  get usersUrl() {
-    return '/users';
+  usersUrl(user: CreateBasicUserRequest) {
+    const params = new URLSearchParams();
+    if (user.newTenantName) {
+      params.set('newTenantName', user.newTenantName);
+    }
+    if (user.tenantId) {
+      params.set('tenantId', user.tenantId);
+    }
+    return `/users?${params.size > 0 ? params : ''}`;
   }
 
   get tenantUsersUrl() {
@@ -44,17 +51,17 @@ export default class Users extends Config {
   }
 
   createUser = async <T = User | Response>(
-    req: NileRequest<CreateBasicUserRequest>,
+    user: CreateBasicUserRequest,
     init?: RequestInit
   ): Promise<T> => {
     const _requester = new Requester(this);
 
     const _init = this.handleHeaders(init);
-    return (await _requester.post(req, this.usersUrl, _init)) as T;
+    return (await _requester.post(user, this.usersUrl(user), _init)) as T;
   };
 
   createTenantUser = async <T = User | Response>(
-    req: NileRequest<CreateBasicUserRequest>,
+    req: NileRequest<CreateTenantUserRequest>,
     init?: RequestInit
   ): Promise<T> => {
     const _requester = new Requester(this);

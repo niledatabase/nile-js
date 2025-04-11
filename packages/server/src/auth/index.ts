@@ -111,8 +111,7 @@ export function serverLogin(
       throw new Error('authentication failed');
     }
 
-    const [, token] =
-      /((__Secure-)?nile\.session-token=.+?);/.exec(authCookie) ?? [];
+    const token = parseToken(loginRes?.headers);
     if (!token) {
       error('Unable to obtain auth token', { authCookie });
       throw new Error('Server login failed');
@@ -126,6 +125,18 @@ export function serverLogin(
   };
 }
 
+export function parseToken(headers?: Headers) {
+  let authCookie = headers?.get('set-cookie');
+  if (!authCookie) {
+    authCookie = headers?.get('cookie');
+  }
+  if (!authCookie) {
+    return undefined;
+  }
+  const [, token] =
+    /((__Secure-)?nile\.session-token=[^;]+)/.exec(authCookie) ?? [];
+  return token;
+}
 export default class Auth extends Config {
   headers?: Headers;
   resetHeaders?: (headers?: Headers) => void;
