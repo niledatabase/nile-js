@@ -122,7 +122,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
+<<<<<<< HEAD
     "@niledatabase/browser": "^4.1.0",
+=======
+    "@niledatabase/browser": "^4.0.2",
+>>>>>>> a7366817 (v4.0.2)
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-dropdown-menu": "^2.1.6",
     "@radix-ui/react-label": "^2.1.3",
