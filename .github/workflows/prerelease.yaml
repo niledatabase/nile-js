@@ -3,6 +3,8 @@ name: Publish @niledatabase packages
 on:
   push:
     branches: [v4]
+env:
+  BRANCH_NAME: v4
 
 jobs:
   publish:
@@ -15,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: v4
+          ref: ${{ env.BRANCH_NAME }}
           token: ${{ secrets.PAT }}
 
       - name: Enable Corepack before setting up Node
