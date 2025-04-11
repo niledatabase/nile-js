@@ -1,8 +1,11 @@
 name: Publish @niledatabase packages
 
 on:
-  push:
-    branches: [main]
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 env:
   BRANCH_NAME: main
 
