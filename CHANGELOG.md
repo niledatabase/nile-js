@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2-alpha.7](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.6...v4.0.2-alpha.7) (2025-04-11)
+
+### Bug Fixes
+
+- **server:** regex on express path cleaning ([3446e49](https://github.com/niledatabase/nile-js/commit/3446e493e039572cf01175731e92719d46a91f73))
+
 ## [4.0.2-alpha.6](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.5...v4.0.2-alpha.6) (2025-04-11)
 
 **Note:** Version bump only for package @niledatabase/packages
