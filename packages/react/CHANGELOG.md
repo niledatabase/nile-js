@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.0.1...v4.1.0-alpha.0) (2025-04-11)
+
+### Bug Fixes
+
+- **server:** update server side create user with correct params ([2dba5dd](https://github.com/niledatabase/nile-js/commit/2dba5ddf9d55989f48455d4de67d0c657da8de37))
+
+### Features
+
+- **server:** save headers for subsequent calls ([ecb86b5](https://github.com/niledatabase/nile-js/commit/ecb86b518e84ecd16b2f9a4faeeb5891281fc3f7))
+
 ## [4.0.1](https://github.com/niledatabase/nile-js/compare/v4.0.1-alpha.1...v4.0.1) (2025-04-09)
 
 **Note:** Version bump only for package @niledatabase/react
