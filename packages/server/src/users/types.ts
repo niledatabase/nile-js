@@ -1,8 +1,22 @@
 export interface CreateBasicUserRequest {
   email: string;
   password: string;
-  preferredName?: string;
-  newTenant?: string;
+  name?: string;
+  familyName?: string;
+  givenName?: string;
+  picture?: string;
+  // create a tenant for the new user to an existing tenant
+  newTenantName?: string;
+  // add the new user to an existing tenant
+  tenantId?: string;
+}
+export interface CreateTenantUserRequest {
+  email: string;
+  password: string;
+  name?: string;
+  familyName?: string;
+  givenName?: string;
+  picture?: string;
 }
 export const LoginUserResponseTokenTypeEnum = {
   AccessToken: 'ACCESS_TOKEN',
