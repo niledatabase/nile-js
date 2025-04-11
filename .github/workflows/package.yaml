@@ -2,9 +2,15 @@ name: Publish @niledatabase packages to GitHub Packages
 
 on:
   push:
+<<<<<<< HEAD
     branches: [v4-stable]
 env:
   BRANCH_NAME: v4-stable
+=======
+    branches: [v4/stable]
+env:
+  BRANCH_NAME: v4/stable
+>>>>>>> d6d5bb3b (chore: fix v4 building)
 jobs:
   build:
     runs-on: ubuntu-latest
