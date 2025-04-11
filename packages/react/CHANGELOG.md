@@ -3,12 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.9...v4.1.0-alpha.1) (2025-04-11)
+
+### Features
+
+- **server:** save headers for subsequent calls ([8c9547e](https://github.com/niledatabase/nile-js/commit/8c9547e0369d63a87fc3a348bc2079ea7f164d39))
+
 # [4.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.0.1...v4.1.0-alpha.0) (2025-04-11)
 
 ### Features
 
 - **server:** save headers for subsequent calls ([ecb86b5](https://github.com/niledatabase/nile-js/commit/ecb86b518e84ecd16b2f9a4faeeb5891281fc3f7))
-
 
 ## [4.0.2-alpha.9](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.8...v4.0.2-alpha.9) (2025-04-11)
 
