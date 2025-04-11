@@ -25,7 +25,6 @@ const baseConfig = [
   'password',
 ];
 const apiConfig = [
-  '_token',
   'basePath',
   'origin',
   'callbackUrl',
