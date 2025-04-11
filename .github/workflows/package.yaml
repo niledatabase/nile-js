@@ -61,21 +61,26 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           npx lerna version --conventional-graduate --force-publish --conventional-commits --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           npx lerna publish from-git --yes
 
       - name: "Get Previous tag"
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Create Release Notes
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PAT }}
           script: |
             await github.request(`POST /repos/${{ github.repository }}/releases`, {
               tag_name: "${{ steps.previoustag.outputs.tag }}",
