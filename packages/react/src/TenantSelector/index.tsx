@@ -55,6 +55,11 @@ export default function TenantSelector(props: ComponentProps) {
 
 function SelectTenant(props: ComponentProps) {
   const { data: tenants = [], isLoading, refetch } = useTenants(props);
+  const {
+    buttonText = 'Create an organization',
+    emptyText = 'You are not part of an organization.',
+  } = props;
+
   const [tenantId, setActiveTenant] = useTenantId(props);
   const [open, setOpen] = useState(false);
 
@@ -73,7 +78,7 @@ function SelectTenant(props: ComponentProps) {
     // the user isn't part of any tenants, so ask them to add one
     return (
       <div className={cn('flex flex-col items-center gap-2', props.className)}>
-        <p>You are not part of an organization.</p>
+        <p>{emptyText}</p>
         <CreateTenant
           {...props}
           onSuccess={(d) => {
@@ -83,7 +88,7 @@ function SelectTenant(props: ComponentProps) {
           }}
           trigger={
             <Button>
-              <Plus size={18} /> Create an organization
+              <Plus size={18} /> {buttonText}
             </Button>
           }
         />

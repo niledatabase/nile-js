@@ -7,7 +7,6 @@ export type HookProps = ComponentFetchProps & {
   fetchUrl?: string;
   tenants?: Tenant[];
   onError?: (e: Error) => void;
-  baseUrl?: string;
 };
 
 export type ComponentProps = HookProps & {
@@ -15,4 +14,6 @@ export type ComponentProps = HookProps & {
   activeTenant?: string;
   useCookie?: boolean;
   className?: string;
+  emptyText?: string;
+  buttonText?: string;
 };
