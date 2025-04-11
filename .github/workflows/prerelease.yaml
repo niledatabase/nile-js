@@ -1,11 +1,16 @@
-name: Publish @niledatabase packages to GitHub Packages
+name: Publish @niledatabase packages
 
 on:
-  pull_request:
+  workflow_run:
+    workflows: ["test"]
     types:
-      - closed
-    branches:
-      - main
+      - completed
+
+jobs:
+  publish:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
 
 jobs:
   if_merged:
@@ -20,7 +25,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
-          token: ${{secrets.PAT}}
+          token: ${{ secrets.PAT }}
 
       - name: Enable Corepack before setting up Node
         run: corepack enable
@@ -66,10 +71,13 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           npx lerna version --force-publish --conventional-prerelease --conventional-commits --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Publish to npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           npx lerna publish from-git --yes
 
@@ -80,6 +88,9 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN" >> .npmrc
         env:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Publish to git
         run: npx lerna publish from-git --yes --registry=https://npm.pkg.github.com/
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
