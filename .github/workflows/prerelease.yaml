@@ -2,7 +2,7 @@ name: Publish @niledatabase packages
 
 on:
   push:
-    branches: [main]
+    branches: [v4]
 
 jobs:
   publish:
