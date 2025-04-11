@@ -7,6 +7,13 @@ const primaryUser = {
   email: 'delete@me.com',
   password: 'deleteme',
 };
+
+const powerCreate = {
+  email: 'delete4@me.com',
+  password: 'deleteme',
+  newTenantName: 'delete4@me.com',
+};
+
 const newUser = {
   email: 'delete2@me.com',
   password: 'deleteme',
@@ -24,14 +31,18 @@ describe('api integration', () => {
     await initialDebugCleanup(nile);
 
     // create 2 users, one primary, the other one to add to a tenant manually later
-    const [user, secondUser] = await Promise.all([
+    const [user, secondUser, powerUser] = await Promise.all([
       nile.api.users.createUser(primaryUser) as unknown as {
         id: string;
         name: string;
       },
       nile.api.users.createUser(newUser) as unknown as { id: string },
+      nile.api.users.createUser(powerCreate) as unknown as {
+        tenants: string[];
+      },
     ]);
 
+    expect(powerUser.tenants.length).toEqual(1);
     expect(user.id).toBeTruthy();
 
     const loginRes = await nile.api.login(primaryUser, {
@@ -155,23 +166,30 @@ describe('api integration', () => {
 
 async function initialDebugCleanup(nile: Server) {
   // remove the users 1st, fk constraints
-  const existing = [primaryUser, newUser, tenantUser].map(async (u) => {
-    const exists = await nile.db.query(
-      'select * from users.users where email = $1',
-      [u.email]
-    );
-    if (exists.rows.length > 0) {
-      const id = exists.rows[0].id;
-      await nile.db.query('delete from auth.credentials where user_id = $1', [
-        id,
-      ]);
-      await nile.db.query('delete from users.users where id= $1', [id]);
+  const existing = [primaryUser, newUser, tenantUser, powerCreate].map(
+    async (u) => {
+      const exists = await nile.db.query(
+        'select * from users.users where email = $1',
+        [u.email]
+      );
+      if (exists.rows.length > 0) {
+        const id = exists.rows[0].id;
+        await nile.db.query('delete from auth.credentials where user_id = $1', [
+          id,
+        ]);
+        await nile.db.query('delete from users.users where id = $1', [id]);
+      }
     }
-  });
+  );
   await Promise.all(existing);
   const tenants = await nile.db.query('select * from tenants;');
   const commands = tenants.rows.reduce((accum, t) => {
-    if (!t.name || t.name?.includes('betterName')) {
+    if (
+      !t.name ||
+      t.name?.includes('betterName') ||
+      t.name?.includes('betterNameAgain') ||
+      t.name?.includes(powerCreate.newTenantName)
+    ) {
       accum.push(
         nile.db.query('delete from users.tenant_users where tenant_id = $1', [
           t.id,

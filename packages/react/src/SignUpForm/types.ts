@@ -1,13 +1,9 @@
 import { PrefetchParams } from 'packages/react/lib/utils';
 
-export interface CreateBasicUserRequest {
+// could probably add CreateTenantUserRequest too.
+export type SignUpInfo = {
   email: string;
   password: string;
-  preferredName?: string;
-  newTenant?: string;
-}
-
-export type SignUpInfo = CreateBasicUserRequest & {
   tenantId?: string;
   fetchUrl?: string;
   callbackUrl?: string;
