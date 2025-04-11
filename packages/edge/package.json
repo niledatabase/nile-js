@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/edge",
-  "version": "4.0.2-alpha.5",
+  "version": "4.0.2-alpha.6",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/edge.esm.js",
