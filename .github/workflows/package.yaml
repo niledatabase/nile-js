@@ -2,8 +2,9 @@ name: Publish @niledatabase packages to GitHub Packages
 
 on:
   push:
-    branches:
-      - stable
+    branches: [v4/stable]
+env:
+  BRANCH_NAME: v4/stable
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: stable
+          ref: ${{ env.BRANCH_NAME }}
 
       - name: Enable Corepack before setting up Node
         run: corepack enable
