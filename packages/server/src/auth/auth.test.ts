@@ -21,7 +21,6 @@ const baseConfig = [
   'signOut',
 ];
 const apiConfig = [
-  '_token',
   'basePath',
   'callbackUrl',
   'cookieKey',

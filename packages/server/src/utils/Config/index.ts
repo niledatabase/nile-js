@@ -50,12 +50,13 @@ export class ApiConfig {
    */
   public callbackUrl?: string;
 
-  private _token?: string;
+  #token?: string;
+
   constructor(config?: ServerConfig, logger?: string) {
     const envVarConfig: EnvConfig = { config, logger };
 
     this.cookieKey = getCookieKey(envVarConfig);
-    this._token = getToken(envVarConfig);
+    this.#token = getToken(envVarConfig);
     this.callbackUrl = getCallbackUrl(envVarConfig);
     this.secureCookies = getSecureCookies(envVarConfig);
     this.basePath = getBasePath(envVarConfig);
@@ -66,11 +67,11 @@ export class ApiConfig {
   }
 
   public get token(): string | undefined {
-    return this._token;
+    return this.#token;
   }
 
   public set token(value: string | undefined) {
-    this._token = value;
+    this.#token = value;
   }
 }
 
