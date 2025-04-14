@@ -21,6 +21,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.0.1...v4.1.0-alpha.0) (2025-04-11)
 
+**Note:** Version bump only for package @niledatabase/edge
+
+## [4.0.2-alpha.10](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.9...v4.0.2-alpha.10) (2025-04-14)
+
+**Note:** Version bump only for package @niledatabase/edge
+
 ## [4.0.2-alpha.9](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.8...v4.0.2-alpha.9) (2025-04-11)
 
 **Note:** Version bump only for package @niledatabase/edge
