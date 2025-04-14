@@ -3,8 +3,6 @@ import { Config } from '../utils/Config';
 import Users from '.';
 
 const baseConfig = [
-  '_tenantId',
-  '_userId',
   'api',
   'createUser',
   'databaseId',
