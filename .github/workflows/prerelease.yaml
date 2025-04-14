@@ -5,7 +5,7 @@ on:
     types:
       - closed
     branches:
-      - v4
+      - main
 env:
   BRANCH_NAME: main
 
