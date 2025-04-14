@@ -88,23 +88,23 @@ export class Config {
 
   api: ApiConfig;
 
-  private _tenantId?: string | undefined | null;
-  private _userId?: string | undefined | null;
+  #tenantId?: string | undefined | null;
+  #userId?: string | undefined | null;
 
   public get tenantId(): string | undefined | null {
-    return this._tenantId;
+    return this.#tenantId;
   }
 
   public set tenantId(value: string | undefined | null) {
-    this._tenantId = value;
+    this.#tenantId = value;
   }
 
   public get userId(): string | undefined | null {
-    return this._userId;
+    return this.#userId;
   }
 
   public set userId(value: string | undefined | null) {
-    this._userId = value;
+    this.#userId = value;
   }
 
   constructor(config?: ServerConfig, logger?: string) {
@@ -127,9 +127,9 @@ export class Config {
 
     this.databaseId = getDatabaseId(envVarConfig) as string;
     this.databaseName = getDatabaseName(envVarConfig) as string;
-    this._tenantId = getTenantId(envVarConfig);
+    this.#tenantId = getTenantId(envVarConfig);
     this.debug = Boolean(config?.debug);
-    this._userId = config?.userId;
+    this.#userId = config?.userId;
 
     const { host, port, ...dbConfig } = config?.db ?? {};
     const configuredHost = host ?? getDbHost(envVarConfig);

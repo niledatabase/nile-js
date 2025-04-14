@@ -3,8 +3,6 @@ import { Config } from '../utils/Config';
 import Auth, { parseToken } from '.';
 
 const baseConfig = [
-  '_tenantId',
-  '_userId',
   'api',
   'configure',
   'databaseId',
