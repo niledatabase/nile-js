@@ -3106,7 +3106,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/browser@npm:^4.1.0-alpha.2, @niledatabase/browser@workspace:packages/browser":
+"@niledatabase/browser@npm:^4.1.0-alpha.2":
+  version: 4.1.0-alpha.2
+  resolution: "@niledatabase/browser@npm:4.1.0-alpha.2"
+  checksum: 10/4a80ecad437e19aea30ab507696866a46339fd056b3989356ffc92efe0ffa3abf3b3af0810fdfee64dadd28215fd43d7310c610739e6a9821d63a7f78c204075
+  languageName: node
+  linkType: hard
+
+"@niledatabase/browser@workspace:packages/browser":
   version: 0.0.0-use.local
   resolution: "@niledatabase/browser@workspace:packages/browser"
   dependencies:
