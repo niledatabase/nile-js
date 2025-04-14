@@ -3106,10 +3106,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/browser@npm:^4.1.0-alpha.2":
-  version: 4.1.0-alpha.2
-  resolution: "@niledatabase/browser@npm:4.1.0-alpha.2"
-  checksum: 10/4a80ecad437e19aea30ab507696866a46339fd056b3989356ffc92efe0ffa3abf3b3af0810fdfee64dadd28215fd43d7310c610739e6a9821d63a7f78c204075
+"@niledatabase/browser@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "@niledatabase/browser@npm:4.0.4"
+  checksum: 10/276fc7b76a15af9837c01c3e433113ee5aee4d627701b28ccfa43f2b37c8bfc520999d85d0b66936f1b270f10f5079289f856cc11304cd7cb315176caead54b3
   languageName: node
   linkType: hard
 
@@ -3183,7 +3183,7 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.23.3"
     "@chromatic-com/storybook": "npm:^1.9.0"
     "@hookform/resolvers": "npm:^5.0.1"
-    "@niledatabase/browser": "npm:^4.1.0-alpha.2"
+    "@niledatabase/browser": "npm:^4.0.4"
     "@radix-ui/react-dialog": "npm:^1.1.6"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.6"
     "@radix-ui/react-label": "npm:^2.1.3"

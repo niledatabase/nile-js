@@ -5,7 +5,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [4.0.4](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.11...v4.0.4) (2025-04-14)
 
-**Note:** Version bump only for package @niledatabase/server
+### Features
+
+- **server:** save headers for subsequent calls ([ecb86b5](https://github.com/niledatabase/nile-js/commit/ecb86b518e84ecd16b2f9a4faeeb5891281fc3f7))
+
 
 ## [4.0.2-alpha.11](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.2...v4.0.2-alpha.11) (2025-04-14)
 
@@ -26,6 +29,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 - **server:** save headers for subsequent calls ([ecb86b5](https://github.com/niledatabase/nile-js/commit/ecb86b518e84ecd16b2f9a4faeeb5891281fc3f7))
+
+## [4.0.2-alpha.10](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.9...v4.0.2-alpha.10) (2025-04-14)
+
+**Note:** Version bump only for package @niledatabase/server
 
 ## [4.0.2-alpha.9](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.8...v4.0.2-alpha.9) (2025-04-11)
 
