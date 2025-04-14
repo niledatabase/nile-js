@@ -11,6 +11,7 @@ env:
 
 jobs:
   publish:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -72,7 +73,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          npx lerna publish from-git --yes
+          npx lerna publish from-git --yes --dist-tag alpha
 
       - name: Update npmrc for GitHub
         run: |
