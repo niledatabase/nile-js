@@ -53,7 +53,7 @@
   "devDependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",
     "@babel/core": "^7.23.3",
-    "@openapitools/openapi-generator-cli": "^2.13.4",
+    "@openapitools/openapi-generator-cli": "^2.18.4",
     "@types/jest": "^29.5.9",
     "@types/lodash": "^4",
     "@types/lodash-es": "^4",
