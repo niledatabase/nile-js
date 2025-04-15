@@ -71,7 +71,6 @@ function UserInfoC(props: Props) {
   if (!user) {
     return 'Loading...';
   }
-
   return (
     <div className={cn(props.className, 'flex flex-col gap-2 items-center')}>
       <div className="flex flex-col gap-5 pb-2 items-center">
