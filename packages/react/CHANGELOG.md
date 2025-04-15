@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.2...v4.1.1) (2025-04-15)
+
+## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
 ## [4.1.1-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.1...v4.1.1-alpha.2) (2025-04-15)
 
 **Note:** Version bump only for package @niledatabase/react
@@ -42,6 +48,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 - **server:** save headers for subsequent calls ([ecb86b5](https://github.com/niledatabase/nile-js/commit/ecb86b518e84ecd16b2f9a4faeeb5891281fc3f7))
+
+## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/react
 
 ## [4.0.2-alpha.11](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.2...v4.0.2-alpha.11) (2025-04-14)
 
