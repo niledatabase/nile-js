@@ -2743,14 +2743,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/browser@npm:^4.1.0":
-  version: 4.1.1
-  resolution: "@niledatabase/browser@npm:4.1.1"
-  checksum: 10/81c13c48188d28f408d1c0a879d92b8aa784df73bb856861a7321d870f59ff5fc1b77171a48951339f13c3ab9a240d19535e2c181543a4872c14f11f1c2575aa
-  languageName: node
-  linkType: hard
-
-"@niledatabase/browser@workspace:packages/browser":
+"@niledatabase/browser@npm:^4.1.1-alpha.1, @niledatabase/browser@workspace:packages/browser":
   version: 0.0.0-use.local
   resolution: "@niledatabase/browser@workspace:packages/browser"
   dependencies:
@@ -2817,7 +2810,7 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.23.3"
     "@chromatic-com/storybook": "npm:^1.9.0"
     "@hookform/resolvers": "npm:^5.0.1"
-    "@niledatabase/browser": "npm:^4.1.0"
+    "@niledatabase/browser": "npm:^4.1.1-alpha.1"
     "@radix-ui/react-dialog": "npm:^1.1.6"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.6"
     "@radix-ui/react-label": "npm:^2.1.3"
