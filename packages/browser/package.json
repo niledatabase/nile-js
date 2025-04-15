@@ -41,7 +41,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.7.0",
+    "@openapitools/openapi-generator-cli": "^2.18.4",
     "@types/jest": "^29.5.9",
     "@types/node": "^18.18.11",
     "dts-cli": "^2.0.3",
