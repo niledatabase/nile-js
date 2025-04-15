@@ -509,7 +509,7 @@ export default class Authorizer {
       return;
     }
 
-    if (options?.redirect ?? true) {
+    if ((options?.redirect ?? true) && !error) {
       const url = callbackUrl;
       window.location.href = url;
       // If url contains a hash, the browser does not reload the page. We reload manually

@@ -2,10 +2,10 @@ import { Server } from '../Server';
 import Logger from '../utils/Logger';
 
 export function cleaner(val: string) {
-  return val.replaceAll(/\{(.*)\}/g, ':$1');
+  return val.replaceAll(/\{([^}]+)\}/g, ':$1');
 }
 
-function expressPaths(nile: Server) {
+export function expressPaths(nile: Server) {
   const paths = {
     get: nile.api.paths.get.map(cleaner),
     post: nile.api.paths.post.map(cleaner),

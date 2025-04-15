@@ -11,6 +11,8 @@ export function cn(...inputs: ClassValue[]) {
 export type ComponentFetchProps = {
   auth?: Authorizer | PartialAuthorizer;
   init?: RequestInit;
+  baseUrl?: string;
+  basePath?: string;
 };
 export function componentFetch(
   fetchUrl: string,
@@ -48,12 +50,52 @@ export function componentFetch(
   if (!('fetchUrl' in opts) && fetchUrl.startsWith('/')) {
     const auth: Authorizer | PartialAuthorizer | undefined =
       'auth' in opts ? opts.auth : props?.auth;
-    const basePath = auth?.state?.basePath ?? authorizer.state.basePath;
-    const baseUrl = auth?.state?.baseUrl ?? authorizer.state.baseUrl;
+    const basePath = getBasePath(props, opts, auth);
+    const baseUrl = getBaseUrl(props, opts, auth);
     url = `${baseUrl}${basePath}${fetchUrl}`;
   }
   return fetch(url, newOpts);
 }
+const getBaseUrl = (
+  props: ComponentFetchProps | undefined,
+  opts: RequestInit | ComponentFetchProps = {},
+  auth: Authorizer | PartialAuthorizer | undefined
+) => {
+  if (props?.baseUrl) {
+    return props.baseUrl;
+  }
+
+  if ('baseUrl' in opts) {
+    return opts.baseUrl;
+  }
+
+  if (auth?.state?.baseUrl) {
+    return auth?.state?.baseUrl;
+  }
+  if (authorizer.state.baseUrl) {
+    return authorizer.state.baseUrl;
+  }
+};
+const getBasePath = (
+  props: ComponentFetchProps | undefined,
+  opts: RequestInit | ComponentFetchProps = {},
+  auth: Authorizer | PartialAuthorizer | undefined
+) => {
+  if (props?.basePath) {
+    return props.basePath;
+  }
+
+  if ('basePath' in opts) {
+    return opts.basePath;
+  }
+
+  if (auth?.state?.basePath) {
+    return auth?.state?.basePath;
+  }
+  if (authorizer.state.basePath) {
+    return authorizer.state.basePath;
+  }
+};
 
 export type PrefetchParams = {
   baseUrl?: string;

@@ -24,7 +24,8 @@
     "test:server": "yarn workspace @niledatabase/server test"
   },
   "resolutions": {
-    "@types/mime": "3.0.4"
+    "@types/mime": "3.0.4",
+    "@nestjs/common": "^10.4.16"
   },
   "devDependencies": {
     "@commitlint/cli": "17.8.1",

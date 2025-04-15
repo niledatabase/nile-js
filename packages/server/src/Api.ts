@@ -6,6 +6,8 @@ import Auth, { parseToken, serverLogin } from './auth';
 import Tenants from './tenants';
 import Users from './users';
 import { Config } from './utils/Config';
+import Logger from './utils/Logger';
+import { setContext as asyncSetContext } from './context/asyncStorage';
 
 export class Api {
   config: Config;
@@ -93,6 +95,7 @@ export class Api {
 
   resetHeaders = (headers?: Headers) => {
     this.#headers = new Headers(headers ?? {});
+    asyncSetContext(new Headers());
     this.reset();
   };
 
@@ -148,6 +151,7 @@ export class Api {
       this.handlers
     )(payload);
     this.headers = headers;
+    this.setContext(headers);
     if (config?.returnResponse) {
       return loginRes;
     }
@@ -161,5 +165,18 @@ export class Api {
       return auth(req, this.config);
     }
     return this.auth.getSession(this.#headers);
+  };
+  setContext = (req: Request | Headers) => {
+    if (req instanceof Headers) {
+      asyncSetContext(req);
+    } else if (req instanceof Request) {
+      asyncSetContext(req.headers);
+    }
+
+    const { warn } = Logger(this.config, '[API]');
+
+    if (warn) {
+      warn('Set context expects a Request or Header object');
+    }
   };
 }

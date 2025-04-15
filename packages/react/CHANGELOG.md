@@ -3,7 +3,97 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.1...v4.1.1-alpha.2) (2025-04-15)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [4.1.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.0...v4.1.1-alpha.1) (2025-04-15)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [4.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.1-alpha.0) (2025-04-15)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.1.0](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.5...v4.1.0) (2025-04-14)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.1.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.4...v4.1.0-alpha.5) (2025-04-14)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.1.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.3...v4.1.0-alpha.4) (2025-04-14)
+
+## [4.0.4](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.11...v4.0.4) (2025-04-14)
+
+## [4.0.2-alpha.11](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.2...v4.0.2-alpha.11) (2025-04-14)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.1.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.2...v4.1.0-alpha.3) (2025-04-14)
+
+### Features
+
+- **server:** save headers for subsequent calls ([ecb86b5](https://github.com/niledatabase/nile-js/commit/ecb86b518e84ecd16b2f9a4faeeb5891281fc3f7))
+
+## [4.0.4](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.11...v4.0.4) (2025-04-14)
+
+### Features
+
+- **server:** save headers for subsequent calls ([ecb86b5](https://github.com/niledatabase/nile-js/commit/ecb86b518e84ecd16b2f9a4faeeb5891281fc3f7))
+
 ## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [4.0.2-alpha.11](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.2...v4.0.2-alpha.11) (2025-04-14)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.1.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.1...v4.1.0-alpha.2) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.1.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.9...v4.1.0-alpha.1) (2025-04-11)
+
+### Features
+
+- **server:** save headers for subsequent calls ([8c9547e](https://github.com/niledatabase/nile-js/commit/8c9547e0369d63a87fc3a348bc2079ea7f164d39))
+
+# [4.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.0.1...v4.1.0-alpha.0) (2025-04-11)
+
+### Features
+
+- **server:** save headers for subsequent calls ([ecb86b5](https://github.com/niledatabase/nile-js/commit/ecb86b518e84ecd16b2f9a4faeeb5891281fc3f7))
+
+## [4.0.2-alpha.10](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.9...v4.0.2-alpha.10) (2025-04-14)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [4.0.2-alpha.9](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.8...v4.0.2-alpha.9) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [4.0.2-alpha.8](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.7...v4.0.2-alpha.8) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [4.0.2-alpha.7](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.6...v4.0.2-alpha.7) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [4.0.2-alpha.6](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.5...v4.0.2-alpha.6) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [4.0.2-alpha.5](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.4...v4.0.2-alpha.5) (2025-04-11)
+
+### Bug Fixes
+
+- **react:** tenant selector baseurl ([687d798](https://github.com/niledatabase/nile-js/commit/687d798efb80b5986720896de3efdf903d2179df))
+
+## [4.0.2-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2-alpha.4) (2025-04-11)
 
 **Note:** Version bump only for package @niledatabase/react
 

@@ -3,8 +3,6 @@ import { Config } from '../utils/Config';
 import Tenants from '.';
 
 const baseConfig = [
-  '_tenantId',
-  '_userId',
   'api',
   'createTenant',
   'getTenant',
@@ -22,7 +20,6 @@ const baseConfig = [
   'password',
 ];
 const apiConfig = [
-  '_token',
   'basePath',
   'callbackUrl',
   'origin',
