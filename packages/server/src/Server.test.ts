@@ -1,7 +1,16 @@
+import { setContext } from './context/asyncStorage';
 import { Server } from './Server';
 import { ServerConfig } from './types';
 
+jest.mock('./context/asyncStorage', () => ({
+  setContext: jest.fn(),
+  setCookie: jest.fn(),
+}));
+
 describe('server', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
   it('has reasonable defaults', () => {
     const config = {
       databaseId: 'databaseId',
@@ -73,9 +82,6 @@ describe('server', () => {
     );
   });
 
-  afterEach(() => {
-    jest.restoreAllMocks(); // Reset fetch after each test
-  });
   it('allows for route overriding', async () => {
     const config: ServerConfig = {
       api: {
@@ -129,5 +135,11 @@ describe('server', () => {
       ['cookie', '123'],
       ['host', 'localhost:3000'],
     ]);
+  });
+  it('allows api set context to be an object', () => {
+    const nile = new Server();
+    const obj = { cookie: 'nile.session-token=123' };
+    nile.api.setContext(obj);
+    expect(setContext).toHaveBeenCalledWith(new Headers(obj));
   });
 });
