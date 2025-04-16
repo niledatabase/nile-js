@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.2.0-alpha.0) (2025-04-16)
+
+### Bug Fixes
+
+- **server:** stop logging password ([2d92e78](https://github.com/niledatabase/nile-js/commit/2d92e78ac2d184951964cf0a9aba57bba46947bb))
+
+### Features
+
+- **server:** allow id to be passed in server side tenant creation ([f452d5b](https://github.com/niledatabase/nile-js/commit/f452d5b40f79457f63e8a6575b4b69a46f8bddab))
+
 # [4.1.0](https://github.com/niledatabase/nile-js/compare/v4.1.0-alpha.5...v4.1.0) (2025-04-14)
 
 **Note:** Version bump only for package @niledatabase/server

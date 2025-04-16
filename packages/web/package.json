@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/web",
-  "version": "4.1.0",
+  "version": "4.2.0-alpha.0",
   "license": "MIT",
   "packageManager": "yarn@4.5.0",
   "types": "./dist/index.d.ts",
