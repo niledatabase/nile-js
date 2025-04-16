@@ -31,13 +31,21 @@ export default class Tenants extends Config {
   }
 
   createTenant = async <T = Tenant | Response>(
-    req: NileRequest<{ name: string }> | Headers | string,
+    req: NileRequest<{ name: string; id?: string }> | Headers | string,
     init?: RequestInit
   ): Promise<T> => {
     let _req;
     if (typeof req === 'string') {
       _req = new Request(`${this.api.basePath}${this.tenantsUrl}`, {
         body: JSON.stringify({ name: req }),
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    } else if ('name' in req || 'id' in req) {
+      _req = new Request(`${this.api.basePath}${this.tenantsUrl}`, {
+        body: JSON.stringify(req),
         method: 'POST',
         headers: {
           'content-type': 'application/json',

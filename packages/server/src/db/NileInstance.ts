@@ -29,7 +29,9 @@ class NileDatabase {
 
     config.db = poolConfig;
     this.config = config;
-    debug(`Connection pool config ${JSON.stringify(this.config.db)}`);
+    const cloned = { ...this.config.db };
+    cloned.password = '***';
+    debug(`Connection pool config ${JSON.stringify(cloned)}`);
 
     this.pool = createProxyForPool(new pg.Pool(remaining), this.config);
 
