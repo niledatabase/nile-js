@@ -82,13 +82,13 @@ export const getPassword = (cfg: EnvConfig) => {
   const log = logProtector(logger);
   const { info } = Logger(config, '[password]');
   if (stringCheck(config?.password)) {
-    log && info(`${logger}[config] ${config?.password}`);
+    log && info(`${logger}[config] ***`);
     return String(config?.password);
   }
 
   const pass = stringCheck(process.env.NILEDB_PASSWORD);
   if (pass) {
-    logger && info(`${logger}[NILEDB_PASSWORD] ${pass}`);
+    logger && info(`${logger}[NILEDB_PASSWORD] ***`);
 
     return pass;
   }

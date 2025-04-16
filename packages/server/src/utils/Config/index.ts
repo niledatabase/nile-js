@@ -170,7 +170,9 @@ export class Config {
         database: this.databaseName,
         ...dbConfig,
       };
-      info('[config set]', { db: this.db, api: this.api });
+      const cloned = { ...this.db };
+      cloned.password = '***';
+      info('[config set]', { db: cloned, api: this.api });
       return this;
     } else {
       const msg = [];
