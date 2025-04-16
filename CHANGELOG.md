@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+### Bug Fixes
+
+- **server:** support Record<string, string> in setContext ([d052f6c](https://github.com/niledatabase/nile-js/commit/d052f6c3ed7268b98e147775bc2901d8c2243a17))
+
 # [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.2.0-alpha.0) (2025-04-16)
 
 ### Bug Fixes
