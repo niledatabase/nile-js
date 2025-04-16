@@ -22,6 +22,7 @@ const tenantUser = {
   email: 'delete3@me.com',
   password: 'deleteme',
 };
+const specificTenantId = generateUUIDv7();
 
 describe('api integration', () => {
   test('does api calls for the api sdk', async () => {
@@ -81,6 +82,13 @@ describe('api integration', () => {
     };
     expect(newTenant.name).toEqual('betterName');
 
+    const specificTenant = (await nile.api.tenants.createTenant({
+      name: 'specific',
+      id: specificTenantId,
+    })) as { id: string };
+
+    expect(specificTenant.id).toEqual(specificTenantId);
+
     // be sure the tenant we get is the tenant we got
     const checkTenant = (await nile.api.tenants.getTenant(newTenant.id)) as {
       id: string;
@@ -89,7 +97,9 @@ describe('api integration', () => {
 
     // be sure the session user is assigned to the created tenant
     const checkMeUpdate = await nile.api.users.me();
-    expect(checkMeUpdate).toMatchObject({ tenants: [{ id: newTenant.id }] });
+    expect(checkMeUpdate).toMatchObject({
+      tenants: [{ id: specificTenantId }, { id: newTenant.id }],
+    });
 
     // contextualize the remaining queries
     nile.tenantId = newTenant.id;
@@ -142,6 +152,11 @@ describe('api integration', () => {
     const removedTenant = await nile.api.tenants.deleteTenant();
     expect(removedTenant.status).toEqual(204);
 
+    nile.tenantId = specificTenantId;
+    const specificTenantRemove = await nile.api.tenants.deleteTenant();
+
+    expect(specificTenantRemove.status).toEqual(204);
+
     // be sure the primary user has no tenants (they are deleted)
     const recheckMe = (await nile.api.users.me()) as unknown as { tenants: [] };
     expect(recheckMe.tenants.length).toEqual(0);
@@ -160,6 +175,12 @@ describe('api integration', () => {
       newTenant.id,
     ]);
     await nile.db.query('delete from tenants where id = $1', [newTenant.id]);
+    await nile.db.query('delete from users.tenant_users where tenant_id = $1', [
+      specificTenantId,
+    ]);
+    await nile.db.query('delete from public.tenants where id = $1', [
+      specificTenantId,
+    ]);
     await nile.clearConnections();
   }, 10000);
 });
@@ -181,6 +202,7 @@ async function initialDebugCleanup(nile: Server) {
       }
     }
   );
+
   await Promise.all(existing);
   const tenants = await nile.db.query('select * from tenants;');
   const commands = tenants.rows.reduce((accum, t) => {
@@ -195,7 +217,9 @@ async function initialDebugCleanup(nile: Server) {
           t.id,
         ])
       );
-      accum.push(nile.db.query('delete from tenants where id = $1', [t.id]));
+      accum.push(
+        nile.db.query('delete from public.tenants where id = $1', [t.id])
+      );
     }
     return accum;
   }, []);
@@ -204,4 +228,34 @@ async function initialDebugCleanup(nile: Server) {
   } catch (e) {
     await Promise.resolve();
   }
+}
+
+function generateUUIDv7(): string {
+  const now = BigInt(Date.now());
+
+  // Timestamp: 48 bits
+  const timestamp = now << 16n;
+
+  // Random bits: 74 bits (to pad rest of UUID)
+  const randomBits = crypto.getRandomValues(new Uint8Array(10));
+  let rand = 0n;
+  for (const byte of randomBits) {
+    rand = (rand << 8n) | BigInt(byte);
+  }
+
+  // Combine timestamp and random
+  const uuidBigInt = timestamp | (rand & 0xffffffffffffn); // Keep lower 48 bits of rand
+
+  // Format UUIDv7 (as per draft spec)
+  const hex = uuidBigInt.toString(16).padStart(32, '0');
+
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    '7' + hex.slice(13, 16), // version 7
+    ((parseInt(hex.slice(16, 18), 16) & 0x3f) | 0x80)
+      .toString(16)
+      .padStart(2, '0') + hex.slice(18, 20), // variant
+    hex.slice(20, 32),
+  ].join('-');
 }
