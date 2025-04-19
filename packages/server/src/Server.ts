@@ -106,7 +106,10 @@ export class Server {
    * A convenience function that applies a config and ensures whatever was passed is set properly
    */
 
-  getInstance(config: ServerConfig): Server {
+  getInstance<T = Request | Headers | Record<string, string>>(
+    config: ServerConfig,
+    req?: T
+  ): Server {
     const _config = { ...this.config, ...config };
 
     // be sure the config is up to date
@@ -121,6 +124,9 @@ export class Server {
     }
     this.databaseId = updatedConfig.databaseId;
 
+    if (req) {
+      this.api.setContext(req);
+    }
     return this;
   }
 }
