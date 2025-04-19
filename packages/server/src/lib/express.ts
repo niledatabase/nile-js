@@ -35,7 +35,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
     | null
     | undefined
   > {
-    const headers = new Headers();
+    const headers = new Headers(req.headers);
     if (!req || typeof req !== 'object') {
       return null;
     }
@@ -63,6 +63,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
         _init.body = JSON.stringify(req.body);
       }
     }
+    headers.delete('connection');
 
     _init.headers = headers;
 
@@ -78,7 +79,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
       });
       return null;
     }
-    const proxyRequest = new Request(reqUrl, _init);
+    const proxyRequest = new Request(reqUrl, { headers: req.headers });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let response;
     try {
