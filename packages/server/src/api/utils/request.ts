@@ -1,4 +1,3 @@
-import { setContext, setCookie } from '../../context/asyncStorage';
 import {
   X_NILE_ORIGIN,
   X_NILE_SECURECOOKIES,
@@ -43,7 +42,7 @@ export default async function request(
     updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
     debug(`Obtained origin from request ${requestUrl.origin}`);
   }
-  const params = { ...init, headers: updatedHeaders };
+  const params = { ...init };
   if (
     params.method?.toLowerCase() === 'post' ||
     params.method?.toLowerCase() === 'put'
@@ -61,10 +60,11 @@ export default async function request(
     }
   }
 
+  params.headers = updatedHeaders;
+
   const fullUrl = `${url}${requestUrl.search}`;
+
   try {
-    setContext(updatedHeaders);
-    // set the headers so they can be used on subsequent server side requests
     const res: Response | void = await fetch(fullUrl, { ...params }).catch(
       (e) => {
         error('An error has occurred in the fetch', {
@@ -83,8 +83,6 @@ export default async function request(
       statusText: res?.statusText,
       text: await loggingRes?.text(),
     });
-    // a special handler for a `set-cookie` header
-    setCookie(res?.headers);
     return res;
   } catch (e) {
     if (e instanceof Error) {

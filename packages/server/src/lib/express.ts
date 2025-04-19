@@ -35,7 +35,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
     | null
     | undefined
   > {
-    const headers = new Headers();
+    const headers = new Headers(req.headers);
     if (!req || typeof req !== 'object') {
       return null;
     }
@@ -45,6 +45,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
     }
     const method =
       'method' in req && typeof req.method === 'string' ? req.method : 'GET';
+
     if (
       'headers' in req &&
       typeof req.headers === 'object' &&
@@ -62,10 +63,12 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
         _init.body = JSON.stringify(req.body);
       }
     }
+    headers.delete('connection');
 
     _init.headers = headers;
-
-    const reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    const refer = headers.get('referer');
+    const refererUrl = new URL(String(refer));
+    const reqUrl = req.protocol + '://' + refererUrl.host + req.originalUrl;
     // be sure its a valid url
     try {
       new URL(reqUrl);
@@ -76,7 +79,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
       });
       return null;
     }
-    const proxyRequest = new Request(reqUrl, _init);
+    const proxyRequest = new Request(reqUrl, { headers: req.headers });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let response;
     try {
