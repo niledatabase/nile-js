@@ -5,9 +5,9 @@ on:
     types:
       - closed
     branches:
-      - main
+      - v4
 env:
-  BRANCH_NAME: main
+  BRANCH_NAME: v4
 
 jobs:
   publish:
