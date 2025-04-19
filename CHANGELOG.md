@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.3) (2025-04-19)
+
+### Bug Fixes
+
+- **react:** clean up userinfo error ([c0fe591](https://github.com/niledatabase/nile-js/commit/c0fe591a3c247d733d1ca130daea35284cd85adf))
+- **react:** user may not return from useMe hook ([878e13f](https://github.com/niledatabase/nile-js/commit/878e13f04c775925b35c4368a1210f663943a8a6))
+
 ## [4.1.2](https://github.com/niledatabase/nile-js/compare/v4.1.1...v4.1.2) (2025-04-19)
 
 ### Bug Fixes
