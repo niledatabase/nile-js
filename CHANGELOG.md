@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://github.com/niledatabase/nile-js/compare/v4.1.1...v4.1.2) (2025-04-19)
+
+### Bug Fixes
+
+- clean up userinfo error ([#944](https://github.com/niledatabase/nile-js/issues/944)) ([5a58866](https://github.com/niledatabase/nile-js/commit/5a58866d852893396f59198bb023ac497929b174))
+
 ## [4.1.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.2...v4.1.1) (2025-04-15)
 
 ## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
