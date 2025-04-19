@@ -11,7 +11,7 @@ export type HookProps = ComponentFetchProps & {
   client?: QueryClient;
   fetchUrl?: string;
 };
-export function useMe(props: HookProps) {
+export function useMe(props: HookProps): User | null {
   const { baseUrl = '', fetchUrl, client, user, auth } = props;
   const { data, isLoading } = useQuery(
     {

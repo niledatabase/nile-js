@@ -55,18 +55,18 @@ function UserInfoC(props: Props) {
   }, [user == null]);
 
   const name = useMemo(() => {
-    if (user.name) {
-      return user.name;
+    if (user?.name) {
+      return user?.name;
     }
     let out = '';
-    if (user.givenName) {
-      out = user.givenName;
+    if (user?.givenName) {
+      out = user?.givenName;
     }
-    if (user.familyName) {
-      out = `${out} ${user.familyName}`;
+    if (user?.familyName) {
+      out = `${out} ${user?.familyName}`;
     }
     return out;
-  }, [user.familyName, user.givenName, user.name]);
+  }, [user?.familyName, user?.givenName, user?.name]);
 
   if (!user) {
     return 'Loading...';
