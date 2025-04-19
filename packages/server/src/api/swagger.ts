@@ -50,6 +50,8 @@
  *       properties:
  *         name:
  *           type: string
+ *         id:
+ *           type: string
  *     Tenant:
  *       required:
  *         - id

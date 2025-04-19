@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+### Bug Fixes
+
+- **server:** support Record<string, string> in setContext ([d052f6c](https://github.com/niledatabase/nile-js/commit/d052f6c3ed7268b98e147775bc2901d8c2243a17))
+
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.2.0-alpha.0) (2025-04-16)
+
+### Bug Fixes
+
+- **server:** stop logging password ([2d92e78](https://github.com/niledatabase/nile-js/commit/2d92e78ac2d184951964cf0a9aba57bba46947bb))
+
+### Features
+
+- **server:** allow id to be passed in server side tenant creation ([f452d5b](https://github.com/niledatabase/nile-js/commit/f452d5b40f79457f63e8a6575b4b69a46f8bddab))
+
+## [4.1.3](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.3) (2025-04-19)
+
+### Bug Fixes
+
+- **react:** clean up userinfo error ([c0fe591](https://github.com/niledatabase/nile-js/commit/c0fe591a3c247d733d1ca130daea35284cd85adf))
+- **react:** user may not return from useMe hook ([878e13f](https://github.com/niledatabase/nile-js/commit/878e13f04c775925b35c4368a1210f663943a8a6))
+
 ## [4.1.2](https://github.com/niledatabase/nile-js/compare/v4.1.1...v4.1.2) (2025-04-19)
 
 ### Bug Fixes
@@ -106,6 +129,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **react:** tenant selector baseurl ([687d798](https://github.com/niledatabase/nile-js/commit/687d798efb80b5986720896de3efdf903d2179df))
 
 ## [4.0.2-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2-alpha.4) (2025-04-11)
+
+## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
 
 **Note:** Version bump only for package @niledatabase/packages
 

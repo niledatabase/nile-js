@@ -166,17 +166,23 @@ export class Api {
     }
     return this.auth.getSession(this.#headers);
   };
-  setContext = (req: Request | Headers) => {
+  setContext = (req: Request | Headers | Record<string, string>) => {
     if (req instanceof Headers) {
       asyncSetContext(req);
+      return;
     } else if (req instanceof Request) {
       asyncSetContext(req.headers);
+      return;
     }
+    const headers = new Headers(req);
+    if (headers) {
+      asyncSetContext(headers);
+    } else {
+      const { warn } = Logger(this.config, '[API]');
 
-    const { warn } = Logger(this.config, '[API]');
-
-    if (warn) {
-      warn('Set context expects a Request or Header object');
+      if (warn) {
+        warn('Set context expects a Request or Header object');
+      }
     }
   };
 }
