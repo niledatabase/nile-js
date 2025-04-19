@@ -1,11 +1,5 @@
-import { setContext } from './context/asyncStorage';
 import { Server } from './Server';
 import { ServerConfig } from './types';
-
-jest.mock('./context/asyncStorage', () => ({
-  setContext: jest.fn(),
-  setCookie: jest.fn(),
-}));
 
 describe('server', () => {
   afterEach(() => {
@@ -140,6 +134,6 @@ describe('server', () => {
     const nile = new Server();
     const obj = { cookie: 'nile.session-token=123' };
     nile.api.setContext(obj);
-    expect(setContext).toHaveBeenCalledWith(new Headers(obj));
+    expect(nile.api.headers).toEqual(new Headers(obj));
   });
 });

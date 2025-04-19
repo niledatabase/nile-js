@@ -7,7 +7,7 @@ import Tenants from './tenants';
 import Users from './users';
 import { Config } from './utils/Config';
 import Logger from './utils/Logger';
-import { setContext as asyncSetContext } from './context/asyncStorage';
+import { handlersWithContext } from './api/handlers/withContext';
 
 export class Api {
   config: Config;
@@ -22,6 +22,7 @@ export class Api {
     DELETE: (req: Request) => Promise<void | Response>;
     PUT: (req: Request) => Promise<void | Response>;
   };
+  handlersWithContext;
   paths: {
     get: string[];
     post: string[];
@@ -30,6 +31,11 @@ export class Api {
   };
   constructor(config: Config) {
     this.config = config;
+
+    if (config?.api.headers) {
+      this.headers = config?.api.headers;
+    }
+
     this.auth = new Auth(config, undefined, {
       resetHeaders: this.resetHeaders,
     });
@@ -41,6 +47,7 @@ export class Api {
     };
 
     this.handlers = Handlers(this.routes, config);
+    this.handlersWithContext = handlersWithContext(this.routes, config);
     this.paths = {
       get: [
         this.routes.ME,
@@ -95,7 +102,6 @@ export class Api {
 
   resetHeaders = (headers?: Headers) => {
     this.#headers = new Headers(headers ?? {});
-    asyncSetContext(new Headers());
     this.reset();
   };
 
@@ -168,20 +174,22 @@ export class Api {
   };
   setContext = (req: Request | Headers | Record<string, string>) => {
     if (req instanceof Headers) {
-      asyncSetContext(req);
+      this.headers = req;
       return;
     } else if (req instanceof Request) {
-      asyncSetContext(req.headers);
+      this.headers = new Headers(req.headers);
       return;
     }
     const headers = new Headers(req);
     if (headers) {
-      asyncSetContext(headers);
+      this.headers = headers;
     } else {
       const { warn } = Logger(this.config, '[API]');
 
       if (warn) {
-        warn('Set context expects a Request or Header object');
+        warn(
+          'Set context expects a Request, Header instance or an object of Record<string, string>'
+        );
       }
     }
   };

@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Config } from '../../utils/Config';
-import { setContext, setCookie } from '../../context/asyncStorage';
-
-jest.mock('../../context/asyncStorage', () => ({
-  setContext: jest.fn(),
-  setCookie: jest.fn(),
-}));
 
 import _request from './request';
 
@@ -99,44 +93,5 @@ describe('request', () => {
       const val = expectedHeaders[key];
       expect(value).toBe(val);
     }
-  });
-  it('sets the context', async () => {
-    const requestHeaders = {
-      host: 'localhost:3001',
-    };
-
-    global.fetch = jest.fn().mockResolvedValue({
-      headers: new Headers({
-        'set-cookie': 'nile.session-token=123',
-      }),
-      status: 200,
-    });
-
-    const request = {
-      url: 'http://localhost:3001/v2/databases/123',
-      method: 'PUT',
-      headers: new Headers(),
-      clone: jest.fn(() => ({ body: '' })),
-      body: JSON.stringify({ userID: '1234' }),
-    } as unknown as Request;
-
-    const config = new Config();
-    await _request(
-      'http://localhost:3000',
-      { request, method: 'POST' },
-      config
-    );
-    const resolvedHeaders = {
-      ...requestHeaders,
-      'nile.origin': 'http://localhost:3001',
-      'content-type': 'application/x-www-form-urlencoded',
-    };
-
-    expect(setContext).toHaveBeenCalledWith(new Headers(resolvedHeaders));
-    expect(setCookie).toHaveBeenCalledWith(
-      new Headers({
-        'set-cookie': 'nile.session-token=123',
-      })
-    );
   });
 });

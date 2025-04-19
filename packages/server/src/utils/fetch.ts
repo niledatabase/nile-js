@@ -1,7 +1,5 @@
 import { decodeJwt } from 'jose';
 
-import { getCookie, getOrigin } from '../context/asyncStorage';
-
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
 import { NileRequest } from './Requester';
@@ -28,7 +26,7 @@ export function handleTenantId(
 }
 
 function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
-  const cookie = headers.get('cookie')?.split('; ') ?? getCookie()?.split('; ');
+  const cookie = headers.get('cookie')?.split('; ');
   const _cookies: Record<string, string> = {};
   if (cookie) {
     for (const parts of cookie) {
@@ -73,8 +71,34 @@ export function makeBasicHeaders(
 ) {
   const { warn, error } = Logger(config, '[headers]');
   const headers = new Headers(opts?.headers);
-  headers.set('content-type', 'application/json; charset=utf-8');
   const cookieKey = config.api?.cookieKey;
+  headers.set('content-type', 'application/json; charset=utf-8');
+  const origin = headers.get(X_NILE_ORIGIN);
+  if (!origin) {
+    if (config.api.headers) {
+      const localOrigin = config.api.headers.get(X_NILE_ORIGIN);
+      if (localOrigin) {
+        headers.set(X_NILE_ORIGIN, localOrigin);
+      }
+    }
+  }
+  // prefer the cookie from the api, not the opts
+  const cookie = headers.get('cookie');
+  if (!cookie) {
+    if (config.api.headers) {
+      const configCookie = config.api.headers.get('cookie');
+      if (configCookie) {
+        headers.set('cookie', configCookie);
+      }
+    } else {
+      // routes that do not require a cookie (non-auth)
+      if (!url.endsWith('/users')) {
+        error(
+          'Missing cookie header from request. Call nile.api.setContext(request) before making additional calls.'
+        );
+      }
+    }
+  }
 
   // the sdk server side calls use this
   const authHeader = headers.get('Authorization');
@@ -86,30 +110,12 @@ export function makeBasicHeaders(
       headers.set('Authorization', `Bearer ${getToken({ config })}`);
     }
   }
-  const cookie = headers.get('cookie');
-  if (!cookie) {
-    const contextCookie = getCookie();
-    if (contextCookie) {
-      headers.set('cookie', contextCookie);
-    } else {
-      // routes that do not require a cookie (non-auth)
-      if (!url.endsWith('/users')) {
-        error(
-          'Missing cookie header from request. Call nile.api.setContext(request) before making additional calls.'
-        );
-      }
-    }
-  }
   if (config && config.api.secureCookies != null) {
     headers.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
   }
 
-  const savedOrigin = getOrigin();
-
   if (config && config.api.origin) {
     headers.set(X_NILE_ORIGIN, config.api.origin);
-  } else if (savedOrigin) {
-    headers.set(X_NILE_ORIGIN, savedOrigin);
   } else {
     warn(
       'nile.origin missing from header, which defaults to secure cookies only.'
@@ -153,6 +159,7 @@ export async function _fetch(
         message: e.message,
         stack: e.stack,
         debug: 'Is nile-auth running?',
+        cause: e.cause,
       });
       return new Error(e);
     });
