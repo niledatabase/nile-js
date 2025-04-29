@@ -12,9 +12,11 @@ export function handlersWithContext(
   config: Config
 ): {
   GET: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
-  POST: (req: Request) => Promise<void | Response>;
-  DELETE: (req: Request) => Promise<void | Response>;
-  PUT: (req: Request) => Promise<void | Response>;
+  POST: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
+  DELETE: (
+    req: Request
+  ) => Promise<{ response: void | Response; nile: Server }>;
+  PUT: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
 } {
   const GET = getter(configRoutes, config);
   const POST = poster(configRoutes, config);
@@ -26,17 +28,32 @@ export function handlersWithContext(
       const updatedConfig = updateConfig(response, config);
       return { response, nile: new Server(updatedConfig) };
     },
-    POST,
-    DELETE,
-    PUT,
+    POST: async (req) => {
+      const response = await POST(req);
+      const updatedConfig = updateConfig(response, config);
+      return { response, nile: new Server(updatedConfig) };
+    },
+    DELETE: async (req) => {
+      const response = await DELETE(req);
+      const updatedConfig = updateConfig(response, config);
+      return { response, nile: new Server(updatedConfig) };
+    },
+    PUT: async (req) => {
+      const response = await PUT(req);
+      const updatedConfig = updateConfig(response, config);
+      return { response, nile: new Server(updatedConfig) };
+    },
   };
 }
 
-export function updateConfig(response: Response, config: Config): ServerConfig {
+export function updateConfig(
+  response: Response | void,
+  config: Config
+): ServerConfig {
   let origin = 'http://localhost:3000';
   let headers: Headers | null = null;
 
-  if (response.status === 302) {
+  if (response?.status === 302) {
     const location = response.headers.get('location');
     if (location) {
       origin = location;
@@ -46,12 +63,13 @@ export function updateConfig(response: Response, config: Config): ServerConfig {
   const setCookies: string[] = [];
 
   // Headers are iterable
-  for (const [key, value] of response.headers) {
-    if (key.toLowerCase() === 'set-cookie') {
-      setCookies.push(value);
+  if (response?.headers) {
+    for (const [key, value] of response.headers) {
+      if (key.toLowerCase() === 'set-cookie') {
+        setCookies.push(value);
+      }
     }
   }
-
   if (setCookies.length > 0) {
     const cookieHeader = setCookies
       .map((cookieStr) => cookieStr.split(';')[0])
