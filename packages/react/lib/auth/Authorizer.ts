@@ -137,10 +137,12 @@ export default class Authorizer {
     return `${this.baseUrl}${this.state.basePath}`;
   }
 
-  async fetchData<T = any>(
+  async fetchData<T = Record<string, string>>(
     url: string,
     init?: RequestInit
   ): Promise<T | undefined> {
+    let errorHandler;
+    let res;
     try {
       const options: RequestInit = {
         headers: {
@@ -150,9 +152,10 @@ export default class Authorizer {
         ...init,
       };
 
-      const res = await fetch(url, options);
-      const data = await res.json();
+      res = await fetch(url, options);
+      errorHandler = res.clone();
       this.state.loading = false;
+      const data = await res.json();
       if (!res.ok) throw data;
       return Object.keys(data).length > 0 ? data : undefined;
     } catch (error) {
@@ -163,6 +166,14 @@ export default class Authorizer {
             error: error as Error,
             url,
           });
+        } else {
+          const error = await errorHandler?.text();
+          if (error) {
+            if (errorHandler) {
+              const urlSearchParams = new URLSearchParams({ error });
+              return { url: `${url}?${urlSearchParams}` } as T;
+            }
+          }
         }
       }
       return undefined;
@@ -254,6 +265,7 @@ export default class Authorizer {
     }
     return { loading: this.state.loading } as NonErrorSession;
   }
+
   async refreshSession() {
     this.state.loading = true;
     const session = await this.fetchData<NonErrorSession | undefined>(
@@ -415,13 +427,13 @@ export default class Authorizer {
       return;
     }
 
-    const error = data?.url
-      ? new URL(String(data?.url)).searchParams.get('error')
-      : 'Unable to parse response from server';
+    const error = data?.data?.url
+      ? new URL(String(data?.data?.url)).searchParams.get('error')
+      : null;
 
     if (data?.ok) {
       await this.initialize();
-      await this.state.getSession({ event: 'storage' });
+      await this.getSession({ event: 'storage' });
     }
     return {
       error,
@@ -496,24 +508,27 @@ export default class Authorizer {
       method: 'post',
       body: JSON.stringify({ email, password }),
     });
-    if (data) {
-      await this.initialize({ event: 'storage' });
-      await this.getSession({ event: 'storage' });
-    }
+
     const error = data?.url
       ? new URL(data.url).searchParams.get('error')
-      : 'Unable to parse response from server';
+      : null;
 
-    if (this.requestInit?.credentials) {
-      window.location.reload();
-      return;
-    }
+    if (!error) {
+      if (data) {
+        await this.initialize({ event: 'storage' });
+        await this.getSession({ event: 'storage' });
+      }
+      if (this.requestInit?.credentials) {
+        window.location.reload();
+        return;
+      }
 
-    if ((options?.redirect ?? true) && !error) {
-      const url = callbackUrl;
-      window.location.href = url;
-      // If url contains a hash, the browser does not reload the page. We reload manually
-      if (url.includes('#')) window.location.reload();
+      if (options?.redirect ?? true) {
+        const url = callbackUrl;
+        window.location.href = url;
+        // If url contains a hash, the browser does not reload the page. We reload manually
+        if (url.includes('#')) window.location.reload();
+      }
     }
 
     return {

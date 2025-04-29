@@ -11,6 +11,10 @@ class FakeResponse {
   json = async () => {
     return JSON.parse(this.payload);
   };
+  ok = true;
+  clone = async () => {
+    return this;
+  };
 }
 
 export async function _token() {
