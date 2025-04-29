@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2025-04-29)
+
+### Bug Fixes
+
+- **server:** update context response ([7820238](https://github.com/niledatabase/nile-js/commit/7820238d5b878926191c2fb017c84aa3626a96c8))
+
 # [4.2.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.3...v4.2.0-alpha.2) (2025-04-29)
 
 ### Bug Fixes
