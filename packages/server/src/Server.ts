@@ -34,6 +34,16 @@ export class Server {
     this.api.updateConfig(this.config);
   }
 
+  async init(cfg?: Config) {
+    const updatedConfig = await this.config.configure({
+      ...this.config,
+      ...cfg,
+    });
+    this.setConfig(updatedConfig);
+
+    return this;
+  }
+
   set databaseId(val: string | void) {
     if (val) {
       this.config.databaseId = val;
@@ -116,10 +126,12 @@ export class Server {
 }
 
 let server: Server;
-export function create(config?: ServerConfig): Server {
+export async function create(config?: ServerConfig): Promise<Server> {
   if (!server) {
     server = new Server(config);
   }
-
-  return server;
+  if (config) {
+    return await server.init(new Config(config));
+  }
+  return await server.init();
 }

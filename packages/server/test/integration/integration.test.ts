@@ -27,6 +27,7 @@ const specificTenantId = generateUUIDv7();
 describe('api integration', () => {
   test('does api calls for the api sdk', async () => {
     const nile = new Server(config);
+    await nile.init();
     // debugging clean up
     await initialDebugCleanup(nile);
 
