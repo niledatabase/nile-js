@@ -1,42 +1,18 @@
 import { Config } from '../utils/Config';
+import { apiConfig, baseConfig } from '../../test/configKeys';
 
 import Auth, { parseToken } from '.';
 
-const baseConfig = [
-  'api',
-  'configure',
-  'databaseId',
-  'databaseName',
-  'db',
-  'debug',
-  'headers',
-  'logger',
-  'password',
-  'listProviders',
-  'getSession',
-  'user',
-  'resetHeaders',
-  'signOut',
-];
-const apiConfig = [
-  'basePath',
-  'callbackUrl',
-  'cookieKey',
-  'routePrefix',
-  'routes',
-  'origin',
-  'secureCookies',
-];
-const config = {
-  databaseId: 'databaseId',
-  tenantId: 'tenant',
-  user: 'username',
-  password: 'password',
-};
+const auth = ['listProviders', 'getSession', 'resetHeaders', 'signOut'];
+
 describe('auth', () => {
   it('has expected methods', () => {
-    const methods = new Auth(new Config(config));
-    expect(Object.keys(methods).sort()).toEqual(baseConfig.sort());
+    const methods = new Auth(new Config());
+    expect(
+      Object.keys(methods)
+        .filter((m) => !baseConfig.includes(m))
+        .sort()
+    ).toEqual(auth.sort());
     expect(Object.keys(methods.api).sort()).toEqual(apiConfig.sort());
   });
 });
