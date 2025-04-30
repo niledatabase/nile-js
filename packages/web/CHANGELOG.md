@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.3...v5.0.0-alpha.0) (2025-04-30)
+
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.1...v4.2.0-alpha.0) (2025-04-16)
+
+## [4.1.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.2...v4.1.1) (2025-04-15)
+
+## [4.1.1-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.1...v4.1.1-alpha.2) (2025-04-15)
+
+## [4.1.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.0...v4.1.1-alpha.1) (2025-04-15)
+
+## [4.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.1-alpha.0) (2025-04-15)
+
+## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+
+**Note:** Version bump only for package @niledatabase/web
+
 # [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
 
 **Note:** Version bump only for package @niledatabase/web

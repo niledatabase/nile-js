@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.3...v5.0.0-alpha.0) (2025-04-30)
+
+- feat(server)!: remove auto configure ([90ed2ac](https://github.com/niledatabase/nile-js/commit/90ed2ac4a9447be1c4df7715d8327c7b4346e4f2))
+
+### Reverts
+
+- Revert "feat(server)!: remove auto configure" ([61a4999](https://github.com/niledatabase/nile-js/commit/61a4999cfce230ae7116d515644cd045768253a7))
+
+### BREAKING CHANGES
+
+- removes autoconfigure
+
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+### Bug Fixes
+
+- **server:** support Record<string, string> in setContext ([d052f6c](https://github.com/niledatabase/nile-js/commit/d052f6c3ed7268b98e147775bc2901d8c2243a17))
+
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.1...v4.2.0-alpha.0) (2025-04-16)
+
+### Bug Fixes
+
+- **server:** stop logging password ([2d92e78](https://github.com/niledatabase/nile-js/commit/2d92e78ac2d184951964cf0a9aba57bba46947bb))
+
+### Features
+
+- **server:** allow id to be passed in server side tenant creation ([f452d5b](https://github.com/niledatabase/nile-js/commit/f452d5b40f79457f63e8a6575b4b69a46f8bddab))
+
+## [4.1.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.2...v4.1.1) (2025-04-15)
+
+## [4.1.1-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.1...v4.1.1-alpha.2) (2025-04-15)
+
+## [4.1.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.0...v4.1.1-alpha.1) (2025-04-15)
+
+## [4.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.1-alpha.0) (2025-04-15)
+
+## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+
 # [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
 
 ### Bug Fixes
@@ -18,6 +56,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 - **server:** allow id to be passed in server side tenant creation ([f452d5b](https://github.com/niledatabase/nile-js/commit/f452d5b40f79457f63e8a6575b4b69a46f8bddab))
+
 ## [4.1.3](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.3) (2025-04-19)
 
 **Note:** Version bump only for package @niledatabase/server
