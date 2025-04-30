@@ -28,6 +28,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [4.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.1-alpha.0) (2025-04-15)
 
 ## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+# [4.2.0](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.4...v4.2.0) (2025-04-30)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.2.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.3...v4.2.0-alpha.4) (2025-04-30)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2025-04-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.2.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.3...v4.2.0-alpha.2) (2025-04-29)
+
+### Bug Fixes
+
+- **react:** redirect on sign up correctly ([114b618](https://github.com/niledatabase/nile-js/commit/114b618d9e44f69c6da6423dd652733e5ac994fc))
+
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.2.0-alpha.0) (2025-04-16)
 
 # [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
 

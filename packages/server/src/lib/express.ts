@@ -45,6 +45,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
     }
     const method =
       'method' in req && typeof req.method === 'string' ? req.method : 'GET';
+
     if (
       'headers' in req &&
       typeof req.headers === 'object' &&
@@ -66,6 +67,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
     _init.headers = headers;
 
     const reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
     // be sure its a valid url
     try {
       new URL(reqUrl);

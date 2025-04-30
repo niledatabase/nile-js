@@ -27,6 +27,7 @@ export type ApiParams = {
   secureCookies?: boolean;
   // the origin for the requests. Allows the setting of the callback origin to a random FE (eg FE localhost:3001 -> BE: localhost:5432 would set to localhost:3000)
   origin?: null | undefined | string;
+  headers?: null | Headers | Record<string, string>;
 };
 export class ApiConfig {
   public cookieKey?: string;
@@ -35,6 +36,7 @@ export class ApiConfig {
   public routePrefix?: string;
   public secureCookies?: boolean;
   public origin?: string | null;
+  public headers?: Headers | null;
 
   /**
    * The client side callback url. Defaults to nothing (so nile.origin will be it), but in the cases of x-origin, you want to set this explicitly to be sure nile-auth does the right thing
@@ -52,6 +54,12 @@ export class ApiConfig {
     this.callbackUrl = getCallbackUrl(envVarConfig);
     this.secureCookies = getSecureCookies(envVarConfig);
     this.basePath = getBasePath(envVarConfig);
+
+    if (config?.api?.headers instanceof Headers) {
+      this.headers = config?.api?.headers;
+    } else if (config?.api?.headers) {
+      this.headers = new Headers(config.api.headers);
+    }
 
     this.routes = config?.api?.routes;
     this.routePrefix = config?.api?.routePrefix;

@@ -40,6 +40,31 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [4.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.1-alpha.0) (2025-04-15)
 
 ## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+# [4.2.0](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.4...v4.2.0) (2025-04-30)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [4.2.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.3...v4.2.0-alpha.4) (2025-04-30)
+
+### Bug Fixes
+
+- **server:** do not merge a missing cookie, set user id at login ([aa68534](https://github.com/niledatabase/nile-js/commit/aa685341d5943748ea0b76e22655e4a64e354bfe))
+
+# [4.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2025-04-29)
+
+### Bug Fixes
+
+- **server:** update context response ([7820238](https://github.com/niledatabase/nile-js/commit/7820238d5b878926191c2fb017c84aa3626a96c8))
+
+# [4.2.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.3...v4.2.0-alpha.2) (2025-04-29)
+
+### Bug Fixes
+
+- **react:** redirect on sign up correctly ([c6ae27a](https://github.com/niledatabase/nile-js/commit/c6ae27af3fc0e1f10ed3646aa47b21eae7760172))
+- **react:** redirect on sign up correctly ([114b618](https://github.com/niledatabase/nile-js/commit/114b618d9e44f69c6da6423dd652733e5ac994fc))
+- **server:** set context better for stateful requests ([7e5808b](https://github.com/niledatabase/nile-js/commit/7e5808b70d09a27fb9db70ba5bdefc2a83310373))
+- **server:** set context better for stateful requests ([2a7402b](https://github.com/niledatabase/nile-js/commit/2a7402b9e051c17748f5dfed11119262452cc420))
+- **server:** set context better for stateful requests ([099c222](https://github.com/niledatabase/nile-js/commit/099c222b83257d60919c9165ccb5fe3a8a7da1a1))
 
 # [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
 
@@ -57,6 +82,25 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **server:** allow id to be passed in server side tenant creation ([f452d5b](https://github.com/niledatabase/nile-js/commit/f452d5b40f79457f63e8a6575b4b69a46f8bddab))
 
+<<<<<<< HEAD
+=======
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+### Bug Fixes
+
+- **server:** support Record<string, string> in setContext ([d052f6c](https://github.com/niledatabase/nile-js/commit/d052f6c3ed7268b98e147775bc2901d8c2243a17))
+
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.2.0-alpha.0) (2025-04-16)
+
+### Bug Fixes
+
+- **server:** stop logging password ([2d92e78](https://github.com/niledatabase/nile-js/commit/2d92e78ac2d184951964cf0a9aba57bba46947bb))
+
+### Features
+
+- **server:** allow id to be passed in server side tenant creation ([f452d5b](https://github.com/niledatabase/nile-js/commit/f452d5b40f79457f63e8a6575b4b69a46f8bddab))
+
+>>>>>>> v4
 ## [4.1.3](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.3) (2025-04-19)
 
 **Note:** Version bump only for package @niledatabase/server

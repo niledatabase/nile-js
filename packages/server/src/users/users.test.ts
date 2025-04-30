@@ -13,7 +13,6 @@ const users = [
   'unlinkUser',
   'updateMe',
 ];
-
 describe('users', () => {
   it('has expected methods', () => {
     const methods = new Users(new Config());

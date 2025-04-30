@@ -1,11 +1,6 @@
-import { setContext } from './context/asyncStorage';
 import { Server } from './Server';
 import { ServerConfig } from './types';
-
-jest.mock('./context/asyncStorage', () => ({
-  setContext: jest.fn(),
-  setCookie: jest.fn(),
-}));
+import { X_NILE_ORIGIN } from './utils/constants';
 
 describe('server', () => {
   afterEach(() => {
@@ -120,26 +115,44 @@ describe('server', () => {
   it('merges headers', () => {
     const nile = new Server();
     expect(nile.api.headers).toEqual(undefined);
-    nile.api.headers = { cookie: '123' };
+    nile.api.headers = {
+      cookie: '123',
+      [X_NILE_ORIGIN]: 'http://localhost:3000',
+    };
     let update: [string, string][] = [];
     nile.api.headers?.forEach((value, key) => {
       update.push([key.toLowerCase(), value]);
     });
-    expect(update).toEqual([['cookie', '123']]);
+    expect(update).toEqual([
+      ['cookie', '123'],
+      [X_NILE_ORIGIN, 'http://localhost:3000'],
+    ]);
     update = [];
     nile.api.headers = { host: 'localhost:3000' };
     nile.api.headers?.forEach((value, key) => {
       update.push([key.toLowerCase(), value]);
     });
     expect(update).toEqual([
-      ['cookie', '123'],
       ['host', 'localhost:3000'],
+      [X_NILE_ORIGIN, 'http://localhost:3000'],
     ]);
   });
   it('allows api set context to be an object', () => {
     const nile = new Server();
     const obj = { cookie: 'nile.session-token=123' };
     nile.api.setContext(obj);
-    expect(setContext).toHaveBeenCalledWith(new Headers(obj));
+    expect(nile.api.headers).toEqual(new Headers(obj));
+  });
+
+  it('removes the cookie if its missing', () => {
+    const nile = new Server();
+    nile.api.setContext({ cookie: 'nile.session-token=123' });
+    const obj = {
+      host: 'localhost:3000',
+      'user-agent': 'curl/8.4.0',
+      accept: '*/*',
+    };
+    nile.api.setContext(obj);
+    expect(nile.api.headers).toEqual(new Headers(obj));
   });
 });
