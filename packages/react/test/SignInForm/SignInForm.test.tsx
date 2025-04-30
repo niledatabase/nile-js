@@ -4,12 +4,23 @@ import userEvent from '@testing-library/user-event';
 
 import '../matchMedia.mock';
 import SignInForm from '../../src/SignInForm/SignInForm';
-import { token } from '../fetch.mock';
+
+const mockFetchResponse = (data: unknown, options: Partial<Response> = {}) => ({
+  ok: true,
+  status: 200,
+  ...options,
+  json: async () => data,
+  clone: () => mockFetchResponse(data, options), // support clone()
+});
 
 describe('LoginForm', () => {
   it('calls success if successful', async () => {
     const onSuccess = jest.fn();
-    global.fetch = token;
+    global.fetch = jest.fn().mockResolvedValueOnce(
+      mockFetchResponse({
+        credentials: { id: 'providers', type: 'providers' },
+      })
+    );
     render(<SignInForm onSuccess={onSuccess} />);
     const password = screen.getByPlaceholderText('Password');
     fireEvent.change(password, { target: { value: 'supersecret' } });

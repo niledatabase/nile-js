@@ -1,10 +1,4 @@
 // Move the mock to the top
-jest.mock('../context/asyncStorage', () => ({
-  getCookie: jest.fn(),
-  getOrigin: jest.fn(),
-}));
-
-import { getCookie, getOrigin } from '../context/asyncStorage';
 
 import { Config } from './Config';
 import { X_NILE_SECURECOOKIES } from './constants';
@@ -17,9 +11,14 @@ describe('fetch wrapper', () => {
   });
 
   it('sets application json and uses the context', () => {
-    const config = new Config();
-    (getCookie as jest.Mock).mockReturnValue('nile.session-token=123');
-    (getOrigin as jest.Mock).mockReturnValue('http://some.url');
+    const config = new Config({
+      api: {
+        headers: {
+          cookie: 'nile.session-token=123',
+          'nile.origin': 'http://some.url',
+        },
+      },
+    });
 
     const result = Object.fromEntries(makeBasicHeaders(config, url).entries());
 
@@ -28,12 +27,18 @@ describe('fetch wrapper', () => {
       cookie: 'nile.session-token=123',
       'nile.origin': 'http://some.url',
     });
-    expect(getCookie).toHaveBeenCalled();
-    expect(getOrigin).toHaveBeenCalled();
   });
 
   it('makes the correct headers based on the config', () => {
-    const config = new Config({ api: { secureCookies: true } });
+    const config = new Config({
+      api: {
+        secureCookies: true,
+        headers: {
+          cookie: 'nile.session-token=123',
+          'nile.origin': 'http://some.url',
+        },
+      },
+    });
 
     const result = Object.fromEntries(makeBasicHeaders(config, url).entries());
 
@@ -50,7 +55,10 @@ describe('fetch wrapper', () => {
 
     const result = Object.fromEntries(
       makeBasicHeaders(config, url, {
-        headers: { cookie: '__Secure.nile-token=blah' },
+        headers: {
+          cookie: '__Secure.nile-token=blah',
+          'nile.origin': 'http://some.url',
+        },
       }).entries()
     );
 

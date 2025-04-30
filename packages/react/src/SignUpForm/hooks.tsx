@@ -16,15 +16,17 @@ export function useSignUp<T extends SignUpInfo>(
       mutationFn: async (_data) => {
         const possibleData = beforeMutate && beforeMutate(_data);
         const payload: T = { ..._data, ...possibleData };
-        return await signUp({
+        const { data, error } = await signUp({
           ...remaining,
           ...payload,
         });
+        if (error) {
+          throw new Error(error);
+        }
+        return data;
       },
 
-      onSuccess: async (data, variables) => {
-        onSuccess && onSuccess(data, variables);
-      },
+      onSuccess,
       onError,
     },
     client

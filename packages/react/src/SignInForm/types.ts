@@ -21,4 +21,5 @@ export type Props = ComponentFetchProps & {
   className?: string;
   baseUrl?: string;
   fetchUrl?: string;
+  redirect?: boolean;
 };

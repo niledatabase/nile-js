@@ -14,19 +14,25 @@ export function useSignIn(params?: Props) {
     baseUrl,
     fetchUrl,
     auth,
+    redirect,
   } = params ?? {};
   const mutation = useMutation({
     mutationFn: async (_data: LoginInfo) => {
       const d = { ..._data, callbackUrl };
       const possibleData = beforeMutate && beforeMutate(d);
       const data = possibleData ?? d;
-      return await signIn('credentials', {
+      const res = await signIn('credentials', {
         init,
         auth,
         baseUrl,
         fetchUrl,
+        redirect,
         ...data,
       });
+      if (!res?.ok && res?.error) {
+        throw new Error(res.error);
+      }
+      return res;
     },
     onSuccess,
     onError,
