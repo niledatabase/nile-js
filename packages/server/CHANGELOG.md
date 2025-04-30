@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.4...v4.2.0) (2025-04-30)
+
+**Note:** Version bump only for package @niledatabase/server
+
 # [4.2.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.3...v4.2.0-alpha.4) (2025-04-30)
 
 ### Bug Fixes
