@@ -9,18 +9,21 @@ export type EnvConfig = {
 
 export const getCallbackUrl = (cfg: EnvConfig) => {
   const { config } = cfg;
-  if (stringCheck(process.env.NILEDB_CALLBACK_URL)) {
-    return process.env.NILEDB_CALLBACK_URL;
+  if (stringCheck(config?.api?.callbackUrl)) {
+    return config?.api?.callbackUrl;
   }
-  return config?.api?.callbackUrl;
+  return process.env.NILEDB_CALLBACK_URL;
 };
 
 export const getSecureCookies = (cfg: EnvConfig) => {
   const { config } = cfg;
+  if (config?.api?.secureCookies != null) {
+    return config?.api?.secureCookies;
+  }
   if (stringCheck(process.env.NILEDB_SECURECOOKIES)) {
     return Boolean(process.env.NILEDB_SECURECOOKIES);
   }
-  return config?.api?.secureCookies;
+  return undefined;
 };
 
 export const getDatabaseId = (cfg: EnvConfig) => {
@@ -105,11 +108,6 @@ export const getPassword = (cfg: EnvConfig) => {
   }
   return undefined;
 };
-
-export const getInfoBearer = (cfg: EnvConfig) => {
-  return `${getUsername(cfg)}:${getPassword(cfg)}`;
-};
-
 export const getToken = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
   const { info } = Logger(config, '[token]');
@@ -210,30 +208,6 @@ export const getBasePath = (cfg: EnvConfig): undefined | string => {
 
   warn('not set. Must run auto-configuration');
   return undefined;
-};
-
-export const getControlPlane = (cfg: EnvConfig) => {
-  const { config, logger } = cfg;
-  const { info } = Logger(config, '[basePath]');
-
-  if (stringCheck(config?.configureUrl)) {
-    logger && info(`${logger}[config] ${config?.configureUrl}`);
-    return String(config?.configureUrl);
-  }
-
-  const autoConfigUrl = stringCheck(process.env.NILEDB_CONFIGURE);
-  if (autoConfigUrl) {
-    logger &&
-      info(`${logger}[NILEDB_CONFIGURE] ${process.env.NILEDB_CONFIGURE}`);
-    // backwards compatible, but not really
-    if (!autoConfigUrl.startsWith('http')) {
-      return `https://${process.env.NILEDB_CONFIGURE}`;
-    }
-    return process.env.NILEDB_CONFIGURE;
-  }
-
-  logger && info(`${logger}[default] https://global.thenile.dev`);
-  return 'https://global.thenile.dev';
 };
 
 export function getDbHost(cfg: EnvConfig) {
