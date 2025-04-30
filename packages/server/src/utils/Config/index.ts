@@ -1,13 +1,21 @@
 import { Routes } from '../../api/types';
-import { LoggerType, NilePoolConfig, ServerConfig } from '../../types';
+import {
+  Database,
+  LoggerType,
+  NilePoolConfig,
+  ServerConfig,
+} from '../../types';
+import Logger from '../Logger';
 
 import {
   EnvConfig,
   getBasePath,
+  getControlPlane,
   getDatabaseName,
   getDatabaseId,
   getDbHost,
   getDbPort,
+  getInfoBearer,
   getPassword,
   getTenantId,
   getToken,
@@ -139,4 +147,121 @@ export class Config {
       this.db.database = this.databaseName;
     }
   }
+
+  configure = async (config: ServerConfig): Promise<Config> => {
+    const { info, error, debug } = Logger(config, '[init]');
+
+    const envVarConfig: EnvConfig = {
+      config,
+    };
+
+    const { host, port, ...dbConfig } = config.db ?? {};
+    let configuredHost = host ?? getDbHost(envVarConfig);
+    const configuredPort = port ?? getDbPort(envVarConfig);
+    let basePath = getBasePath(envVarConfig);
+    if (configuredHost && this.databaseName && this.databaseId && basePath) {
+      info('Already configured, aborting fetch');
+      this.api = new ApiConfig(config);
+      this.db = {
+        user: this.user,
+        password: this.password,
+        host: configuredHost,
+        port: configuredPort,
+        database: this.databaseName,
+        ...dbConfig,
+      };
+      const cloned = { ...this.db };
+      cloned.password = '***';
+      info('[config set]', { db: cloned, api: this.api });
+      return this;
+    } else {
+      const msg = [];
+      if (!configuredHost) {
+        msg.push('Database host');
+      }
+      if (!this.databaseName) {
+        msg.push('Database name');
+      }
+      if (!this.databaseId) {
+        msg.push('Database id');
+      }
+      if (!basePath) {
+        msg.push('API URL');
+      }
+      info(
+        `[autoconfigure] ${msg.join(', ')} ${
+          msg.length > 1 ? 'are' : 'is'
+        } missing from the config. Autoconfiguration will run.`
+      );
+    }
+
+    const cp = getControlPlane(envVarConfig);
+
+    const databaseName = getDatabaseName({ config, logger: 'getInfo' });
+    const url = new URL(`${cp}/databases/configure`);
+    if (databaseName) {
+      url.searchParams.set('databaseName', databaseName);
+    }
+    info(`configuring from ${url.href}`);
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${getInfoBearer({ config })}`,
+      },
+    }).catch(() => {
+      error(`Unable to auto-configure. is ${url} available?`);
+    });
+    if (!res) {
+      return this;
+    }
+    let database: Database;
+    const possibleError = res.clone();
+    try {
+      const json: Database = await res.json();
+      if (res.status === 404) {
+        info('is the configured databaseName correct?');
+      }
+      if (json.status && json.status !== 'READY') {
+        database = { message: 'Database is not ready yet' } as Database;
+      } else {
+        database = json;
+      }
+    } catch (e) {
+      const message = await possibleError.text();
+      debug('Unable to auto-configure');
+      error(message);
+      database = { message } as Database;
+    }
+    info('[fetched database]', database);
+    if (process.env.NODE_ENV !== 'TEST') {
+      if ('message' in database) {
+        if ('statusCode' in database) {
+          error(database);
+          throw new Error('HTTP error has occurred');
+        } else {
+          throw new Error(
+            'Unable to auto-configure. Please remove NILEDB_NAME, NILEDB_API_URL, NILEDB_POSTGRES_URL, and/or NILEDB_HOST from your environment variables.'
+          );
+        }
+      }
+      if (typeof database === 'object') {
+        const { apiHost, dbHost, name, id } = database;
+        basePath = basePath || apiHost;
+        this.databaseId = id;
+        this.databaseName = name;
+        const dburl = new URL(dbHost);
+        configuredHost = dburl.hostname;
+      }
+    }
+    this.api = new ApiConfig(config);
+    this.db = {
+      user: this.user,
+      password: this.password,
+      host: configuredHost,
+      port: configuredPort,
+      database: this.databaseName,
+      ...dbConfig,
+    };
+    info('[config set]', { db: this.db, api: this.api });
+    return this;
+  };
 }
