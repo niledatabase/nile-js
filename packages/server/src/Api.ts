@@ -105,6 +105,9 @@ export class Api {
     this.reset();
   };
 
+  /**
+   * Merge headers together
+   */
   set headers(headers: Headers | Record<string, string>) {
     const updates: [string, string][] = [];
 
@@ -120,7 +123,10 @@ export class Api {
 
     const merged: Record<string, string> = {};
     this.#headers?.forEach((value, key) => {
-      merged[key.toLowerCase()] = value;
+      // It is expected that if the 'cookie' is missing when you set headers, it should be removed.
+      if (key.toLowerCase() !== 'cookie') {
+        merged[key.toLowerCase()] = value;
+      }
     });
 
     for (const [key, value] of updates) {
@@ -156,8 +162,19 @@ export class Api {
       this.config,
       this.handlers
     )(payload);
-    this.headers = headers;
     this.setContext(headers);
+    try {
+      const res = await loginRes.json();
+      // set the user id at log in, for convenience.
+      if (res.id) {
+        this.config.userId = res.id;
+      }
+    } catch (e) {
+      const { warn } = Logger(this.config, '[API][login]');
+      if (warn) {
+        warn('Unable to set user id from login attempt.');
+      }
+    }
     if (config?.returnResponse) {
       return loginRes;
     }
@@ -172,25 +189,29 @@ export class Api {
     }
     return this.auth.getSession(this.#headers);
   };
-  setContext = (req: Request | Headers | Record<string, string>) => {
-    if (req instanceof Headers) {
-      this.headers = req;
-      return;
-    } else if (req instanceof Request) {
-      this.headers = new Headers(req.headers);
-      return;
-    }
-    const headers = new Headers(req);
-    if (headers) {
-      this.headers = headers;
-    } else {
-      const { warn } = Logger(this.config, '[API]');
-
-      if (warn) {
-        warn(
-          'Set context expects a Request, Header instance or an object of Record<string, string>'
-        );
+  setContext = (req: Request | Headers | Record<string, string> | unknown) => {
+    try {
+      if (req instanceof Headers) {
+        this.headers = req;
+        return;
+      } else if (req instanceof Request) {
+        this.headers = new Headers(req.headers);
+        return;
       }
+      const headers = new Headers(req as Record<string, string>);
+      if (headers) {
+        this.headers = headers;
+        return;
+      }
+    } catch {
+      //noop
+    }
+    const { warn } = Logger(this.config, '[API]');
+
+    if (warn) {
+      warn(
+        'Set context expects a Request, Header instance or an object of Record<string, string>'
+      );
     }
   };
 }
