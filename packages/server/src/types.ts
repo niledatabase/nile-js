@@ -34,12 +34,3 @@ export type AfterCreate = (
   conn: PoolClient,
   done: (err: null | Error, conn: PoolClient) => void
 ) => void;
-
-export type Database = {
-  name: string;
-  apiHost: string;
-  dbHost: string;
-  id: string;
-  message?: string; // is actually an error
-  status: 'READY' | string;
-};
