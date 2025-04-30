@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.3...v4.2.0-alpha.4) (2025-04-30)
+
+### Bug Fixes
+
+- **server:** do not merge a missing cookie, set user id at login ([aa68534](https://github.com/niledatabase/nile-js/commit/aa685341d5943748ea0b76e22655e4a64e354bfe))
+
 # [4.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2025-04-29)
 
 ### Bug Fixes
