@@ -80,10 +80,7 @@ export function updateConfig(
 
   return {
     ...config,
-    api: {
-      ...config.api,
-      origin,
-      headers: headers ?? undefined,
-    },
+    origin,
+    headers: headers ?? undefined,
   };
 }

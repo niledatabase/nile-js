@@ -4,10 +4,8 @@ import Requester, { NileRequest } from '../utils/Requester';
 import { CreateBasicUserRequest, CreateTenantUserRequest, User } from './types';
 
 export default class Users extends Config {
-  headers?: Headers;
-  constructor(config: Config, headers?: Headers) {
+  constructor(config: Config) {
     super(config);
-    this.headers = headers;
   }
 
   usersUrl(user: CreateBasicUserRequest) {
@@ -78,7 +76,7 @@ export default class Users extends Config {
   ): Promise<T> => {
     let _req;
     if (req && 'id' in req) {
-      _req = new Request(`${this.api.basePath}${this.tenantUserUrl}`, {
+      _req = new Request(`${this.tenantUserUrl}`, {
         body: JSON.stringify(req),
         method: 'PUT',
       });

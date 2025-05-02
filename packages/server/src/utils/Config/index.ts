@@ -1,150 +1,187 @@
+import Handlers from '../../api/handlers';
+import { handlersWithContext } from '../../api/handlers/withContext';
+import { appRoutes } from '../../api/utils/routes/defaultRoutes';
 import { Routes } from '../../api/types';
 import { LoggerType, NilePoolConfig, ServerConfig } from '../../types';
 
 import {
   EnvConfig,
-  getBasePath,
+  // getBasePath,
   getDatabaseName,
-  getDatabaseId,
+  // getDatabaseId,
   getDbHost,
   getDbPort,
   getPassword,
-  getTenantId,
-  getToken,
+  // getToken,
   getUsername,
-  getSecureCookies,
-  getCallbackUrl,
-  getCookieKey,
+  // getSecureCookies,
+  // getCallbackUrl,
+  // getCookieKey,
 } from './envVars';
 
-export type ApiParams = {
-  basePath?: string | undefined;
-  cookieKey?: string;
-  token?: string | undefined;
-  callbackUrl?: string | undefined;
-  routes?: Partial<Routes>;
-  routePrefix?: string | undefined;
-  secureCookies?: boolean;
-  // the origin for the requests. Allows the setting of the callback origin to a random FE (eg FE localhost:3001 -> BE: localhost:5432 would set to localhost:3000)
-  origin?: null | undefined | string;
-  headers?: null | Headers | Record<string, string>;
-};
-export class ApiConfig {
-  public cookieKey?: string;
-  public basePath?: string | undefined;
-  public routes?: Partial<Routes>;
-  public routePrefix?: string;
-  public secureCookies?: boolean;
-  public origin?: string | null;
-  public headers?: Headers | null;
+export class Config {
+  routes: Routes;
+  handlersWithContext;
+  handlers: {
+    GET: (req: Request) => Promise<void | Response>;
+    POST: (req: Request) => Promise<void | Response>;
+    DELETE: (req: Request) => Promise<void | Response>;
+    PUT: (req: Request) => Promise<void | Response>;
+  };
+  paths: {
+    get: string[];
+    post: string[];
+    delete: string[];
+    put: string[];
+  };
+  logger?: LoggerType;
+  /**
+   * Stores the set tenant id from Server for use in sub classes
+   */
+  tenantId: string | null | undefined;
+  /**
+   * Stores the set user id from Server for use in sub classes
+   */
+  userId: string | null | undefined;
 
   /**
-   * The client side callback url. Defaults to nothing (so nile.origin will be it), but in the cases of x-origin, you want to set this explicitly to be sure nile-auth does the right thing
-   * If this is set, any `callbackUrl` from the client will be ignored.
+   * Stores the headers to be used in `fetch` calls
    */
-  public callbackUrl?: string;
+  headers: Headers;
 
-  #token?: string;
+  /**
+   * The nile-auth url
+   */
+  apiUrl: string;
 
-  constructor(config?: ServerConfig, logger?: string) {
-    const envVarConfig: EnvConfig = { config, logger };
+  origin?: string | undefined | null;
 
-    this.cookieKey = getCookieKey(envVarConfig);
-    this.#token = getToken(envVarConfig);
-    this.callbackUrl = getCallbackUrl(envVarConfig);
-    this.secureCookies = getSecureCookies(envVarConfig);
-    this.basePath = getBasePath(envVarConfig);
+  debug?: boolean;
+  /**
+   * To use secure cookies or not in the fetch
+   */
+  secureCookies?: boolean;
 
-    if (config?.api?.headers instanceof Headers) {
-      this.headers = config?.api?.headers;
-    } else if (config?.api?.headers) {
-      this.headers = new Headers(config.api.headers);
-    }
-
-    this.routes = config?.api?.routes;
-    this.routePrefix = config?.api?.routePrefix;
-    this.origin = config?.api?.origin;
-  }
-
-  public get token(): string | undefined {
-    return this.#token;
-  }
-
-  public set token(value: string | undefined) {
-    this.#token = value;
-  }
-}
-
-export class Config {
-  user: string;
-  password: string;
-  databaseId: string;
-  databaseName: string;
-  logger?: LoggerType;
-
-  debug: boolean;
+  callbackUrl?: string;
+  /**
+   * change the starting route
+   */
+  routePrefix: string;
 
   db: NilePoolConfig;
 
-  api: ApiConfig;
-
-  #tenantId?: string | undefined | null;
-  #userId?: string | undefined | null;
-
-  public get tenantId(): string | undefined | null {
-    return this.#tenantId;
-  }
-
-  public set tenantId(value: string | undefined | null) {
-    this.#tenantId = value;
-  }
-
-  public get userId(): string | undefined | null {
-    return this.#userId;
-  }
-
-  public set userId(value: string | undefined | null) {
-    this.#userId = value;
-  }
+  // api: ApiConfig;
 
   constructor(config?: ServerConfig, logger?: string) {
     const envVarConfig: EnvConfig = { config, logger };
-    this.user = getUsername(envVarConfig) as string;
-    this.logger = config?.logger;
-    this.password = getPassword(envVarConfig) as string;
+    const user = getUsername(envVarConfig) as string;
+    const password = getPassword(envVarConfig) as string;
+    this.routePrefix = config?.routePrefix ?? '/api';
+    this.secureCookies = config?.secureCookies;
+    this.callbackUrl = config?.callbackUrl;
+    this.debug = config?.debug;
+    this.origin = config?.origin ?? 'http://localhost:3000';
+
+    if (config?.headers) {
+      this.headers = config?.headers as Headers;
+    } else {
+      this.headers = new Headers();
+    }
+
+    // we need these 4 values no matter what, so break if they are missing
+    // we support getting user and password from the postgres url (so technically you can configure in 2 env vars)
     if (process.env.NODE_ENV !== 'TEST') {
-      if (!this.user) {
+      if (!process.env.NILEDB_API_URL) {
         throw new Error(
-          'User is required. Set NILEDB_USER as an environment variable or set `user` in the config options.'
+          'A connection to nile-auth is required. Set NILEDB_API_URL as an environment variable.'
         );
       }
-      if (!this.password) {
+
+      if (!process.env.NILEDB_POSTGRES_URL) {
         throw new Error(
-          'Password is required. Set NILEDB_PASSWORD as an environment variable or set `password` in the config options.'
+          'A nile database required. Set NILEDB_POSTGRES_URL as an environment variable.'
+        );
+      }
+
+      if (!user) {
+        throw new Error(
+          'A database user is required. Set NILEDB_USER as an environment variable.'
+        );
+      }
+
+      if (!password) {
+        throw new Error(
+          'A database password is required. Set NILEDB_PASSWORD as an environment variable.'
         );
       }
     }
 
-    this.databaseId = getDatabaseId(envVarConfig) as string;
-    this.databaseName = getDatabaseName(envVarConfig) as string;
-    this.#tenantId = getTenantId(envVarConfig);
-    this.debug = Boolean(config?.debug);
-    this.#userId = config?.userId;
+    this.routes = {
+      ...appRoutes(config?.routePrefix),
+      ...config?.routes,
+    };
+
+    this.handlers = Handlers(this.routes as Routes, this);
+    this.handlersWithContext = handlersWithContext(this.routes, this);
+
+    this.paths = {
+      get: [
+        this.routes.ME,
+        this.routes.TENANT_USERS,
+        this.routes.TENANTS,
+        this.routes.TENANT,
+        this.routes.SESSION,
+        this.routes.SIGNIN,
+        this.routes.PROVIDERS,
+        this.routes.CSRF,
+        this.routes.PASSWORD_RESET,
+        this.routes.CALLBACK,
+        this.routes.SIGNOUT,
+        this.routes.VERIFY_REQUEST,
+        this.routes.ERROR,
+      ],
+      post: [
+        this.routes.TENANT_USERS,
+        this.routes.SIGNUP,
+        this.routes.USERS,
+        this.routes.TENANTS,
+        this.routes.SESSION,
+        `${this.routes.SIGNIN}/{provider}`,
+        this.routes.PASSWORD_RESET,
+        this.routes.PROVIDERS,
+        this.routes.CSRF,
+        `${this.routes.CALLBACK}/{provider}`,
+        this.routes.SIGNOUT,
+      ],
+      put: [
+        this.routes.TENANT_USERS,
+        this.routes.USERS,
+        this.routes.TENANT,
+        this.routes.PASSWORD_RESET,
+      ],
+      delete: [this.routes.TENANT_USER, this.routes.TENANT],
+    };
+    this.tenantId = config?.tenantId;
+    this.userId = config?.userId;
+    this.logger = config?.logger;
+
+    const databaseName = getDatabaseName(envVarConfig) as string;
+
+    this.apiUrl = process.env.NILEDB_API_URL as string;
 
     const { host, port, ...dbConfig } = config?.db ?? {};
     const configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
 
-    this.api = new ApiConfig(config, logger);
     this.db = {
-      user: this.user,
-      password: this.password,
+      user,
+      password,
       host: configuredHost,
       port: configuredPort,
       ...dbConfig,
     };
-    if (this.databaseName) {
-      this.db.database = this.databaseName;
+    if (databaseName) {
+      this.db.database = databaseName;
     }
   }
 }

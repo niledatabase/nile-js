@@ -1,6 +1,6 @@
 import { ServerConfig } from '../../types';
 
-import { Config, ApiConfig } from '.';
+import { Config } from '.';
 
 describe('Config', () => {
   const ORIGINAL_ENV = process.env;
@@ -40,25 +40,19 @@ describe('Config', () => {
       host: 'config-host',
       port: 9876,
     },
-    api: {
-      token: 'config-token',
-      cookieKey: 'config-cookie',
-      callbackUrl: 'https://config-callback.com',
-      routePrefix: '/auth',
-      secureCookies: false,
-      basePath: '/config/api',
-      routes: { SIGNIN: '/login' },
-      origin: 'https://frontend.app',
-    },
+    callbackUrl: 'https://config-callback.com',
+    routePrefix: '/auth',
+    secureCookies: false,
+    apiUrl: '/config/api',
+    routes: { SIGNIN: '/login' },
+    origin: 'https://frontend.app',
   };
 
   fit('should prioritize config values over env vars', () => {
     const config = new Config(serverConfig);
 
-    expect(config.user).toBe('config-user');
-    expect(config.password).toBe('config-password');
-    expect(config.databaseName).toBe('config-db-name');
-    expect(config.databaseId).toBe('config-db-id');
+    expect(config.db.user).toBe('config-user');
+    expect(config.db.password).toBe('config-password');
     expect(config.tenantId).toBe('tenant-from-config'); // config wins
     expect(config.userId).toBe('user-from-config');
     expect(config.debug).toBe(true);
@@ -73,32 +67,25 @@ describe('Config', () => {
       })
     );
 
-    expect(config.api).toBeInstanceOf(ApiConfig);
-    expect(config.api.token).toBe('config-token');
-    expect(config.api.cookieKey).toBe('config-cookie');
-    expect(config.api.callbackUrl).toBe('https://config-callback.com');
-    expect(config.api.routePrefix).toBe('/auth');
-    expect(config.api.secureCookies).toBe(false);
-    expect(config.api.origin).toBe('https://frontend.app');
-    expect(config.api.routes?.SIGNIN).toBe('/login');
-    expect(config.api.basePath).toBe('/config/api');
+    expect(config.callbackUrl).toBe('https://config-callback.com');
+    expect(config.routePrefix).toBe('/auth');
+    expect(config.secureCookies).toBe(false);
+    expect(config.origin).toBe('https://frontend.app');
+    expect(config.routes?.SIGNIN).toBe('/login');
+    expect(config.apiUrl).toBe('/config/api');
   });
 
   it('should fall back to environment variables if config is missing', () => {
     const config = new Config(undefined, 'fallback-test');
 
-    expect(config.user).toBe('env-user');
-    expect(config.password).toBe('env-password');
-    expect(config.databaseName).toBe('env-db-name');
-    expect(config.databaseId).toBe('env-db-id');
+    expect(config.db.user).toBe('env-user');
+    expect(config.db.password).toBe('env-password');
     expect(config.tenantId).toBe('env-tenant-id');
     expect(config.userId).toBe(undefined);
 
-    expect(config.api.token).toBe('env-token');
-    expect(config.api.cookieKey).toBe('cookie-key-env');
-    expect(config.api.callbackUrl).toBe('https://callback.test');
-    expect(config.api.secureCookies).toBe(true);
-    expect(config.api.basePath).toBe('https://api.test.com/base/path');
+    expect(config.callbackUrl).toBe('https://callback.test');
+    expect(config.secureCookies).toBe(true);
+    expect(config.apiUrl).toBe('https://api.test.com/base/path');
   });
 
   it('should throw if required env vars are missing in non-test env', () => {

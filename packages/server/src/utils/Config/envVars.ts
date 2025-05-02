@@ -9,16 +9,16 @@ export type EnvConfig = {
 
 export const getCallbackUrl = (cfg: EnvConfig) => {
   const { config } = cfg;
-  if (stringCheck(config?.api?.callbackUrl)) {
-    return config?.api?.callbackUrl;
+  if (stringCheck(config?.callbackUrl)) {
+    return config?.callbackUrl;
   }
   return process.env.NILEDB_CALLBACK_URL;
 };
 
 export const getSecureCookies = (cfg: EnvConfig) => {
   const { config } = cfg;
-  if (config?.api?.secureCookies != null) {
-    return config?.api?.secureCookies;
+  if (config?.secureCookies != null) {
+    return config?.secureCookies;
   }
   if (stringCheck(process.env.NILEDB_SECURECOOKIES)) {
     return Boolean(process.env.NILEDB_SECURECOOKIES);
@@ -108,20 +108,6 @@ export const getPassword = (cfg: EnvConfig) => {
   }
   return undefined;
 };
-export const getToken = (cfg: EnvConfig) => {
-  const { config, logger } = cfg;
-  const { info } = Logger(config, '[token]');
-  if (stringCheck(config?.api?.token)) {
-    logger && info(`${logger}[config] ${config?.api?.token}`);
-    return String(config?.api?.token);
-  }
-  const token = stringCheck(process.env.NILEDB_TOKEN);
-  if (token) {
-    logger && info(`${logger}[NILEDB_TOKEN] ${token}`);
-    return token;
-  }
-  return undefined;
-};
 
 export const getDatabaseName = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
@@ -163,31 +149,14 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
   return null;
 };
 
-export const getCookieKey = (cfg: EnvConfig): string => {
-  const { config, logger } = cfg;
-  const { info } = Logger(config, '[cookieKey]');
-  if (stringCheck(config?.api?.cookieKey)) {
-    logger && info(`${logger}[config] ${config?.api?.cookieKey}`);
-    return String(config?.api?.cookieKey);
-  }
-
-  if (stringCheck(process.env.NILEDB_COOKIE_KEY)) {
-    logger &&
-      info(`${logger}[NILEDB_COOKIE_KEY] ${process.env.NILEDB_COOKIE_KEY}`);
-    return String(process.env.NILEDB_COOKIE_KEY);
-  }
-
-  return 'token';
-};
-
 /**
  * @param cfg various overrides
  * @returns the url for REST to use
  */
 export const getBasePath = (cfg: EnvConfig): undefined | string => {
   const { config, logger } = cfg;
-  const { warn, info, error } = Logger(config, '[basePath]');
-  const basePath = config?.api?.basePath;
+  const { warn, info, error } = Logger(config, '[apiUrl]');
+  const basePath = config?.apiUrl;
   if (stringCheck(basePath)) {
     logger && info(`${logger}[config] ${basePath}`);
     return basePath;

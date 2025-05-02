@@ -13,7 +13,7 @@ export async function convertToRequest(
   event: H3Event<EventHandlerRequest>,
   nile: Server
 ) {
-  const { handlers } = nile.api;
+  const { handlers } = nile;
   const url = getRequestURL(event);
   const reqHeaders = event.node.req.headers;
   const headers: HeadersInit = reqHeaders
