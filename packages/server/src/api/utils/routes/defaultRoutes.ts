@@ -19,3 +19,7 @@ export const appRoutes = (prefix = '/api'): Routes => ({
   SIGNUP: `${prefix}/signup`,
   LOG: `${prefix}/_log`,
 });
+
+export enum DefaultNileAuthRoutes {
+  SIGNUP = '/signup',
+}

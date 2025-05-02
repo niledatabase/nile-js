@@ -31,7 +31,10 @@
 
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
-import { proxyRoutes } from '../../utils/routes/proxyRoutes';
+import {
+  ProxyNileAuthRoutes,
+  proxyRoutes,
+} from '../../utils/routes/proxyRoutes';
 import request from '../../utils/request';
 import urlMatches from '../../utils/routes/urlMatches';
 
@@ -61,4 +64,20 @@ export default async function route(req: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes[key]);
+}
+
+// this is not for the the credential provider STILL NEED TO FIGURE THIS OUT I THINK? or remove.
+export async function fetchSignIn(
+  config: Config,
+  provider: string,
+  body: string
+): Promise<Response> {
+  const clientUrl = `${config.origin}${config.routePrefix}${ProxyNileAuthRoutes.SIGNIN}/${provider}`;
+  const req = new Request(clientUrl, {
+    method: 'POST',
+    headers: config.headers,
+    body,
+  });
+
+  return (await config.handlers.POST(req)) as Response;
 }

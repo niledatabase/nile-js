@@ -7,10 +7,10 @@ export function cleaner(val: string) {
 
 export function expressPaths(nile: Server) {
   const paths = {
-    get: nile.api.paths.get.map(cleaner),
-    post: nile.api.paths.post.map(cleaner),
-    put: nile.api.paths.put.map(cleaner),
-    delete: nile.api.paths.delete.map(cleaner),
+    get: nile.paths.get.map(cleaner),
+    post: nile.paths.post.map(cleaner),
+    put: nile.paths.put.map(cleaner),
+    delete: nile.paths.delete.map(cleaner),
   };
   return {
     paths,
@@ -83,7 +83,7 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
     let response;
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      response = await (nile.api.handlers as any)[method](proxyRequest);
+      response = await (nile.handlers as any)[method](proxyRequest);
     } catch (e) {
       error(e);
     }

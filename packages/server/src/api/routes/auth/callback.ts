@@ -1,4 +1,7 @@
-import { proxyRoutes } from '../../utils/routes/proxyRoutes';
+import {
+  ProxyNileAuthRoutes,
+  proxyRoutes,
+} from '../../utils/routes/proxyRoutes';
 import request from '../../utils/request';
 import urlMatches from '../../utils/routes/urlMatches';
 import { Routes } from '../../types';
@@ -49,4 +52,20 @@ export default async function route(req: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes.CALLBACK);
+}
+
+// this is for the the credential provider, among other things
+export async function fetchCallback(
+  config: Config,
+  provider: string,
+  body: string
+): Promise<Response> {
+  const clientUrl = `${config.origin}${config.routePrefix}${ProxyNileAuthRoutes.CALLBACK}/${provider}`;
+  const req = new Request(clientUrl, {
+    method: 'POST',
+    headers: config.headers,
+    body,
+  });
+
+  return (await config.handlers.POST(req)) as Response;
 }

@@ -1,5 +1,8 @@
 import { Routes } from '../../types';
-import { proxyRoutes } from '../../utils/routes/proxyRoutes';
+import {
+  ProxyNileAuthRoutes,
+  proxyRoutes,
+} from '../../utils/routes/proxyRoutes';
 import fetch from '../../utils/request';
 import urlMatches from '../../utils/routes/urlMatches';
 import { Config } from '../../../utils/Config';
@@ -24,4 +27,18 @@ export default async function route(request: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes[key]);
+}
+
+export async function fetchSignOut(
+  config: Config,
+  body: string
+): Promise<Response> {
+  const clientUrl = `${config.origin}${config.routePrefix}${ProxyNileAuthRoutes.SIGNOUT}`;
+  const req = new Request(clientUrl, {
+    method: 'POST',
+    body,
+    headers: config.headers,
+  });
+
+  return (await config.handlers.POST(req)) as Response;
 }

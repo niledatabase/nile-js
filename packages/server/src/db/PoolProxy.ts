@@ -13,13 +13,13 @@ export function createProxyForPool(pool: pg.Pool, config: Config): pg.Pool {
       if (property === 'query') {
         // give connection string a pass for these problems
         if (!config.db.connectionString) {
-          if (!config.user || !config.password) {
+          if (!config.db.user || !config.db.password) {
             error(
               'Cannot connect to the database. User and/or password are missing. Generate them at https://console.thenile.dev'
             );
           } else if (!config.db.database) {
             error(
-              'Database name is missing from the config. Call `nile.init()` or set NILEDB_ID in your .env'
+              'Unable to obtain database name. Is process.env.NILEDB_POSTGRES_URL set?'
             );
           }
         }

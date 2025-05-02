@@ -71,7 +71,7 @@ export default function GETTER(configRoutes: Routes, config: Config) {
       info('matches error');
       return authRoutes.handleError(req, config);
     }
-    warn('No GET routes matched');
+    warn(`No GET routes matched ${req.url}`);
     return new Response(null, { status: 404 });
   };
 }

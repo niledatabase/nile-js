@@ -24,20 +24,18 @@ export default async function request(
       String(request.headers.get(X_NILE_TENANT))
     );
   }
-  if (config.api.secureCookies != null) {
-    updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
+  if (config.secureCookies != null) {
+    updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
   }
 
   updatedHeaders.set('host', requestUrl.host);
-  if (config.api.callbackUrl) {
-    const cbUrl = new URL(config.api.callbackUrl);
-    debug(
-      `Obtained origin from config.api.callbackUrl ${config.api.callbackUrl}`
-    );
+  if (config.callbackUrl) {
+    const cbUrl = new URL(config.callbackUrl);
+    debug(`Obtained origin from config.callbackUrl ${config.callbackUrl}`);
     updatedHeaders.set(X_NILE_ORIGIN, cbUrl.origin);
-  } else if (config.api.origin) {
-    debug(`Obtained origin from config.api.origin ${config.api.origin}`);
-    updatedHeaders.set(X_NILE_ORIGIN, config.api.origin);
+    // } else if (config.api.origin) {
+    // debug(`Obtained origin from config.api.origin ${config.api.origin}`);
+    // updatedHeaders.set(X_NILE_ORIGIN, config.api.origin);
   } else {
     updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
     debug(`Obtained origin from request ${requestUrl.origin}`);
@@ -64,19 +62,27 @@ export default async function request(
 
   const fullUrl = `${url}${requestUrl.search}`;
 
+  if (config.debug) {
+    // something going on with `fetch` in nextjs, possibly other places
+    // hot-reloading does not always give back `set-cookie` from fetchCSRF
+    // cURL seems to always do it (and in a real app, you don't have hot reloading),
+    // so add a cache bypass to stop the annoying failure reloads that actually work
+    params.headers.set('request-id', crypto.randomUUID());
+    params.cache = 'no-store';
+  }
   try {
-    const res: Response | void = await fetch(fullUrl, { ...params }).catch(
-      (e) => {
-        error('An error has occurred in the fetch', {
-          message: e.message,
-          stack: e.stack,
-        });
-        return new Response(
-          'An unexpected (most likely configuration) problem has occurred',
-          { status: 500 }
-        );
-      }
-    );
+    const res: Response | void = await fetch(fullUrl, {
+      ...params,
+    }).catch((e) => {
+      error('An error has occurred in the fetch', {
+        message: e.message,
+        stack: e.stack,
+      });
+      return new Response(
+        'An unexpected (most likely configuration) problem has occurred',
+        { status: 500 }
+      );
+    });
     const loggingRes = typeof res?.clone === 'function' ? res?.clone() : null;
     info(`[${params.method ?? 'GET'}] ${fullUrl}`, {
       status: res?.status,

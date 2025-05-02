@@ -20,7 +20,7 @@ export function makeRestUrl(
   path: string,
   qp?: Record<string, string | null>
 ) {
-  const url = config.api.basePath || NILEDB_API_URL;
+  const url = config.apiUrl || NILEDB_API_URL;
   if (!url) {
     throw new Error(
       'An API url is required. Set it via NILEDB_API_URL. Was auto configuration run?'

@@ -23,7 +23,7 @@ export type Provider = {
   name: string;
   type: string;
   signinUrl: string;
-  callbackUr: string;
+  callbackUrl: string;
 };
 
 export type JWT = {
@@ -54,7 +54,7 @@ export default async function auth(
   const { info, error } = Logger(config, '[nileauth]');
   info('checking auth');
 
-  const sessionUrl = `${config.api.basePath}/auth/session`;
+  const sessionUrl = `${config.apiUrl}/auth/session`;
   info(`using session${sessionUrl}`);
   // handle the pass through with posts
   req.headers.delete('content-length');

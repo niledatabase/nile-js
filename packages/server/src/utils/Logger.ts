@@ -53,10 +53,16 @@ const baseLogger = (config: void | ServerConfig, ...params: unknown[]) => ({
   },
 });
 
+export type LogReturn = {
+  info(message: string | unknown, meta?: Record<string, unknown>): void;
+  debug(message: string | unknown, meta?: Record<string, unknown>): void;
+  warn(message: string | unknown, meta?: Record<string, unknown>): void;
+  error(message: string | unknown, meta?: Record<string, unknown>): void;
+};
 export default function Logger(
   config?: Config | ServerConfig,
   ...params: unknown[]
-) {
+): LogReturn {
   const base = baseLogger(config, params);
   const info = config?.logger?.info ?? base.info;
   const debug = config?.logger?.debug ?? base.debug;

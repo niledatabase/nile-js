@@ -1,17 +1,11 @@
-import { decodeJwt } from 'jose';
+// import { decodeJwt } from 'jose';
 
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
 import { NileRequest } from './Requester';
 import { updateTenantId, updateUserId } from './Event';
-import { getToken } from './Config/envVars';
 import Logger from './Logger';
-import {
-  X_NILE_ORIGIN,
-  X_NILE_SECURECOOKIES,
-  X_NILE_TENANT,
-  X_NILE_USER_ID,
-} from './constants';
+import { X_NILE_ORIGIN, X_NILE_TENANT, X_NILE_USER_ID } from './constants';
 
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,28 +49,24 @@ export function getTenantFromHttp(headers: Headers, config?: Config) {
   return cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config?.tenantId;
 }
 
+// do we do this any more?
 export function getUserFromHttp(headers: Headers, config: Config) {
-  const token = getTokenFromCookie(headers, config.api.cookieKey);
-  if (token) {
-    const jwt = decodeJwt(token);
-    return jwt.sub;
-  }
   return headers?.get(X_NILE_USER_ID) ?? config.userId;
 }
 
+// it should be possible to remove this once everything is moved over to have `#handleHeaders` as the source of truth
 export function makeBasicHeaders(
   config: Config,
   url: string,
   opts?: RequestInit
 ) {
-  const { warn, error } = Logger(config, '[headers]');
+  const { error } = Logger(config, '[headers]');
   const headers = new Headers(opts?.headers);
-  const cookieKey = config.api?.cookieKey;
   headers.set('content-type', 'application/json; charset=utf-8');
   const origin = headers.get(X_NILE_ORIGIN);
   if (!origin) {
-    if (config.api.headers) {
-      const localOrigin = config.api.headers.get(X_NILE_ORIGIN);
+    if (config.headers) {
+      const localOrigin = config.headers.get(X_NILE_ORIGIN);
       if (localOrigin) {
         headers.set(X_NILE_ORIGIN, localOrigin);
       }
@@ -85,8 +75,8 @@ export function makeBasicHeaders(
   // prefer the cookie from the api, not the opts
   const cookie = headers.get('cookie');
   if (!cookie) {
-    if (config.api.headers) {
-      const configCookie = config.api.headers.get('cookie');
+    if (config.headers) {
+      const configCookie = config.headers.get('cookie');
       if (configCookie) {
         headers.set('cookie', configCookie);
       }
@@ -94,33 +84,12 @@ export function makeBasicHeaders(
       // routes that do not require a cookie (non-auth)
       if (!url.endsWith('/users')) {
         error(
-          'Missing cookie header from request. Call nile.api.setContext(request) before making additional calls.'
+          'Missing cookie header from request. Call nile.setContext(request) before making additional calls.'
         );
       }
     }
   }
 
-  // the sdk server side calls use this
-  const authHeader = headers.get('Authorization');
-  if (!authHeader) {
-    const token = getTokenFromCookie(headers, cookieKey);
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
-    } else if (getToken({ config })) {
-      headers.set('Authorization', `Bearer ${getToken({ config })}`);
-    }
-  }
-  if (config && config.api.secureCookies != null) {
-    headers.set(X_NILE_SECURECOOKIES, String(config.api.secureCookies));
-  }
-
-  if (config && config.api.origin) {
-    headers.set(X_NILE_ORIGIN, config.api.origin);
-  } else {
-    warn(
-      'nile.origin missing from header, which defaults to secure cookies only.'
-    );
-  }
   return headers;
 }
 
@@ -131,7 +100,7 @@ export async function _fetch(
 ): Promise<Response | ResponseError> {
   const { debug, error } = Logger(config, '[server]');
 
-  const url = `${config.api?.basePath}${path}`;
+  const url = `${config.apiUrl}${path}`;
   const headers = new Headers(opts?.headers);
   const tenantId = getTenantFromHttp(headers, config);
   const basicHeaders = makeBasicHeaders(config, url, opts);

@@ -4,10 +4,8 @@ import Requester, { NileRequest } from '../utils/Requester';
 import { Tenant } from './types';
 
 export default class Tenants extends Config {
-  headers?: Headers;
-  constructor(config: Config, headers?: Headers) {
+  constructor(config: Config) {
     super(config);
-    this.headers = headers;
   }
   handleHeaders(init?: RequestInit) {
     if (this.headers) {
@@ -36,7 +34,7 @@ export default class Tenants extends Config {
   ): Promise<T> => {
     let _req;
     if (typeof req === 'string') {
-      _req = new Request(`${this.api.basePath}${this.tenantsUrl}`, {
+      _req = new Request(`${this.apiUrl}${this.tenantsUrl}`, {
         body: JSON.stringify({ name: req }),
         method: 'POST',
         headers: {
@@ -44,7 +42,7 @@ export default class Tenants extends Config {
         },
       });
     } else if ('name' in req || 'id' in req) {
-      _req = new Request(`${this.api.basePath}${this.tenantsUrl}`, {
+      _req = new Request(`${this.apiUrl}${this.tenantsUrl}`, {
         body: JSON.stringify(req),
         method: 'POST',
         headers: {
@@ -101,7 +99,7 @@ export default class Tenants extends Config {
   ): Promise<T> => {
     let _req;
     if (req && 'name' in req) {
-      _req = new Request(`${this.api.basePath}${this.tenantUrl}`, {
+      _req = new Request(`${this.apiUrl}${this.tenantUrl}`, {
         body: JSON.stringify(req),
         method: 'PUT',
       });
