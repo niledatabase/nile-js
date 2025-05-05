@@ -1,6 +1,6 @@
 import { ActiveSession } from '../../../../utils/auth';
 import fetch from '../../../../utils/request';
-import { apiRoutes } from '../../../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../../../utils/routes';
 import { Config } from '../../../../../utils/Config';
 
 /**
@@ -50,10 +50,8 @@ export async function POST(
 ) {
   const yurl = new URL(init.request.url);
   const [, tenantId] = yurl.pathname.split('/').reverse();
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   init.body = JSON.stringify({ email: session.email });
-  init.method = 'PUT';
+  init.method = 'POST';
   const url = apiRoutes(config).TENANT_USERS(tenantId);
 
   return await fetch(url, init, config);

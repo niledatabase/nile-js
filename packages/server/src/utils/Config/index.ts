@@ -1,27 +1,24 @@
 import Handlers from '../../api/handlers';
-import { handlersWithContext } from '../../api/handlers/withContext';
-import { appRoutes } from '../../api/utils/routes/defaultRoutes';
+// import { handlersWithContext } from '../../api/handlers/withContext';
+import { appRoutes } from '../../api/utils/routes';
 import { Routes } from '../../api/types';
-import { LoggerType, NilePoolConfig, ServerConfig } from '../../types';
+import { LoggerType, NilePoolConfig, NileConfig } from '../../types';
 
 import {
   EnvConfig,
-  // getBasePath,
   getDatabaseName,
-  // getDatabaseId,
   getDbHost,
   getDbPort,
   getPassword,
-  // getToken,
   getUsername,
-  // getSecureCookies,
-  // getCallbackUrl,
-  // getCookieKey,
+  getSecureCookies,
+  getCallbackUrl,
+  getApiUrl,
 } from './envVars';
 
 export class Config {
   routes: Routes;
-  handlersWithContext;
+  // handlersWithContext;
   handlers: {
     GET: (req: Request) => Promise<void | Response>;
     POST: (req: Request) => Promise<void | Response>;
@@ -72,48 +69,41 @@ export class Config {
 
   // api: ApiConfig;
 
-  constructor(config?: ServerConfig, logger?: string) {
+  constructor(config?: NileConfig, logger?: string) {
     const envVarConfig: EnvConfig = { config, logger };
-    const user = getUsername(envVarConfig) as string;
-    const password = getPassword(envVarConfig) as string;
     this.routePrefix = config?.routePrefix ?? '/api';
-    this.secureCookies = config?.secureCookies;
-    this.callbackUrl = config?.callbackUrl;
+    this.secureCookies = getSecureCookies(envVarConfig);
+    this.callbackUrl = getCallbackUrl(envVarConfig);
     this.debug = config?.debug;
     this.origin = config?.origin ?? 'http://localhost:3000';
+
+    // this four throw because its the only way to get it
+    this.apiUrl = getApiUrl(envVarConfig) as string;
+    const user = getUsername(envVarConfig) as string;
+    const password = getPassword(envVarConfig) as string;
+    const databaseName = getDatabaseName(envVarConfig) as string;
+
+    const { host, port, ...dbConfig } = config?.db ?? {};
+    const configuredHost = host ?? getDbHost(envVarConfig);
+    const configuredPort = port ?? getDbPort(envVarConfig);
+
+    this.db = {
+      user,
+      password,
+      host: configuredHost,
+      port: configuredPort,
+      ...dbConfig,
+    };
+    if (databaseName) {
+      this.db.database = databaseName;
+    }
+
+    // we need these values no matter what, so break if they are missing
 
     if (config?.headers) {
       this.headers = config?.headers as Headers;
     } else {
       this.headers = new Headers();
-    }
-
-    // we need these 4 values no matter what, so break if they are missing
-    // we support getting user and password from the postgres url (so technically you can configure in 2 env vars)
-    if (process.env.NODE_ENV !== 'TEST') {
-      if (!process.env.NILEDB_API_URL) {
-        throw new Error(
-          'A connection to nile-auth is required. Set NILEDB_API_URL as an environment variable.'
-        );
-      }
-
-      if (!process.env.NILEDB_POSTGRES_URL) {
-        throw new Error(
-          'A nile database required. Set NILEDB_POSTGRES_URL as an environment variable.'
-        );
-      }
-
-      if (!user) {
-        throw new Error(
-          'A database user is required. Set NILEDB_USER as an environment variable.'
-        );
-      }
-
-      if (!password) {
-        throw new Error(
-          'A database password is required. Set NILEDB_PASSWORD as an environment variable.'
-        );
-      }
     }
 
     this.routes = {
@@ -122,7 +112,7 @@ export class Config {
     };
 
     this.handlers = Handlers(this.routes as Routes, this);
-    this.handlersWithContext = handlersWithContext(this.routes, this);
+    // this.handlersWithContext = handlersWithContext(this.routes, this);
 
     this.paths = {
       get: [
@@ -164,24 +154,5 @@ export class Config {
     this.tenantId = config?.tenantId;
     this.userId = config?.userId;
     this.logger = config?.logger;
-
-    const databaseName = getDatabaseName(envVarConfig) as string;
-
-    this.apiUrl = process.env.NILEDB_API_URL as string;
-
-    const { host, port, ...dbConfig } = config?.db ?? {};
-    const configuredHost = host ?? getDbHost(envVarConfig);
-    const configuredPort = port ?? getDbPort(envVarConfig);
-
-    this.db = {
-      user,
-      password,
-      host: configuredHost,
-      port: configuredPort,
-      ...dbConfig,
-    };
-    if (databaseName) {
-      this.db.database = databaseName;
-    }
   }
 }

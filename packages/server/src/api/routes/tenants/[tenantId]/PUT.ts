@@ -1,6 +1,6 @@
+import { apiRoutes } from '../../../utils/routes';
 import { Config } from '../../../../utils/Config';
 import fetch from '../../../utils/request';
-import { apiRoutes } from '../../../utils/routes/apiRoutes';
 
 /**
  * @swagger

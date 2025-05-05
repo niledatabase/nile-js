@@ -1,4 +1,6 @@
 import { Server } from '../Server';
+import { NileConfig } from '../types';
+import { Config } from '../utils/Config';
 import Logger from '../utils/Logger';
 
 export function cleaner(val: string) {
@@ -6,11 +8,12 @@ export function cleaner(val: string) {
 }
 
 export function expressPaths(nile: Server) {
+  const nilePaths = nile.getPaths();
   const paths = {
-    get: nile.paths.get.map(cleaner),
-    post: nile.paths.post.map(cleaner),
-    put: nile.paths.put.map(cleaner),
-    delete: nile.paths.delete.map(cleaner),
+    get: nilePaths.get.map(cleaner),
+    post: nilePaths.post.map(cleaner),
+    put: nilePaths.put.map(cleaner),
+    delete: nilePaths.delete.map(cleaner),
   };
   return {
     paths,
@@ -18,8 +21,14 @@ export function expressPaths(nile: Server) {
 }
 
 type HandlerConfig = { muteResponse?: boolean; init?: RequestInit };
-export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
-  const { error } = Logger(nile.config, 'nile-express');
+export async function NileExpressHandler(
+  nile: Server,
+  config?: HandlerConfig & NileConfig
+) {
+  const { error } = Logger(
+    config ? new Config(config) : undefined,
+    'nile-express'
+  );
   async function handler(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req: any,
@@ -82,8 +91,9 @@ export async function NileExpressHandler(nile: Server, config?: HandlerConfig) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let response;
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      response = await (nile.handlers as any)[method](proxyRequest);
+      response = await nile.handlers[
+        method as 'GET' | 'POST' | 'PUT' | 'DELETE'
+      ](proxyRequest);
     } catch (e) {
       error(e);
     }

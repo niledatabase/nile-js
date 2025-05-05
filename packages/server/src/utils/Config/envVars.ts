@@ -1,10 +1,24 @@
 import 'dotenv/config';
-import { ServerConfig } from '../../types';
+import { NileConfig } from '../../types';
 import Logger from '../Logger';
 
 export type EnvConfig = {
   logger?: string;
-  config?: ServerConfig;
+  config?: NileConfig;
+};
+
+export const getApiUrl = (cfg: EnvConfig) => {
+  const { config } = cfg;
+  if (config?.apiUrl != null) {
+    return config?.apiUrl;
+  }
+  if (stringCheck(process.env.NILEDB_API_URL)) {
+    return process.env.NILEDB_API_URL;
+  }
+
+  throw new Error(
+    'A connection to nile-auth is required. Set NILEDB_API_URL as an environment variable.'
+  );
 };
 
 export const getCallbackUrl = (cfg: EnvConfig) => {
@@ -26,32 +40,6 @@ export const getSecureCookies = (cfg: EnvConfig) => {
   return undefined;
 };
 
-export const getDatabaseId = (cfg: EnvConfig) => {
-  const { config, logger } = cfg;
-
-  const { info } = Logger(config, '[databaseId]');
-  if (stringCheck(config?.databaseId)) {
-    logger && info(`${logger}[config] ${config?.databaseId}`);
-    return String(config?.databaseId);
-  }
-  const dbFromEnv = stringCheck(process.env.NILEDB_ID);
-
-  if (dbFromEnv) {
-    logger && info(`${logger}[NILEDB_ID] ${dbFromEnv}`);
-    return dbFromEnv;
-  }
-
-  const dbId = stringCheck(process.env.NILEDB_API_URL);
-  if (dbId) {
-    try {
-      const pgUrl = new URL(dbId);
-      return pgUrl.pathname.split('/')[3];
-    } catch (e) {
-      // ok to fail
-    }
-  }
-  return null;
-};
 export const getUsername = (cfg: EnvConfig) => {
   const { config, logger } = cfg;
 
@@ -77,7 +65,9 @@ export const getUsername = (cfg: EnvConfig) => {
       //ok to fail
     }
   }
-  return undefined;
+  throw new Error(
+    'A database user is required. Set NILEDB_USER as an environment variable.'
+  );
 };
 
 export const getPassword = (cfg: EnvConfig) => {
@@ -106,7 +96,9 @@ export const getPassword = (cfg: EnvConfig) => {
       // ok to fail
     }
   }
-  return undefined;
+  throw new Error(
+    'A database password is required. Set NILEDB_PASSWORD as an environment variable.'
+  );
 };
 
 export const getDatabaseName = (cfg: EnvConfig) => {
@@ -130,7 +122,9 @@ export const getDatabaseName = (cfg: EnvConfig) => {
       // ok to fail
     }
   }
-  return null;
+  throw new Error(
+    'A database name is required. Set NILEDB_PASSWORD as an environment variable.'
+  );
 };
 
 export const getTenantId = (cfg: EnvConfig): string | null => {
@@ -147,36 +141,6 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
   }
 
   return null;
-};
-
-/**
- * @param cfg various overrides
- * @returns the url for REST to use
- */
-export const getBasePath = (cfg: EnvConfig): undefined | string => {
-  const { config, logger } = cfg;
-  const { warn, info, error } = Logger(config, '[apiUrl]');
-  const basePath = config?.apiUrl;
-  if (stringCheck(basePath)) {
-    logger && info(`${logger}[config] ${basePath}`);
-    return basePath;
-  }
-
-  const envUrl = stringCheck(process.env.NILEDB_API_URL);
-  if (envUrl) {
-    logger && info(`${logger}[NILEDB_API_URL] ${process.env.NILEDB_API_URL}`);
-    try {
-      const apiUrl = new URL(envUrl);
-      return apiUrl.href;
-    } catch (e) {
-      if (e instanceof Error) {
-        error(e.stack);
-      }
-    }
-  }
-
-  warn('not set. Must run auto-configuration');
-  return undefined;
 };
 
 export function getDbHost(cfg: EnvConfig) {

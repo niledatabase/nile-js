@@ -34,9 +34,9 @@ import { Config } from '../../../utils/Config';
 import {
   ProxyNileAuthRoutes,
   proxyRoutes,
-} from '../../utils/routes/proxyRoutes';
+  urlMatches,
+} from '../../utils/routes';
 import request from '../../utils/request';
-import urlMatches from '../../utils/routes/urlMatches';
 
 const key = 'SIGNIN';
 

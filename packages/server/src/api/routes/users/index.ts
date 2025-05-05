@@ -1,5 +1,10 @@
 import { Routes } from '../../types';
-import urlMatches from '../../utils/routes/urlMatches';
+import {
+  DefaultNileAuthRoutes,
+  isUUID,
+  prefixAppRoute,
+  urlMatches,
+} from '../../utils/routes';
 import auth from '../../utils/auth';
 import { Config } from '../../../utils/Config';
 import Logger from '../../../utils/Logger';
@@ -31,4 +36,32 @@ export default async function route(request: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes[key]);
+}
+
+export async function fetchUser(config: Config, method: 'PUT') {
+  let clientUrl = `${prefixAppRoute(config)}${DefaultNileAuthRoutes.USERS}`;
+
+  if (method === 'PUT')
+    if (!config.userId) {
+      throw new Error(
+        'Unable to update user, the userId context is missing. Call nile.setContext({ userId }), set nile.userId = "userId", or add it to the function call'
+      );
+    } else {
+      clientUrl = `${prefixAppRoute(
+        config
+      )}${DefaultNileAuthRoutes.USER.replace('{userId}', config.userId)}`;
+    }
+  if (!isUUID(config.userId) && config.logger?.warn) {
+    config.logger?.warn(
+      'nile.userId is not a valid UUID. This may lead to unexpected behavior in your application.'
+    );
+  }
+
+  const init: RequestInit = {
+    method,
+    headers: config.headers,
+  };
+  const req = new Request(clientUrl, init);
+
+  return (await config.handlers[method](req)) as Response;
 }

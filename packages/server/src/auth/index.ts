@@ -2,18 +2,27 @@ import { fetchCallback } from '../api/routes/auth/callback';
 import { fetchCsrf } from '../api/routes/auth/csrf';
 import { fetchProviders } from '../api/routes/auth/providers';
 import { fetchSession } from '../api/routes/auth/session';
+import { fetchSignIn } from '../api/routes/auth/signin';
 import { fetchSignOut } from '../api/routes/auth/signout';
 import { fetchSignUp } from '../api/routes/signup';
-import { ActiveSession, JWT, Provider } from '../api/utils/auth';
+import { ActiveSession, JWT, Provider, ProviderName } from '../api/utils/auth';
+import { User } from '../users/types';
 import { Config } from '../utils/Config';
 import { updateHeaders } from '../utils/Event';
 import Logger, { LogReturn } from '../utils/Logger';
 
-export default class Auth extends Config {
-  logger: LogReturn;
+type SignUpPayload = {
+  email: string;
+  password: string;
+  tenantId?: string;
+  newTenantName?: string;
+};
+export default class Auth {
+  #logger: LogReturn;
+  #config: Config;
   constructor(config: Config) {
-    super(config);
-    this.logger = Logger(config, '[auth]');
+    this.#config = config;
+    this.#logger = Logger(config, '[auth]');
   }
 
   getSession(rawResponse: true): Promise<Response>;
@@ -23,12 +32,12 @@ export default class Auth extends Config {
   async getSession<T = JWT | ActiveSession | Response | undefined>(
     rawResponse = false
   ): Promise<T | Response> {
-    const res = await fetchSession(this);
+    const res = await fetchSession(this.#config);
     if (rawResponse) {
       return res;
     }
     try {
-      const session = await res.json();
+      const session = await res.clone().json();
       if (Object.keys(session).length === 0) {
         return undefined as T;
       }
@@ -41,21 +50,45 @@ export default class Auth extends Config {
   async getCsrf(rawResponse: true): Promise<Response>;
   async getCsrf<T = Response | JSON>(rawResponse?: false): Promise<T>;
   async getCsrf<T = Response | JSON>(rawResponse = false) {
-    const res = await fetchCsrf(this);
+    const res = await fetchCsrf(this.#config);
     // we're gonna use it, so set the headers now.
     const csrfCook = parseCSRF(res.headers);
+
+    // prefer the csrf from the headers over the saved one
     if (csrfCook) {
+      const [, value] = csrfCook.split('=');
+      const [token] = decodeURIComponent(value).split('|');
+
+      const setCookie = res.headers.get('set-cookie');
+      if (setCookie) {
+        const cookie = [
+          csrfCook,
+          parseCallback(res.headers),
+          parseToken(res.headers),
+        ]
+          .filter(Boolean)
+          .join('; ');
+        this.#config.headers.set('cookie', cookie);
+        updateHeaders(new Headers({ cookie }));
+      }
+      if (!rawResponse) {
+        return { csrfToken: token };
+      }
+    } else {
       // for csrf, preserve the existing cookies
-      const existingCookie = this.headers.get('cookie');
+      const existingCookie = this.#config.headers.get('cookie');
       const cookieParts = [];
       if (existingCookie) {
-        cookieParts.push(parseToken(this.headers), parseCallback(this.headers));
+        cookieParts.push(
+          parseToken(this.#config.headers),
+          parseCallback(this.#config.headers)
+        );
       }
       cookieParts.push(csrfCook);
       const cookie = cookieParts.filter(Boolean).join('; ');
 
       // we need to do it in both places in case its the very first time
-      this.headers.set('cookie', cookie);
+      this.#config.headers.set('cookie', cookie);
       updateHeaders(new Headers({ cookie }));
     }
 
@@ -64,7 +97,7 @@ export default class Auth extends Config {
     }
 
     try {
-      return (await res.json()) as T;
+      return (await res.clone().json()) as T;
     } catch {
       return res;
     }
@@ -77,24 +110,18 @@ export default class Auth extends Config {
   async listProviders<T = { [key: string]: Provider }>(
     rawResponse = false
   ): Promise<T | Response> {
-    const res = await fetchProviders(this);
+    const res = await fetchProviders(this.#config);
     if (rawResponse) {
       return res;
     }
     try {
-      return (await res.json()) as T;
+      return (await res.clone().json()) as T;
     } catch {
       return res;
     }
   }
 
-  async signOut(rawResponse: true): Promise<Response>;
-  async signOut<T = Response | { url: string }>(
-    rawResponse?: false
-  ): Promise<T>;
-  async signOut<T = Response | { url: string }>(
-    rawResponse = false
-  ): Promise<T | Response> {
+  async signOut(): Promise<Response> {
     // check for csrf header, maybe its already there?
     const csrfRes = await this.getCsrf();
     if (!('csrfToken' in csrfRes)) {
@@ -105,23 +132,28 @@ export default class Auth extends Config {
       csrfToken: csrfRes.csrfToken,
       json: true,
     });
-    const res = await fetchSignOut(this, body);
+    const res = await fetchSignOut(this.#config, body);
 
     updateHeaders(new Headers({}));
+    this.#config.headers = new Headers();
 
-    if (rawResponse) {
-      return res;
-    }
-
-    try {
-      return (await res.json()) as T;
-    } catch (e) {
-      return res;
-    }
+    return res;
   }
 
-  async signUp(payload: { email: string; password: string }) {
-    const { email, password } = payload;
+  /**
+   * signUp only works with email + password
+   * @param payload
+   * @param rawResponse
+   */
+  async signUp(payload: SignUpPayload, rawResponse: true): Promise<Response>;
+  async signUp<T = User | Response>(payload: SignUpPayload): Promise<T>;
+  async signUp<T = User | Response | undefined>(
+    payload: SignUpPayload,
+    rawResponse?: boolean
+  ): Promise<T> {
+    // be sure its fresh
+    this.#config.headers = new Headers();
+    const { email, password, ...params } = payload;
     if (!email || !password) {
       throw new Error(
         'Server side sign up requires a user email and password.'
@@ -152,26 +184,47 @@ export default class Auth extends Config {
       callbackUrl: credentials.callbackUrl,
     });
 
-    const res = await fetchSignUp(this, 'credentials', body);
+    const res = await fetchSignUp(this.#config, { body, params });
     if (res.status > 299) {
-      this.logger.error(await res.text());
-      return;
+      this.#logger.error(await res.clone().text());
+      return undefined as T;
     }
     const token = parseToken(res.headers);
     if (!token) {
       throw new Error('Server side sign up failed. Session token not found');
     }
-    this.headers?.append('cookie', token);
-    updateHeaders(this.headers);
+    this.#config.headers?.append('cookie', token);
+    updateHeaders(this.#config.headers);
+    if (rawResponse) {
+      return res as T;
+    }
+    try {
+      return (await res.clone().json()) as T;
+    } catch {
+      return res as T;
+    }
   }
 
-  async signIn(
-    payload: { email: string; password: string },
-    config?: { returnResponse?: boolean }
-  ): Promise<undefined | [Headers | undefined, Response]> {
-    const { info, error } = this.logger;
-    const { email, password } = payload;
-    if (!email || !password) {
+  /**
+   * The return value from this will be a redirect for the client
+   * In most cases, you should forward the response directly to the client
+   * @param payload
+   * @param rawResponse
+   */
+  async signIn<T = Response>(
+    provider: ProviderName,
+    payload?: { email: string; password: string },
+    rawResponse?: true
+  ): Promise<T>;
+  async signIn<T = Response | undefined>(
+    provider: ProviderName,
+    payload?: { email: string; password: string },
+    rawResponse?: boolean
+  ): Promise<T> {
+    this.#config.headers = new Headers();
+    const { info, error } = this.#logger;
+    const { email, password } = payload ?? {};
+    if (provider === 'email' && (!email || !password)) {
       throw new Error(
         'Server side sign in requires a user email and password.'
       );
@@ -196,6 +249,13 @@ export default class Auth extends Config {
         'Unable to obtain credential provider. Aborting server side sign in.'
       );
     }
+    if (provider !== 'credentials') {
+      return (await fetchSignIn(
+        this.#config,
+        provider,
+        JSON.stringify({ csrfToken })
+      )) as T;
+    }
 
     info(`Attempting sign in with email ${email}`);
     const body = JSON.stringify({
@@ -205,7 +265,7 @@ export default class Auth extends Config {
       callbackUrl: credentials.callbackUrl,
     });
 
-    const signInRes = await fetchCallback(this, 'credentials', body);
+    const signInRes = await fetchCallback(this.#config, provider, body);
 
     const authCookie = signInRes?.headers.get('set-cookie');
     if (!authCookie) {
@@ -223,7 +283,7 @@ export default class Auth extends Config {
       }
       if (urlError) {
         error('Unable to log user in', { error: urlError });
-        return undefined;
+        return undefined as T;
       }
     }
     if (!token) {
@@ -239,7 +299,7 @@ export default class Auth extends Config {
     const setCookie = signInRes.headers.get('set-cookie');
     if (setCookie) {
       const cookie = [
-        parseCSRF(this.headers),
+        parseCSRF(this.#config.headers),
         parseCallback(signInRes.headers),
         parseToken(signInRes.headers),
       ]
@@ -252,11 +312,14 @@ export default class Auth extends Config {
       });
     }
 
-    if (config?.returnResponse) {
-      return [this.headers, signInRes];
+    if (rawResponse) {
+      return signInRes as T;
     }
-
-    return undefined;
+    try {
+      return (await signInRes.clone().json()) as T;
+    } catch {
+      return signInRes as T;
+    }
   }
 }
 

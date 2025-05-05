@@ -1,4 +1,4 @@
-import { appRoutes } from '../utils/routes/defaultRoutes';
+import { appRoutes } from '../utils/routes';
 import { Config } from '../../utils/Config';
 import { X_NILE_ORIGIN, X_NILE_TENANT } from '../../utils/constants';
 
@@ -8,7 +8,7 @@ jest.mock('../utils/auth', () => () => 'a session, relax');
 describe('DELETER', () => {
   const apiGet = DELETER(
     appRoutes(),
-    new Config({ api: { basePath: 'http://thenile.dev/v2/databases/testdb' } })
+    new Config({ apiUrl: 'http://thenile.dev/v2/databases/testdb' })
   );
   global.fetch = jest.fn();
 

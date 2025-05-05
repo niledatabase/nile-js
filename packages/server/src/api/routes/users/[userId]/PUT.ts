@@ -1,4 +1,4 @@
-import { apiRoutes } from '../../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../../utils/routes';
 import fetch from '../../../utils/request';
 import { ActiveSession } from '../../../utils/auth';
 import { Config } from '../../../../utils/Config';

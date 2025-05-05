@@ -3,7 +3,7 @@ import Logger from '../../utils/Logger';
 
 import request from './request';
 
-type ProviderName =
+export type ProviderName =
   | 'discord'
   | 'github'
   | 'google'
@@ -11,8 +11,8 @@ type ProviderName =
   | 'linkedin'
   | 'slack'
   | 'twitter'
-  | 'email'
-  | 'credentials'
+  | 'email' // magic link
+  | 'credentials' // email + password
   | 'azure';
 
 export type Providers = {
@@ -55,7 +55,7 @@ export default async function auth(
   info('checking auth');
 
   const sessionUrl = `${config.apiUrl}/auth/session`;
-  info(`using session${sessionUrl}`);
+  info(`using session ${sessionUrl}`);
   // handle the pass through with posts
   req.headers.delete('content-length');
 

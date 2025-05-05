@@ -1,4 +1,4 @@
-import { ServerConfig } from '../../types';
+import { NileConfig } from '../../types';
 
 import { Config } from '.';
 
@@ -27,7 +27,7 @@ describe('Config', () => {
     process.env = ORIGINAL_ENV;
   });
 
-  const serverConfig: ServerConfig = {
+  const serverConfig: NileConfig = {
     userId: 'user-from-config',
     tenantId: 'tenant-from-config',
     logger: { info: jest.fn() },
@@ -48,7 +48,7 @@ describe('Config', () => {
     origin: 'https://frontend.app',
   };
 
-  fit('should prioritize config values over env vars', () => {
+  it('should prioritize config values over env vars', () => {
     const config = new Config(serverConfig);
 
     expect(config.db.user).toBe('config-user');
@@ -80,7 +80,7 @@ describe('Config', () => {
 
     expect(config.db.user).toBe('env-user');
     expect(config.db.password).toBe('env-password');
-    expect(config.tenantId).toBe('env-tenant-id');
+    expect(config.tenantId).toBe(undefined);
     expect(config.userId).toBe(undefined);
 
     expect(config.callbackUrl).toBe('https://callback.test');
@@ -93,14 +93,6 @@ describe('Config', () => {
     delete process.env.NILEDB_PASSWORD;
     process.env.NODE_ENV = 'development';
 
-    expect(() => new Config(undefined)).toThrow(/User is required/);
-  });
-
-  it('should not throw if missing user/password in TEST env', () => {
-    delete process.env.NILEDB_USER;
-    delete process.env.NILEDB_PASSWORD;
-    process.env.NODE_ENV = 'TEST';
-
-    expect(() => new Config(undefined)).not.toThrow();
+    expect(() => new Config(undefined)).toThrow(/database user is required/);
   });
 });

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Routes } from '../api/types';
-import urlMatches from '../api/utils/routes/urlMatches';
-import { ServerConfig } from '../types';
+import { urlMatches } from '../api/utils/routes';
+import { NileConfig } from '../types';
 
 import { Config } from './Config';
 
@@ -11,7 +11,7 @@ const purple = '\x1b[38;2;200;160;255m';
 const orange = '\x1b[38;2;255;165;0m';
 const reset = '\x1b[0m';
 
-const baseLogger = (config: void | ServerConfig, ...params: unknown[]) => ({
+const baseLogger = (config: void | NileConfig, ...params: unknown[]) => ({
   info(message: string | unknown, meta?: Record<string, unknown>) {
     if (config?.debug) {
       console.info(
@@ -60,7 +60,7 @@ export type LogReturn = {
   error(message: string | unknown, meta?: Record<string, unknown>): void;
 };
 export default function Logger(
-  config?: Config | ServerConfig,
+  config?: Config | NileConfig,
   ...params: unknown[]
 ): LogReturn {
   const base = baseLogger(config, params);

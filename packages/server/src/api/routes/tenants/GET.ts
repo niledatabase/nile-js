@@ -1,7 +1,7 @@
 import { Config } from '../../../utils/Config';
 import { ActiveSession } from '../../utils/auth';
 import request from '../../utils/request';
-import { apiRoutes } from '../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../utils/routes';
 
 /**
  * @swagger

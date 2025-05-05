@@ -23,7 +23,7 @@ describe('tenants route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest).toHaveBeenCalledWith(
@@ -39,7 +39,7 @@ describe('tenants route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
 
@@ -56,7 +56,7 @@ describe('tenants route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest.mock.calls[0][0]).toEqual(
@@ -72,7 +72,7 @@ describe('tenants route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest.mock.calls[0][0]).toEqual(
