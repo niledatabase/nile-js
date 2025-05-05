@@ -19,9 +19,6 @@ describe('db', () => {
       db: {
         port: 4433,
       },
-      api: {
-        token: 'blah',
-      },
       tenantId: null,
       userId: null,
     });

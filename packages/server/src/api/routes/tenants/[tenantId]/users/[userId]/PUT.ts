@@ -1,9 +1,9 @@
-import { apiRoutes } from '../../../../utils/routes/apiRoutes';
-import fetch from '../../../../utils/request';
-import { Config } from '../../../../../utils/Config';
+import { apiRoutes } from '../../../../../utils/routes';
+import fetch from '../../../../../utils/request';
+import { Config } from '../../../../../../utils/Config';
 /**
  * @swagger
- * /api/tenants/{tenantId}/users:
+ * /api/tenants/{tenantId}/users/{userId}/link:
  *   put:
  *    tags:
  *    - tenants
@@ -15,6 +15,12 @@ import { Config } from '../../../../../utils/Config';
  *      required: true
  *      schema:
  *        type: string
+ *    - name: userId 
+ *      in: path
+ *      required: true
+ *      schema:
+ *        type: string
+ 
  *    requestBody:
  *      description: |
  *        The email of the user you want to add to a tenant.
@@ -32,10 +38,13 @@ export async function PUT(
   init: RequestInit & { request: Request }
 ) {
   const yurl = new URL(init.request.url);
-  const [, tenantId] = yurl.pathname.split('/').reverse();
+
+  const [, userId, , tenantId] = yurl.pathname.split('/').reverse();
+  config.tenantId = tenantId;
+  config.userId = userId;
 
   init.method = 'PUT';
-  const url = `${apiRoutes(config).TENANT_USERS(tenantId)}`;
+  const url = `${apiRoutes(config).TENANT_USER}/link`;
 
   return await fetch(url, init, config);
 }

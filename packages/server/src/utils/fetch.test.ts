@@ -12,12 +12,10 @@ describe('fetch wrapper', () => {
 
   it('sets application json and uses the context', () => {
     const config = new Config({
-      api: {
-        headers: {
-          cookie: 'nile.session-token=123',
-          'nile.origin': 'http://some.url',
-        },
-      },
+      headers: new Headers({
+        cookie: 'nile.session-token=123',
+        'nile.origin': 'http://some.url',
+      }),
     });
 
     const result = Object.fromEntries(makeBasicHeaders(config, url).entries());
@@ -31,13 +29,11 @@ describe('fetch wrapper', () => {
 
   it('makes the correct headers based on the config', () => {
     const config = new Config({
-      api: {
-        secureCookies: true,
-        headers: {
-          cookie: 'nile.session-token=123',
-          'nile.origin': 'http://some.url',
-        },
-      },
+      secureCookies: true,
+      headers: new Headers({
+        cookie: 'nile.session-token=123',
+        'nile.origin': 'http://some.url',
+      }),
     });
 
     const result = Object.fromEntries(makeBasicHeaders(config, url).entries());
@@ -51,7 +47,7 @@ describe('fetch wrapper', () => {
   });
 
   it('passes the header cookie', () => {
-    const config = new Config({ api: { secureCookies: true } });
+    const config = new Config({ secureCookies: true });
 
     const result = Object.fromEntries(
       makeBasicHeaders(config, url, {

@@ -2,9 +2,9 @@ import { Routes } from '../../types';
 import {
   ProxyNileAuthRoutes,
   proxyRoutes,
-} from '../../utils/routes/proxyRoutes';
+  urlMatches,
+} from '../../utils/routes';
 import fetch from '../../utils/request';
-import urlMatches from '../../utils/routes/urlMatches';
 import { Config } from '../../../utils/Config';
 
 const key = 'SIGNOUT';

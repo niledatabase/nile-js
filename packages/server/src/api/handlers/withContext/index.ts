@@ -1,27 +1,24 @@
 import { Server } from '../../../Server';
-import { ServerConfig } from '../../../types';
+import { NileConfig } from '../../../types';
 import { Config } from '../../../utils/Config';
-import { Routes } from '../../types';
 import getter from '../GET';
 import poster from '../POST';
 import deleter from '../DELETE';
 import puter from '../PUT';
 
-export function handlersWithContext(
-  configRoutes: Routes,
-  config: Config
-): {
+export type CTXHandlerType = {
   GET: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
   POST: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
   DELETE: (
     req: Request
   ) => Promise<{ response: void | Response; nile: Server }>;
   PUT: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
-} {
-  const GET = getter(configRoutes, config);
-  const POST = poster(configRoutes, config);
-  const DELETE = deleter(configRoutes, config);
-  const PUT = puter(configRoutes, config);
+};
+export function handlersWithContext(config: Config): CTXHandlerType {
+  const GET = getter(config.routes, config);
+  const POST = poster(config.routes, config);
+  const DELETE = deleter(config.routes, config);
+  const PUT = puter(config.routes, config);
   return {
     GET: async (req) => {
       const response = await GET(req);
@@ -49,14 +46,17 @@ export function handlersWithContext(
 export function updateConfig(
   response: Response | void,
   config: Config
-): ServerConfig {
+): NileConfig {
   let origin = 'http://localhost:3000';
   let headers: Headers | null = null;
 
   if (response?.status === 302) {
     const location = response.headers.get('location');
     if (location) {
-      origin = location;
+      const normalized = location.endsWith('/')
+        ? location.slice(0, -1)
+        : location;
+      origin = normalized;
     }
   }
 

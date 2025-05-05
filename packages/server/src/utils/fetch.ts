@@ -2,10 +2,15 @@
 
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
-import { NileRequest } from './Requester';
+import { NileRequest } from './Requester/types';
 import { updateTenantId, updateUserId } from './Event';
 import Logger from './Logger';
-import { X_NILE_ORIGIN, X_NILE_TENANT, X_NILE_USER_ID } from './constants';
+import {
+  X_NILE_ORIGIN,
+  X_NILE_SECURECOOKIES,
+  X_NILE_TENANT,
+  X_NILE_USER_ID,
+} from './constants';
 
 export function handleTenantId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,6 +76,10 @@ export function makeBasicHeaders(
         headers.set(X_NILE_ORIGIN, localOrigin);
       }
     }
+  }
+  const secure = headers.get(X_NILE_SECURECOOKIES) ?? config.secureCookies;
+  if (secure) {
+    headers.set(X_NILE_SECURECOOKIES, String(secure));
   }
   // prefer the cookie from the api, not the opts
   const cookie = headers.get('cookie');

@@ -18,7 +18,7 @@ describe('users route', () => {
     const res = await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(res?.status).toEqual(404);
@@ -29,7 +29,7 @@ describe('users route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest).toHaveBeenCalledWith(
@@ -47,9 +47,7 @@ describe('users route', () => {
     await route(
       _res,
       new Config({
-        api: {
-          basePath: 'http://thenile.dev/v2/databases/testdb',
-        },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest).toHaveBeenCalledWith(
@@ -63,7 +61,7 @@ describe('users route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest).toHaveBeenCalledWith(
@@ -81,7 +79,7 @@ describe('users route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest).toHaveBeenCalledWith(
@@ -99,7 +97,7 @@ describe('users route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest).toHaveBeenCalledWith(

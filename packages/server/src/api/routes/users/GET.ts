@@ -1,6 +1,6 @@
 import { getTenantFromHttp } from '../../../utils/fetch';
 import request from '../../utils/request';
-import { apiRoutes } from '../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../utils/routes';
 import { Config } from '../../../utils/Config';
 
 /**

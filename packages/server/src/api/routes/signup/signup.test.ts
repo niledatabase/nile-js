@@ -22,7 +22,7 @@ describe('signup route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest).toHaveBeenCalledWith(

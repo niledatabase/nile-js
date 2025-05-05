@@ -1,7 +1,6 @@
 import { Config } from '../../../utils/Config';
-import urlMatches from '../../utils/routes/urlMatches';
 import { Routes } from '../../types';
-import { DefaultNileAuthRoutes } from '../../utils/routes/defaultRoutes';
+import { urlMatches, DefaultNileAuthRoutes } from '../../utils/routes';
 
 import { POST } from './POST';
 
@@ -23,10 +22,22 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 
 export async function fetchSignUp(
   config: Config,
-  provider: string,
-  body: string
+  payload: {
+    body?: string;
+    params?: { newTenantName?: string; tenantId?: string };
+  }
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${DefaultNileAuthRoutes.SIGNUP}/${provider}`;
+  const { body, params } = payload ?? {};
+  const q = new URLSearchParams();
+  if (params?.newTenantName) {
+    q.set('newTenantName', params.newTenantName);
+  }
+  if (params?.tenantId) {
+    q.set('tenantId', params.tenantId);
+  }
+  const clientUrl = `${config.origin}${config.routePrefix}${
+    DefaultNileAuthRoutes.SIGNUP
+  }${q.size > 0 ? `?${q}` : ''}`;
   const req = new Request(clientUrl, {
     method: 'POST',
     headers: config.headers,

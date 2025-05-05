@@ -1,4 +1,4 @@
-import { apiRoutes } from '../../../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../../../utils/routes';
 import { Config } from '../../../../../utils/Config';
 import request from '../../../../utils/request';
 
