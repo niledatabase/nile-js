@@ -137,12 +137,10 @@ export default class Authorizer {
     return `${this.baseUrl}${this.state.basePath}`;
   }
 
-  async fetchData<T = Record<string, string>>(
+  async sendData(
     url: string,
     init?: RequestInit
-  ): Promise<T | undefined> {
-    let errorHandler;
-    let res;
+  ): Promise<Response | undefined> {
     try {
       const options: RequestInit = {
         headers: {
@@ -152,12 +150,34 @@ export default class Authorizer {
         ...init,
       };
 
-      res = await fetch(url, options);
-      errorHandler = res.clone();
+      const res = await fetch(url, options);
       this.state.loading = false;
       const data = await res.json();
       if (!res.ok) throw data;
       return Object.keys(data).length > 0 ? data : undefined;
+    } catch (error) {
+      this.logger.error('CLIENT_FETCH_ERROR', { error: error as Error, url });
+      return undefined;
+    }
+  }
+  async fetchData<T = any>(
+    url: string,
+    init?: RequestInit
+  ): Promise<T | undefined> {
+    const options: RequestInit = {
+      ...(this.requestInit ? this.requestInit : {}),
+      ...init,
+    };
+    const res = await this.sendData(url, options);
+
+    const errorHandler = res?.clone();
+    try {
+      if (res?.ok) {
+        const data = await res.json();
+        this.state.loading = false;
+        if (!res.ok) throw data;
+        return Object.keys(data).length > 0 ? data : undefined;
+      }
     } catch (error) {
       if (error instanceof Error) {
         // this is fine
@@ -199,11 +219,20 @@ export default class Authorizer {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
+      if (res.ok) {
+        return {
+          data: (await res.json()) as T,
+          status: res.status,
+          ok: res.ok,
+          url: res.url,
+        };
+      }
+      const { url: responseUrl } = await res.json();
       return {
-        data: (await res.json()) as T,
+        data: {} as T,
         status: res.status,
         ok: res.ok,
-        url: url,
+        url: responseUrl,
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -351,6 +380,7 @@ export default class Authorizer {
       baseUrl?: string;
       init?: ResponseInit;
       fetchUrl?: string;
+      resetUrl?: string;
       auth?: Authorizer | PartialAuthorizer;
     },
     authorizationParams?: SignInAuthorizationParams
@@ -359,6 +389,7 @@ export default class Authorizer {
   > {
     const {
       callbackUrl = window.location.href,
+      resetUrl = window.location.href,
       baseUrl,
       fetchUrl,
       init,
@@ -388,7 +419,6 @@ export default class Authorizer {
     if (!providers) {
       return { error: 'No providers enabled' } as any;
     }
-
     if (!provider || !(provider in providers)) {
       return { error: `Provider ${provider} not enabled` } as any;
     }
@@ -412,15 +442,16 @@ export default class Authorizer {
         csrfToken: String(await this.getCsrfToken()),
         callbackUrl,
         json: String(true),
+        resetUrl,
       }),
     });
 
-    if (this.requestInit?.credentials && isSupportingReturn) {
+    if (data?.ok && this.requestInit?.credentials && isSupportingReturn) {
       window.location.reload();
       return;
     }
 
-    if (redirect || !isSupportingReturn) {
+    if (data?.ok && (redirect || !isSupportingReturn)) {
       const url = data?.data.url ?? callbackUrl;
       window.location.href = url;
       if (url.includes('#')) window.location.reload();
@@ -536,6 +567,78 @@ export default class Authorizer {
       error,
     } as any;
   }
+  async resetPassword(options: {
+    baseUrl?: string;
+    init?: ResponseInit;
+    fetchUrl?: string;
+    email: string;
+    password: string;
+    auth?: Authorizer | PartialAuthorizer;
+    callbackUrl?: string;
+    redirect?: boolean;
+  }) {
+    const { password, fetchUrl, email, redirect, callbackUrl } = options;
+
+    this._configureFetch(options);
+
+    const resetPasswordUrl =
+      fetchUrl ?? `${this.apiBaseUrl}/auth/reset-password`;
+
+    let resetPasswordWithParams = resetPasswordUrl;
+
+    const searchParams = new URLSearchParams();
+
+    if (redirect === false) {
+      searchParams.set('json', 'true');
+    }
+    if (searchParams.size > 0) {
+      resetPasswordWithParams += `?${searchParams}`;
+    }
+
+    const data = await this.fetchData(resetPasswordWithParams, {
+      method: 'post',
+      body: JSON.stringify({
+        email,
+        password,
+        redirectUrl: resetPasswordUrl,
+        callbackUrl,
+      }),
+    });
+    if (redirect === false) {
+      const { url: urlWithParams } = data;
+      resetPasswordWithParams = `${urlWithParams}&redirect=false`;
+      await this.sendData(resetPasswordWithParams);
+    }
+
+    return await this.sendData(resetPasswordWithParams, {
+      method: password ? 'put' : 'post',
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  _configureFetch(params: {
+    baseUrl?: string;
+    auth?: Authorizer | PartialAuthorizer;
+    init?: RequestInit;
+  }) {
+    const { baseUrl, init, auth } = params;
+    if (baseUrl) {
+      this.baseUrl = baseUrl;
+    }
+
+    if (auth) {
+      if (auth.requestInit) {
+        this.requestInit = auth.requestInit;
+      }
+      if (auth.state?.baseUrl) {
+        this.baseUrl = auth.state.baseUrl;
+      }
+    }
+
+    if (init) {
+      this.requestInit = init;
+    }
+  }
 }
 export interface InternalUrl {
   /** @default "http://localhost:3000" */
@@ -612,3 +715,7 @@ export const signIn: typeof authorizer.signIn = async function signOut(
 export const signUp: typeof authorizer.signUp = async function signUp(options) {
   return auth.signUp(options);
 };
+export const resetPassword: typeof authorizer.resetPassword =
+  async function resetPassword(options) {
+    return auth.resetPassword(options);
+  };

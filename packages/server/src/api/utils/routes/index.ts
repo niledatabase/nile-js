@@ -15,26 +15,29 @@ export enum DefaultNileAuthRoutes {
   ME = '/me',
 }
 
-export enum ProxyNileAuthRoutes {
+export enum NileAuthRoutes {
   CSRF = '/auth/csrf',
   PROVIDERS = '/auth/providers',
   SESSION = '/auth/session',
   SIGNIN = '/auth/signin',
   CALLBACK = '/auth/callback',
   SIGNOUT = '/auth/signout',
+  PASSWORD_RESET = '/auth/reset-password',
+  VERIFY_EMAIL = '/auth/verify-email',
 }
 
 // these map to the developer app
 export const appRoutes = (prefix = '/api'): Routes => ({
-  SIGNIN: `${prefix}${ProxyNileAuthRoutes.SIGNIN}`,
-  PROVIDERS: `${prefix}${ProxyNileAuthRoutes.PROVIDERS}`,
-  SESSION: `${prefix}${ProxyNileAuthRoutes.SESSION}`,
-  CSRF: `${prefix}${ProxyNileAuthRoutes.CSRF}`,
-  CALLBACK: `${prefix}${ProxyNileAuthRoutes.CALLBACK}`,
-  SIGNOUT: `${prefix}${ProxyNileAuthRoutes.SIGNOUT}`,
+  SIGNIN: `${prefix}${NileAuthRoutes.SIGNIN}`,
+  PROVIDERS: `${prefix}${NileAuthRoutes.PROVIDERS}`,
+  SESSION: `${prefix}${NileAuthRoutes.SESSION}`,
+  CSRF: `${prefix}${NileAuthRoutes.CSRF}`,
+  CALLBACK: `${prefix}${NileAuthRoutes.CALLBACK}`,
+  SIGNOUT: `${prefix}${NileAuthRoutes.SIGNOUT}`,
   ERROR: `${prefix}/auth/error`,
   VERIFY_REQUEST: `${prefix}/auth/verify-request`,
-  PASSWORD_RESET: `${prefix}/auth/reset-password`,
+  VERIFY_EMAIL: `${prefix}${NileAuthRoutes.VERIFY_EMAIL}`,
+  PASSWORD_RESET: `${prefix}${NileAuthRoutes.PASSWORD_RESET}`,
   ME: `${prefix}${DefaultNileAuthRoutes.ME}`,
   USERS: `${prefix}${DefaultNileAuthRoutes.USERS}`,
   USER_TENANTS: `${prefix}${DefaultNileAuthRoutes.USER_TENANTS}`,
@@ -69,15 +72,16 @@ export type ApiRoutePaths = (typeof apiRoutes)[ApiRouteKeys];
 
 // these map to nile-auth
 export const proxyRoutes = (config: Config) => ({
-  SIGNIN: makeRestUrl(config, ProxyNileAuthRoutes.SIGNIN),
-  PROVIDERS: makeRestUrl(config, ProxyNileAuthRoutes.PROVIDERS),
-  SESSION: makeRestUrl(config, ProxyNileAuthRoutes.SESSION),
-  CSRF: makeRestUrl(config, ProxyNileAuthRoutes.CSRF),
-  CALLBACK: makeRestUrl(config, ProxyNileAuthRoutes.CALLBACK),
-  SIGNOUT: makeRestUrl(config, ProxyNileAuthRoutes.SIGNOUT),
+  SIGNIN: makeRestUrl(config, NileAuthRoutes.SIGNIN),
+  PROVIDERS: makeRestUrl(config, NileAuthRoutes.PROVIDERS),
+  SESSION: makeRestUrl(config, NileAuthRoutes.SESSION),
+  CSRF: makeRestUrl(config, NileAuthRoutes.CSRF),
+  CALLBACK: makeRestUrl(config, NileAuthRoutes.CALLBACK),
+  SIGNOUT: makeRestUrl(config, NileAuthRoutes.SIGNOUT),
   ERROR: makeRestUrl(config, '/auth/error'),
   VERIFY_REQUEST: makeRestUrl(config, '/auth/verify-request'),
-  PASSWORD_RESET: makeRestUrl(config, '/auth/reset-password'),
+  PASSWORD_RESET: makeRestUrl(config, NileAuthRoutes.PASSWORD_RESET),
+  VERIFY_EMAIL: makeRestUrl(config, NileAuthRoutes.VERIFY_EMAIL),
 });
 type ProxyKeys = keyof typeof proxyRoutes;
 export type ProxyPaths = (typeof proxyRoutes)[ProxyKeys];
