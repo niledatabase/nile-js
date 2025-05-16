@@ -1,8 +1,5 @@
-// import { decodeJwt } from 'jose';
-
 import { ResponseError } from './ResponseError';
 import { Config } from './Config';
-import { NileRequest } from './Requester/types';
 import { updateTenantId, updateUserId } from './Event';
 import Logger from './Logger';
 import {
@@ -11,18 +8,6 @@ import {
   X_NILE_TENANT,
   X_NILE_USER_ID,
 } from './constants';
-
-export function handleTenantId(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  req: NileRequest<any>,
-  config: Config
-): ResponseError | void {
-  // already set, no need to try and figure it out
-  if (config.tenantId) {
-    return;
-  }
-  return new ResponseError('tenant id needs to be set', { status: 400 });
-}
 
 function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
   const cookie = headers.get('cookie')?.split('; ');
