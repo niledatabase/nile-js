@@ -11,7 +11,6 @@ describe('nile db', () => {
       'auth',
       'users',
       'tenants',
-      'me',
     ]);
     keys.forEach((k) => {
       const props = Object.getOwnPropertyNames(
@@ -22,15 +21,20 @@ describe('nile db', () => {
         expect(props).toEqual(['constructor', 'signin']);
       }
       if (k === 'users') {
-        expect(props).toEqual([
-          'constructor',
-          'createTenantUser',
-          'createUser',
-          'listTenantUsers',
-          'listUsers',
-          'signUp',
-          'updateUser',
-        ]);
+        expect(props).toEqual(
+          [
+            'constructor',
+            'createTenantUser',
+            'createUser',
+            'getSelf',
+            'removeSelf',
+            'updateSelf',
+            'listTenantUsers',
+            'listUsers',
+            'signUp',
+            'updateUser',
+          ].sort()
+        );
       }
     });
   });
