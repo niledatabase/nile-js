@@ -305,6 +305,19 @@ export default class Auth {
 
     return res;
   }
+  async callback(provider: ProviderName, body?: string | Request) {
+    if (body instanceof Request) {
+      this.#config.headers = body.headers;
+      return await fetchCallback(
+        this.#config,
+        provider,
+        undefined,
+        body,
+        'GET'
+      );
+    }
+    return await fetchCallback(this.#config, provider, body);
+  }
   /**
    * The return value from this will be a redirect for the client
    * In most cases, you should forward the response directly to the client
@@ -313,24 +326,46 @@ export default class Auth {
    */
   async signIn<T = Response>(
     provider: ProviderName,
-    payload?: { email: string; password: string },
+    payload?: Request | { email: string; password: string },
     rawResponse?: true
   ): Promise<T>;
   async signIn<T = Response | undefined>(
     provider: ProviderName,
-    payload?: { email: string; password: string },
+    payload?: Request | { email: string; password: string },
     rawResponse?: boolean
   ): Promise<T> {
-    this.#config.headers = new Headers();
-    const { info, error } = this.#logger;
-    const { email, password } = payload ?? {};
-    if (provider === 'email' && (!email || !password)) {
-      throw new Error(
-        'Server side sign in requires a user email and password.'
+    if (payload instanceof Request) {
+      const csrfToken = parseCSRF(payload.headers);
+      const callbackUrl = parseCallback(payload.headers);
+
+      this.#config.headers = new Headers(payload.headers);
+      this.#config.headers.set('cookie', [csrfToken].join('; '));
+      if (!csrfToken) {
+        throw new Error(
+          'CSRF token in missing from request. Request it by the client before calling sign in'
+        );
+      }
+      const [, csrfValue] = csrfToken.split('=');
+      const [csrf] = decodeURIComponent(csrfValue).split('|');
+      const [, cbUrl] = callbackUrl?.split('=') ?? [];
+      this.#config.headers.set(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
       );
+      return (await fetchSignIn(
+        this.#config,
+        provider,
+        new URLSearchParams({
+          csrfToken: csrf,
+          json: String(true),
+          callbackUrl: decodeURIComponent(cbUrl),
+        })
+      )) as T;
     }
 
-    info(`Obtaining providers for ${email}`);
+    this.#config.headers = new Headers();
+    const { info, error } = this.#logger;
+
     const providers = await this.listProviders();
     info('Obtaining csrf');
     const csrf = await this.getCsrf();
@@ -349,14 +384,15 @@ export default class Auth {
         'Unable to obtain credential provider. Aborting server side sign in.'
       );
     }
-    if (provider !== 'credentials') {
-      return (await fetchSignIn(
-        this.#config,
-        provider,
-        JSON.stringify({ csrfToken })
-      )) as T;
+
+    const { email, password } = payload ?? {};
+    if (provider === 'email' && (!email || !password)) {
+      throw new Error(
+        'Server side sign in requires a user email and password.'
+      );
     }
 
+    info(`Obtaining providers for ${email}`);
     info(`Attempting sign in with email ${email}`);
     const body = JSON.stringify({
       email,
@@ -365,7 +401,7 @@ export default class Auth {
       callbackUrl: credentials.callbackUrl,
     });
 
-    const signInRes = await fetchCallback(this.#config, provider, body);
+    const signInRes = await this.callback(provider, body);
 
     const authCookie = signInRes?.headers.get('set-cookie');
     if (!authCookie) {
