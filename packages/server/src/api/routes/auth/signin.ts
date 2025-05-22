@@ -53,7 +53,6 @@ export default async function route(req: Request, config: Config) {
   const params = new URLSearchParams(passThroughUrl.search);
 
   url = `${url}${params.toString() !== '' ? `?${params.toString()}` : ''}`;
-
   const res = await request(url, { ...init, request: req }, config);
 
   return res;
@@ -66,7 +65,7 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 export async function fetchSignIn(
   config: Config,
   provider: string,
-  body: string
+  body: URLSearchParams
 ): Promise<Response> {
   const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.SIGNIN}/${provider}`;
   const req = new Request(clientUrl, {

@@ -53,10 +53,8 @@ export function updateConfig(
   if (response?.status === 302) {
     const location = response.headers.get('location');
     if (location) {
-      const normalized = location.endsWith('/')
-        ? location.slice(0, -1)
-        : location;
-      origin = normalized;
+      const urlLocation = new URL(location);
+      origin = urlLocation.origin;
     }
   }
 
