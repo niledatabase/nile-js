@@ -22,7 +22,7 @@ export function useSignIn(params?: Props) {
       const d = { ..._data, callbackUrl };
       const possibleData = beforeMutate && beforeMutate(d);
       const data = possibleData ?? d;
-      const res = await signIn('credentials', {
+      const res = await signIn(data.provider, {
         init,
         auth,
         baseUrl,

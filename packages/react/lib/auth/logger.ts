@@ -28,7 +28,7 @@ export class UnknownError extends Error {
 /** Makes sure that error is always serializable */
 function formatError(o: unknown): unknown {
   if (o instanceof Error && !(o instanceof UnknownError)) {
-    return { message: o.message, stack: o.stack, name: o.name };
+    return JSON.stringify({ message: o.message, stack: o.stack, name: o.name });
   }
   if (hasErrorProperty(o)) {
     o.error = formatError(o.error) as Error;
