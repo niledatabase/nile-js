@@ -2,6 +2,7 @@ import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
 
 const NILEDB_API_URL = process.env.NILEDB_API_URL;
+export const DEFAULT_PREFIX = '/api';
 
 export enum DefaultNileAuthRoutes {
   SIGNUP = '/signup',
@@ -27,7 +28,7 @@ export enum NileAuthRoutes {
 }
 
 // these map to the developer app
-export const appRoutes = (prefix = '/api'): Routes => ({
+export const appRoutes = (prefix = DEFAULT_PREFIX): Routes => ({
   SIGNIN: `${prefix}${NileAuthRoutes.SIGNIN}`,
   PROVIDERS: `${prefix}${NileAuthRoutes.PROVIDERS}`,
   SESSION: `${prefix}${NileAuthRoutes.SESSION}`,

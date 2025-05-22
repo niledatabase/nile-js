@@ -17,7 +17,7 @@ export default function POSTER(configRoutes: Routes, config: Config) {
       try {
         const json = await req.clone().json();
         error(req.body && json);
-      } catch (e) {
+      } catch {
         error(await req.text());
       }
       return new Response(null, { status: 200 });

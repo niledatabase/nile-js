@@ -55,11 +55,15 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 export async function fetchCallback(
   config: Config,
   provider: ProviderName,
-  body: string
+  body?: string,
+  request?: Request,
+  method: 'POST' | 'GET' = 'POST'
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.CALLBACK}/${provider}`;
+  const clientUrl = `${config.origin}${config.routePrefix}${
+    NileAuthRoutes.CALLBACK
+  }/${provider}${request ? `?${new URL(request.url).searchParams}` : ''}`;
   const req = new Request(clientUrl, {
-    method: 'POST',
+    method,
     headers: config.headers,
     body,
   });
