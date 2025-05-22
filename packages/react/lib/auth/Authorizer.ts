@@ -152,9 +152,7 @@ export default class Authorizer {
 
       const res = await fetch(url, options);
       this.state.loading = false;
-      const data = await res.json();
-      if (!res.ok) throw data;
-      return Object.keys(data).length > 0 ? data : undefined;
+      return res;
     } catch (error) {
       this.logger.error('CLIENT_FETCH_ERROR', { error: error as Error, url });
       return undefined;
@@ -248,15 +246,15 @@ export default class Authorizer {
     }
   }
 
-  async getProviders() {
+  async getProviders(url?: string) {
     return await this.fetchData<
       Record<LiteralUnion<BuiltInProviderType>, ClientSafeProvider>
-    >(`${this.apiBaseUrl}/auth/providers`);
+    >(url ?? `${this.apiBaseUrl}/auth/providers`);
   }
 
-  async getCsrfToken() {
+  async getCsrfToken(url?: string) {
     const response = await this.fetchData<{ csrfToken: string }>(
-      `${this.apiBaseUrl}/auth/csrf`
+      url ?? `${this.apiBaseUrl}/auth/csrf`
     );
     return response?.csrfToken;
   }
@@ -378,6 +376,8 @@ export default class Authorizer {
     >,
     options?: SignInOptions & {
       baseUrl?: string;
+      providersUrl?: string;
+      csrfUrl?: string;
       init?: ResponseInit;
       fetchUrl?: string;
       resetUrl?: string;
@@ -390,6 +390,8 @@ export default class Authorizer {
     const {
       callbackUrl = window.location.href,
       resetUrl = window.location.href,
+      providersUrl,
+      csrfUrl,
       baseUrl,
       fetchUrl,
       init,
@@ -413,8 +415,7 @@ export default class Authorizer {
       this.requestInit = init;
     }
 
-    const baseFetch = fetchUrl ?? `${this.apiBaseUrl}/auth`;
-    const providers = await this.getProviders();
+    const providers = await this.getProviders(providersUrl);
 
     if (!providers) {
       return { error: 'No providers enabled' } as any;
@@ -427,9 +428,10 @@ export default class Authorizer {
     const isEmail = providers[provider].type === 'email';
     const isSupportingReturn = isCredentials || isEmail;
 
-    const signInUrl = `${baseFetch}/${
-      isCredentials ? 'callback' : 'signin'
-    }/${provider}`;
+    const baseFetch = `${this.apiBaseUrl}/auth`;
+    const signInUrl =
+      fetchUrl ??
+      `${baseFetch}/${isCredentials ? 'callback' : 'signin'}/${provider}`;
 
     const _signInUrl = `${signInUrl}${
       authorizationParams ? `?${new URLSearchParams(authorizationParams)}` : ''
@@ -439,7 +441,7 @@ export default class Authorizer {
       method: 'post',
       body: new URLSearchParams({
         ...remaining,
-        csrfToken: String(await this.getCsrfToken()),
+        csrfToken: String(await this.getCsrfToken(csrfUrl)),
         callbackUrl,
         json: String(true),
         resetUrl,
@@ -691,8 +693,8 @@ export const getSession = async function getSession(params?: GetSessionParams) {
   return await auth.getSession(params);
 };
 
-export const getCsrfToken = async function getCsrfToken() {
-  return auth.getCsrfToken();
+export const getCsrfToken = async function getCsrfToken(url?: string) {
+  return auth.getCsrfToken(url);
 };
 
 export const getProviders = async function getProviders() {
