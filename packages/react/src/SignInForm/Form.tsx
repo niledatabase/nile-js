@@ -28,7 +28,8 @@ export function SignInForm(props: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(
-          ({ email, password }) => signIn && signIn({ email, password })
+          ({ email, password }) =>
+            signIn && signIn({ provider: 'credentials', email, password })
         )}
         className="space-y-8"
       >

@@ -13,6 +13,7 @@ export function useSignIn(params?: Props) {
     init,
     baseUrl,
     fetchUrl,
+    resetUrl,
     auth,
     redirect,
   } = params ?? {};
@@ -21,12 +22,13 @@ export function useSignIn(params?: Props) {
       const d = { ..._data, callbackUrl };
       const possibleData = beforeMutate && beforeMutate(d);
       const data = possibleData ?? d;
-      const res = await signIn('credentials', {
+      const res = await signIn(data.provider, {
         init,
         auth,
         baseUrl,
         fetchUrl,
         redirect,
+        resetUrl,
         ...data,
       });
       if (!res?.ok && res?.error) {

@@ -6,6 +6,8 @@ import {
 import { Config } from '../../utils/Config';
 import Logger from '../../utils/Logger';
 
+import { DEFAULT_PREFIX } from './routes';
+
 export default async function request(
   url: string,
   _init: RequestInit & { request: Request },
@@ -37,8 +39,12 @@ export default async function request(
     // debug(`Obtained origin from config.api.origin ${config.api.origin}`);
     // updatedHeaders.set(X_NILE_ORIGIN, config.api.origin);
   } else {
-    updatedHeaders.set(X_NILE_ORIGIN, requestUrl.origin);
-    debug(`Obtained origin from request ${requestUrl.origin}`);
+    const reqOrigin =
+      config.routePrefix !== DEFAULT_PREFIX
+        ? `${requestUrl.origin}${config.routePrefix}`
+        : requestUrl.origin;
+    updatedHeaders.set(X_NILE_ORIGIN, reqOrigin);
+    debug(`Obtained origin from request ${reqOrigin}`);
   }
   const params = { ...init };
   if (

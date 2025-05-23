@@ -169,20 +169,25 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = 'FormMessage';
 
-const Email = () => {
+const Email = ({ hide }: { hide?: boolean }) => {
   const form = useFormContext();
+
   return (
     <FormField
       control={form.control}
       name="email"
       render={({ field }) => {
+        if (hide) {
+          return <input type="hidden" {...field} />;
+        }
         return (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel htmlFor={field.name}>Email</FormLabel>
             <FormControl>
               <Input
                 placeholder="Email"
                 {...field}
+                aria-label={field.name}
                 autoComplete="current-email"
                 required
               />
@@ -205,12 +210,13 @@ const Password = () => {
       render={({ field }) => {
         return (
           <FormItem>
-            <FormLabel>Password</FormLabel>
+            <FormLabel htmlFor={field.name}>Password</FormLabel>
             <FormControl>
               <Input
                 placeholder="Password"
                 {...field}
                 type="password"
+                aria-label={field.name}
                 autoComplete="current-password"
                 required
               />

@@ -1,11 +1,16 @@
 import { QueryClient } from '@tanstack/react-query';
 
+import { BuiltInProviderType } from '../../lib/auth/types';
 import { ComponentFetchProps } from '../../lib/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllowedAny = any;
 
-export type LoginInfo = { email: string; password: string };
+export type LoginInfo = {
+  provider: BuiltInProviderType;
+  email?: string;
+  password?: string;
+};
 type LoginSuccess = (
   response: AllowedAny,
   formValues: LoginInfo,
@@ -17,6 +22,7 @@ export type Props = ComponentFetchProps & {
   onSuccess?: LoginSuccess;
   onError?: (error: Error, data: AllowedAny) => void;
   callbackUrl?: string;
+  resetUrl?: string;
   client?: QueryClient;
   className?: string;
   baseUrl?: string;

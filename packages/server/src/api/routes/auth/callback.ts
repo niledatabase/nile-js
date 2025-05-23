@@ -1,8 +1,4 @@
-import {
-  ProxyNileAuthRoutes,
-  proxyRoutes,
-  urlMatches,
-} from '../../utils/routes';
+import { NileAuthRoutes, proxyRoutes, urlMatches } from '../../utils/routes';
 import request from '../../utils/request';
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
@@ -59,11 +55,15 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 export async function fetchCallback(
   config: Config,
   provider: ProviderName,
-  body: string
+  body?: string,
+  request?: Request,
+  method: 'POST' | 'GET' = 'POST'
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${ProxyNileAuthRoutes.CALLBACK}/${provider}`;
+  const clientUrl = `${config.origin}${config.routePrefix}${
+    NileAuthRoutes.CALLBACK
+  }/${provider}${request ? `?${new URL(request.url).searchParams}` : ''}`;
   const req = new Request(clientUrl, {
-    method: 'POST',
+    method,
     headers: config.headers,
     body,
   });

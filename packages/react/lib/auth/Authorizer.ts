@@ -137,12 +137,10 @@ export default class Authorizer {
     return `${this.baseUrl}${this.state.basePath}`;
   }
 
-  async fetchData<T = Record<string, string>>(
+  async sendData(
     url: string,
     init?: RequestInit
-  ): Promise<T | undefined> {
-    let errorHandler;
-    let res;
+  ): Promise<Response | undefined> {
     try {
       const options: RequestInit = {
         headers: {
@@ -152,12 +150,36 @@ export default class Authorizer {
         ...init,
       };
 
-      res = await fetch(url, options);
-      errorHandler = res.clone();
+      const filledUrl = !url.startsWith('http')
+        ? `${window.location.origin}${url}`
+        : url;
+
+      const res = await fetch(filledUrl, options);
       this.state.loading = false;
-      const data = await res.json();
-      if (!res.ok) throw data;
-      return Object.keys(data).length > 0 ? data : undefined;
+      return res;
+    } catch (error) {
+      this.logger.error('CLIENT_FETCH_ERROR', { error: error as Error, url });
+      return undefined;
+    }
+  }
+  async fetchData<T = any>(
+    url: string,
+    init?: RequestInit
+  ): Promise<T | undefined> {
+    const options: RequestInit = {
+      ...(this.requestInit ? this.requestInit : {}),
+      ...init,
+    };
+    const res = await this.sendData(url, options);
+
+    const errorHandler = res?.clone();
+    try {
+      if (res?.ok) {
+        const data = await res.json();
+        this.state.loading = false;
+        if (!res.ok) throw data;
+        return Object.keys(data).length > 0 ? data : undefined;
+      }
     } catch (error) {
       if (error instanceof Error) {
         // this is fine
@@ -199,11 +221,20 @@ export default class Authorizer {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
+      if (res.ok) {
+        return {
+          data: (await res.json()) as T,
+          status: res.status,
+          ok: res.ok,
+          url: res.url,
+        };
+      }
+      const { url: responseUrl } = await res.json();
       return {
-        data: (await res.json()) as T,
+        data: {} as T,
         status: res.status,
         ok: res.ok,
-        url: url,
+        url: responseUrl,
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -219,15 +250,15 @@ export default class Authorizer {
     }
   }
 
-  async getProviders() {
+  async getProviders(url?: string) {
     return await this.fetchData<
       Record<LiteralUnion<BuiltInProviderType>, ClientSafeProvider>
-    >(`${this.apiBaseUrl}/auth/providers`);
+    >(url ?? `${this.apiBaseUrl}/auth/providers`);
   }
 
-  async getCsrfToken() {
+  async getCsrfToken(url?: string) {
     const response = await this.fetchData<{ csrfToken: string }>(
-      `${this.apiBaseUrl}/auth/csrf`
+      url ?? `${this.apiBaseUrl}/auth/csrf`
     );
     return response?.csrfToken;
   }
@@ -349,8 +380,11 @@ export default class Authorizer {
     >,
     options?: SignInOptions & {
       baseUrl?: string;
+      providersUrl?: string;
+      csrfUrl?: string;
       init?: ResponseInit;
       fetchUrl?: string;
+      resetUrl?: string;
       auth?: Authorizer | PartialAuthorizer;
     },
     authorizationParams?: SignInAuthorizationParams
@@ -359,6 +393,9 @@ export default class Authorizer {
   > {
     const {
       callbackUrl = window.location.href,
+      resetUrl = window.location.href,
+      providersUrl,
+      csrfUrl,
       baseUrl,
       fetchUrl,
       init,
@@ -382,13 +419,11 @@ export default class Authorizer {
       this.requestInit = init;
     }
 
-    const baseFetch = fetchUrl ?? `${this.apiBaseUrl}/auth`;
-    const providers = await this.getProviders();
+    const providers = await this.getProviders(providersUrl);
 
     if (!providers) {
       return { error: 'No providers enabled' } as any;
     }
-
     if (!provider || !(provider in providers)) {
       return { error: `Provider ${provider} not enabled` } as any;
     }
@@ -397,9 +432,10 @@ export default class Authorizer {
     const isEmail = providers[provider].type === 'email';
     const isSupportingReturn = isCredentials || isEmail;
 
-    const signInUrl = `${baseFetch}/${
-      isCredentials ? 'callback' : 'signin'
-    }/${provider}`;
+    const baseFetch = `${this.apiBaseUrl}/auth`;
+    const signInUrl =
+      fetchUrl ??
+      `${baseFetch}/${isCredentials ? 'callback' : 'signin'}/${provider}`;
 
     const _signInUrl = `${signInUrl}${
       authorizationParams ? `?${new URLSearchParams(authorizationParams)}` : ''
@@ -409,18 +445,19 @@ export default class Authorizer {
       method: 'post',
       body: new URLSearchParams({
         ...remaining,
-        csrfToken: String(await this.getCsrfToken()),
+        csrfToken: String(await this.getCsrfToken(csrfUrl)),
         callbackUrl,
         json: String(true),
+        resetUrl,
       }),
     });
 
-    if (this.requestInit?.credentials && isSupportingReturn) {
+    if (data?.ok && this.requestInit?.credentials && isSupportingReturn) {
       window.location.reload();
       return;
     }
 
-    if (redirect || !isSupportingReturn) {
+    if (data?.ok && (redirect || !isSupportingReturn)) {
       const url = data?.data.url ?? callbackUrl;
       window.location.href = url;
       if (url.includes('#')) window.location.reload();
@@ -536,6 +573,78 @@ export default class Authorizer {
       error,
     } as any;
   }
+  async resetPassword(options: {
+    baseUrl?: string;
+    init?: ResponseInit;
+    fetchUrl?: string;
+    email: string;
+    password: string;
+    auth?: Authorizer | PartialAuthorizer;
+    callbackUrl?: string;
+    redirect?: boolean;
+  }) {
+    const { password, fetchUrl, email, redirect, callbackUrl } = options;
+
+    this._configureFetch(options);
+
+    const resetPasswordUrl =
+      fetchUrl ?? `${this.apiBaseUrl}/auth/reset-password`;
+
+    let resetPasswordWithParams = resetPasswordUrl;
+
+    const searchParams = new URLSearchParams();
+
+    if (redirect === false) {
+      searchParams.set('json', 'true');
+    }
+    if (searchParams.size > 0) {
+      resetPasswordWithParams += `?${searchParams}`;
+    }
+
+    const data = await this.fetchData(resetPasswordWithParams, {
+      method: 'post',
+      body: JSON.stringify({
+        email,
+        password,
+        redirectUrl: resetPasswordUrl,
+        callbackUrl,
+      }),
+    });
+    if (redirect === false) {
+      const { url: urlWithParams } = data;
+      resetPasswordWithParams = `${urlWithParams}&redirect=false`;
+      await this.sendData(resetPasswordWithParams);
+    }
+
+    return await this.sendData(resetPasswordWithParams, {
+      method: password ? 'put' : 'post',
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  _configureFetch(params: {
+    baseUrl?: string;
+    auth?: Authorizer | PartialAuthorizer;
+    init?: RequestInit;
+  }) {
+    const { baseUrl, init, auth } = params;
+    if (baseUrl) {
+      this.baseUrl = baseUrl;
+    }
+
+    if (auth) {
+      if (auth.requestInit) {
+        this.requestInit = auth.requestInit;
+      }
+      if (auth.state?.baseUrl) {
+        this.baseUrl = auth.state.baseUrl;
+      }
+    }
+
+    if (init) {
+      this.requestInit = init;
+    }
+  }
 }
 export interface InternalUrl {
   /** @default "http://localhost:3000" */
@@ -588,8 +697,8 @@ export const getSession = async function getSession(params?: GetSessionParams) {
   return await auth.getSession(params);
 };
 
-export const getCsrfToken = async function getCsrfToken() {
-  return auth.getCsrfToken();
+export const getCsrfToken = async function getCsrfToken(url?: string) {
+  return auth.getCsrfToken(url);
 };
 
 export const getProviders = async function getProviders() {
@@ -612,3 +721,7 @@ export const signIn: typeof authorizer.signIn = async function signOut(
 export const signUp: typeof authorizer.signUp = async function signUp(options) {
   return auth.signUp(options);
 };
+export const resetPassword: typeof authorizer.resetPassword =
+  async function resetPassword(options) {
+    return auth.resetPassword(options);
+  };

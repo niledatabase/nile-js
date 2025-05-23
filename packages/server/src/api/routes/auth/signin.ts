@@ -31,11 +31,7 @@
 
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
-import {
-  ProxyNileAuthRoutes,
-  proxyRoutes,
-  urlMatches,
-} from '../../utils/routes';
+import { NileAuthRoutes, proxyRoutes, urlMatches } from '../../utils/routes';
 import request from '../../utils/request';
 
 const key = 'SIGNIN';
@@ -57,7 +53,6 @@ export default async function route(req: Request, config: Config) {
   const params = new URLSearchParams(passThroughUrl.search);
 
   url = `${url}${params.toString() !== '' ? `?${params.toString()}` : ''}`;
-
   const res = await request(url, { ...init, request: req }, config);
 
   return res;
@@ -70,9 +65,9 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 export async function fetchSignIn(
   config: Config,
   provider: string,
-  body: string
+  body: URLSearchParams
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${ProxyNileAuthRoutes.SIGNIN}/${provider}`;
+  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.SIGNIN}/${provider}`;
   const req = new Request(clientUrl, {
     method: 'POST',
     headers: config.headers,

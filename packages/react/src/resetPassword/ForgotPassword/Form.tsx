@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import {
-  Email,
   Form,
   FormControl,
   FormDescription,
@@ -69,7 +68,6 @@ function ResetForm(props: Props) {
         })}
         className="py-2"
       >
-        <Email />
         <Password />
         <FormField
           control={form.control}
@@ -86,7 +84,7 @@ function ResetForm(props: Props) {
                     autoComplete="new-password"
                   />
                 </FormControl>
-                <FormDescription>An updated password</FormDescription>
+                <FormDescription>Confirm your new password</FormDescription>
                 <FormMessage />
               </FormItem>
             );
