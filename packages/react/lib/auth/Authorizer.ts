@@ -150,7 +150,11 @@ export default class Authorizer {
         ...init,
       };
 
-      const res = await fetch(url, options);
+      const filledUrl = !url.startsWith('http')
+        ? `${window.location.origin}${url}`
+        : url;
+
+      const res = await fetch(filledUrl, options);
       this.state.loading = false;
       return res;
     } catch (error) {

@@ -335,32 +335,34 @@ export default class Auth {
     rawResponse?: boolean
   ): Promise<T> {
     if (payload instanceof Request) {
-      const csrfToken = parseCSRF(payload.headers);
-      const callbackUrl = parseCallback(payload.headers);
+      const body = new URLSearchParams(await payload.text());
+      const origin = new URL(payload.url).origin;
 
-      this.#config.headers = new Headers(payload.headers);
-      this.#config.headers.set('cookie', [csrfToken].join('; '));
+      const payloadUrl = body?.get('callbackUrl');
+      const csrfToken = body?.get('csrfToken');
+
+      const callbackUrl = `${
+        !payloadUrl?.startsWith('http') ? origin : ''
+      }${payloadUrl}`;
       if (!csrfToken) {
         throw new Error(
           'CSRF token in missing from request. Request it by the client before calling sign in'
         );
       }
-      const [, csrfValue] = csrfToken.split('=');
-      const [csrf] = decodeURIComponent(csrfValue).split('|');
-      const [, cbUrl] = callbackUrl?.split('=') ?? [];
+      this.#config.headers = new Headers(payload.headers);
+
       this.#config.headers.set(
         'Content-Type',
         'application/x-www-form-urlencoded'
       );
-      return (await fetchSignIn(
-        this.#config,
-        provider,
-        new URLSearchParams({
-          csrfToken: csrf,
-          json: String(true),
-          callbackUrl: decodeURIComponent(cbUrl),
-        })
-      )) as T;
+      const params = new URLSearchParams({
+        csrfToken,
+        json: String(true),
+      });
+      if (payloadUrl) {
+        params.set('callbackUrl', callbackUrl);
+      }
+      return (await fetchSignIn(this.#config, provider, params)) as T;
     }
 
     this.#config.headers = new Headers();
