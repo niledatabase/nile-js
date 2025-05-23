@@ -68,6 +68,12 @@ function ResetForm(props: Props) {
         })}
         className="py-2"
       >
+        {defaultValues?.email ? (
+          <FormItem>
+            <FormLabel>Email address</FormLabel>
+            <Input value={defaultValues.email} disabled />
+          </FormItem>
+        ) : null}
         <Password />
         <FormField
           control={form.control}

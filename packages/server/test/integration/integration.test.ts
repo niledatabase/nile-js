@@ -33,6 +33,9 @@ describe('api integration', () => {
     await initialDebugCleanup(nile);
     // make this user for later
     const tenantUser = await nile.auth.signUp<User>(tu);
+    const verifiedMe = await nile.users.verifySelf<User>();
+    expect(verifiedMe.emailVerified).not.toBeNull();
+
     expect(tenantUser).toMatchObject({ email: tu.email });
     // signs up a user to a tenant
     let user = await nile.auth.signUp<User>(primaryUser);
@@ -183,6 +186,10 @@ async function initialDebugCleanup(nile: Server) {
   const tenants = await nile.db.query('select * from tenants;');
 
   for (const tenant of tenants.rows) {
+    await nile.db.query(
+      'delete from auth.tenant_oidc_relying_parties where tenant_id = $1',
+      [tenant.id]
+    );
     await nile.db.query('delete from users.tenant_users where tenant_id = $1', [
       tenant.id,
     ]);

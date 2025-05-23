@@ -18,7 +18,7 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 }
 
 export async function fetchCsrf(config: Config): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.CSRF}`;
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${NileAuthRoutes.CSRF}`;
   const req = new Request(clientUrl, {
     method: 'GET',
     headers: config.headers,

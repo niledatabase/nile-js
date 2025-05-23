@@ -69,7 +69,7 @@ export async function fetchTenantUser(
     );
   }
 
-  const clientUrl = `${config.origin}${
+  const clientUrl = `${config.serverOrigin}${
     config.routePrefix
   }${DefaultNileAuthRoutes.TENANT_USER.replace(
     '{tenantId}',

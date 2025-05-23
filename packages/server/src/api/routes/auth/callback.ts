@@ -59,7 +59,7 @@ export async function fetchCallback(
   request?: Request,
   method: 'POST' | 'GET' = 'POST'
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${
     NileAuthRoutes.CALLBACK
   }/${provider}${request ? `?${new URL(request.url).searchParams}` : ''}`;
   const req = new Request(clientUrl, {

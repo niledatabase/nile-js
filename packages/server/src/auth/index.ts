@@ -1,5 +1,4 @@
 import { fetchCallback } from '../api/routes/auth/callback';
-import { fetchCsrf } from '../api/routes/auth/csrf';
 import { fetchResetPassword } from '../api/routes/auth/password-reset';
 import { fetchProviders } from '../api/routes/auth/providers';
 import { fetchSession } from '../api/routes/auth/session';
@@ -12,6 +11,8 @@ import { User } from '../users/types';
 import { Config } from '../utils/Config';
 import { updateHeaders } from '../utils/Event';
 import Logger, { LogReturn } from '../utils/Logger';
+
+import getCsrf from './getCsrf';
 
 type SignUpPayload = {
   email: string;
@@ -52,62 +53,7 @@ export default class Auth {
   async getCsrf(rawResponse: true): Promise<Response>;
   async getCsrf<T = Response | JSON>(rawResponse?: false): Promise<T>;
   async getCsrf<T = Response | JSON>(rawResponse = false) {
-    const res = await fetchCsrf(this.#config);
-    // we're gonna use it, so set the headers now.
-    const csrfCook = parseCSRF(res.headers);
-
-    // prefer the csrf from the headers over the saved one
-    if (csrfCook) {
-      const [, value] = csrfCook.split('=');
-      const [token] = decodeURIComponent(value).split('|');
-
-      const setCookie = res.headers.get('set-cookie');
-      if (setCookie) {
-        const cookie = [
-          csrfCook,
-          parseCallback(res.headers),
-          parseToken(res.headers),
-        ]
-          .filter(Boolean)
-          .join('; ');
-        this.#config.headers.set('cookie', cookie);
-        updateHeaders(new Headers({ cookie }));
-      }
-      if (!rawResponse) {
-        return { csrfToken: token };
-      }
-    } else {
-      // for csrf, preserve the existing cookies
-      const existingCookie = this.#config.headers.get('cookie');
-      const cookieParts = [];
-      if (existingCookie) {
-        cookieParts.push(
-          parseToken(this.#config.headers),
-          parseCallback(this.#config.headers)
-        );
-      }
-      if (csrfCook) {
-        cookieParts.push(csrfCook);
-      } else {
-        // use the one tha tis already there
-        cookieParts.push(parseCSRF(this.#config.headers));
-      }
-      const cookie = cookieParts.filter(Boolean).join('; ');
-
-      // we need to do it in both places in case its the very first time
-      this.#config.headers.set('cookie', cookie);
-      updateHeaders(new Headers({ cookie }));
-    }
-
-    if (rawResponse) {
-      return res;
-    }
-
-    try {
-      return (await res.clone().json()) as T;
-    } catch {
-      return res;
-    }
+    return await getCsrf<T>(this.#config, rawResponse);
   }
 
   async listProviders(rawResponse: true): Promise<Response>;
@@ -225,6 +171,7 @@ export default class Auth {
     let email = '';
     let password = '';
     let callbackUrl = null;
+    let redirectUrl = null;
     if (req instanceof Request) {
       const body = await req.json();
       email = body.email;
@@ -236,6 +183,9 @@ export default class Auth {
       if (body.callbackUrl) {
         callbackUrl = body.callbackUrl;
       }
+      if (body.redirectUrl) {
+        redirectUrl = body.redirectUrl;
+      }
     } else {
       if ('email' in req) {
         email = req.email;
@@ -246,12 +196,31 @@ export default class Auth {
       if ('callbackUrl' in req) {
         callbackUrl = req.callbackUrl ? req.callbackUrl : null;
       }
+      if ('redirectUrl' in req) {
+        redirectUrl = req.redirectUrl ? req.redirectUrl : null;
+      }
+    }
+    // we need a default
+    const fallbackCb = parseCallback(this.#config.headers);
+    if (fallbackCb) {
+      const [, value] = fallbackCb.split('=');
+      if (value) {
+        const parsedUrl = decodeURIComponent(value);
+        if (!redirectUrl) {
+          redirectUrl = `${new URL(parsedUrl).origin}${
+            NileAuthRoutes.PASSWORD_RESET
+          }`;
+        }
+      }
+      if (!callbackUrl) {
+        callbackUrl = value;
+      }
     }
     await this.getCsrf();
     const body = JSON.stringify({
       email,
       password,
-      redirectUrl: NileAuthRoutes.PASSWORD_RESET,
+      redirectUrl,
       callbackUrl,
     });
     let urlWithParams;
@@ -289,6 +258,10 @@ export default class Auth {
     const cookie = this.#config.headers.get('cookie')?.split('; ');
     if (token) {
       cookie?.push(token);
+    } else {
+      throw new Error(
+        'Unable to reset password, reset token is missing from response'
+      );
     }
     this.#config.headers = new Headers({
       ...this.#config.headers,
@@ -335,32 +308,34 @@ export default class Auth {
     rawResponse?: boolean
   ): Promise<T> {
     if (payload instanceof Request) {
-      const csrfToken = parseCSRF(payload.headers);
-      const callbackUrl = parseCallback(payload.headers);
+      const body = new URLSearchParams(await payload.text());
+      const origin = new URL(payload.url).origin;
 
-      this.#config.headers = new Headers(payload.headers);
-      this.#config.headers.set('cookie', [csrfToken].join('; '));
+      const payloadUrl = body?.get('callbackUrl');
+      const csrfToken = body?.get('csrfToken');
+
+      const callbackUrl = `${
+        !payloadUrl?.startsWith('http') ? origin : ''
+      }${payloadUrl}`;
       if (!csrfToken) {
         throw new Error(
           'CSRF token in missing from request. Request it by the client before calling sign in'
         );
       }
-      const [, csrfValue] = csrfToken.split('=');
-      const [csrf] = decodeURIComponent(csrfValue).split('|');
-      const [, cbUrl] = callbackUrl?.split('=') ?? [];
+      this.#config.headers = new Headers(payload.headers);
+
       this.#config.headers.set(
         'Content-Type',
         'application/x-www-form-urlencoded'
       );
-      return (await fetchSignIn(
-        this.#config,
-        provider,
-        new URLSearchParams({
-          csrfToken: csrf,
-          json: String(true),
-          callbackUrl: decodeURIComponent(cbUrl),
-        })
-      )) as T;
+      const params = new URLSearchParams({
+        csrfToken,
+        json: String(true),
+      });
+      if (payloadUrl) {
+        params.set('callbackUrl', callbackUrl);
+      }
+      return (await fetchSignIn(this.#config, provider, params)) as T;
     }
 
     this.#config.headers = new Headers();

@@ -38,7 +38,7 @@ export async function fetchMe(
   method?: 'DELETE' | 'PUT',
   body?: string
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${DefaultNileAuthRoutes.ME}`;
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${DefaultNileAuthRoutes.ME}`;
   const init: RequestInit = {
     headers: config.headers,
     method: method ?? 'GET',

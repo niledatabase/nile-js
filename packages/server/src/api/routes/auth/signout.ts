@@ -29,7 +29,7 @@ export async function fetchSignOut(
   config: Config,
   body: string
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.SIGNOUT}`;
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${NileAuthRoutes.SIGNOUT}`;
   const req = new Request(clientUrl, {
     method: 'POST',
     body,

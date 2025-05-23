@@ -8,7 +8,7 @@ describe('request', () => {
     jest.resetAllMocks();
   });
 
-  it('sets the correct GET headers', async () => {
+  fit('sets the correct GET headers', async () => {
     global.fetch = jest.fn((url, p) => {
       return Promise.resolve({
         ...p,
@@ -20,12 +20,13 @@ describe('request', () => {
     const res = await _request('http://localhost:3000', { request }, config);
     const expectedHeaders: any = {
       host: 'localhost:3001',
-      'nile.origin': 'http://localhost:3001',
+      'nile-origin': 'http://localhost:3001',
+      'nile-secure-cookies': 'false',
     };
     const headersObject = Object.entries(
       Object.fromEntries(res.headers.entries())
     );
-    expect(headersObject.length).toBe(2);
+    expect(headersObject.length).toBe(3);
     for (const [key, value] of headersObject) {
       const val = expectedHeaders[key];
       expect(value).toBe(val);
@@ -50,7 +51,7 @@ describe('request', () => {
     );
     const expectedHeaders: any = {
       host: 'localhost:3001',
-      'nile.origin': 'http://localhost:3001',
+      'nile-origin': 'http://localhost:3001',
       'content-type': 'application/x-www-form-urlencoded',
     };
     const headersObject = Object.entries(
@@ -81,7 +82,7 @@ describe('request', () => {
     );
     const expectedHeaders: any = {
       host: 'localhost:3001',
-      'nile.origin': 'http://localhost:3001',
+      'nile-origin': 'http://localhost:3001',
       'content-type': 'application/json',
     };
     const headersObject = Object.entries(

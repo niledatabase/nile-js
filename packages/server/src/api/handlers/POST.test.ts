@@ -1,6 +1,10 @@
 import { appRoutes } from '../utils/routes';
 import { Config } from '../../utils/Config';
-import { X_NILE_ORIGIN, X_NILE_TENANT } from '../../utils/constants';
+import {
+  X_NILE_ORIGIN,
+  X_NILE_SECURECOOKIES,
+  X_NILE_TENANT,
+} from '../../utils/constants';
 
 import POSTER from './POST';
 
@@ -62,6 +66,7 @@ describe('poster', () => {
       expect(headersArray).toEqual([
         { key: 'host', value: 'localhost:3001' },
         { key: X_NILE_ORIGIN, value: 'http://localhost:3001' },
+        { key: X_NILE_SECURECOOKIES, value: 'false' },
       ]);
     });
   });

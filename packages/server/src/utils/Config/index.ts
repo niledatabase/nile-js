@@ -1,5 +1,4 @@
 import Handlers from '../../api/handlers';
-// import { handlersWithContext } from '../../api/handlers/withContext';
 import { appRoutes } from '../../api/utils/routes';
 import { Routes } from '../../api/types';
 import { LoggerType, NilePoolConfig, NileConfig } from '../../types';
@@ -18,7 +17,6 @@ import {
 
 export class Config {
   routes: Routes;
-  // handlersWithContext;
   handlers: {
     GET: (req: Request) => Promise<void | Response>;
     POST: (req: Request) => Promise<void | Response>;
@@ -53,6 +51,11 @@ export class Config {
 
   origin?: string | undefined | null;
 
+  /**
+   * important for separating the `origin` config value from a default in order to make requests
+   */
+  serverOrigin: string;
+
   debug?: boolean;
   /**
    * To use secure cookies or not in the fetch
@@ -75,7 +78,9 @@ export class Config {
     this.secureCookies = getSecureCookies(envVarConfig);
     this.callbackUrl = getCallbackUrl(envVarConfig);
     this.debug = config?.debug;
-    this.origin = config?.origin ?? 'http://localhost:3000';
+    this.origin = config?.origin;
+
+    this.serverOrigin = config?.origin ?? 'http://localhost:3000';
 
     // this four throw because its the only way to get it
     this.apiUrl = getApiUrl(envVarConfig) as string;

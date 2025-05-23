@@ -35,7 +35,7 @@ export async function fetchSignUp(
   if (params?.tenantId) {
     q.set('tenantId', params.tenantId);
   }
-  const clientUrl = `${config.origin}${config.routePrefix}${
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${
     DefaultNileAuthRoutes.SIGNUP
   }${q.size > 0 ? `?${q}` : ''}`;
   const req = new Request(clientUrl, {
