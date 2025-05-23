@@ -40,7 +40,7 @@ export async function fetchResetPassword(
 ) {
   const authParams = new URLSearchParams(params ?? {});
   authParams?.set('json', 'true');
-  const clientUrl = `${config.origin}${config.routePrefix}${
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${
     NileAuthRoutes.PASSWORD_RESET
   }?${authParams?.toString()}`;
   const init: RequestInit = {

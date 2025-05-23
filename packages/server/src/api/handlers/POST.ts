@@ -74,6 +74,11 @@ export default function POSTER(configRoutes: Routes, config: Config) {
       info('matches signout');
       return authRoutes.handleSignOut(req, config);
     }
+    if (authRoutes.matchesVerifyEmail(configRoutes, req)) {
+      info('matches verify-email');
+      return authRoutes.handleVerifyEmail(req, config);
+    }
+
     warn(`No POST routes matched ${req.url}`);
     return new Response(null, { status: 404 });
   };

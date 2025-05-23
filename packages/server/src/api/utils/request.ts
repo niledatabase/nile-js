@@ -26,8 +26,14 @@ export default async function request(
       String(request.headers.get(X_NILE_TENANT))
     );
   }
+  // sets secure cookies for production
   if (config.secureCookies != null) {
     updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
+  } else {
+    updatedHeaders.set(
+      X_NILE_SECURECOOKIES,
+      process.env.NODE_ENV === 'production' ? 'true' : 'false'
+    );
   }
 
   updatedHeaders.set('host', requestUrl.host);
@@ -35,16 +41,23 @@ export default async function request(
     const cbUrl = new URL(config.callbackUrl);
     debug(`Obtained origin from config.callbackUrl ${config.callbackUrl}`);
     updatedHeaders.set(X_NILE_ORIGIN, cbUrl.origin);
-    // } else if (config.api.origin) {
-    // debug(`Obtained origin from config.api.origin ${config.api.origin}`);
-    // updatedHeaders.set(X_NILE_ORIGIN, config.api.origin);
+    // this origin may be overridden, but when SDK requests are made, we want to ignore it
+  } else if (config.origin) {
+    debug(`Obtained origin from config.origin ${config.origin}`);
+    updatedHeaders.set(X_NILE_ORIGIN, config.origin);
   } else {
-    const reqOrigin =
-      config.routePrefix !== DEFAULT_PREFIX
-        ? `${requestUrl.origin}${config.routePrefix}`
-        : requestUrl.origin;
-    updatedHeaders.set(X_NILE_ORIGIN, reqOrigin);
-    debug(`Obtained origin from request ${reqOrigin}`);
+    const passedOrigin = request.headers.get(X_NILE_ORIGIN);
+    if (passedOrigin) {
+      updatedHeaders.set(X_NILE_ORIGIN, passedOrigin);
+    } else {
+      const reqOrigin =
+        config.routePrefix !== DEFAULT_PREFIX
+          ? `${requestUrl.origin}${config.routePrefix}`
+          : requestUrl.origin;
+
+      updatedHeaders.set(X_NILE_ORIGIN, reqOrigin);
+      debug(`Obtained origin from request ${reqOrigin}`);
+    }
   }
   const params = { ...init };
   if (

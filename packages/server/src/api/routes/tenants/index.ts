@@ -52,7 +52,7 @@ export async function fetchTenants(
   method: 'POST' | 'GET',
   body?: string
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${DefaultNileAuthRoutes.TENANTS}`;
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${DefaultNileAuthRoutes.TENANTS}`;
 
   const init: RequestInit = {
     method,
@@ -81,7 +81,7 @@ export async function fetchTenant(
       'nile.tenantId is not a valid UUID. This may lead to unexpected behavior in your application.'
     );
   }
-  const clientUrl = `${config.origin}${
+  const clientUrl = `${config.serverOrigin}${
     config.routePrefix
   }${DefaultNileAuthRoutes.TENANT.replace('{tenantId}', config.tenantId)}`;
   const m = method ?? 'GET';
@@ -109,7 +109,7 @@ export async function fetchTenantsByUser(config: Config) {
       );
     }
   }
-  const clientUrl = `${config.origin}${
+  const clientUrl = `${config.serverOrigin}${
     config.routePrefix
   }${DefaultNileAuthRoutes.USER_TENANTS.replace(
     '{userId}',

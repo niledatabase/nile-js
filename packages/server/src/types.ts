@@ -89,6 +89,7 @@ export type NileConfig = {
   /**
    * In some cases, you may want to force secure cookies.
    * The SDK handles this for you, but might be necessary in some firewall / internal cases
+   * Defaults to true if you're in production
    */
   secureCookies?: boolean;
 
@@ -97,6 +98,7 @@ export type NileConfig = {
    * Allows the setting of the callback origin to a random FE
    * eg FE localhost:3001 -> BE: localhost:5432 would set to localhost:3001 to be sure nile-auth uses that.
    * In full stack cases, will just be the `host` header of the incoming request, which is used by default
+   * It is also important to set this when dealing with secure cookies. Calling via server side needs to know if TLS is being used so that nile-auth knows which cookies to be sent.
    */
   origin?: null | undefined | string;
 

@@ -83,7 +83,7 @@ export async function fetchTenantUsers(
   if (params?.tenantId) {
     q.set('tenantId', params.tenantId);
   }
-  const clientUrl = `${config.origin}${
+  const clientUrl = `${config.serverOrigin}${
     config.routePrefix
   }${DefaultNileAuthRoutes.TENANT_USERS.replace(
     '{tenantId}',

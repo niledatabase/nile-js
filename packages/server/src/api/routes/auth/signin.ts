@@ -67,7 +67,7 @@ export async function fetchSignIn(
   provider: string,
   body: URLSearchParams
 ): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.SIGNIN}/${provider}`;
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${NileAuthRoutes.SIGNIN}/${provider}`;
   const req = new Request(clientUrl, {
     method: 'POST',
     headers: config.headers,

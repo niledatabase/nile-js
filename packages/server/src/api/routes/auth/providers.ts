@@ -18,7 +18,7 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 }
 
 export async function fetchProviders(config: Config): Promise<Response> {
-  const clientUrl = `${config.origin}${config.routePrefix}${NileAuthRoutes.PROVIDERS}`;
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${NileAuthRoutes.PROVIDERS}`;
   const req = new Request(clientUrl, {
     method: 'GET',
     headers: config.headers,

@@ -71,7 +71,7 @@ export default function GETTER(configRoutes: Routes, config: Config) {
     }
 
     if (authRoutes.matchesVerifyEmail(configRoutes, req)) {
-      info('matches verify-request');
+      info('matches verify-email');
       return authRoutes.handleVerifyEmail(req, config);
     }
 

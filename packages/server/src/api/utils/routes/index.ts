@@ -125,7 +125,7 @@ export function urlMatches(requestUrl: string, route: string) {
   return url.pathname.startsWith(route);
 }
 export function prefixAppRoute(config: Config) {
-  return `${config.origin}${config.routePrefix}`;
+  return `${config.serverOrigin}${config.routePrefix}`;
 }
 
 export function isUUID(value: string | null | undefined) {
