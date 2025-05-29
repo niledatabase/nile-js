@@ -1,7 +1,7 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
+import { signUp } from '@niledatabase/client';
 
 import { usePrefetch } from '../../lib/utils';
-import { signUp } from '../../lib/auth/Authorizer';
 
 import { Props, SignUpInfo } from './types';
 

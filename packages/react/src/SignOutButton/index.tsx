@@ -3,10 +3,10 @@
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { LogOut } from 'lucide-react';
+import { signOut } from '@niledatabase/client';
 
 import { ComponentFetchProps } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signOut } from '../../lib/auth/Authorizer';
 
 type Props = ButtonProps &
   ComponentFetchProps & {

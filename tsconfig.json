@@ -20,10 +20,10 @@
     "paths": {
       "@niledatabase/react": ["./packages/react/src"],
       "@niledatabase/react/*": ["./packages/react/src/*"],
-      "@niledatabase/browser": ["./packages/browser/src"],
-      "@niledatabase/browser/*": ["./packages/browser/src/*"],
       "@niledatabase/server": ["./packages/server/src"],
       "@niledatabase/server/*": ["./packages/server/src/*"],
+      "@niledatabase/client": ["packages/client/src"]
+      
     }
   },
   "exclude": ["**/node_modules", "**/.*/"],

@@ -2,10 +2,10 @@
 import { Slot } from '@radix-ui/react-slot';
 import React from 'react';
 import { Mail } from 'lucide-react';
+import { signIn } from '@niledatabase/client';
 
 import { ButtonProps, buttonVariants } from '../../components/ui/button';
 import { cn } from '../../lib/utils';
-import { signIn } from '../../lib/auth/Authorizer';
 import { SSOButtonProps } from '../types';
 
 type EmailError = void | {

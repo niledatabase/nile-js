@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        lib: ["server", "react", "browser"]
+        lib: ["server", "react", "client"]
     steps:
       - uses: actions/checkout@v4
 

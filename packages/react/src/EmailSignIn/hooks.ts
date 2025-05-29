@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-
-import { signIn } from '../../lib/auth/Authorizer';
+import { signIn } from '@niledatabase/client';
 
 import { Props } from './types';
 

@@ -1,6 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-
-import { SignInOptions } from '../../lib/auth/types';
+import { SignInOptions } from '@niledatabase/client';
 
 export type EmailSignInInfo = SignInOptions;
 type SignInSuccess = (response: Response) => void;

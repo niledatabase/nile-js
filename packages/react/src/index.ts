@@ -54,15 +54,5 @@ export {
   signIn,
   signOut,
   auth,
-  default as Authorizer,
-} from '../lib/auth/Authorizer';
-export type {
-  AuthState,
-  Listener,
-  ListenerParams,
-  AuthConfig,
-  ListenerKeys,
-  ActiveSession,
-  JWT,
-  NonErrorSession as Session,
-} from '../lib/auth/types';
+  Authorizer,
+} from '@niledatabase/client';
