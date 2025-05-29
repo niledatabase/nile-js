@@ -1,9 +1,12 @@
 'use client';
 import React from 'react';
-import { NileSession, NonErrorSession } from 'packages/react/lib/auth/types';
-import { SessionProviderProps } from 'packages/react/lib/auth';
+import { NileSession, NonErrorSession } from '@niledatabase/client';
 
-import { useSession, SessionProvider } from '../../lib/auth';
+import {
+  useSession,
+  SessionProvider,
+  SessionProviderProps,
+} from '../../lib/auth';
 
 export function convertSession(
   startSession: NileSession

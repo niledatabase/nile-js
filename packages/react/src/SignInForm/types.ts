@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
+import { BuiltInProviderType } from '@niledatabase/client';
 
-import { BuiltInProviderType } from '../../lib/auth/types';
 import { ComponentFetchProps } from '../../lib/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

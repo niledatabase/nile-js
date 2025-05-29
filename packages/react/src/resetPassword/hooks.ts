@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
+import { resetPassword } from '@niledatabase/client';
 
 import { useCsrf } from '../../lib/utils';
-import { resetPassword } from '../../lib/auth/Authorizer';
 
 import { MutateFnParams, Params } from './types';
 

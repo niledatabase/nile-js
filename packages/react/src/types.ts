@@ -1,5 +1,4 @@
-import Authorizer from '../lib/auth/Authorizer';
-import { PartialAuthorizer } from '../lib/auth/types';
+import { PartialAuthorizer, Authorizer } from '@niledatabase/client';
 
 export interface SignInResponse {
   error: string | null;

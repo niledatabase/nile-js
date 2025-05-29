@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
+import { signIn } from '@niledatabase/client';
 
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signIn } from '../../lib/auth/Authorizer';
 import { SSOButtonProps } from '../types';
 
 const LinkedInSignInButton = ({

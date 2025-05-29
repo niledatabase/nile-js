@@ -99,8 +99,6 @@ export default class Authorizer {
 
     return this;
   }
-  // return the bare minimum config for convenience
-  // this is useful for `@niledatabase/web`
   sanitize(): PartialAuthorizer {
     return {
       state: {
@@ -221,21 +219,24 @@ export default class Authorizer {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-      if (res.ok) {
+      if (res) {
+        if (res.ok) {
+          return {
+            data: (await res.json()) as T,
+            status: res.status,
+            ok: res.ok,
+            url: res.url,
+          };
+        }
+        const { url: responseUrl } = await res.json();
         return {
-          data: (await res.json()) as T,
+          data: {} as T,
           status: res.status,
-          ok: res.ok,
-          url: res.url,
+          ok: res?.ok,
+          url: responseUrl,
         };
       }
-      const { url: responseUrl } = await res.json();
-      return {
-        data: {} as T,
-        status: res.status,
-        ok: res.ok,
-        url: responseUrl,
-      };
+      throw new Error(`Unable to fetch ${url}`);
     } catch (error) {
       if (error instanceof Error) {
         // this is fine
@@ -285,9 +286,8 @@ export default class Authorizer {
     const session = await this.fetchData<NonErrorSession | undefined>(
       `${this.apiBaseUrl}/auth/session`
     );
-    if (params?.broadcast ?? true) {
-      broadcast.post({ event: 'session', data: { trigger: 'getSession' } });
-    }
+
+    broadcast.post({ event: 'session', data: { trigger: 'getSession' } });
     this.status = null;
     if (session) {
       this.state.session = session;

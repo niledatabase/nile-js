@@ -7,21 +7,19 @@
     "packages/*"
   ],
   "scripts": {
-    "build:browser": "yarn workspace @niledatabase/browser build",
     "build:storybook": "yarn build && yarn workspace @niledatabase/react build:storybook",
     "dev:react": "yarn workspace @niledatabase/react dev",
     "build:react": "yarn workspace @niledatabase/react build",
-    "build:web": "yarn workspace @niledatabase/web build",
+    "build:client": "yarn workspace @niledatabase/client build",
     "build:server": "yarn workspace @niledatabase/server build",
-    "build:edge": "yarn workspace @niledatabase/edge build",
-    "build": "yarn build:server && yarn build:edge && yarn build:browser && yarn build:react && yarn build:web",
+    "build": "yarn build:server && yarn build:react && yarn build:client",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "husky install",
     "prepare": "husky install",
     "publish": "yarn lerna publish",
-    "test:browser": "yarn workspace @niledatabase/browser test",
     "test:react": "yarn workspace @niledatabase/react test",
-    "test:server": "yarn workspace @niledatabase/server test"
+    "test:server": "yarn workspace @niledatabase/server test",
+    "test:client": "yarn workspace @niledatabase/client test"
   },
   "resolutions": {
     "@types/mime": "3.0.4",
