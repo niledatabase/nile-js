@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2025-05-29)
+
+### Bug Fixes
+
+- **react:** update deps, fix sign in ([8083bef](https://github.com/niledatabase/nile-js/commit/8083beffe93f887b9c441f075f3fc497291ec7c1))
+- **server:** api route fixes ([6bce035](https://github.com/niledatabase/nile-js/commit/6bce0351c006ad06c2149eb6b395ca23d75dabee))
+- **server:** handle callback url correctly on sign in ([acbc843](https://github.com/niledatabase/nile-js/commit/acbc84355b4f3aae6154234fd0716782a410c71e))
+
+### Features
+
+- **client:** remove web, make client ([455ba97](https://github.com/niledatabase/nile-js/commit/455ba97d5923743f6880b5ad8f8d2b714d649373))
+- **server:** add sign out ([1739bc9](https://github.com/niledatabase/nile-js/commit/1739bc9fbc4abd8cd1f481eaa14c3fab28b5fc27))
+
 # [5.0.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0...v5.0.0-alpha.1) (2025-05-16)
 
 ### Bug Fixes
