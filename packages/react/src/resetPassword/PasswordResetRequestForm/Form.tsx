@@ -20,7 +20,7 @@ export default function ResetPasswordForm(props: Props) {
 function ResetForm(props: Props) {
   const { defaultValues, ...params } = props;
   const form = useForm({ defaultValues: { email: '', ...defaultValues } });
-  const resetPassword = useResetPassword(params);
+  const resetPassword = useResetPassword({ ...params, redirect: true });
   return (
     <Form {...form}>
       <form

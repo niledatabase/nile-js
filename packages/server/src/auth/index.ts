@@ -28,10 +28,10 @@ export default class Auth {
     this.#logger = Logger(config, '[auth]');
   }
 
-  getSession(rawResponse: true): Promise<Response>;
   getSession<T = JWT | ActiveSession | undefined>(
     rawResponse?: false
   ): Promise<T>;
+  getSession(rawResponse: true): Promise<Response>;
   async getSession<T = JWT | ActiveSession | Response | undefined>(
     rawResponse = false
   ): Promise<T | Response> {
@@ -50,8 +50,8 @@ export default class Auth {
     }
   }
 
-  async getCsrf(rawResponse: true): Promise<Response>;
   async getCsrf<T = Response | JSON>(rawResponse?: false): Promise<T>;
+  async getCsrf(rawResponse: true): Promise<Response>;
   async getCsrf<T = Response | JSON>(rawResponse = false) {
     return await getCsrf<T>(this.#config, rawResponse);
   }
@@ -158,6 +158,45 @@ export default class Auth {
     }
   }
 
+  async forgotPassword(req: {
+    email: string;
+    callbackUrl?: string;
+    redirectUrl?: string;
+  }): Promise<Response> {
+    let email = '';
+    const defaults = defaultCallbackUrl({
+      config: this.#config,
+    });
+    let callbackUrl = defaults.callbackUrl;
+    let redirectUrl = defaults.redirectUrl;
+
+    if ('email' in req) {
+      email = req.email;
+    }
+
+    if ('callbackUrl' in req) {
+      callbackUrl = req.callbackUrl ? req.callbackUrl : null;
+    }
+    if ('redirectUrl' in req) {
+      redirectUrl = req.redirectUrl ? req.redirectUrl : null;
+    }
+    const body = JSON.stringify({
+      email,
+      redirectUrl,
+      callbackUrl,
+    });
+
+    // we need a default
+    const data = await fetchResetPassword(
+      this.#config,
+      'POST',
+      body,
+      new URLSearchParams(),
+      false
+    );
+    return data;
+  }
+
   async resetPassword(
     req:
       | Request
@@ -170,8 +209,9 @@ export default class Auth {
   ): Promise<Response> {
     let email = '';
     let password = '';
-    let callbackUrl = null;
-    let redirectUrl = null;
+    const defaults = defaultCallbackUrl({ config: this.#config });
+    let callbackUrl = defaults.callbackUrl;
+    let redirectUrl = defaults.redirectUrl;
     if (req instanceof Request) {
       const body = await req.json();
       email = body.email;
@@ -201,21 +241,6 @@ export default class Auth {
       }
     }
     // we need a default
-    const fallbackCb = parseCallback(this.#config.headers);
-    if (fallbackCb) {
-      const [, value] = fallbackCb.split('=');
-      if (value) {
-        const parsedUrl = decodeURIComponent(value);
-        if (!redirectUrl) {
-          redirectUrl = `${new URL(parsedUrl).origin}${
-            NileAuthRoutes.PASSWORD_RESET
-          }`;
-        }
-      }
-      if (!callbackUrl) {
-        callbackUrl = value;
-      }
-    }
     await this.getCsrf();
     const body = JSON.stringify({
       email,
@@ -480,4 +505,18 @@ function parseResetToken(headers: Headers | void): string | void {
   }
   const [, token] = /((__Secure-)?nile\.reset=[^;]+)/.exec(authCookie) ?? [];
   return token;
+}
+
+function defaultCallbackUrl({ config }: { config: Config }) {
+  let cb = null;
+  let redirect = null;
+  const fallbackCb = parseCallback(config.headers);
+  if (fallbackCb) {
+    const [, value] = fallbackCb.split('=');
+    cb = decodeURIComponent(value);
+    if (value) {
+      redirect = `${new URL(cb).origin}${NileAuthRoutes.PASSWORD_RESET}`;
+    }
+  }
+  return { callbackUrl: cb, redirectUrl: redirect };
 }

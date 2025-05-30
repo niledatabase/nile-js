@@ -74,8 +74,8 @@ export default class Tenants {
     return res;
   }
 
-  get(rawResponse: true): Promise<Response>;
   get<T = Tenant | Response>(id: string, rawResponse?: boolean): Promise<T>;
+  get(rawResponse: true): Promise<Response>;
   get<T = Tenant | Response>(
     payload: { id: string },
     rawResponse?: boolean
@@ -128,8 +128,8 @@ export default class Tenants {
     }
   }
 
-  list(rawResponse: true): Promise<Response>;
   list<T = Tenant[] | Response>(): Promise<T>;
+  list(rawResponse: true): Promise<Response>;
   async list<T = Tenant[] | Response>(
     req: boolean | NileRequest<void> | Headers
   ): Promise<T | Response | undefined> {
@@ -191,13 +191,12 @@ export default class Tenants {
     const res = await fetchTenantUser(this.#config, 'DELETE');
     return responseHandler(res, rawResponse);
   }
-
-  users(req: boolean): Promise<Response>;
   users<T = User[] | Response>(
     req?: boolean | { tenantId?: string },
     rawResponse?: boolean
   ): Promise<T>;
-  async users<T = User[] | Response>(
+  users(req: true): Promise<Response>;
+  async users<T>(
     req?: boolean | { tenantId?: string },
     rawResponse?: boolean
   ): Promise<T> {
@@ -207,7 +206,7 @@ export default class Tenants {
     return responseHandler(
       res,
       rawResponse || (typeof req === 'boolean' && req)
-    );
+    ) as T;
   }
 
   #handleContext(req: JoinTenantRequest | boolean | undefined) {
