@@ -601,7 +601,7 @@ export default class Authorizer {
       resetPasswordWithParams += `?${searchParams}`;
     }
 
-    const data = await this.fetchData(resetPasswordWithParams, {
+    const data = await this.sendData(resetPasswordWithParams, {
       method: 'post',
       body: JSON.stringify({
         email,
@@ -610,16 +610,20 @@ export default class Authorizer {
         callbackUrl,
       }),
     });
+    if (!data?.ok) {
+      throw new Error(await data?.clone().text());
+    }
     if (redirect === false) {
-      const { url: urlWithParams } = data;
+      const json = await data?.json();
+      const { url: urlWithParams } = json;
       resetPasswordWithParams = `${urlWithParams}&redirect=false`;
       await this.sendData(resetPasswordWithParams);
-    }
 
-    return await this.sendData(resetPasswordWithParams, {
-      method: password ? 'put' : 'post',
-      body: JSON.stringify({ email, password }),
-    });
+      return await this.sendData(resetPasswordWithParams, {
+        method: password ? 'put' : 'post',
+        body: JSON.stringify({ email, password }),
+      });
+    }
   }
 
   _configureFetch(params: {

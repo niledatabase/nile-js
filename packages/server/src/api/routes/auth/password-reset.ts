@@ -36,10 +36,13 @@ export async function fetchResetPassword(
   config: Config,
   method: 'POST' | 'GET' | 'PUT',
   body: null | string,
-  params?: URLSearchParams
+  params?: URLSearchParams,
+  useJson = true
 ) {
   const authParams = new URLSearchParams(params ?? {});
-  authParams?.set('json', 'true');
+  if (useJson) {
+    authParams?.set('json', 'true');
+  }
   const clientUrl = `${config.serverOrigin}${config.routePrefix}${
     NileAuthRoutes.PASSWORD_RESET
   }?${authParams?.toString()}`;

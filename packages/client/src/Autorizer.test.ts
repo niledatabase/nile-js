@@ -460,33 +460,85 @@ describe('Authorizer', () => {
   });
 
   describe('resetPassword', () => {
-    it('should call the reset password endpoint', async () => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        clone: () => ({ ok: true }),
-      });
+    it('should call all reset password endpoints in non-redirect mode', async () => {
+      fetchMock
+        .mockResolvedValueOnce(
+          mockResponse({
+            url: 'https://example.com/api/auth/reset-password',
+          })
+        )
+        .mockResolvedValueOnce(
+          mockResponse({
+            ok: true,
+          })
+        )
+        .mockResolvedValueOnce(
+          mockResponse({
+            ok: true,
+          })
+        );
 
       await expect(
-        authorizer.resetPassword({ email: 'user@example.com', password: '123' })
+        authorizer.resetPassword({
+          email: 'user@example.com',
+          password: '123',
+          redirect: false,
+          fetchUrl: 'https://example.com/api/auth/reset-password',
+        })
       ).resolves.not.toThrow();
 
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledTimes(3);
 
-      expect(fetchMock.mock.calls[0][0]).toContain('/reset-password');
+      expect(fetchMock.mock.calls[0][0]).toContain('/reset-password?json=true');
       expect(fetchMock.mock.calls[0][1]).toMatchObject({
         method: 'post',
         body: JSON.stringify({
           email: 'user@example.com',
           password: '123',
           redirectUrl: 'https://example.com/api/auth/reset-password',
+          callbackUrl: undefined,
         }),
       });
+
       expect(fetchMock.mock.calls[1][0]).toContain('/reset-password');
-      expect(fetchMock.mock.calls[1][1]).toMatchObject({
+      expect(fetchMock.mock.calls[2][1]).toMatchObject({
         method: 'put',
         body: JSON.stringify({
           email: 'user@example.com',
           password: '123',
+        }),
+      });
+    });
+    it('should call only the initial reset-password endpoint for redirect=true', async () => {
+      fetchMock.mockResolvedValueOnce(
+        mockResponse({
+          ok: true,
+          clone: () => ({
+            text: () => Promise.resolve('OK'),
+          }),
+        })
+      );
+
+      await expect(
+        authorizer.resetPassword({
+          email: 'user@example.com',
+          password: '123',
+          fetchUrl: 'https://example.com/api/auth/reset-password',
+        })
+      ).resolves.not.toThrow();
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      expect(fetchMock.mock.calls[0][0]).toBe(
+        'https://example.com/api/auth/reset-password'
+      );
+      expect(fetchMock.mock.calls[0][1]).toMatchObject({
+        method: 'post',
+        body: JSON.stringify({
+          email: 'user@example.com',
+          password: '123',
+          redirectUrl: 'https://example.com/api/auth/reset-password',
+          callbackUrl: undefined,
         }),
       });
     });

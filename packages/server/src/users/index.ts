@@ -45,8 +45,8 @@ export default class Users {
     return res;
   }
 
-  async getSelf(rawResponse?: true): Promise<Response>;
   async getSelf<T = User | Response>(): Promise<T>;
+  async getSelf(rawResponse?: true): Promise<Response>;
   async getSelf<T = User | Response>(rawResponse?: boolean): Promise<T> {
     const res = await fetchMe(this.#config);
 
@@ -60,8 +60,8 @@ export default class Users {
     }
   }
 
-  async verifySelf(rawResponse?: true): Promise<Response>;
   async verifySelf<T = Response | void>(): Promise<T>;
+  async verifySelf(rawResponse?: true): Promise<Response>;
   async verifySelf<T = Response | void>(
     bypassEmail = process.env.NODE_ENV !== 'production',
     rawResponse = false
