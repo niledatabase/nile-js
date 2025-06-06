@@ -1,6 +1,5 @@
 import { apiRoutes } from '../../../utils/routes';
 import fetch from '../../../utils/request';
-import { ActiveSession } from '../../../utils/auth';
 import { Config } from '../../../../utils/Config';
 
 /**
@@ -42,12 +41,8 @@ import { Config } from '../../../../utils/Config';
 
 export async function PUT(
   config: Config,
-  session: null | undefined | ActiveSession,
   init: RequestInit & { request: Request }
 ) {
-  if (!session) {
-    return new Response(null, { status: 401 });
-  }
   init.body = init.request.body;
   init.method = 'PUT';
 

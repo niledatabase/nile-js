@@ -74,7 +74,7 @@ export async function POST(
   const yurl = new URL(init.request.url);
   const tenantId = yurl.searchParams.get('tenantId');
   const newTenantName = yurl.searchParams.get('newTenantName');
-  const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
+  const tenant = tenantId ?? getTenantFromHttp(init.request.headers, config);
 
   const url = apiRoutes(config).USERS({ tenantId: tenant, newTenantName });
 

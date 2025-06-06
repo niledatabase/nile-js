@@ -1,9 +1,9 @@
 import { appRoutes } from '../utils/routes';
 import { Config } from '../../utils/Config';
 import {
-  X_NILE_ORIGIN,
-  X_NILE_SECURECOOKIES,
-  X_NILE_TENANT,
+  HEADER_ORIGIN,
+  HEADER_SECURE_COOKIES,
+  TENANT_COOKIE,
 } from '../../utils/constants';
 
 import POSTER from './POST';
@@ -37,7 +37,7 @@ describe('poster', () => {
 
       const req = {
         method: 'POST',
-        [X_NILE_TENANT]: '123',
+        [TENANT_COOKIE]: '123',
         nextUrl: {
           pathname: `/api/${key}`,
         },
@@ -65,8 +65,8 @@ describe('poster', () => {
       });
       expect(headersArray).toEqual([
         { key: 'host', value: 'localhost:3001' },
-        { key: X_NILE_ORIGIN, value: 'http://localhost:3001' },
-        { key: X_NILE_SECURECOOKIES, value: 'false' },
+        { key: HEADER_ORIGIN, value: 'http://localhost:3001' },
+        { key: HEADER_SECURE_COOKIES, value: 'false' },
       ]);
     });
   });

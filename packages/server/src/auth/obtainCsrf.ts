@@ -4,7 +4,7 @@ import { Config } from '../utils/Config';
 
 import { parseCallback, parseCSRF, parseToken } from '.';
 
-export default async function getCsrf<T = Response | { csrfToken: string }>(
+export default async function obtainCsrf<T = Response | { csrfToken: string }>(
   config: Config,
   rawResponse = false
 ) {

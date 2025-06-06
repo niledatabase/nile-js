@@ -1,4 +1,4 @@
-import { ActiveSession } from '../../../../utils/auth';
+import auth from '../../../../utils/auth';
 import fetch from '../../../../utils/request';
 import { apiRoutes } from '../../../../utils/routes';
 import { Config } from '../../../../../utils/Config';
@@ -45,9 +45,13 @@ import { Config } from '../../../../../utils/Config';
  */
 export async function POST(
   config: Config,
-  session: ActiveSession,
   init: RequestInit & { request: Request }
 ) {
+  const session = await auth(init.request, config);
+
+  if (!session) {
+    return new Response(null, { status: 401 });
+  }
   const yurl = new URL(init.request.url);
   const [, tenantId] = yurl.pathname.split('/').reverse();
   init.body = JSON.stringify({ email: session.email });

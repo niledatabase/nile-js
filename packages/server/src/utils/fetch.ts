@@ -1,5 +1,5 @@
 import { Config } from './Config';
-import { X_NILE_TENANT, X_NILE_USER_ID } from './constants';
+import { TENANT_COOKIE, USER_COOKIE } from './constants';
 
 function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
   const cookie = headers.get('cookie')?.split('; ');
@@ -26,12 +26,14 @@ function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
   }
   return null;
 }
-export function getTenantFromHttp(headers: Headers, config?: Config) {
-  const cookieTenant = getTokenFromCookie(headers, X_NILE_TENANT);
-  return cookieTenant ?? headers?.get(X_NILE_TENANT) ?? config?.tenantId;
+export function getTenantFromHttp(headers: Headers, config: Config) {
+  const cookieTenant = getTokenFromCookie(headers, TENANT_COOKIE);
+
+  return cookieTenant ? cookieTenant : config?.tenantId;
 }
 
 // do we do this any more?
 export function getUserFromHttp(headers: Headers, config: Config) {
-  return headers?.get(X_NILE_USER_ID) ?? config.userId;
+  const userHeader = headers?.get(USER_COOKIE);
+  return userHeader ? userHeader : config.userId;
 }

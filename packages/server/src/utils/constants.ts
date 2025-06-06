@@ -1,6 +1,6 @@
 // these two are a pass though
-export const X_NILE_TENANT = 'nile-tenant-id';
-export const X_NILE_USER_ID = 'nile-user-id';
-export const X_NILE_ORIGIN = 'nile-origin';
+export const TENANT_COOKIE = 'nile.tenant-id';
+export const USER_COOKIE = 'nile.user-id';
+export const HEADER_ORIGIN = 'nile-origin';
 // this one is not
-export const X_NILE_SECURECOOKIES = 'nile-secure-cookies';
+export const HEADER_SECURE_COOKIES = 'nile-secure-cookies';

@@ -5,6 +5,9 @@ import signup, { matches as matchesSignup } from '../routes/signup';
 import tenantUsers, {
   matches as matchesTenantUsers,
 } from '../routes/tenants/[tenantId]/users';
+import inviteUsers, {
+  matches as matchesInviteUsers,
+} from '../routes/tenants/[tenantId]/invite';
 import { Routes } from '../types';
 import { Config } from '../../utils/Config';
 import * as authRoutes from '../routes/auth';
@@ -26,6 +29,11 @@ export default function POSTER(configRoutes: Routes, config: Config) {
     if (matchesTenantUsers(configRoutes, req)) {
       info('matches tenant users');
       return tenantUsers(req, config);
+    }
+    // order matters for tenantInvites
+    if (matchesInviteUsers(configRoutes, req)) {
+      info('matches tenant invite');
+      return inviteUsers(req, config);
     }
 
     if (matchesSignup(configRoutes, req)) {
