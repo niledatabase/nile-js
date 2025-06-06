@@ -37,7 +37,7 @@ enum State {
 
 export default class Authorizer {
   state: AuthState;
-  logger: LoggerInstance;
+  #logger: LoggerInstance;
   requestInit?: RequestInit;
   addListener: (cb: Listener) => void;
   removeListener: (cb: Listener) => void;
@@ -59,7 +59,7 @@ export default class Authorizer {
     this.state = proxy;
     this.addListener = addListener;
     this.removeListener = removeListener;
-    this.logger = logger(this);
+    this.#logger = logger(this);
     this.status = null;
   }
 
@@ -78,17 +78,17 @@ export default class Authorizer {
       this.state.lastSync = Date.now();
       this.state.session = await this.getSession();
     } catch (error) {
-      this.logger.error('CLIENT_SESSION_ERROR', error as Error);
+      this.#logger.error('CLIENT_SESSION_ERROR', error as Error);
     }
   }
 
   set baseUrl(val: string) {
     this.state.baseUrl = val;
-    this.logger = logger(this);
+    this.#logger = logger(this);
   }
 
   get baseUrl() {
-    this.logger = logger(this);
+    this.#logger = logger(this);
     return this.state.baseUrl;
   }
 
@@ -135,7 +135,7 @@ export default class Authorizer {
     return `${this.baseUrl}${this.state.basePath}`;
   }
 
-  async sendData(
+  async #sendData(
     url: string,
     init?: RequestInit
   ): Promise<Response | undefined> {
@@ -156,11 +156,11 @@ export default class Authorizer {
       this.state.loading = false;
       return res;
     } catch (error) {
-      this.logger.error('CLIENT_FETCH_ERROR', { error: error as Error, url });
+      this.#logger.error('CLIENT_FETCH_ERROR', { error: error as Error, url });
       return undefined;
     }
   }
-  async fetchData<T = any>(
+  async #fetchData<T = any>(
     url: string,
     init?: RequestInit
   ): Promise<T | undefined> {
@@ -168,7 +168,7 @@ export default class Authorizer {
       ...(this.requestInit ? this.requestInit : {}),
       ...init,
     };
-    const res = await this.sendData(url, options);
+    const res = await this.#sendData(url, options);
 
     const errorHandler = res?.clone();
     try {
@@ -182,7 +182,7 @@ export default class Authorizer {
       if (error instanceof Error) {
         // this is fine
         if (!error.message.includes('is not valid JSON')) {
-          this.logger.error('CLIENT_FETCH_ERROR', {
+          this.#logger.error('CLIENT_FETCH_ERROR', {
             error: error as Error,
             url,
           });
@@ -199,7 +199,7 @@ export default class Authorizer {
       return undefined;
     }
   }
-  async fetchFormData<T = { url: string }>(
+  async #fetchFormData<T = { url: string }>(
     url: string,
     init: RequestInit
   ): Promise<
@@ -241,7 +241,7 @@ export default class Authorizer {
       if (error instanceof Error) {
         // this is fine
         if (!error.message.includes('is not valid JSON')) {
-          this.logger.error('CLIENT_FETCH_ERROR', {
+          this.#logger.error('CLIENT_FETCH_ERROR', {
             error: error as Error,
             url,
           });
@@ -252,13 +252,13 @@ export default class Authorizer {
   }
 
   async getProviders(url?: string) {
-    return await this.fetchData<
+    return await this.#fetchData<
       Record<LiteralUnion<BuiltInProviderType>, ClientSafeProvider>
     >(url ?? `${this.apiBaseUrl}/auth/providers`);
   }
 
   async getCsrfToken(url?: string) {
-    const response = await this.fetchData<{ csrfToken: string }>(
+    const response = await this.#fetchData<{ csrfToken: string }>(
       url ?? `${this.apiBaseUrl}/auth/csrf`
     );
     return response?.csrfToken;
@@ -283,7 +283,7 @@ export default class Authorizer {
     }
     this.state.loading = true;
 
-    const session = await this.fetchData<NonErrorSession | undefined>(
+    const session = await this.#fetchData<NonErrorSession | undefined>(
       `${this.apiBaseUrl}/auth/session`
     );
 
@@ -299,7 +299,7 @@ export default class Authorizer {
 
   async refreshSession() {
     this.state.loading = true;
-    const session = await this.fetchData<NonErrorSession | undefined>(
+    const session = await this.#fetchData<NonErrorSession | undefined>(
       `${this.apiBaseUrl}/auth/session`
     );
 
@@ -347,7 +347,7 @@ export default class Authorizer {
         json: String(true),
       }),
     };
-    const res = await this.fetchFormData<SignOutResponse>(
+    const res = await this.#fetchFormData<SignOutResponse>(
       baseFetch,
       fetchOptions
     );
@@ -441,7 +441,7 @@ export default class Authorizer {
       authorizationParams ? `?${new URLSearchParams(authorizationParams)}` : ''
     }`;
 
-    const data = await this.fetchFormData(_signInUrl, {
+    const data = await this.#fetchFormData(_signInUrl, {
       method: 'post',
       body: new URLSearchParams({
         ...remaining,
@@ -541,7 +541,7 @@ export default class Authorizer {
     if (searchParams.size > 0) {
       signUpUrl += `?${searchParams}`;
     }
-    const data = await this.fetchData(signUpUrl, {
+    const data = await this.#fetchData(signUpUrl, {
       method: 'post',
       body: JSON.stringify({ email, password }),
     });
@@ -585,7 +585,7 @@ export default class Authorizer {
   }) {
     const { password, fetchUrl, email, redirect, callbackUrl } = options;
 
-    this._configureFetch(options);
+    this.#configureFetch(options);
 
     const resetPasswordUrl =
       fetchUrl ?? `${this.apiBaseUrl}/auth/reset-password`;
@@ -601,7 +601,7 @@ export default class Authorizer {
       resetPasswordWithParams += `?${searchParams}`;
     }
 
-    const data = await this.sendData(resetPasswordWithParams, {
+    const data = await this.#sendData(resetPasswordWithParams, {
       method: 'post',
       body: JSON.stringify({
         email,
@@ -617,16 +617,16 @@ export default class Authorizer {
       const json = await data?.json();
       const { url: urlWithParams } = json;
       resetPasswordWithParams = `${urlWithParams}&redirect=false`;
-      await this.sendData(resetPasswordWithParams);
+      await this.#sendData(resetPasswordWithParams);
 
-      return await this.sendData(resetPasswordWithParams, {
+      return await this.#sendData(resetPasswordWithParams, {
         method: password ? 'put' : 'post',
         body: JSON.stringify({ email, password }),
       });
     }
   }
 
-  _configureFetch(params: {
+  #configureFetch(params: {
     baseUrl?: string;
     auth?: Authorizer | PartialAuthorizer;
     init?: RequestInit;

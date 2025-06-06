@@ -1,7 +1,4 @@
-import { Server } from '../Server';
-import { NileConfig } from '../types';
-import { Config } from '../utils/Config';
-import Logger from '../utils/Logger';
+import { NileConfig, Server } from '@niledatabase/server';
 
 export function cleaner(val: string) {
   return val.replaceAll(/\{([^}]+)\}/g, ':$1');
@@ -25,10 +22,8 @@ export async function NileExpressHandler(
   nile: Server,
   config?: HandlerConfig & NileConfig
 ) {
-  const { error } = Logger(
-    config ? new Config(config) : undefined,
-    'nile-express'
-  );
+  // eslint-disable-next-line no-console
+  const error = config?.logger?.error ?? console.error;
   async function handler(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req: any,

@@ -1,5 +1,5 @@
 import { NileConfig } from './types';
-import { X_NILE_ORIGIN, X_NILE_SECURECOOKIES } from './utils/constants';
+import { HEADER_ORIGIN, HEADER_SECURE_COOKIES } from './utils/constants';
 import { getTenantId } from './utils/Config/envVars';
 import { handlersWithContext } from './api/handlers/withContext';
 import DbManager from './db';
@@ -82,8 +82,8 @@ describe('Server', () => {
   it('should merge and normalize headers', () => {
     const { headers } = server.getContext();
     expect(headers?.get('x-custom')).toBe('value');
-    expect(headers?.get(X_NILE_ORIGIN)).toBe('http://localhost');
-    expect(headers?.get(X_NILE_SECURECOOKIES)).toBe('true');
+    expect(headers?.get(HEADER_ORIGIN)).toBe('http://localhost');
+    expect(headers?.get(HEADER_SECURE_COOKIES)).toBe('true');
   });
 
   it('should provide database access and clear method', () => {

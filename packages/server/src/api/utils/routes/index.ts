@@ -14,6 +14,8 @@ export enum DefaultNileAuthRoutes {
   USER = '/users/{userId}',
   USERS = '/users',
   ME = '/me',
+  INVITES = '/tenants/{tenantId}/invites',
+  INVITE = '/tenants/{tenantId}/invite',
 }
 
 export enum NileAuthRoutes {
@@ -47,6 +49,8 @@ export const appRoutes = (prefix = DEFAULT_PREFIX): Routes => ({
   TENANT_USER: `${prefix}${DefaultNileAuthRoutes.TENANT_USER}`,
   TENANT_USERS: `${prefix}${DefaultNileAuthRoutes.TENANT_USERS}`,
   SIGNUP: `${prefix}${DefaultNileAuthRoutes.SIGNUP}`,
+  INVITES: `${prefix}${DefaultNileAuthRoutes.INVITES}`,
+  INVITE: `${prefix}${DefaultNileAuthRoutes.INVITE}`,
   LOG: `${prefix}/_log`,
 });
 
@@ -61,6 +65,10 @@ export const apiRoutes = (config: Config) => ({
   SIGNUP: makeRestUrl(config, '/signup'),
   TENANT_USERS: (tenantId: string) =>
     makeRestUrl(config, `/tenants/${tenantId}/users`),
+  INVITES: (tenantId: string) =>
+    makeRestUrl(config, `/tenants/${tenantId}/invites`),
+  INVITE: (tenantId: string) =>
+    makeRestUrl(config, `/tenants/${tenantId}/invite`),
   TENANT_USER: makeRestUrl(
     config,
     `/tenants/${config.tenantId}/users/${config.userId}`

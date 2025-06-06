@@ -1,6 +1,5 @@
 import { EventHandlerRequest, getRequestURL, H3Event, readRawBody } from 'h3';
-
-import { Server } from '../Server';
+import { Server } from '@niledatabase/server';
 
 const convertHeader = ([key, value]: [
   string,

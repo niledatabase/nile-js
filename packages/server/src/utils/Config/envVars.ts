@@ -1,10 +1,9 @@
 import 'dotenv/config';
-import { NileConfig } from '../../types';
+import { LoggerType, NileConfig } from '../../types';
 import Logger from '../Logger';
 
 export type EnvConfig = {
-  logger?: string;
-  config?: NileConfig;
+  config: NileConfig & { logger: LoggerType };
 };
 
 export const getApiUrl = (cfg: EnvConfig) => {
@@ -41,7 +40,8 @@ export const getSecureCookies = (cfg: EnvConfig) => {
 };
 
 export const getUsername = (cfg: EnvConfig) => {
-  const { config, logger } = cfg;
+  const { config } = cfg;
+  const logger = config.logger;
 
   const { info } = Logger(config, '[username]');
   if (config?.user) {
@@ -71,7 +71,8 @@ export const getUsername = (cfg: EnvConfig) => {
 };
 
 export const getPassword = (cfg: EnvConfig) => {
-  const { config, logger } = cfg;
+  const { config } = cfg;
+  const logger = config.logger;
   const log = logProtector(logger);
   const { info } = Logger(config, '[password]');
   if (stringCheck(config?.password)) {
@@ -102,7 +103,8 @@ export const getPassword = (cfg: EnvConfig) => {
 };
 
 export const getDatabaseName = (cfg: EnvConfig) => {
-  const { config, logger } = cfg;
+  const { config } = cfg;
+  const logger = config.logger;
   const { info } = Logger(config, '[databaseName]');
   if (stringCheck(config?.databaseName)) {
     logger && info(`${logger}[config] ${config?.databaseName}`);
@@ -128,7 +130,8 @@ export const getDatabaseName = (cfg: EnvConfig) => {
 };
 
 export const getTenantId = (cfg: EnvConfig): string | null => {
-  const { config, logger } = cfg;
+  const { config } = cfg;
+  const logger = config.logger;
   const { info } = Logger(config, '[tenantId]');
   if (stringCheck(config?.tenantId)) {
     logger && info(`${logger}[config] ${config?.tenantId}`);
@@ -144,7 +147,8 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
 };
 
 export function getDbHost(cfg: EnvConfig) {
-  const { config, logger } = cfg;
+  const { config } = cfg;
+  const logger = config.logger;
   const { info } = Logger(config, '[db.host]');
 
   if (stringCheck(config?.db && config.db.host)) {
@@ -173,7 +177,8 @@ export function getDbHost(cfg: EnvConfig) {
 }
 
 export function getDbPort(cfg: EnvConfig): number {
-  const { config, logger } = cfg;
+  const { config } = cfg;
+  const logger = config.logger;
   const { info } = Logger(config, '[db.port]');
   if (config?.db?.port && config.db.port != null) {
     logger && info(`${logger}[config] ${config?.db.port}`);
@@ -201,7 +206,7 @@ export function getDbPort(cfg: EnvConfig): number {
 }
 
 // don't let people accidentally log secrets to production
-const logProtector = (logger?: string) => {
+const logProtector = (logger: LoggerType) => {
   return process.env.NODE_ENV === 'development' ||
     process.env.NODE_ENV === 'test'
     ? logger

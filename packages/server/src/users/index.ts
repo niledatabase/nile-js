@@ -2,8 +2,9 @@ import { fetchMe } from '../api/routes/me';
 import { Config } from '../utils/Config';
 import { updateHeaders } from '../utils/Event';
 import { fetchVerifyEmail } from '../api/routes/auth/verify-email';
-import getCsrf from '../auth/getCsrf';
+import getCsrf from '../auth/obtainCsrf';
 import Logger, { LogReturn } from '../utils/Logger';
+import { parseCallback } from '../auth';
 
 import { User } from './types';
 
@@ -60,27 +61,50 @@ export default class Users {
     }
   }
 
-  async verifySelf<T = Response | void>(): Promise<T>;
-  async verifySelf(rawResponse?: true): Promise<Response>;
-  async verifySelf<T = Response | void>(
-    bypassEmail = process.env.NODE_ENV !== 'production',
+  async verifySelf<T = void>(): Promise<T>;
+  async verifySelf(rawResponse: true): Promise<Response>;
+  async verifySelf<T = Response | User>(
+    options: {
+      bypassEmail?: boolean;
+      callbackUrl?: string;
+    },
+    rawResponse?: true
+  ): Promise<T>;
+  async verifySelf<T = void | Response>(
+    options?: true | { bypassEmail?: boolean; callbackUrl?: string },
     rawResponse = false
   ): Promise<T> {
+    const bypassEmail =
+      typeof options === 'object'
+        ? options.bypassEmail ?? process.env.NODE_ENV !== 'production'
+        : process.env.NODE_ENV !== 'production';
+
+    const callbackUrl =
+      typeof options === 'object'
+        ? options.callbackUrl
+        : defaultCallbackUrl(this.#config).callbackUrl;
+
     try {
       const me = await this.getSelf();
       if (me instanceof Response) {
         return me as T;
       }
-      const res = await verifyEmailAddress(this.#config, me);
+      const res = await verifyEmailAddress(
+        this.#config,
+        me,
+        String(callbackUrl)
+      );
       return res as T;
     } catch {
       this.#logger?.warn(
-        "Unable to verify email. The current user's email will be set to verified any way. Be sure to configure emails for production."
+        "Unable to verify email. The current user's email will be set to verified anyway. Be sure to configure emails for production."
       );
     }
+
     if (bypassEmail) {
-      return await this.updateSelf({ emailVerified: true }, rawResponse);
+      return this.updateSelf({ emailVerified: true }, rawResponse);
     }
+
     this.#logger.error(
       'Unable to verify email address. Configure your SMTP server in the console.'
     );
@@ -88,17 +112,36 @@ export default class Users {
   }
 }
 
-async function verifyEmailAddress(config: Config, user: User) {
+async function verifyEmailAddress(
+  config: Config,
+  user: User,
+  callback: string
+) {
   config.headers.set('content-type', 'application/x-www-form-urlencoded');
   const { csrfToken } = await getCsrf<{ csrfToken: string }>(config);
+  const defaults = defaultCallbackUrl(config);
+  const callbackUrl = callback ?? String(defaults.callbackUrl);
   const res = await fetchVerifyEmail(
     config,
     'POST',
-    new URLSearchParams({ csrfToken, email: user.email }).toString()
+    new URLSearchParams({
+      csrfToken,
+      email: user.email,
+      callbackUrl,
+    }).toString()
   );
   if (res.status > 299) {
     throw new Error(await res.text());
   }
   return res;
-  // return await fetchVerifyEmail(config, 'GET');
+}
+
+export function defaultCallbackUrl(config: Config) {
+  let cb = null;
+  const fallbackCb = parseCallback(config.headers);
+  if (fallbackCb) {
+    const [, value] = fallbackCb.split('=');
+    cb = decodeURIComponent(value);
+  }
+  return { callbackUrl: cb };
 }

@@ -5,7 +5,6 @@ import {
   prefixAppRoute,
   urlMatches,
 } from '../../utils/routes';
-import auth from '../../utils/auth';
 import { Config } from '../../../utils/Config';
 import Logger from '../../../utils/Logger';
 
@@ -20,7 +19,6 @@ export default async function route(request: Request, config: Config) {
     { ...config, debug: config.debug } as Config,
     `[ROUTES][${key}]`
   );
-  const session = await auth(request, config);
 
   switch (request.method) {
     case 'GET':
@@ -28,7 +26,7 @@ export default async function route(request: Request, config: Config) {
     case 'POST':
       return await POST(config, { request });
     case 'PUT':
-      return await PUT(config, session, { request });
+      return await PUT(config, { request });
 
     default:
       return new Response('method not allowed', { status: 405 });

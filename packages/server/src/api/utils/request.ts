@@ -1,7 +1,7 @@
 import {
-  X_NILE_ORIGIN,
-  X_NILE_SECURECOOKIES,
-  X_NILE_TENANT,
+  HEADER_ORIGIN,
+  HEADER_SECURE_COOKIES,
+  TENANT_COOKIE,
 } from '../../utils/constants';
 import { Config } from '../../utils/Config';
 import Logger from '../../utils/Logger';
@@ -20,18 +20,18 @@ export default async function request(
   if (request.headers.get('cookie')) {
     updatedHeaders.set('cookie', String(request.headers.get('cookie')));
   }
-  if (request.headers.get(X_NILE_TENANT)) {
+  if (request.headers.get(TENANT_COOKIE)) {
     updatedHeaders.set(
-      X_NILE_TENANT,
-      String(request.headers.get(X_NILE_TENANT))
+      TENANT_COOKIE,
+      String(request.headers.get(TENANT_COOKIE))
     );
   }
   // sets secure cookies for production
   if (config.secureCookies != null) {
-    updatedHeaders.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
+    updatedHeaders.set(HEADER_SECURE_COOKIES, String(config.secureCookies));
   } else {
     updatedHeaders.set(
-      X_NILE_SECURECOOKIES,
+      HEADER_SECURE_COOKIES,
       process.env.NODE_ENV === 'production' ? 'true' : 'false'
     );
   }
@@ -40,45 +40,50 @@ export default async function request(
   if (config.callbackUrl) {
     const cbUrl = new URL(config.callbackUrl);
     debug(`Obtained origin from config.callbackUrl ${config.callbackUrl}`);
-    updatedHeaders.set(X_NILE_ORIGIN, cbUrl.origin);
+    updatedHeaders.set(HEADER_ORIGIN, cbUrl.origin);
     // this origin may be overridden, but when SDK requests are made, we want to ignore it
   } else if (config.origin) {
     debug(`Obtained origin from config.origin ${config.origin}`);
-    updatedHeaders.set(X_NILE_ORIGIN, config.origin);
+    updatedHeaders.set(HEADER_ORIGIN, config.origin);
   } else {
-    const passedOrigin = request.headers.get(X_NILE_ORIGIN);
+    const passedOrigin = request.headers.get(HEADER_ORIGIN);
     if (passedOrigin) {
-      updatedHeaders.set(X_NILE_ORIGIN, passedOrigin);
+      updatedHeaders.set(HEADER_ORIGIN, passedOrigin);
     } else {
       const reqOrigin =
         config.routePrefix !== DEFAULT_PREFIX
           ? `${requestUrl.origin}${config.routePrefix}`
           : requestUrl.origin;
 
-      updatedHeaders.set(X_NILE_ORIGIN, reqOrigin);
+      updatedHeaders.set(HEADER_ORIGIN, reqOrigin);
       debug(`Obtained origin from request ${reqOrigin}`);
     }
   }
   const params = { ...init };
+
   if (
     params.method?.toLowerCase() === 'post' ||
     params.method?.toLowerCase() === 'put'
   ) {
     try {
       updatedHeaders.set('content-type', 'application/json');
-      const initBody = await new Response(_init.request.clone().body).json();
-      const requestBody = await new Response(request.clone().body).json();
-      params.body = JSON.stringify(initBody ?? requestBody);
+
+      const bodyStream = _init.body ?? _init.request?.body ?? request.body;
+
+      const bodyText = await new Response(bodyStream).text();
+
+      // try to parse JSON, fallback to text if not
+      try {
+        params.body = JSON.stringify(JSON.parse(bodyText));
+      } catch {
+        updatedHeaders.set('content-type', 'application/x-www-form-urlencoded');
+        params.body = bodyText;
+      }
     } catch (e) {
-      updatedHeaders.set('content-type', 'application/x-www-form-urlencoded');
-      const initBody = await new Response(_init.request.clone().body).text();
-      const requestBody = await new Response(request.clone().body).text();
-      params.body = initBody ?? requestBody;
+      error('Failed to parse request body');
     }
   }
-
   params.headers = updatedHeaders;
-
   const fullUrl = `${url}${requestUrl.search}`;
 
   if (config.debug) {
@@ -89,6 +94,9 @@ export default async function request(
     params.headers.set('request-id', crypto.randomUUID());
     params.cache = 'no-store';
   }
+
+  await config.extensionCtx?.handleOnRequest(config, _init, params);
+
   try {
     const res: Response | void = await fetch(fullUrl, {
       ...params,

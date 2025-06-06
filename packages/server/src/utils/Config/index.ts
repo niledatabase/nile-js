@@ -1,8 +1,17 @@
 import Handlers from '../../api/handlers';
 import { appRoutes } from '../../api/utils/routes';
 import { Routes } from '../../api/types';
-import { LoggerType, NilePoolConfig, NileConfig } from '../../types';
+import { LoggerType, NilePoolConfig, NileConfig, Extension } from '../../types';
+import Logger from '../Logger';
 
+type ExtensionCtx = {
+  handleOnRequest: (
+    config: Config,
+    _init: RequestInit & { request: Request },
+    params: RequestInit
+  ) => Promise<void>;
+};
+type ConfigConstructor = NileConfig & { extensionCtx?: ExtensionCtx };
 import {
   EnvConfig,
   getDatabaseName,
@@ -29,7 +38,9 @@ export class Config {
     delete: string[];
     put: string[];
   };
-  logger?: LoggerType;
+  extensionCtx: ExtensionCtx;
+  extensions?: Extension[];
+  logger: LoggerType;
   /**
    * Stores the set tenant id from Server for use in sub classes
    */
@@ -72,15 +83,20 @@ export class Config {
 
   // api: ApiConfig;
 
-  constructor(config?: NileConfig, logger?: string) {
-    const envVarConfig: EnvConfig = { config, logger };
+  constructor(config?: ConfigConstructor) {
     this.routePrefix = config?.routePrefix ?? '/api';
-    this.secureCookies = getSecureCookies(envVarConfig);
-    this.callbackUrl = getCallbackUrl(envVarConfig);
     this.debug = config?.debug;
     this.origin = config?.origin;
-
+    this.extensions = config?.extensions;
+    this.extensionCtx = config?.extensionCtx as ExtensionCtx;
     this.serverOrigin = config?.origin ?? 'http://localhost:3000';
+
+    this.logger = config?.logger ?? Logger(this);
+    const envVarConfig: EnvConfig = {
+      config: { ...config, logger: this.logger },
+    };
+    this.secureCookies = getSecureCookies(envVarConfig);
+    this.callbackUrl = getCallbackUrl(envVarConfig);
 
     // this four throw because its the only way to get it
     this.apiUrl = getApiUrl(envVarConfig) as string;
@@ -158,6 +174,5 @@ export class Config {
     };
     this.tenantId = config?.tenantId;
     this.userId = config?.userId;
-    this.logger = config?.logger;
   }
 }

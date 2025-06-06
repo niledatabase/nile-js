@@ -30,7 +30,6 @@ describe('Config', () => {
   const serverConfig: NileConfig = {
     userId: 'user-from-config',
     tenantId: 'tenant-from-config',
-    logger: { info: jest.fn() },
     debug: true,
     databaseName: 'config-db-name',
     databaseId: 'config-db-id',
@@ -76,7 +75,7 @@ describe('Config', () => {
   });
 
   it('should fall back to environment variables if config is missing', () => {
-    const config = new Config(undefined, 'fallback-test');
+    const config = new Config();
 
     expect(config.db.user).toBe('env-user');
     expect(config.db.password).toBe('env-password');

@@ -1,18 +1,32 @@
 import { PoolClient, PoolConfig } from 'pg';
 
 import { Routes } from './api/types';
+import { Server } from './Server';
 
 export type Opts = {
   basePath?: string;
   fetch?: typeof fetch;
 };
+export interface ExtensionResult {
+  id?: string;
+  [key: string]: unknown;
+  // Called before request is handled
+  onRequest?: (req: Request) => void | Promise<void | RequestInit>;
+
+  // Called after response is generated
+  onResponse?: (res: Response) => void | Promise<void>;
+}
+
+export type Extension = (
+  instance: Server
+) => ExtensionResult | Promise<ExtensionResult>;
 
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
 export type LoggerType = {
-  info?: (args: unknown | unknown[]) => void;
-  warn?: (args: unknown | unknown[]) => void;
-  error?: (args: unknown | unknown[]) => void;
-  debug?: (args: unknown | unknown[]) => void;
+  info: (args: unknown | unknown[]) => void;
+  warn: (args: unknown | unknown[]) => void;
+  error: (args: unknown | unknown[]) => void;
+  debug: (args: unknown | unknown[]) => void;
 };
 export type NileConfig = {
   /**
@@ -107,6 +121,10 @@ export type NileConfig = {
    * The `cookie` would be expected if you are setting this, else most calls will be unauthorized
    */
   headers?: null | Headers | Record<string, string>;
+  /**
+   * Functions to run at various points to make life easier
+   */
+  extensions?: Extension[];
 };
 
 export type NileDb = NilePoolConfig & { tenantId?: string };
