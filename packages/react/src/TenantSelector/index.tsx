@@ -54,7 +54,11 @@ export default function TenantSelector(props: ComponentProps) {
 }
 
 function SelectTenant(props: ComponentProps) {
-  const { data: tenants = [], isLoading, refetch } = useTenants(props);
+  const {
+    data: tenants = props.tenants ?? [],
+    isLoading,
+    refetch,
+  } = useTenants(props);
   const {
     buttonText = 'Create an organization',
     emptyText = 'You are not part of an organization.',

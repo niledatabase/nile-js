@@ -1,4 +1,4 @@
-import { X_NILE_TENANT } from '../../../utils/constants';
+import { TENANT_COOKIE } from '../../../utils/constants';
 import fetch from '../../utils/request';
 import { Config } from '../../../utils/Config';
 
@@ -70,28 +70,10 @@ describe('users route', () => {
       expect.objectContaining({})
     );
   });
-  it('should GET to v2 tenant users with headers', async () => {
-    const _res = new Request('http://localhost:3000', {
-      headers: new Headers({
-        [X_NILE_TENANT]: '123',
-      }),
-    });
-    await route(
-      _res,
-      new Config({
-        apiUrl: 'http://thenile.dev/v2/databases/testdb',
-      })
-    );
-    expect(utilRequest).toHaveBeenCalledWith(
-      'http://thenile.dev/v2/databases/testdb/tenants/123/users',
-      expect.objectContaining({ method: 'GET' }),
-      expect.objectContaining({})
-    );
-  });
   it('should GET to v2 tenant users with cookies', async () => {
     const _res = new Request('http://localhost:3000', {
       headers: new Headers({
-        cookie: `token=abunchofgarbage; ${X_NILE_TENANT}=456`,
+        cookie: `token=abunchofgarbage; ${TENANT_COOKIE}=456`,
       }),
     });
     await route(

@@ -2,7 +2,7 @@ import { fetchMe } from '../api/routes/me';
 import { Config } from '../utils/Config';
 import { updateHeaders } from '../utils/Event';
 import { fetchVerifyEmail } from '../api/routes/auth/verify-email';
-import getCsrf from '../auth/getCsrf';
+import getCsrf from '../auth/obtainCsrf';
 import Logger, { LogReturn } from '../utils/Logger';
 
 import { User } from './types';

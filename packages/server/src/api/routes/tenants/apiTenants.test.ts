@@ -1,5 +1,5 @@
 import { Config } from '../../../utils/Config';
-import { X_NILE_TENANT } from '../../../utils/constants';
+import { TENANT_COOKIE } from '../../../utils/constants';
 import fetch from '../../utils/request';
 
 import route from '.';
@@ -50,7 +50,7 @@ describe('tenants route', () => {
   it('should GET to v2 tenant users with headers', async () => {
     const _res = new Request('http://localhost:3000', {
       headers: new Headers({
-        [X_NILE_TENANT]: '123',
+        [TENANT_COOKIE]: '123',
       }),
     });
     await route(
@@ -66,7 +66,7 @@ describe('tenants route', () => {
   it('should GET to v2 tenant users with cookies', async () => {
     const _res = new Request('http://localhost:3000', {
       headers: new Headers({
-        cookie: `token=abunchofgarbage; ${X_NILE_TENANT}=456`,
+        cookie: `token=abunchofgarbage; ${TENANT_COOKIE}=456`,
       }),
     });
     await route(

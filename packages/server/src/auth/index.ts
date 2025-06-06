@@ -9,10 +9,10 @@ import { ActiveSession, JWT, Provider, ProviderName } from '../api/utils/auth';
 import { NileAuthRoutes } from '../api/utils/routes';
 import { User } from '../users/types';
 import { Config } from '../utils/Config';
-import { updateHeaders } from '../utils/Event';
+import { updateHeaders, updateTenantId } from '../utils/Event';
 import Logger, { LogReturn } from '../utils/Logger';
 
-import getCsrf from './getCsrf';
+import obtainCsrf from './obtainCsrf';
 
 type SignUpPayload = {
   email: string;
@@ -53,7 +53,7 @@ export default class Auth {
   async getCsrf<T = Response | JSON>(rawResponse?: false): Promise<T>;
   async getCsrf(rawResponse: true): Promise<Response>;
   async getCsrf<T = Response | JSON>(rawResponse = false) {
-    return await getCsrf<T>(this.#config, rawResponse);
+    return await obtainCsrf<T>(this.#config, rawResponse);
   }
 
   async listProviders(rawResponse: true): Promise<Response>;
@@ -152,7 +152,14 @@ export default class Auth {
       return res as T;
     }
     try {
-      return (await res.clone().json()) as T;
+      const json = (await res.clone().json()) as T;
+      if (json && typeof json === 'object' && 'tenants' in json) {
+        const tenantId = (json as unknown as User).tenants[0];
+        if (tenantId) {
+          updateTenantId(tenantId);
+        }
+      }
+      return json;
     } catch {
       return res as T;
     }
@@ -507,7 +514,7 @@ function parseResetToken(headers: Headers | void): string | void {
   return token;
 }
 
-function defaultCallbackUrl({ config }: { config: Config }) {
+export function defaultCallbackUrl({ config }: { config: Config }) {
   let cb = null;
   let redirect = null;
   const fallbackCb = parseCallback(config.headers);

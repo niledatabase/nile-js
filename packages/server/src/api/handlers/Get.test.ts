@@ -1,7 +1,7 @@
 import {
-  X_NILE_ORIGIN,
-  X_NILE_SECURECOOKIES,
-  X_NILE_TENANT,
+  HEADER_ORIGIN,
+  HEADER_SECURE_COOKIES,
+  TENANT_COOKIE,
 } from '../../utils/constants';
 import { Config } from '../../utils/Config';
 import { appRoutes } from '../utils/routes';
@@ -13,13 +13,15 @@ jest.mock('../utils/auth', () => () => 'a session, relax');
 describe('getter', () => {
   const apiGet = GETTER(
     appRoutes(),
-    new Config({ apiUrl: 'http://thenile.dev/v2/databases/testdb' })
+    new Config({
+      apiUrl: 'http://thenile.dev/v2/databases/testdb',
+      tenantId: '123',
+    })
   );
   global.fetch = jest.fn();
 
   beforeEach(() => {
-    //@ts-expect-error - fetch
-    global.fetch.mockClear();
+    (global.fetch as jest.Mock).mockClear();
   });
 
   [
@@ -43,15 +45,14 @@ describe('getter', () => {
         },
         method: 'GET',
         headers: new Headers({
-          [X_NILE_TENANT]: '123',
+          [TENANT_COOKIE]: '123',
           host: 'http://localhost:3000',
         }),
         url: `http://localhost:3001/api/${key}`,
         clone: jest.fn(() => ({ body: '{}' })),
       };
 
-      //@ts-expect-error - fetch
-      global.fetch = jest.fn((url, p) => {
+      (global.fetch as jest.Mock) = jest.fn((url, p) => {
         if (p) {
           params = new Request(url, p);
         }
@@ -69,9 +70,9 @@ describe('getter', () => {
       });
       expect(headersArray).toEqual([
         { key: 'host', value: 'localhost:3001' },
-        { key: X_NILE_ORIGIN, value: 'http://localhost:3001' },
-        { key: X_NILE_SECURECOOKIES, value: 'false' },
-        { key: X_NILE_TENANT, value: '123' },
+        { key: HEADER_ORIGIN, value: 'http://localhost:3001' },
+        { key: HEADER_SECURE_COOKIES, value: 'false' },
+        { key: TENANT_COOKIE, value: '123' },
       ]);
     });
   });

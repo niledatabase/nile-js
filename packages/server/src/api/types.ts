@@ -22,4 +22,6 @@ export type Routes = {
   PASSWORD_RESET: string;
   LOG: string;
   VERIFY_EMAIL: string;
+  INVITES: string;
+  INVITE: string;
 };

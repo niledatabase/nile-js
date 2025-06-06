@@ -8,6 +8,9 @@ import tenantUsers, {
 import tenantUser, {
   matches as matchesTenantUser,
 } from '../routes/tenants/[tenantId]/users/[userId]';
+import invite, {
+  matches as matchesInvite,
+} from '../routes/tenants/[tenantId]/invite';
 import { handlePasswordReset, matchesPasswordReset } from '../routes/auth';
 import { Routes } from '../types';
 import { Config } from '../../utils/Config';
@@ -15,6 +18,12 @@ import { Config } from '../../utils/Config';
 export default function PUTER(configRoutes: Routes, config: Config) {
   const { info, warn } = Logger(config, '[PUT MATCHER]');
   return async function PUT(req: Request) {
+    // order matters for tenantInvites
+    if (matchesInvite(configRoutes, req)) {
+      info('matches tenant invite');
+      return invite(req, config);
+    }
+
     if (matchesTenantUser(configRoutes, req)) {
       info('matches tenant user');
       return tenantUser(req, config);
