@@ -5,6 +5,7 @@ import {
   NileConfig,
   parseToken,
   Tenant,
+  Invite,
 } from '../../src/index';
 
 const config: NileConfig = { debug: true };
@@ -13,6 +14,9 @@ const primaryUser = {
   email: 'delete@me.com',
   password: 'deleteme',
   newTenantName: 'delete@me.com',
+};
+const userToInvite = {
+  email: 'noway@postmortemai.com',
 };
 
 const powerCreate = {
@@ -39,6 +43,17 @@ describe('api integration', () => {
     expect(tenantUser).toMatchObject({ email: tu.email });
     // signs up a user to a tenant
     let user = await nile.auth.signUp<User>(primaryUser);
+    const invite = await nile.tenants.invite(userToInvite.email, true);
+    if (invite) {
+      expect(invite.status).toEqual(201);
+    }
+    const obtainedInvite = await nile.db.query<Invite>(
+      'select * from auth.invites where identifier = $1',
+      [userToInvite.email]
+    );
+    const invited = await nile.tenants.acceptInvite(obtainedInvite.rows[0]);
+    expect(invited.status).toEqual(302);
+
     expect(user).toMatchObject({ email: primaryUser.email });
     expect(user.tenants.length).toEqual(1);
     const me = await nile.users.getSelf();

@@ -9,17 +9,18 @@ import Tenants from './tenants';
 import Auth from './auth';
 import { getTenantId } from './utils/Config/envVars';
 import Logger from './utils/Logger';
-import { X_NILE_ORIGIN, X_NILE_SECURECOOKIES } from './utils/constants';
+import { HEADER_ORIGIN, HEADER_SECURE_COOKIES } from './utils/constants';
 import {
   CTXHandlerType,
   handlersWithContext,
 } from './api/handlers/withContext';
+import { getTenantFromHttp } from './utils/fetch';
+import { buildExtensionConfig } from './api/utils/extensions';
 
 export class Server {
   users: Users;
   tenants: Tenants;
   auth: Auth;
-
   #config: Config;
   #handlers: {
     GET: (req: Request) => Promise<void | Response>;
@@ -38,7 +39,10 @@ export class Server {
   #headers: undefined | Headers;
 
   constructor(config?: NileConfig) {
-    this.#config = new Config(config, '[initial config]');
+    this.#config = new Config({
+      ...config,
+      extensionCtx: buildExtensionConfig(this),
+    });
     // watch first, they may mutate first
     watchTenantId((tenantId) => {
       if (tenantId !== this.#config.tenantId) {
@@ -214,10 +218,10 @@ export class Server {
       headers = config?.headers;
       if (config && config.origin) {
         // DO SOMETHING TO SURFACE A WARNING?
-        this.#headers.set(X_NILE_ORIGIN, config.origin);
+        this.#headers.set(HEADER_ORIGIN, config.origin);
       }
       if (config && config.secureCookies != null) {
-        this.#headers.set(X_NILE_SECURECOOKIES, String(config.secureCookies));
+        this.#headers.set(HEADER_SECURE_COOKIES, String(config.secureCookies));
       }
     }
 
@@ -232,6 +236,10 @@ export class Server {
     }
 
     const merged: Record<string, string> = {};
+
+    // if we do have a cookie, grab anything useful before it is destroyed.
+    this.#config.tenantId = getTenantFromHttp(this.#headers, this.#config);
+
     this.#headers?.forEach((value, key) => {
       // It is expected that if the 'cookie' is missing when you set headers, it should be removed.
       if (key.toLowerCase() !== 'cookie') {

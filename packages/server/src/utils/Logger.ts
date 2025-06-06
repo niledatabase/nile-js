@@ -60,7 +60,7 @@ export type LogReturn = {
   error(message: string | unknown, meta?: Record<string, unknown>): void;
 };
 export default function Logger(
-  config?: Config | NileConfig,
+  config: Config | NileConfig,
   ...params: unknown[]
 ): LogReturn {
   const base = baseLogger(config, params);

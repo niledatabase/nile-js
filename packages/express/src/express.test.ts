@@ -1,10 +1,15 @@
-import { Server } from '../Server';
+import { Server } from '@niledatabase/server';
 
-import { expressPaths } from './express';
+import { expressPaths } from '.';
 
 describe('express', () => {
   it('cleans express paths', () => {
-    const nile = new Server();
+    const nile = new Server({
+      apiUrl: 'http://localhost:3000',
+      user: '123',
+      password: '123',
+      databaseName: '123',
+    });
     const { paths } = expressPaths(nile);
     expect(Object.keys(paths)).toEqual(['get', 'post', 'put', 'delete']);
     expect(paths.delete).toEqual([

@@ -50,6 +50,10 @@ jobs:
         working-directory: packages/client
         run: yarn install --immutable
 
+      - name: Install @niledatabase/nextjs
+        working-directory: packages/nextjs
+        run: yarn install --immutable
+
       - name: Build @niledatabase/packages
         run: yarn build
 

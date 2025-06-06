@@ -5,7 +5,6 @@ import {
   urlMatches,
 } from '../../../../utils/routes';
 import { Routes } from '../../../../types';
-import auth from '../../../../utils/auth';
 import Logger from '../../../../../utils/Logger';
 
 import { GET } from './GET';
@@ -18,12 +17,7 @@ export default async function route(request: Request, config: Config) {
     { ...config, debug: config.debug } as Config,
     `[ROUTES][${key}]`
   );
-  const session = await auth(request, config);
 
-  if (!session) {
-    info('401');
-    return new Response(null, { status: 401 });
-  }
   const yurl = new URL(request.url);
   const [, tenantId] = yurl.pathname.split('/').reverse();
 
@@ -36,7 +30,7 @@ export default async function route(request: Request, config: Config) {
     case 'GET':
       return await GET(config, { request });
     case 'POST':
-      return await POST(config, session, { request });
+      return await POST(config, { request });
 
     default:
       return new Response('method not allowed', { status: 405 });

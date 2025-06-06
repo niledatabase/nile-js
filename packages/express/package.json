@@ -1,0 +1,41 @@
+{
+  "name": "@niledatabase/express",
+  "version": "5.0.0-alpha.3",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts",
+    "test": "jest"
+  },
+  "author": "jrea",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niledatabase/nile-js.git",
+    "directory": "packages/express"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@niledatabase/server": "*"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4",
+    "tsup": "^8.5.0"
+  }
+}

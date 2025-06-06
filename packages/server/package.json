@@ -9,16 +9,6 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
-    },
-    "./express": {
-      "types": "./dist/express.d.ts",
-      "require": "./dist/express.js",
-      "import": "./dist/express.mjs"
-    },
-    "./nitro": {
-      "types": "./dist/nitro.d.ts",
-      "require": "./dist/nitro.js",
-      "import": "./dist/nitro.mjs"
     }
   },
   "files": [
@@ -74,7 +64,6 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "h3": "^1.15.1",
     "pg": "^8.11.3"
   }
 }

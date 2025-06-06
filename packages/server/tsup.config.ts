@@ -3,8 +3,6 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
-    express: 'src/lib/express.ts',
-    nitro: 'src/lib/nitro.ts',
   },
   format: ['esm', 'cjs'],
   outDir: 'dist',

@@ -4,6 +4,12 @@ import users, { matches as matchesUsers } from '../routes/users';
 import tenantUsers, {
   matches as matchesTenantUsers,
 } from '../routes/tenants/[tenantId]/users';
+import invite, {
+  matches as matchesInvite,
+} from '../routes/tenants/[tenantId]/invite';
+import invites, {
+  matches as matchesInvites,
+} from '../routes/tenants/[tenantId]/invites';
 import tenants, { matches as matchesTenants } from '../routes/tenants';
 import { Routes } from '../types';
 import * as authRoutes from '../routes/auth';
@@ -16,18 +22,29 @@ export default function GETTER(configRoutes: Routes, config: Config) {
       info('matches me');
       return me(req, config);
     }
+    // order matters for invites (matches against tenants and invite)
+    if (matchesInvites(configRoutes, req)) {
+      info('matches tenant invites');
+      return invites(req, config);
+    }
+
+    if (matchesInvite(configRoutes, req)) {
+      info('matches invite');
+      return invite(req, config);
+    }
+
     if (matchesTenantUsers(configRoutes, req)) {
       info('matches tenant users');
       return tenantUsers(req, config);
     }
-    if (matchesUsers(configRoutes, req)) {
-      info('matches users');
-      return users(req, config);
-    }
-
     if (matchesTenants(configRoutes, req)) {
       info('matches tenants');
       return tenants(req, config);
+    }
+
+    if (matchesUsers(configRoutes, req)) {
+      info('matches users');
+      return users(req, config);
     }
 
     if (authRoutes.matchSession(configRoutes, req)) {
