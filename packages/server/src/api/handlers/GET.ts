@@ -1,4 +1,3 @@
-import Logger from '../../utils/Logger';
 import me, { matches as matchesMe } from '../routes/me';
 import users, { matches as matchesUsers } from '../routes/users';
 import tenantUsers, {
@@ -16,7 +15,7 @@ import * as authRoutes from '../routes/auth';
 import { Config } from '../../utils/Config';
 
 export default function GETTER(configRoutes: Routes, config: Config) {
-  const { info, warn } = Logger(config, '[GET MATCHER]');
+  const { info, warn } = config.logger('[GET MATCHER]');
   return async function GET(req: Request) {
     if (matchesMe(configRoutes, req)) {
       info('matches me');

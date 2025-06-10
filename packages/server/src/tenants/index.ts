@@ -14,7 +14,6 @@ import obtainCsrf from '../auth/obtainCsrf';
 import { NileRequest } from '../types';
 import { User } from '../users/types';
 import { Config } from '../utils/Config';
-import Logger, { LogReturn } from '../utils/Logger';
 
 import { Invite, Tenant } from './types';
 
@@ -22,10 +21,8 @@ type ReqContext = { userId?: string; tenantId?: string };
 type JoinTenantRequest = string | ReqContext | { id: string };
 
 export default class Tenants {
-  #logger: LogReturn;
   #config: Config;
   constructor(config: Config) {
-    this.#logger = Logger(config, '[tenants]');
     this.#config = config;
   }
 

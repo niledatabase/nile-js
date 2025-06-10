@@ -2,6 +2,7 @@ import { PoolClient, PoolConfig } from 'pg';
 
 import { Routes } from './api/types';
 import { Server } from './Server';
+import { LogReturn } from './utils/Logger';
 
 export type Opts = {
   basePath?: string;
@@ -77,7 +78,7 @@ export type NileConfig = {
   /**
    * Some kind of logger if you want to send to an external service
    */
-  logger?: LoggerType;
+  logger?: LogReturn;
 
   /**
    * The configuration value that maps to `NILEDB_API_URL` - its going to be nile-auth (or similar service)

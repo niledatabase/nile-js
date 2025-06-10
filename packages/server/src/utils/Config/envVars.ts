@@ -1,9 +1,9 @@
 import 'dotenv/config';
-import { LoggerType, NileConfig } from '../../types';
-import Logger from '../Logger';
+import { NileConfig } from '../../types';
+import { LogReturn } from '../Logger';
 
 export type EnvConfig = {
-  config: NileConfig & { logger: LoggerType };
+  config: NileConfig & { logger: LogReturn };
 };
 
 export const getApiUrl = (cfg: EnvConfig) => {
@@ -43,14 +43,14 @@ export const getUsername = (cfg: EnvConfig) => {
   const { config } = cfg;
   const logger = config.logger;
 
-  const { info } = Logger(config, '[username]');
+  const { info } = logger();
   if (config?.user) {
-    logger && info(`${logger}[config] ${config.user}`);
+    info(`[config] ${config.user}`);
     return String(config?.user);
   }
   const user = stringCheck(process.env.NILEDB_USER);
   if (user) {
-    logger && info(`${logger}[NILEDB_USER] ${user}`);
+    info(`[NILEDB_USER] ${user}`);
     return user;
   }
 
@@ -74,15 +74,14 @@ export const getPassword = (cfg: EnvConfig) => {
   const { config } = cfg;
   const logger = config.logger;
   const log = logProtector(logger);
-  const { info } = Logger(config, '[password]');
   if (stringCheck(config?.password)) {
-    log && info(`${logger}[config] ***`);
+    log && log('[config]').info('***');
     return String(config?.password);
   }
 
   const pass = stringCheck(process.env.NILEDB_PASSWORD);
   if (pass) {
-    logger && info(`${logger}[NILEDB_PASSWORD] ***`);
+    logger('[NILEDB_PASSWORD]').info('***');
 
     return pass;
   }
@@ -104,15 +103,14 @@ export const getPassword = (cfg: EnvConfig) => {
 
 export const getDatabaseName = (cfg: EnvConfig) => {
   const { config } = cfg;
-  const logger = config.logger;
-  const { info } = Logger(config, '[databaseName]');
+  const { info } = config.logger('[databaseName]');
   if (stringCheck(config?.databaseName)) {
-    logger && info(`${logger}[config] ${config?.databaseName}`);
+    info(`[config] ${config?.databaseName}`);
     return String(config?.databaseName);
   }
   const name = stringCheck(process.env.NILEDB_NAME);
   if (name) {
-    logger && info(`${logger}[NILEDB_NAME] ${name}`);
+    info(`[NILEDB_NAME] ${name}`);
     return name;
   }
 
@@ -131,15 +129,14 @@ export const getDatabaseName = (cfg: EnvConfig) => {
 
 export const getTenantId = (cfg: EnvConfig): string | null => {
   const { config } = cfg;
-  const logger = config.logger;
-  const { info } = Logger(config, '[tenantId]');
+  const { info } = config.logger('[tenantId]');
   if (stringCheck(config?.tenantId)) {
-    logger && info(`${logger}[config] ${config?.tenantId}`);
+    info(`[config] ${config?.tenantId}`);
     return String(config?.tenantId);
   }
 
   if (stringCheck(process.env.NILEDB_TENANT)) {
-    logger && info(`${logger}[NILEDB_TENANT] ${process.env.NILEDB_TENANT}`);
+    info(`[NILEDB_TENANT] ${process.env.NILEDB_TENANT}`);
     return String(process.env.NILEDB_TENANT);
   }
 
@@ -149,15 +146,15 @@ export const getTenantId = (cfg: EnvConfig): string | null => {
 export function getDbHost(cfg: EnvConfig) {
   const { config } = cfg;
   const logger = config.logger;
-  const { info } = Logger(config, '[db.host]');
+  const { info } = logger('[db.host]');
 
   if (stringCheck(config?.db && config.db.host)) {
-    logger && info(`${logger}[config] ${config?.db?.host}`);
+    info(`[config] ${config?.db?.host}`);
     return String(config?.db?.host);
   }
 
   if (stringCheck(process.env.NILEDB_HOST)) {
-    logger && info(`${logger}[NILEDB_HOST] ${process.env.NILEDB_HOST}`);
+    info(`[NILEDB_HOST] ${process.env.NILEDB_HOST}`);
     return process.env.NILEDB_HOST;
   }
 
@@ -165,28 +162,28 @@ export function getDbHost(cfg: EnvConfig) {
   if (pg) {
     try {
       const pgUrl = new URL(pg);
-      logger && info(`${logger}[NILEDB_POSTGRES_URL] ${pgUrl.hostname}`);
+      info(`[NILEDB_POSTGRES_URL] ${pgUrl.hostname}`);
       return pgUrl.hostname;
     } catch (e) {
       // ok to fail
     }
   }
 
-  logger && info(`${logger}[default] db.thenile.dev`);
+  info('[default] db.thenile.dev');
   return 'db.thenile.dev';
 }
 
 export function getDbPort(cfg: EnvConfig): number {
   const { config } = cfg;
   const logger = config.logger;
-  const { info } = Logger(config, '[db.port]');
+  const { info } = logger('[db.port]');
   if (config?.db?.port && config.db.port != null) {
-    logger && info(`${logger}[config] ${config?.db.port}`);
+    info(`[config] ${config?.db.port}`);
     return Number(config.db?.port);
   }
 
   if (stringCheck(process.env.NILEDB_PORT)) {
-    logger && info(`${logger}[NILEDB_PORT] ${process.env.NILEDB_PORT}`);
+    info(`[NILEDB_PORT] ${process.env.NILEDB_PORT}`);
     return Number(process.env.NILEDB_PORT);
   }
 
@@ -201,12 +198,12 @@ export function getDbPort(cfg: EnvConfig): number {
       // ok to fail
     }
   }
-  logger && info(`${logger}[default] 5432`);
+  info('[default] 5432');
   return 5432;
 }
 
 // don't let people accidentally log secrets to production
-const logProtector = (logger: LoggerType) => {
+const logProtector = (logger: LogReturn) => {
   return process.env.NODE_ENV === 'development' ||
     process.env.NODE_ENV === 'test'
     ? logger

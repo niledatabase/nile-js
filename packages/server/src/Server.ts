@@ -183,7 +183,7 @@ export class Server {
         return;
       }
     }
-    const { warn } = Logger(this.#config, '[API]');
+    const { warn } = Logger(this.#config)('[API]');
 
     if (warn) {
       warn(

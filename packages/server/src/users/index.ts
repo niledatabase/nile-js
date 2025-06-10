@@ -3,17 +3,17 @@ import { Config } from '../utils/Config';
 import { updateHeaders } from '../utils/Event';
 import { fetchVerifyEmail } from '../api/routes/auth/verify-email';
 import getCsrf from '../auth/obtainCsrf';
-import Logger, { LogReturn } from '../utils/Logger';
+import { Loggable } from '../utils/Logger';
 import { parseCallback } from '../auth';
 
 import { User } from './types';
 
 export default class Users {
   #config: Config;
-  #logger: LogReturn;
+  #logger: Loggable;
   constructor(config: Config) {
     this.#config = config;
-    this.#logger = Logger(config, '[me]');
+    this.#logger = config.logger('[me]');
   }
 
   async updateSelf<T = User[] | Response>(

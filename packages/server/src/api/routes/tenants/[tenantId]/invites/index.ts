@@ -28,10 +28,12 @@ export async function fetchInvites(config: Config) {
       'Unable to fetch tenant, the tenantId context is missing. Call nile.setContext({ tenantId }), set nile.tenantId = "tenantId", or add it to the function call'
     );
   }
-  if (!isUUID(config.tenantId) && config.logger?.warn) {
-    config.logger?.warn(
-      'nile.tenantId is not a valid UUID. This may lead to unexpected behavior in your application.'
-    );
+  if (!isUUID(config.tenantId)) {
+    config
+      .logger('fetchInvites')
+      .warn(
+        'nile.tenantId is not a valid UUID. This may lead to unexpected behavior in your application.'
+      );
   }
   const clientUrl = `${config.serverOrigin}${
     config.routePrefix

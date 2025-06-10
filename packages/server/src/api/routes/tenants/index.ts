@@ -1,7 +1,6 @@
 import { Config } from '../../../utils/Config';
 import { Routes } from '../../types';
 import auth from '../../utils/auth';
-import Logger from '../../../utils/Logger';
 import { urlMatches, DefaultNileAuthRoutes, isUUID } from '../../utils/routes';
 
 import { GET } from './GET';
@@ -13,10 +12,7 @@ import { POST } from './POST';
 const key = 'TENANTS';
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger(
-    { ...config, debug: config.debug } as Config,
-    `[ROUTES][${key}]`
-  );
+  const { info } = config.logger(`[ROUTES][${key}]`);
   const session = await auth(request, config);
 
   if (!session) {
@@ -76,10 +72,12 @@ export async function fetchTenant(
       'Unable to fetch tenant, the tenantId context is missing. Call nile.setContext({ tenantId }), set nile.tenantId = "tenantId", or add it to the function call'
     );
   }
-  if (!isUUID(config.tenantId) && config.logger?.warn) {
-    config.logger?.warn(
-      'nile.tenantId is not a valid UUID. This may lead to unexpected behavior in your application.'
-    );
+  if (!isUUID(config.tenantId)) {
+    config
+      .logger('fetch tenant')
+      .warn(
+        'nile.tenantId is not a valid UUID. This may lead to unexpected behavior in your application.'
+      );
   }
   const clientUrl = `${config.serverOrigin}${
     config.routePrefix
@@ -98,23 +96,17 @@ export async function fetchTenant(
 }
 
 export async function fetchTenantsByUser(config: Config) {
-  if (config.logger?.warn) {
-    if (!config.userId) {
-      config.logger?.warn(
-        'nile.userId is not set. The call will still work for the API, but the database context is not set properly and may lead to unexpected behavior in your application.'
-      );
-    } else if (!isUUID(config.userId)) {
-      config.logger?.warn(
-        'nile.userId is not a valid UUID. This may lead to unexpected behavior in your application.'
-      );
-    }
+  const { warn } = config.logger('fetchTenantsByUser');
+  if (!config.userId) {
+    warn(
+      'nile.userId is not set. The call will still work for the API, but the database context is not set properly and may lead to unexpected behavior in your application.'
+    );
+  } else if (!isUUID(config.userId)) {
+    warn(
+      'nile.userId is not a valid UUID. This may lead to unexpected behavior in your application.'
+    );
   }
-  const clientUrl = `${config.serverOrigin}${
-    config.routePrefix
-  }${DefaultNileAuthRoutes.USER_TENANTS.replace(
-    '{userId}',
-    config.userId ?? 'WARN_NOT_SET'
-  )}`;
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${DefaultNileAuthRoutes.TENANTS}`;
   const req = new Request(clientUrl, { headers: config.headers });
 
   return (await config.handlers.GET(req)) as Response;

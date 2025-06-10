@@ -2,16 +2,12 @@ import { NileAuthRoutes, proxyRoutes, urlMatches } from '../../utils/routes';
 import request from '../../utils/request';
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
-import Logger from '../../../utils/Logger';
 import { ProviderName } from '../../utils/auth';
 
 const key = 'CALLBACK';
 
 export default async function route(req: Request, config: Config) {
-  const { error } = Logger(
-    { ...config, debug: config.debug } as Config,
-    `[ROUTES][${key}]`
-  );
+  const { error } = config.logger(`[ROUTES][${key}]`);
   const [provider] = new URL(req.url).pathname.split('/').reverse();
   try {
     const passThroughUrl = new URL(req.url);

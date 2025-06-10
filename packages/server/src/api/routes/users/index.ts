@@ -6,7 +6,6 @@ import {
   urlMatches,
 } from '../../utils/routes';
 import { Config } from '../../../utils/Config';
-import Logger from '../../../utils/Logger';
 
 import { POST } from './POST';
 import { GET } from './GET';
@@ -15,10 +14,7 @@ import { PUT } from './[userId]/PUT';
 const key = 'USERS';
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger(
-    { ...config, debug: config.debug } as Config,
-    `[ROUTES][${key}]`
-  );
+  const { info } = config.logger(`[ROUTES][${key}]`);
 
   switch (request.method) {
     case 'GET':
@@ -49,10 +45,12 @@ export async function fetchUser(config: Config, method: 'PUT') {
         config
       )}${DefaultNileAuthRoutes.USER.replace('{userId}', config.userId)}`;
     }
-  if (!isUUID(config.userId) && config.logger?.warn) {
-    config.logger?.warn(
-      'nile.userId is not a valid UUID. This may lead to unexpected behavior in your application.'
-    );
+  if (!isUUID(config.userId)) {
+    config
+      .logger('[fetchUser]')
+      .warn(
+        'nile.userId is not a valid UUID. This may lead to unexpected behavior in your application.'
+      );
   }
 
   const init: RequestInit = {

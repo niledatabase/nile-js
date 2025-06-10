@@ -4,7 +4,6 @@ import pg from 'pg';
 import { Config } from '../utils/Config';
 import { evictPool } from '../utils/Event';
 import { AfterCreate } from '../types';
-import Logger from '../utils/Logger';
 
 import { createProxyForPool } from './PoolProxy';
 
@@ -17,7 +16,7 @@ class NileDatabase {
   timer: NodeJS.Timeout | undefined;
 
   constructor(config: Config, id: string) {
-    const { warn, info, debug } = Logger(config, '[NileInstance]');
+    const { warn, info, debug } = config.logger('[NileInstance]');
     this.id = id;
     const poolConfig = {
       min: 0,
@@ -51,7 +50,7 @@ class NileDatabase {
         `${this.id}-${this.timer}`
       );
       afterCreate(client, (err) => {
-        const { error } = Logger(config, '[after create callback]');
+        const { error } = config.logger('[after create callback]');
         if (err) {
           clearTimeout(this.timer);
           error('after create failed', {
@@ -80,7 +79,7 @@ class NileDatabase {
   }
 
   startTimeout() {
-    const { debug } = Logger(this.config, '[NileInstance]');
+    const { debug } = this.config.logger('[NileInstance]');
     if (this.timer) {
       clearTimeout(this.timer);
     }
@@ -97,7 +96,7 @@ class NileDatabase {
     }, Number(this.config.db.idleTimeoutMillis) ?? 30000);
   }
   shutdown() {
-    const { debug } = Logger(this.config, '[NileInstance]');
+    const { debug } = this.config.logger('[NileInstance]');
     debug(`attempting to shut down ${this.id}`);
     clearTimeout(this.timer);
     this.pool.end(() => {
@@ -109,7 +108,7 @@ class NileDatabase {
 export default NileDatabase;
 
 function makeAfterCreate(config: Config, id: string): AfterCreate {
-  const { error, warn, debug } = Logger(config, '[afterCreate]');
+  const { error, warn, debug } = config.logger('[afterCreate]');
   return (conn, done) => {
     conn.on('error', function errorHandler(e: Error) {
       error(`Connection ${id} was terminated by server`, {
