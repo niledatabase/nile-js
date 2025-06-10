@@ -9,10 +9,7 @@
   "scripts": {
     "build:storybook": "yarn build && yarn workspace @niledatabase/react build:storybook",
     "dev:react": "yarn workspace @niledatabase/react dev",
-    "build:react": "yarn workspace @niledatabase/react build",
-    "build:client": "yarn workspace @niledatabase/client build",
-    "build:server": "yarn workspace @niledatabase/server build",
-    "build": "yarn build:server && yarn build:react && yarn build:client",
+    "build": "yarn workspaces foreach --all run build",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "husky install",
     "prepare": "husky install",

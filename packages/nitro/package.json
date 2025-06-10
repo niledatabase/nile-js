@@ -30,12 +30,11 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@niledatabase/server": "*"
-  },
-  "dependencies": {
+    "@niledatabase/server": "*",
     "h3": "^1"
   },
   "devDependencies": {
+    "h3": "^1",
     "tsup": "^8.5.0"
   }
 }
