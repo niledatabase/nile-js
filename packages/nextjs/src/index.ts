@@ -1,9 +1,9 @@
 import { Server, TENANT_COOKIE } from '@niledatabase/server';
-import { cookies, headers } from 'next/headers';
 
 export function nextJs(instance: Server) {
   return {
     onRequest: async () => {
+      const { cookies, headers } = await import('next/headers');
       instance.setContext(await headers());
       if (!instance.getContext().tenantId) {
         const cooks = await cookies();

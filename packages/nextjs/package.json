@@ -17,6 +17,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
+  "sideEffects": false,
   "scripts": {
     "build": "tsup src/index.ts"
   },
@@ -30,12 +31,11 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@niledatabase/server": "*"
-  },
-  "dependencies": {
+    "@niledatabase/server": "*",
     "next": "^15"
   },
   "devDependencies": {
+    "next": "^15.3.3",
     "tsup": "^8.5.0"
   }
 }

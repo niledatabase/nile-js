@@ -1,5 +1,4 @@
-import { Server } from '@niledatabase/server/Server';
-
+import { Server } from '../../Server';
 import { Config } from '../../utils/Config';
 
 export function bindHandleOnRequest(instance: Server) {
@@ -10,6 +9,9 @@ export function bindHandleOnRequest(instance: Server) {
   ) {
     if (config.extensions) {
       for (const create of config.extensions) {
+        if (typeof create !== 'function') {
+          return undefined;
+        }
         const ext = await create(instance);
         if (ext.onRequest) {
           const modified = await ext.onRequest(_init.request);

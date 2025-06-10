@@ -3267,10 +3267,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@niledatabase/nextjs@workspace:packages/nextjs"
   dependencies:
-    next: "npm:^15"
+    next: "npm:^15.3.3"
     tsup: "npm:^8.5.0"
   peerDependencies:
     "@niledatabase/server": "*"
+    next: ^15
   languageName: unknown
   linkType: soft
 
@@ -3282,6 +3283,7 @@ __metadata:
     tsup: "npm:^8.5.0"
   peerDependencies:
     "@niledatabase/server": "*"
+    h3: ^1
   languageName: unknown
   linkType: soft
 
@@ -15059,7 +15061,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^15":
+"next@npm:^15.3.3":
   version: 15.3.3
   resolution: "next@npm:15.3.3"
   dependencies:
