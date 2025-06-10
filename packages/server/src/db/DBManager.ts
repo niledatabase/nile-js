@@ -31,7 +31,7 @@ export default class DBManager {
     watchEvictPool(this.poolWatcherFn);
   }
   poolWatcher = (config: NileConfig) => (id: undefined | null | string) => {
-    const { info, warn } = Logger(config, '[DBManager]');
+    const { info, warn } = Logger(config)('[DBManager]');
     if (id && this.connections.has(id)) {
       info(`Removing ${id} from db connection pool.`);
       const connection = this.connections.get(id);
@@ -43,7 +43,7 @@ export default class DBManager {
   };
 
   getConnection = (config: NileConfig): pg.Pool => {
-    const { info } = Logger(config, '[DBManager]');
+    const { info } = Logger(config)('[DBManager]');
     const id = this.makeId(config.tenantId, config.userId);
 
     const existing = this.connections.get(id);
@@ -64,7 +64,7 @@ export default class DBManager {
   };
 
   clear = (config: NileConfig) => {
-    const { info } = Logger(config, '[DBManager]');
+    const { info } = Logger(config)('[DBManager]');
     info(`Clearing all connections ${this.connections.size}`);
     this.cleared = true;
     this.connections.forEach((connection) => {

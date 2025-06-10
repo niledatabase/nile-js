@@ -10,7 +10,7 @@ import { NileAuthRoutes } from '../api/utils/routes';
 import { User } from '../users/types';
 import { Config } from '../utils/Config';
 import { updateHeaders, updateTenantId } from '../utils/Event';
-import Logger, { LogReturn } from '../utils/Logger';
+import { Loggable } from '../utils/Logger';
 
 import obtainCsrf from './obtainCsrf';
 
@@ -21,11 +21,11 @@ type SignUpPayload = {
   newTenantName?: string;
 };
 export default class Auth {
-  #logger: LogReturn;
+  #logger: Loggable;
   #config: Config;
   constructor(config: Config) {
     this.#config = config;
-    this.#logger = Logger(config, '[auth]');
+    this.#logger = config.logger('[auth]');
   }
 
   getSession<T = JWT | ActiveSession | undefined>(

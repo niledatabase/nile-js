@@ -1,4 +1,3 @@
-import Logger from '../../utils/Logger';
 import users, { matches as matchesUsers } from '../routes/users';
 import tenants, { matches as matchesTenants } from '../routes/tenants';
 import me, { matches as matchesMe } from '../routes/me';
@@ -16,7 +15,7 @@ import { Routes } from '../types';
 import { Config } from '../../utils/Config';
 
 export default function PUTER(configRoutes: Routes, config: Config) {
-  const { info, warn } = Logger(config, '[PUT MATCHER]');
+  const { info, warn } = config.logger('[PUT MATCHER]');
   return async function PUT(req: Request) {
     // order matters for tenantInvites
     if (matchesInvite(configRoutes, req)) {

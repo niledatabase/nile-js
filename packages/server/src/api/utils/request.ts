@@ -4,7 +4,6 @@ import {
   TENANT_COOKIE,
 } from '../../utils/constants';
 import { Config } from '../../utils/Config';
-import Logger from '../../utils/Logger';
 
 import { DEFAULT_PREFIX } from './routes';
 
@@ -13,7 +12,7 @@ export default async function request(
   _init: RequestInit & { request: Request },
   config: Config
 ) {
-  const { debug, info, error } = Logger(config, '[REQUEST]');
+  const { debug, info, error } = config.logger('[REQUEST]');
   const { request, ...init } = _init;
   const requestUrl = new URL(request.url);
   const updatedHeaders = new Headers({});

@@ -8,12 +8,12 @@ describe('env vars', () => {
   beforeEach(() => {
     config = {
       config: {
-        logger: {
+        logger: () => ({
           info: jest.fn,
           warn: jest.fn,
           error: jest.fn,
           debug: jest.fn,
-        },
+        }),
       },
     };
   });

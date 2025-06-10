@@ -22,8 +22,7 @@ export async function NileExpressHandler(
   nile: Server,
   config?: HandlerConfig & NileConfig
 ) {
-  // eslint-disable-next-line no-console
-  const error = config?.logger?.error ?? console.error;
+  const error = config?.logger ? config?.logger('express').error : () => null;
   async function handler(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req: any,

@@ -5,7 +5,6 @@ import {
   urlMatches,
 } from '../../../../utils/routes';
 import { Routes } from '../../../../types';
-import Logger from '../../../../../utils/Logger';
 
 import { GET } from './GET';
 import { POST } from './POST';
@@ -13,10 +12,7 @@ import { POST } from './POST';
 const key = 'TENANT_USERS';
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger(
-    { ...config, debug: config.debug } as Config,
-    `[ROUTES][${key}]`
-  );
+  const { info } = config.logger(`[ROUTES][${key}]`);
 
   const yurl = new URL(request.url);
   const [, tenantId] = yurl.pathname.split('/').reverse();
@@ -65,10 +61,12 @@ export async function fetchTenantUsers(
       'Unable to fetch tenant, the tenantId context is missing. Call nile.setContext({ tenantId }), set nile.tenantId = "tenantId", or add it to the function call'
     );
   }
-  if (!isUUID(config.tenantId) && config.logger?.warn) {
-    config.logger?.warn(
-      'nile.tenantId is not a valid UUID. This may lead to unexpected behavior in your application.'
-    );
+  if (!isUUID(config.tenantId)) {
+    config
+      .logger('fetchTenantUsers')
+      .warn(
+        'nile.tenantId is not a valid UUID. This may lead to unexpected behavior in your application.'
+      );
   }
   const q = new URLSearchParams();
   if (params?.newTenantName) {

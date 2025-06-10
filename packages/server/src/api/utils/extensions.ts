@@ -7,6 +7,7 @@ export function bindHandleOnRequest(instance: Server) {
     _init: RequestInit & { request: Request },
     params: RequestInit
   ) {
+    const { debug } = config.logger('[EXTENSIONS]');
     if (config.extensions) {
       for (const create of config.extensions) {
         if (typeof create !== 'function') {
@@ -20,13 +21,11 @@ export function bindHandleOnRequest(instance: Server) {
             const cookie = modHeaders.get('cookie');
             if (cookie) {
               (params.headers as Headers).set('cookie', cookie);
-              config.logger.debug(
-                `extension ${ext.id ?? create.name} modified cookie`
-              );
+              debug(`${ext.id ?? create.name} modified cookie`);
             }
           }
         }
-        config.logger.debug(`extension ${ext.id ?? create.name} ran onRequest`);
+        debug(`${ext.id ?? create.name} ran onRequest`);
       }
     }
   };

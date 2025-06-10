@@ -1,13 +1,12 @@
 import pg from 'pg';
 
 import { Config } from '../utils/Config';
-import Logger from '../utils/Logger';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AllowAny = any;
 
 export function createProxyForPool(pool: pg.Pool, config: Config): pg.Pool {
-  const { info, error } = Logger(config, '[pool]');
+  const { info, error } = config.logger('[pool]');
   return new Proxy<pg.Pool>(pool, {
     get(target: AllowAny, property) {
       if (property === 'query') {

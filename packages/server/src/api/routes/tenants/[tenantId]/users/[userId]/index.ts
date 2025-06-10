@@ -2,7 +2,6 @@ import { Config } from '../../../../../../utils/Config';
 import { DefaultNileAuthRoutes, urlMatches } from '../../../../../utils/routes';
 import { Routes } from '../../../../../types';
 import auth from '../../../../../utils/auth';
-import Logger from '../../../../../../utils/Logger';
 
 import { DELETE } from './DELETE';
 import { PUT } from './PUT';
@@ -10,10 +9,7 @@ import { PUT } from './PUT';
 const key = 'TENANT_USER';
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger(
-    { ...config, debug: config.debug } as Config,
-    `[ROUTES][${key}]`
-  );
+  const { info } = config.logger(`[ROUTES][${key}]`);
   const session = await auth(request, config);
 
   if (!session) {

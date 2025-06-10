@@ -1,8 +1,8 @@
 import Handlers from '../../api/handlers';
 import { appRoutes } from '../../api/utils/routes';
 import { Routes } from '../../api/types';
-import { LoggerType, NilePoolConfig, NileConfig, Extension } from '../../types';
-import Logger from '../Logger';
+import { NilePoolConfig, NileConfig, Extension } from '../../types';
+import Logger, { LogReturn } from '../Logger';
 
 type ExtensionCtx = {
   handleOnRequest: (
@@ -40,7 +40,7 @@ export class Config {
   };
   extensionCtx: ExtensionCtx;
   extensions?: Extension[];
-  logger: LoggerType;
+  logger: LogReturn;
   /**
    * Stores the set tenant id from Server for use in sub classes
    */
@@ -81,8 +81,6 @@ export class Config {
 
   db: NilePoolConfig;
 
-  // api: ApiConfig;
-
   constructor(config?: ConfigConstructor) {
     this.routePrefix = config?.routePrefix ?? '/api';
     this.debug = config?.debug;
@@ -91,7 +89,7 @@ export class Config {
     this.extensionCtx = config?.extensionCtx as ExtensionCtx;
     this.serverOrigin = config?.origin ?? 'http://localhost:3000';
 
-    this.logger = config?.logger ?? Logger(this);
+    this.logger = Logger(config);
     const envVarConfig: EnvConfig = {
       config: { ...config, logger: this.logger },
     };

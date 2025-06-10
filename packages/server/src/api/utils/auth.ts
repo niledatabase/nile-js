@@ -1,5 +1,4 @@
 import { Config } from '../../utils/Config';
-import Logger from '../../utils/Logger';
 
 import request from './request';
 
@@ -51,7 +50,7 @@ export default async function auth(
   req: Request,
   config: Config
 ): Promise<null | undefined | ActiveSession> {
-  const { info, error } = Logger(config, '[nileauth]');
+  const { info, error } = config.logger('[nileauth]');
   info('checking auth');
 
   const sessionUrl = `${config.apiUrl}/auth/session`;
