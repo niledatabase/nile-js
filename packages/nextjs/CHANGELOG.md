@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.6...v5.0.0-alpha.7) (2025-06-11)
+
+### Bug Fixes
+
+- **server:** update request params from context mutation ([6b9cdf6](https://github.com/niledatabase/nile-js/commit/6b9cdf672f1ace1adfd197f47fd3c216d89520aa))
+
 # [5.0.0-alpha.6](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.5...v5.0.0-alpha.6) (2025-06-11)
 
 ### Bug Fixes
