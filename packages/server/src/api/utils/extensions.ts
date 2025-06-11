@@ -1,5 +1,6 @@
 import { Server } from '../../Server';
 import { Config } from '../../utils/Config';
+import { TENANT_COOKIE } from '../../utils/constants';
 
 export function bindHandleOnRequest(instance: Server) {
   return async function handleOnRequest(
@@ -15,17 +16,23 @@ export function bindHandleOnRequest(instance: Server) {
         }
         const ext = await create(instance);
         if (ext.onRequest) {
-          const modified = await ext.onRequest(_init.request);
-          if (modified?.headers) {
-            const modHeaders = new Headers(modified.headers);
-            const cookie = modHeaders.get('cookie');
+          await ext.onRequest(_init.request);
+          const updatedContext = instance.getContext();
+          if (updatedContext?.headers) {
+            const cookie = updatedContext.headers.get('cookie');
             if (cookie) {
               (params.headers as Headers).set('cookie', cookie);
-              debug(`${ext.id ?? create.name} modified cookie`);
+            }
+
+            if (updatedContext.tenantId) {
+              (params.headers as Headers).set(
+                TENANT_COOKIE,
+                String(updatedContext.headers.get(TENANT_COOKIE))
+              );
             }
           }
+          debug(`${ext.id ?? create.name} ran onRequest`);
         }
-        debug(`${ext.id ?? create.name} ran onRequest`);
       }
     }
   };

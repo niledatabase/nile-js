@@ -255,6 +255,7 @@ export class Server {
       this.#headers.set(key, value);
     }
 
+    this.#config.logger('[handleHeaders]').debug(JSON.stringify(merged));
     this.#config.headers = this.#headers;
   }
 

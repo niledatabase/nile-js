@@ -12,7 +12,11 @@ import { Config } from './utils/Config';
 
 // Mocks
 const mockWarn = jest.fn();
-jest.mock('./utils/Logger', () => () => () => ({ warn: mockWarn }));
+const mockDebug = jest.fn();
+jest.mock('./utils/Logger', () => () => () => ({
+  warn: mockWarn,
+  debug: mockDebug,
+}));
 jest.mock('./db');
 jest.mock('./users');
 jest.mock('./tenants');
