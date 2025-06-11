@@ -36,6 +36,7 @@ export default async function request(
   }
 
   updatedHeaders.set('host', requestUrl.host);
+
   if (config.callbackUrl) {
     const cbUrl = new URL(config.callbackUrl);
     debug(`Obtained origin from config.callbackUrl ${config.callbackUrl}`);
