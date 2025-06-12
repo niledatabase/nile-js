@@ -93,9 +93,9 @@ export default class Users {
       res = await verifyEmailAddress(this.#config, me, String(callbackUrl));
       return res as T;
     } catch {
-      this.#logger?.warn(
-        "Unable to verify email. The current user's email will be set to verified anyway. Be sure to configure emails for production."
-      );
+      const message = 'Unable to verify email.';
+      this.#logger?.warn(message);
+      res = new Response(message, { status: 400 });
     }
 
     if (bypassEmail) {
