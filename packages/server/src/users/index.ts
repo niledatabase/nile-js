@@ -84,16 +84,13 @@ export default class Users {
         ? options.callbackUrl
         : defaultCallbackUrl(this.#config).callbackUrl;
 
+    let res;
     try {
       const me = await this.getSelf();
       if (me instanceof Response) {
         return me as T;
       }
-      const res = await verifyEmailAddress(
-        this.#config,
-        me,
-        String(callbackUrl)
-      );
+      res = await verifyEmailAddress(this.#config, me, String(callbackUrl));
       return res as T;
     } catch {
       this.#logger?.warn(
@@ -102,13 +99,13 @@ export default class Users {
     }
 
     if (bypassEmail) {
-      return this.updateSelf({ emailVerified: true }, rawResponse);
+      res = this.updateSelf({ emailVerified: true }, rawResponse);
     }
 
     this.#logger.error(
       'Unable to verify email address. Configure your SMTP server in the console.'
     );
-    return undefined as T;
+    return res as T;
   }
 }
 

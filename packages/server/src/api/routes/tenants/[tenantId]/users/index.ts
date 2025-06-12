@@ -58,7 +58,7 @@ export async function fetchTenantUsers(
   const { body, params } = payload ?? {};
   if (!config.tenantId) {
     throw new Error(
-      'Unable to fetch tenant, the tenantId context is missing. Call nile.setContext({ tenantId }), set nile.tenantId = "tenantId", or add it to the function call'
+      "Unable to fetch the user's tenants, the tenantId context is missing. Call nile.setContext({ tenantId })"
     );
   }
   if (!isUUID(config.tenantId)) {
