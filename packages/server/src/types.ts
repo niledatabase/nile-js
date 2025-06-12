@@ -126,6 +126,12 @@ export type NileConfig = {
    * Functions to run at various points to make life easier
    */
   extensions?: Extension[];
+
+  /**
+   * In some cases, like when using REST context, we want to preserve the headers from the request,
+   * regardless of what an extension might do
+   */
+  preserveHeaders?: boolean;
 };
 
 export type NileDb = NilePoolConfig & { tenantId?: string };

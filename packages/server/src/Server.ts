@@ -37,6 +37,7 @@ export class Server {
   };
   #manager: DbManager;
   #headers: undefined | Headers;
+  #preserveHeaders: boolean;
 
   constructor(config?: NileConfig) {
     this.#config = new Config({
@@ -68,6 +69,7 @@ export class Server {
       withContext: handlersWithContext(this.#config),
     };
 
+    this.#preserveHeaders = config?.preserveHeaders ?? false;
     this.#paths = this.#config.paths;
 
     this.#config.tenantId = getTenantId({ config: this.#config });
@@ -165,6 +167,10 @@ export class Server {
       this.#config.userId = req.userId as string | undefined;
     }
 
+    if (req && typeof req === 'object' && 'preserveHeaders' in req) {
+      ok = true;
+      this.#preserveHeaders = Boolean(req.preserveHeaders);
+    }
     if (ok) {
       return;
     }
@@ -197,6 +203,7 @@ export class Server {
       headers: this.#headers,
       userId: this.#config.userId,
       tenantId: this.#config.tenantId,
+      preserveHeaders: this.#preserveHeaders,
     };
   }
 

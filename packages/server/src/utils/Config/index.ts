@@ -131,7 +131,6 @@ export class Config {
     };
 
     this.handlers = Handlers(this.routes as Routes, this);
-    // this.handlersWithContext = handlersWithContext(this.routes, this);
 
     this.paths = {
       get: [
