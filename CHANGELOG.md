@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2025-06-12)
+
+### Bug Fixes
+
+- **server:** preserve initial headers when making context requests ([05d0f9c](https://github.com/niledatabase/nile-js/commit/05d0f9c9b67be016f83b7a752b92111e8e7551f3))
+
 # [5.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.6...v5.0.0-alpha.7) (2025-06-11)
 
 ### Bug Fixes

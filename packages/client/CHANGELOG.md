@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2025-06-12)
+
+**Note:** Version bump only for package @niledatabase/client
+
 # [5.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.6...v5.0.0-alpha.7) (2025-06-11)
 
 **Note:** Version bump only for package @niledatabase/client
