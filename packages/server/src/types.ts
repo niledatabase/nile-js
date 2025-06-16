@@ -29,107 +29,109 @@ export type LoggerType = {
   error: (args: unknown | unknown[]) => void;
   debug: (args: unknown | unknown[]) => void;
 };
+
+/**
+ * Configuration options used by the {@link Server} class.
+ * Most values can be provided via environment variables if not set here.
+ */
 export type NileConfig = {
   /**
-   * The specific database id. Either passed in or figured out by NILEDB_API_URL
-   * process.env.NILEDB_ID
+   * Unique ID of the database.
+   * If omitted, the value is derived from `NILEDB_API_URL`.
+   * Environment variable: `NILEDB_ID`.
    */
   databaseId?: string;
 
   /**
-   * The user UUID to the database
-   * process.env.NILEDB_USER
+   * Database user used for authentication.
+   * Environment variable: `NILEDB_USER`.
    */
   user?: string;
 
   /**
-   * The password UUID to the database
-   * process.env.NILEDB_PASSWORD
+   * Password for the configured user.
+   * Environment variable: `NILEDB_PASSWORD`.
    */
   password?: string;
 
   /**
-   * The name of the database. Automatically obtained from NILEDB_POSTGRES_URL
-   * process.env.NILEDB_NAME
+   * Database name. Defaults to the name parsed from
+   * `NILEDB_POSTGRES_URL` when not provided.
+   * Environment variable: `NILEDB_NAME`.
    */
   databaseName?: string;
 
   /**
-   * A tenant id. Scopes requests to a specific tenant, both API and DB
-   * process.env.NILEDB_TENANT
+   * Tenant context used for scoping API and DB calls.
+   * Environment variable: `NILEDB_TENANT`.
    */
   tenantId?: string | null | undefined;
 
   /**
-   * A user id. Possibly not the logged in user, used for setting database context (nile.user_id)
-   * Generally speaking, this wouldn't be used for authentication, and in some cases simply won't do anything on some endpoints
+   * Optional user identifier to apply when interacting with the database.
+   * In most cases nile-auth injects the logged in user automatically so this
+   * value rarely needs to be specified directly. It can be useful when
+   * performing administrative actions on behalf of another user.
    */
   userId?: string | null | undefined;
-  /**
-   * Shows a bunch of logging on the server side to see what's being done between the sdk and nile-auth
-   */
+  /** Enable verbose logging of SDK behaviour. */
   debug?: boolean;
 
   /**
-   * DB configuration overrides. Environment variables are the way to go, but maybe you need something more
+   * Optional Postgres connection configuration.
+   * Environment variables will be used for any values not set here.
    */
   db?: NilePoolConfig;
 
-  /**
-   * Some kind of logger if you want to send to an external service
-   */
+  /** Custom logger implementation. */
   logger?: LogReturn;
 
   /**
-   * The configuration value that maps to `NILEDB_API_URL` - its going to be nile-auth (or similar service)
+   * Base URL for nile-auth requests.
+   * Environment variable: `NILEDB_API_URL`.
    */
   apiUrl?: string | undefined;
 
   /**
-   * Ignore client callbackUrls by setting this.
-   * You can force the callback URL server side to be sure nile-auth redirects to whatever location.
+   * Override the client provided callback URL during authentication.
+   * Environment variable: `NILEDB_CALLBACK_URL`.
    */
   callbackUrl?: string | undefined;
 
-  /**
-   * Need to override some routes? Change it here
-   */
+  /** Override default API routes. */
   routes?: Partial<Routes>;
 
-  /**
-   * don't like the default `/api`? change it here
-   */
+  /** Prefix applied to all generated routes. */
   routePrefix?: string | undefined;
 
   /**
-   * In some cases, you may want to force secure cookies.
-   * The SDK handles this for you, but might be necessary in some firewall / internal cases
-   * Defaults to true if you're in production
+   * Force usage of secure cookies when communicating with nile-auth.
+   * Defaults to `true` when `NODE_ENV` is `production`.
+   * Environment variable: `NILEDB_SECURECOOKIES`.
    */
   secureCookies?: boolean;
 
   /**
-   * The origin for the requests.
-   * Allows the setting of the callback origin to a random FE
-   * eg FE localhost:3001 -> BE: localhost:5432 would set to localhost:3001 to be sure nile-auth uses that.
-   * In full stack cases, will just be the `host` header of the incoming request, which is used by default
-   * It is also important to set this when dealing with secure cookies. Calling via server side needs to know if TLS is being used so that nile-auth knows which cookies to be sent.
+   * Origin for requests made to nile-auth. This controls where users are
+   * redirected after authentication. For single-page apps running on a
+   * different port than the API, set this to the front-end origin
+   * (e.g. `http://localhost:3001`). In a full-stack setup the value defaults
+   * to the `host` header of the incoming request. When using secure cookies on
+   * server-to-server calls, explicitly setting the origin ensures nile-auth
+   * knows whether TLS is being used and which cookies to send.
    */
   origin?: null | undefined | string;
 
   /**
-   * Set the headers to use in API requests.
-   * The `cookie` would be expected if you are setting this, else most calls will be unauthorized
+   * Additional headers sent with every API request.
+   * Include a `cookie` header to forward session information.
    */
   headers?: null | Headers | Record<string, string>;
-  /**
-   * Functions to run at various points to make life easier
-   */
+  /** Hooks executed before and after each request. */
   extensions?: Extension[];
 
   /**
-   * In some cases, like when using REST context, we want to preserve the headers from the request,
-   * regardless of what an extension might do
+   * Preserve incoming request headers when running extensions.
    */
   preserveHeaders?: boolean;
 };
