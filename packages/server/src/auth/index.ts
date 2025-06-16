@@ -20,14 +20,38 @@ type SignUpPayload = {
   tenantId?: string;
   newTenantName?: string;
 };
+/**
+ * Utility class that wraps the server side authentication endpoints.
+ *
+ * The methods in this class call the `fetch*` helpers which are generated
+ * from the OpenAPI specification. Those helpers interact with routes under
+ * the `/api/auth` prefix such as `/session`, `/signin`, `/signout` and others.
+ * By reusing them here we provide a higher level interface for frameworks to
+ * manage user authentication.
+ */
 export default class Auth {
   #logger: Loggable;
   #config: Config;
+  /**
+   * Create an Auth helper.
+   *
+   * @param config - runtime configuration used by the underlying fetch helpers
+   *   such as `serverOrigin`, `routePrefix` and default headers.
+   */
   constructor(config: Config) {
     this.#config = config;
     this.#logger = config.logger('[auth]');
   }
-
+  /**
+   * Retrieve the currently active session from the API.
+   *
+   * Internally this issues a `GET` request to `/api/auth/session` via
+   * {@link fetchSession}. If `rawResponse` is `true` the raw {@link Response}
+   * object is returned instead of the parsed JSON.
+   *
+   * @template T Return type for the parsed session.
+   * @param rawResponse - set to `true` to get the raw {@link Response} object.
+   */
   getSession<T = JWT | ActiveSession | undefined>(
     rawResponse?: false
   ): Promise<T>;
@@ -49,13 +73,31 @@ export default class Auth {
       return res;
     }
   }
-
+  /**
+   * Acquire a CSRF token for subsequent authenticated requests.
+   *
+   * Issues a `GET` to `/api/auth/csrf` via {@link obtainCsrf}. When the call
+   * succeeds the returned headers are merged into the current configuration so
+   * future requests include the appropriate cookies.
+   *
+   * @param rawResponse - when `true`, skip JSON parsing and return the raw
+   *   {@link Response}.
+   */
   async getCsrf<T = Response | JSON>(rawResponse?: false): Promise<T>;
   async getCsrf(rawResponse: true): Promise<Response>;
   async getCsrf<T = Response | JSON>(rawResponse = false) {
     return await obtainCsrf<T>(this.#config, rawResponse);
   }
-
+  /**
+   * List all configured authentication providers.
+   *
+   * This calls `/api/auth/providers` using {@link fetchProviders} to retrieve
+   * the available provider configuration. Providers are returned as an object
+   * keyed by provider name.
+   *
+   * @param rawResponse - when true, return the {@link Response} instead of the
+   *   parsed JSON.
+   */
   async listProviders(rawResponse: true): Promise<Response>;
   async listProviders<T = { [key: string]: Provider }>(
     rawResponse?: false
@@ -73,7 +115,12 @@ export default class Auth {
       return res;
     }
   }
-
+  /**
+   * Sign the current user out by calling `/api/auth/signout`.
+   *
+   * The CSRF token is fetched automatically and the stored cookies are cleared
+   * from the internal configuration once the request completes.
+   */
   async signOut(): Promise<Response> {
     // check for csrf header, maybe its already there?
     const csrfRes = await this.getCsrf();
@@ -94,9 +141,17 @@ export default class Auth {
   }
 
   /**
-   * signUp only works with email + password
-   * @param payload
-   * @param rawResponse
+   * Create a new user account and start a session.
+   *
+   * This method posts to the `/api/signup` endpoint using
+   * {@link fetchSignUp}. Only the credential provider is supported; a valid
+   * email and password must be supplied. On success the returned session token
+   * is stored in the headers used for subsequent requests.
+   *
+   * @param payload - email and password along with optional tenant
+   *   information.
+   * @param rawResponse - when `true` return the raw {@link Response} rather
+   *   than the parsed {@link User} object.
    */
   async signUp(payload: SignUpPayload, rawResponse: true): Promise<Response>;
   async signUp<T = User | Response>(payload: SignUpPayload): Promise<T>;
@@ -165,6 +220,13 @@ export default class Auth {
     }
   }
 
+  /**
+   * Request a password reset email.
+   *
+   * Sends a `POST` to `/api/auth/password-reset` with the provided email and
+   * optional callback information. The endpoint responds with a redirect URL
+   * which is returned as a {@link Response} object.
+   */
   async forgotPassword(req: {
     email: string;
     callbackUrl?: string;
@@ -204,6 +266,16 @@ export default class Auth {
     return data;
   }
 
+  /**
+   * Complete a password reset.
+   *
+   * This workflow expects a token obtained from {@link forgotPassword}. The
+   * function performs a POST/GET/PUT sequence against
+   * `/api/auth/password-reset` as described in the OpenAPI specification.
+   *
+   * @param req - either a {@link Request} with a JSON body or an object
+   *   containing the necessary fields.
+   */
   async resetPassword(
     req:
       | Request
@@ -310,6 +382,12 @@ export default class Auth {
 
     return res;
   }
+  /**
+   * Low level helper used by {@link signIn} to complete provider flows.
+   *
+   * Depending on the provider this issues either a GET or POST request to
+   * `/api/auth/callback/{provider}` via {@link fetchCallback}.
+   */
   async callback(provider: ProviderName, body?: string | Request) {
     if (body instanceof Request) {
       this.#config.headers = body.headers;
@@ -324,10 +402,14 @@ export default class Auth {
     return await fetchCallback(this.#config, provider, body);
   }
   /**
-   * The return value from this will be a redirect for the client
-   * In most cases, you should forward the response directly to the client
-   * @param payload
-   * @param rawResponse
+   * Sign a user in with one of the configured providers.
+   *
+   * Internally this posts to `/api/auth/signin/{provider}` and follows the
+   * provider callback flow as documented in the OpenAPI spec. When using the
+   * credential provider an email and password must be supplied.
+   *
+   * @param payload - request body or credential object
+   * @param rawResponse - return the raw {@link Response} instead of parsed JSON
    */
   async signIn<T = Response>(
     provider: ProviderName,
@@ -466,6 +548,9 @@ export default class Auth {
   }
 }
 
+/**
+ * Extract the CSRF cookie from a set of headers.
+ */
 export function parseCSRF(headers?: Headers) {
   let cookie = headers?.get('set-cookie');
   if (!cookie) {
@@ -478,6 +563,9 @@ export function parseCSRF(headers?: Headers) {
   return token;
 }
 
+/**
+ * Extract the callback cookie from a set of headers.
+ */
 export function parseCallback(headers?: Headers) {
   let cookie = headers?.get('set-cookie');
   if (!cookie) {
@@ -490,6 +578,9 @@ export function parseCallback(headers?: Headers) {
   return token;
 }
 
+/**
+ * Extract the session token cookie from a set of headers.
+ */
 export function parseToken(headers?: Headers) {
   let authCookie = headers?.get('set-cookie');
   if (!authCookie) {
@@ -502,6 +593,9 @@ export function parseToken(headers?: Headers) {
     /((__Secure-)?nile\.session-token=[^;]+)/.exec(authCookie) ?? [];
   return token;
 }
+/**
+ * Internal helper for the password reset flow.
+ */
 function parseResetToken(headers: Headers | void): string | void {
   let authCookie = headers?.get('set-cookie');
   if (!authCookie) {
@@ -514,6 +608,11 @@ function parseResetToken(headers: Headers | void): string | void {
   return token;
 }
 
+/**
+ * Determine the default callback and redirect URLs from the configured
+ * headers. These are used during password reset flows when no explicit
+ * callback is provided.
+ */
 export function defaultCallbackUrl({ config }: { config: Config }) {
   let cb = null;
   let redirect = null;
