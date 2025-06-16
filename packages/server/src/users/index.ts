@@ -9,11 +9,11 @@ import { parseCallback } from '../auth';
 import { User } from './types';
 
 /**
- * Helper functions for interacting with the currently authenticated user.
+ * Convenience wrapper around the user endpoints.
  *
- * These helpers wrap the {@link fetchMe} utility which calls the
- * <code>/api/me</code> endpoint. The underlying route definitions contain
- * OpenAPI descriptions that document the behaviour of each request.
+ * Requests are issued via {@link fetchMe} against `/api/me`. The Swagger
+ * definitions for these APIs live in
+ * `packages/server/src/api/routes/me/index.ts`.
  */
 export default class Users {
   #config: Config;
@@ -28,15 +28,13 @@ export default class Users {
   }
 
   /**
-   * Update information about the authenticated user using
-   * a <code>PUT</code> request to <code>/api/me</code>.
+   * Update the current user via `PUT /api/me`.
    *
-   * See the <code>updateSelf</code> operation in the OpenAPI
-   * specification for the full list of supported fields.
+   * The OpenAPI description for this endpoint can be found in
+   * `packages/server/src/api/routes/me/index.ts` under `updateSelf`.
    *
-   * @param req - The profile fields to update.
-   * @param [rawResponse] - When <code>true</code>, the raw {@link Response}
-   *   from <code>fetch</code> is returned instead of the parsed payload.
+   * @param req - Partial user fields to send.
+   * @param [rawResponse] - When `true`, return the raw {@link Response}.
    */
   async updateSelf<T = User[] | Response>(
     req: Partial<
@@ -59,13 +57,11 @@ export default class Users {
   }
 
   /**
-   * Soft delete the authenticated user via <code>DELETE /api/me</code> and
-   * clear authentication headers.
+   * Remove the current user using `DELETE /api/me`.
    *
-   * The removal only happens server side; client state is not automatically
-   * cleaned up other than resetting the stored headers.
-   *
-   * @returns The {@link Response} from the server.
+   * After the request the authentication headers are cleared with
+   * {@link updateHeaders}. The OpenAPI docs for this route are in
+   * `packages/server/src/api/routes/me/index.ts` under `removeSelf`.
    */
   async removeSelf(): Promise<Response> {
     const me = await this.getSelf();
@@ -78,11 +74,12 @@ export default class Users {
   }
 
   /**
-   * Retrieve information for the authenticated user using
-   * <code>GET /api/me</code>.
+   * Retrieve the current user with `GET /api/me`.
    *
-   * @param [rawResponse] - When <code>true</code>, returns the raw
-   *   {@link Response} instead of the parsed {@link User} object.
+   * OpenAPI for this endpoint resides in
+   * `packages/server/src/api/routes/me/index.ts` (`getSelf`).
+   *
+   * @param [rawResponse] - When `true` return the raw {@link Response}.
    */
   async getSelf<T = User | Response>(): Promise<T>;
   async getSelf(rawResponse?: true): Promise<Response>;
@@ -100,17 +97,16 @@ export default class Users {
   }
 
   /**
-   * Initiate an email verification flow for the authenticated user.
+   * Initiate an email verification flow.
    *
-   * A <code>POST</code> request is sent to <code>/auth/verify-email</code>
-   * after retrieving the current user via {@link getSelf}. If the
-   * <code>bypassEmail</code> flag is provided, the user's
-   * <code>emailVerified</code> field is updated instead of sending an email.
+   * The current user is fetched and then `/auth/verify-email` is called.
+   * In development or when `bypassEmail` is set, the user's
+   * `emailVerified` field is updated instead of sending an email.
+   * See `packages/server/src/api/routes/auth/verify-email.ts` for the
+   * underlying request.
    *
-   * @param [options] - Optional flags controlling email delivery and the
-   *   callback URL used for verification.
-   * @param [rawResponse] - When <code>true</code> the raw
-   *   {@link Response} is returned.
+   * @param [options] - Flags controlling bypass behaviour and callback URL.
+   * @param [rawResponse] - When `true` return the raw {@link Response}.
    */
   async verifySelf<T = void>(): Promise<T>;
   async verifySelf(rawResponse: true): Promise<Response>;
@@ -161,13 +157,12 @@ export default class Users {
 }
 
 /**
- * Send a verification email for the given user via the
- * <code>/auth/verify-email</code> endpoint.
+ * Issue a POST to `/auth/verify-email` for the supplied user.
  *
- * @internal
- * @param config - Current configuration instance.
- * @param user - User being verified.
- * @param callback - Callback URL to use for verification.
+ * @internal This helper is shared by {@link verifySelf}.
+ * @param config - Active configuration.
+ * @param user - The user to verify.
+ * @param callback - Callback URL to include in the request body.
  */
 async function verifyEmailAddress(
   config: Config,
@@ -194,12 +189,10 @@ async function verifyEmailAddress(
 }
 
 /**
- * Extract a callback URL from the <code>nile.callback-url</code> cookie in the
- * provided configuration headers.
+ * Derive the `callbackUrl` from the `nile.callback-url` cookie if present.
  *
- * @param config - Current configuration instance.
- * @returns Object containing the found <code>callbackUrl</code> or
- *   <code>null</code>.
+ * @param config - Configuration whose headers may contain the cookie.
+ * @returns An object with the parsed `callbackUrl` or `null`.
  */
 export function defaultCallbackUrl(config: Config) {
   let cb = null;
