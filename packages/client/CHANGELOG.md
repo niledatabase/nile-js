@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.10](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.9...v5.0.0-alpha.10) (2025-06-16)
+
+### Bug Fixes
+
+- correct signIn helper function name ([5ea4946](https://github.com/niledatabase/nile-js/commit/5ea494631b8cf5d312fa1eb5608d506a200c7ee7))
+
 # [5.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2025-06-16)
 
 ### Bug Fixes
