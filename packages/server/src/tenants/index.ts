@@ -17,6 +17,13 @@ import { Config } from '../utils/Config';
 
 import { Invite, Tenant } from './types';
 
+/**
+ * Convenience wrapper around the tenant endpoints. These methods call
+ * the `fetch*` helpers in `packages/server/src/api/routes/tenants` which
+ * in turn hit routes such as `/api/tenants` and `/api/tenants/{tenantId}`.
+ * See those files for the Swagger definitions.
+ */
+
 type ReqContext = { userId?: string; tenantId?: string };
 type JoinTenantRequest = string | ReqContext | { id: string };
 
@@ -38,6 +45,11 @@ export default class Tenants {
     },
     rawResponse?: boolean
   ): Promise<T>;
+  /**
+   * Create a new tenant using `POST /api/tenants`.
+   * See `packages/server/src/api/routes/tenants/POST.ts` for the
+   * `createTenant` operation definition.
+   */
   async create<T = Tenant | Response | undefined>(
     req: { name: string; id?: string } | string,
     rawResponse?: boolean
@@ -330,6 +342,9 @@ async function responseHandler(res: Response, rawResponse?: boolean) {
   }
 }
 
+/**
+ * Parse the `nile.callback-url` cookie to determine a callback and redirect.
+ */
 export function defaultCallbackUrl(config: Config) {
   let cb = null;
   let redirect = null;
