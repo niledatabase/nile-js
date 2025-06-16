@@ -426,7 +426,7 @@ export default class Auth {
       }
       if (urlError) {
         error('Unable to log user in', { error: urlError });
-        return undefined as T;
+        return new Response(urlError, { status: signInRes.status }) as T;
       }
     }
     if (!token) {

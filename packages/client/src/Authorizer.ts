@@ -175,8 +175,14 @@ export default class Authorizer {
       if (res?.ok) {
         const data = await res.json();
         this.state.loading = false;
-        if (!res.ok) throw data;
         return Object.keys(data).length > 0 ? data : undefined;
+      } else {
+        const error = await errorHandler?.text();
+        if (error) {
+          const updatedUrl = new URL(url);
+          updatedUrl.searchParams.set('error', error);
+          return { url: updatedUrl.toString() } as T;
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -189,10 +195,9 @@ export default class Authorizer {
         } else {
           const error = await errorHandler?.text();
           if (error) {
-            if (errorHandler) {
-              const urlSearchParams = new URLSearchParams({ error });
-              return { url: `${url}?${urlSearchParams}` } as T;
-            }
+            const updatedUrl = new URL(url);
+            updatedUrl.searchParams.set('error', error);
+            return { url: updatedUrl.toString() } as T;
           }
         }
       }
