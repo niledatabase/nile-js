@@ -69,7 +69,7 @@ export default class Authorizer {
     try {
       const storageEvent = event === 'storage';
       if (storageEvent || !this.state.session) {
-        this.state.getSession = await this.getSession;
+        this.state.getSession = this.getSession.bind(this);
         this.state.lastSync = now();
       }
       if (!event || this.state.session == null || now() < this.state.lastSync) {
