@@ -719,7 +719,7 @@ export const signOut: typeof authorizer.signOut = async function signOut(
 ) {
   return auth.signOut(options);
 };
-export const signIn: typeof authorizer.signIn = async function signOut(
+export const signIn: typeof authorizer.signIn = async function signIn(
   provider,
   options,
   authParams
