@@ -74,8 +74,22 @@ export default class Tenants {
     }
   }
 
+  /**
+   * Delete a tenant using `DELETE /api/tenants/{tenantId}`.
+   * The OpenAPI operation is defined in
+   * `packages/server/src/api/routes/tenants/[tenantId]/DELETE.ts`.
+   */
   delete<T = Response>(id?: string): Promise<T>;
+  /**
+   * Delete a tenant using `DELETE /api/tenants/{tenantId}`.
+   * See `packages/server/src/api/routes/tenants/[tenantId]/DELETE.ts`.
+   */
   delete<T = Response>(payload: { id: string }): Promise<T>;
+  /**
+   * Remove a tenant via `DELETE /api/tenants/{tenantId}`.
+   *
+   * @param req - The tenant to remove or context containing the id.
+   */
   async delete<T = Response>(
     req: NileRequest<void> | { id?: string } | string | Tenant
   ): Promise<T | Response> {
@@ -96,6 +110,12 @@ export default class Tenants {
     payload: { id: string },
     rawResponse?: boolean
   ): Promise<T>;
+  /**
+   * Fetch details for a tenant using `GET /api/tenants/{tenantId}`.
+   *
+   * @param req - Tenant identifier or context.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
   async get<T = Tenant | Response>(
     req: boolean | { id: string } | string | void,
     rawResponse?: boolean
@@ -118,6 +138,12 @@ export default class Tenants {
   }
 
   async update(req: Partial<Tenant>, rawResponse: true): Promise<Response>;
+  /**
+   * Modify a tenant using `PUT /api/tenants/{tenantId}`.
+   *
+   * @param req - Tenant data to update. Can include an id.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
   update<T = Tenant | Response | undefined>(
     req: Partial<Tenant>,
     rawResponse?: boolean
@@ -146,6 +172,10 @@ export default class Tenants {
 
   list<T = Tenant[] | Response>(): Promise<T>;
   list(rawResponse: true): Promise<Response>;
+  /**
+   * List tenants for the current user via `GET /api/tenants`.
+   * See `packages/server/src/api/routes/tenants/GET.ts` for details.
+   */
   async list<T = Tenant[] | Response>(
     req: boolean | NileRequest<void> | Headers
   ): Promise<T | Response | undefined> {
@@ -160,6 +190,11 @@ export default class Tenants {
       return res;
     }
   }
+  /**
+   * Leave the current tenant using `DELETE /api/tenants/{tenantId}/users/{userId}`.
+   *
+   * @param [req] - Optionally specify the tenant id to leave.
+   */
   async leaveTenant<T = Response>(
     req?: string | { tenantId: string }
   ): Promise<T> {
@@ -181,6 +216,12 @@ export default class Tenants {
   }
 
   addMember(req: JoinTenantRequest, rawResponse: true): Promise<Response>;
+  /**
+   * Add a user to a tenant via `PUT /api/tenants/{tenantId}/users/{userId}`.
+   *
+   * @param req - User and tenant identifiers or context.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
   addMember<T = User | Response>(
     req: JoinTenantRequest,
     rawResponse?: boolean
@@ -199,6 +240,12 @@ export default class Tenants {
     return responseHandler(res, rawResponse);
   }
 
+  /**
+   * Remove a user from a tenant with `DELETE /api/tenants/{tenantId}/users/{userId}`.
+   *
+   * @param req - User and tenant identifiers or context.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
   async removeMember(
     req: JoinTenantRequest,
     rawResponse?: boolean
@@ -207,6 +254,12 @@ export default class Tenants {
     const res = await fetchTenantUser(this.#config, 'DELETE');
     return responseHandler(res, rawResponse);
   }
+  /**
+   * List users for a tenant via `GET /api/tenants/{tenantId}/users`.
+   *
+   * @param [req] - Tenant identifier or context.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
   users<T = User[] | Response>(
     req?: boolean | { tenantId?: string },
     rawResponse?: boolean
@@ -225,12 +278,21 @@ export default class Tenants {
     ) as T;
   }
 
+  /**
+   * List invites for the current tenant via `GET /api/tenants/{tenantId}/invites`.
+   */
   async invites<T = Invite[] | Response>(): Promise<T> {
     const res = await fetchInvites(this.#config);
 
     return responseHandler(res);
   }
 
+  /**
+   * Send an invitation via `POST /api/tenants/{tenantId}/invite`.
+   *
+   * @param req - Email and optional callback/redirect URLs.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
   async invite<T = Response | Invite>(
     req: string | { email: string; callbackUrl?: string; redirectUrl?: string },
     rawResponse?: boolean
@@ -280,6 +342,12 @@ export default class Tenants {
     return responseHandler(res, rawResponse);
   }
 
+  /**
+   * Accept an invite using `PUT /api/tenants/{tenantId}/invite`.
+   *
+   * @param req - Identifier and token from the invite email.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
   async acceptInvite<T = Response>(
     req?: { identifier: string; token: string; redirectUrl?: string },
     rawResponse?: boolean
@@ -303,6 +371,11 @@ export default class Tenants {
     return responseHandler(res, rawResponse);
   }
 
+  /**
+   * Delete a pending invite using `DELETE /api/tenants/{tenantId}/invite/{inviteId}`.
+   *
+   * @param req - Identifier of the invite to remove.
+   */
   async deleteInvite<T = Response>(req: string | { id: string }): Promise<T> {
     let id = '';
     if (typeof req === 'object') {
@@ -331,6 +404,12 @@ export default class Tenants {
   }
 }
 
+/**
+ * Handle the fetch response, optionally parsing JSON.
+ *
+ * @param res - Response from fetch.
+ * @param [rawResponse] - When true, return the response untouched.
+ */
 async function responseHandler(res: Response, rawResponse?: boolean) {
   if (rawResponse) {
     return res;
@@ -344,6 +423,9 @@ async function responseHandler(res: Response, rawResponse?: boolean) {
 
 /**
  * Parse the `nile.callback-url` cookie to determine a callback and redirect.
+ *
+ * @param config - Configuration whose headers may contain the cookie.
+ * @returns Parsed callback and redirect URLs.
  */
 export function defaultCallbackUrl(config: Config) {
   let cb = null;
