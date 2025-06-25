@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.14...v5.0.0-alpha.15) (2025-06-25)
+
+### Bug Fixes
+
+- **server:** add better extensions ([2dd7417](https://github.com/niledatabase/nile-js/commit/2dd741726e2336b042d06a36ad091e6749098454))
+
 # [5.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.13...v5.0.0-alpha.14) (2025-06-16)
 
 **Note:** Version bump only for package @niledatabase/packages
