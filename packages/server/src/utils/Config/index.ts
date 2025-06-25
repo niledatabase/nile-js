@@ -1,15 +1,30 @@
 import Handlers from '../../api/handlers';
 import { appRoutes } from '../../api/utils/routes';
 import { Routes } from '../../api/types';
-import { NilePoolConfig, NileConfig, Extension } from '../../types';
+import {
+  NilePoolConfig,
+  NileConfig,
+  Extension,
+  ExtensionState,
+  RouteFunctions,
+} from '../../types';
 import Logger, { LogReturn } from '../Logger';
 
-type ExtensionCtx = {
-  handleOnRequest: (
+export type ConfigurablePaths = {
+  get: string[];
+  post: string[];
+  delete: string[];
+  put: string[];
+};
+export type ExtensionReturns = void | Response | Request | ExtensionState;
+export type ExtensionCtx = {
+  runExtensions: <T = ExtensionReturns>(
+    toRun: ExtensionState,
     config: Config,
-    _init: RequestInit & { request: Request },
-    params: RequestInit
-  ) => Promise<void>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params: any,
+    _init?: RequestInit & { request: Request }
+  ) => Promise<T>;
 };
 type ConfigConstructor = NileConfig & { extensionCtx?: ExtensionCtx };
 import {
@@ -26,18 +41,8 @@ import {
 
 export class Config {
   routes: Routes;
-  handlers: {
-    GET: (req: Request) => Promise<void | Response>;
-    POST: (req: Request) => Promise<void | Response>;
-    DELETE: (req: Request) => Promise<void | Response>;
-    PUT: (req: Request) => Promise<void | Response>;
-  };
-  paths: {
-    get: string[];
-    post: string[];
-    delete: string[];
-    put: string[];
-  };
+  handlers: RouteFunctions;
+  paths: ConfigurablePaths;
   extensionCtx: ExtensionCtx;
   extensions?: Extension[];
   logger: LogReturn;

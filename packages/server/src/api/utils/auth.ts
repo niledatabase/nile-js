@@ -59,16 +59,13 @@ export default async function auth(
   req.headers.delete('content-length');
 
   const res = await request(sessionUrl, { request: req }, config);
-  if (!res) {
-    info('no session found');
-    return undefined;
-  }
-  info('session active');
   try {
     const session = await new Response(res.body).json();
     if (Object.keys(session).length === 0) {
+      info('no session found');
       return undefined;
     }
+    info('session active');
     return session;
   } catch (e) {
     error(e);

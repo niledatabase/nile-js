@@ -99,7 +99,7 @@ describe('Server', () => {
   });
 
   it('should return configured paths', () => {
-    const paths = server.getPaths();
+    const { paths } = server;
     expect(typeof paths).toBe('object');
   });
 

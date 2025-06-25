@@ -2,6 +2,15 @@ import { NileConfig } from '../../types';
 
 import { Config } from '.';
 
+jest.mock('../Logger', () => ({
+  __esModule: true,
+  default: jest.fn(() => () => ({
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  })),
+}));
+
 describe('Config', () => {
   const ORIGINAL_ENV = process.env;
 

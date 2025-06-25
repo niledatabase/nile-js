@@ -1,54 +1,166 @@
-import { Server } from '@niledatabase/server';
+import express from 'express';
+import { ExtensionState, Server } from '@niledatabase/server';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 
-import { expressPaths } from '.';
+import { express as expressExtension, cleaner } from '.';
 
-describe('express', () => {
-  it('cleans express paths', () => {
-    const nile = new Server({
-      apiUrl: 'http://localhost:3000',
-      user: '123',
-      password: '123',
-      databaseName: '123',
+describe('express extension', () => {
+  let app;
+  let instance: Server;
+
+  beforeEach(() => {
+    app = express();
+    app.use(express.json());
+
+    instance = {
+      logger: () => ({
+        error: jest.fn(),
+        debug: jest.fn(),
+        warn: jest.fn(),
+        info: jest.fn(),
+      }),
+      handlers: {
+        GET: jest
+          .fn()
+          .mockResolvedValue(
+            new Response(JSON.stringify({ msg: 'GET OK' }), { status: 200 })
+          ),
+        POST: jest
+          .fn()
+          .mockResolvedValue(
+            new Response(JSON.stringify({ msg: 'POST OK' }), { status: 201 })
+          ),
+      },
+      setContext: jest.fn(),
+      paths: {
+        get: ['/test/{id}'],
+        post: ['/submit/{formId}'],
+        put: [],
+        delete: [],
+      },
+    } as unknown as Server;
+  });
+
+  describe('cleaner()', () => {
+    it('replaces {param} with :param', () => {
+      expect(cleaner('/api/{tenantId}/resource')).toBe(
+        '/api/:tenantId/resource'
+      );
     });
-    const { paths } = expressPaths(nile);
-    expect(Object.keys(paths)).toEqual(['get', 'post', 'put', 'delete']);
-    expect(paths.delete).toEqual([
-      '/api/tenants/:tenantId/users/:userId',
-      '/api/tenants/:tenantId',
-    ]);
-    expect(paths.post).toEqual([
-      '/api/tenants/:tenantId/users',
-      '/api/signup',
-      '/api/users',
-      '/api/tenants',
-      '/api/auth/session',
-      '/api/auth/signin/:provider',
-      '/api/auth/reset-password',
-      '/api/auth/providers',
-      '/api/auth/csrf',
-      '/api/auth/callback/:provider',
-      '/api/auth/signout',
-    ]);
-    expect(paths.put).toEqual([
-      '/api/tenants/:tenantId/users',
-      '/api/users',
-      '/api/tenants/:tenantId',
-      '/api/auth/reset-password',
-    ]);
-    expect(paths.get).toEqual([
-      '/api/me',
-      '/api/tenants/:tenantId/users',
-      '/api/tenants',
-      '/api/tenants/:tenantId',
-      '/api/auth/session',
-      '/api/auth/signin',
-      '/api/auth/providers',
-      '/api/auth/csrf',
-      '/api/auth/reset-password',
-      '/api/auth/callback',
-      '/api/auth/signout',
-      '/api/auth/verify-request',
-      '/api/auth/error',
-    ]);
+  });
+
+  describe('onSetContext', () => {
+    it('sets context from params and headers', () => {
+      const ext = expressExtension(instance);
+      const req = {
+        params: { tenantId: 'abc' },
+        headers: { 'x-foo': 'bar' },
+      } as unknown as ExpressRequest;
+      const res = {} as unknown as ExpressResponse;
+      const next = jest.fn();
+
+      ext.onSetContext(req, res, next);
+
+      expect(instance.setContext).toHaveBeenCalledWith({ tenantId: 'abc' });
+      expect(instance.setContext).toHaveBeenCalledWith(req.headers);
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe('onConfigure', () => {
+    it('cleans up path params and updates instance.paths', () => {
+      const ext = expressExtension(instance);
+      ext.onConfigure();
+      expect(instance.paths).toEqual({
+        get: ['/test/:id'],
+        post: ['/submit/:formId'],
+        put: [],
+        delete: [],
+      });
+    });
+  });
+
+  describe('onHandleRequest', () => {
+    it('proxies GET request with JSON response', async () => {
+      const ext = expressExtension(instance);
+      const req = {
+        method: 'GET',
+        protocol: 'http',
+        get: () => 'localhost',
+        originalUrl: '/api/test',
+        headers: { cookie: 'a=b' },
+        body: {},
+      } as unknown as ExpressRequest;
+      const res = {
+        headersSent: false,
+        status: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        send: jest.fn(),
+      } as unknown as ExpressResponse;
+
+      const result = await ext.onHandleRequest(req, res);
+
+      expect(instance.setContext).toHaveBeenCalledWith(req.headers);
+      expect(instance.handlers.GET).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ msg: 'GET OK' });
+      expect(result).toBe(ExtensionState.onHandleRequest);
+    });
+
+    it('handles non-JSON response fallback', async () => {
+      (instance.handlers.GET as jest.Mock).mockResolvedValue(
+        new Response('Plain text body', { status: 200 })
+      );
+      const ext = expressExtension(instance);
+
+      const req = {
+        method: 'GET',
+        protocol: 'http',
+        get: () => 'localhost',
+        originalUrl: '/api/test',
+        headers: {},
+        body: {},
+      } as unknown as ExpressRequest;
+      const res = {
+        headersSent: false,
+        status: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        send: jest.fn(),
+      } as unknown as ExpressResponse;
+
+      await ext.onHandleRequest(req, res);
+
+      expect(res.send).toHaveBeenCalledWith('Plain text body');
+    });
+
+    it('does not re-send headers if already sent', async () => {
+      const ext = expressExtension(instance);
+
+      const req = {
+        method: 'GET',
+        protocol: 'http',
+        get: () => 'localhost',
+        originalUrl: '/api/test',
+        headers: {},
+        body: {},
+      } as unknown as ExpressRequest;
+      const res = {
+        headersSent: true,
+        status: jest.fn(),
+        set: jest.fn(),
+        json: jest.fn(),
+        send: jest.fn(),
+      } as unknown as ExpressResponse;
+
+      const result = await ext.onHandleRequest(req, res);
+
+      expect(res.status).not.toHaveBeenCalled();
+      expect(result).toBe(ExtensionState.onHandleRequest);
+    });
   });
 });

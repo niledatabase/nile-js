@@ -13,10 +13,30 @@ import invite, {
 import { handlePasswordReset, matchesPasswordReset } from '../routes/auth';
 import { Routes } from '../types';
 import { Config } from '../../utils/Config';
+import { ExtensionState } from '../../types';
 
 export default function PUTER(configRoutes: Routes, config: Config) {
-  const { info, warn } = config.logger('[PUT MATCHER]');
-  return async function PUT(req: Request) {
+  const { error, info, warn } = config.logger('[PUT MATCHER]');
+  return async function PUT(...params: unknown[]) {
+    const handledRequest = await config.extensionCtx?.runExtensions(
+      ExtensionState.onHandleRequest,
+      config,
+      params
+    );
+    // if this has been overridden, we don't do anything else.
+    // for express, when you do this, make a new internal instance that does not have
+    // `onHandleRequest`
+    if (handledRequest) {
+      return handledRequest;
+    }
+
+    // the default
+    const req = params[0] instanceof Request ? params[0] : null;
+    if (!req) {
+      error('Proxy requests failed, a Request object was not passed.');
+      return;
+    }
+
     // order matters for tenantInvites
     if (matchesInvite(configRoutes, req)) {
       info('matches tenant invite');

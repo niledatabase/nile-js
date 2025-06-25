@@ -4,7 +4,7 @@ export * from './tenants/types';
 export { JWT, ActiveSession, Providers } from './api/utils/auth';
 
 export { create as Nile, Server } from './Server';
-export { parseCSRF, parseCallback, parseToken } from './auth';
+export { parseCSRF, parseCallback, parseToken, parseResetToken } from './auth';
 export {
   TENANT_COOKIE,
   USER_COOKIE,

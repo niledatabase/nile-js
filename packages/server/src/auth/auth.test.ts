@@ -16,6 +16,14 @@ jest.mock('../api/routes/auth/signin');
 jest.mock('../api/routes/auth/signout');
 jest.mock('../api/routes/signup');
 jest.mock('../utils/Event');
+jest.mock('../utils/Logger', () => ({
+  __esModule: true,
+  default: jest.fn(() => () => ({
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  })),
+}));
 
 const mockHeaders = new Headers();
 mockHeaders.set(

@@ -1,7 +1,7 @@
 import pg from 'pg';
 
-import { NileConfig } from './types';
-import { Config } from './utils/Config';
+import { CTXHandlerType, Extension, NileConfig, RouteFunctions } from './types';
+import { Config, ConfigurablePaths } from './utils/Config';
 import { watchHeaders, watchTenantId, watchUserId } from './utils/Event';
 import DbManager from './db';
 import Users from './users';
@@ -10,10 +10,7 @@ import Auth from './auth';
 import { getTenantId } from './utils/Config/envVars';
 import Logger from './utils/Logger';
 import { HEADER_ORIGIN, HEADER_SECURE_COOKIES } from './utils/constants';
-import {
-  CTXHandlerType,
-  handlersWithContext,
-} from './api/handlers/withContext';
+import { handlersWithContext } from './api/handlers/withContext';
 import { getTenantFromHttp } from './utils/fetch';
 import { buildExtensionConfig } from './api/utils/extensions';
 
@@ -22,18 +19,8 @@ export class Server {
   tenants: Tenants;
   auth: Auth;
   #config: Config;
-  #handlers: {
-    GET: (req: Request) => Promise<void | Response>;
-    POST: (req: Request) => Promise<void | Response>;
-    DELETE: (req: Request) => Promise<void | Response>;
-    PUT: (req: Request) => Promise<void | Response>;
+  #handlers: RouteFunctions & {
     withContext: CTXHandlerType;
-  };
-  #paths: {
-    get: string[];
-    post: string[];
-    delete: string[];
-    put: string[];
   };
   #manager: DbManager;
   #headers: undefined | Headers;
@@ -44,6 +31,7 @@ export class Server {
       ...config,
       extensionCtx: buildExtensionConfig(this),
     });
+
     // watch first, they may mutate first
     watchTenantId((tenantId) => {
       if (tenantId !== this.#config.tenantId) {
@@ -70,7 +58,6 @@ export class Server {
     };
 
     this.#preserveHeaders = config?.preserveHeaders ?? false;
-    this.#paths = this.#config.paths;
 
     this.#config.tenantId = getTenantId({ config: this.#config });
     this.#manager = new DbManager(this.#config);
@@ -81,6 +68,20 @@ export class Server {
     this.users = new Users(this.#config);
     this.tenants = new Tenants(this.#config);
     this.auth = new Auth(this.#config);
+
+    // for `onConfigure, we run it, but after the full
+    if (config?.extensions) {
+      for (const create of config.extensions) {
+        if (typeof create !== 'function') {
+          continue;
+        }
+        const ext = create(this);
+        // we can only run this after config has a value, so we must wait, but we can't.
+        if (ext.onConfigure) {
+          ext.onConfigure();
+        }
+      }
+    }
   }
 
   get db(): pg.Pool & { clearConnections: () => void } {
@@ -91,6 +92,30 @@ export class Server {
         this.#manager.clear(this.#config);
       },
     });
+  }
+  get logger() {
+    return this.#config.logger;
+  }
+
+  get extensions() {
+    return {
+      remove: async (id: string) => {
+        if (!this.#config.extensions) return;
+
+        const resolved = this.#config.extensions.map((ext) => ext(this));
+        const index = resolved.findIndex((ext) => ext.id === id);
+        if (index !== -1) {
+          this.#config.extensions.splice(index, 1);
+        }
+        return resolved;
+      },
+      add: (extension: Extension) => {
+        if (!this.#config.extensions) {
+          this.#config.extensions = [];
+        }
+        this.#config.extensions.push(extension);
+      },
+    };
   }
 
   /**
@@ -118,13 +143,19 @@ export class Server {
 
     return this;
   }
-  getPaths() {
-    return this.#paths;
-  }
 
   get handlers() {
     return this.#handlers;
   }
+
+  get paths(): ConfigurablePaths {
+    return this.#config.paths;
+  }
+
+  set paths(paths: ConfigurablePaths) {
+    this.#config.paths = paths;
+  }
+
   /**
    * Allow the setting of headers from a req or header object.
    * Makes it possible to handle REST requests easily
@@ -132,14 +163,44 @@ export class Server {
    * @param req
    * @returns undefined
    */
-  setContext(
+  setContext = (
     req:
       | Request
       | Headers
       | Record<string, string>
       | unknown
-      | { tenantId?: string; userId?: string }
-  ) {
+      | { tenantId?: string; userId?: string },
+    ...remaining: unknown[]
+  ) => {
+    let atLeastOne = false;
+    // run the extensions last. this basically means "we don't know what to do"
+    // so we are going to trust the developer to handle the next round trip,
+    // which should stop at one of the previous stops.
+    if (this.#config?.extensions) {
+      for (const create of this.#config.extensions) {
+        if (typeof create !== 'function') {
+          continue;
+        }
+        const ext = create(this);
+        // we can only run this after config has a value, so we must wait, but we can't.
+        if (typeof ext.onSetContext === 'function') {
+          if (req) {
+            ext.onSetContext(req, ...remaining);
+            atLeastOne = true;
+          } else {
+            this.#config
+              .logger('extension')
+              .warn('attempted to call onSetContext without a value');
+          }
+        }
+      }
+    }
+    // any extension that uses `onSetContext` knows better than the default.
+    // if you need default behavior, remove the extension and call the function again
+    if (atLeastOne) {
+      return;
+    }
+
     try {
       if (req instanceof Headers) {
         this.#handleHeaders(req);
@@ -181,14 +242,19 @@ export class Server {
      */
 
     if (typeof req === 'object') {
-      const headers = new Headers(req as Record<string, string>);
-      if (headers) {
-        this.#handleHeaders(headers);
-        this.#reset();
+      try {
+        const headers = new Headers(req as Record<string, string>);
+        if (headers) {
+          this.#handleHeaders(headers);
+          this.#reset();
 
-        return;
+          return;
+        }
+      } catch {
+        // this one didn't work either
       }
     }
+
     const { warn } = Logger(this.#config)('[API]');
 
     if (warn) {
@@ -196,13 +262,13 @@ export class Server {
         'Set context expects a Request, Header instance or an object of Record<string, string>'
       );
     }
-  }
+  };
 
   getContext() {
     return {
       headers: this.#headers,
-      userId: this.#config.userId,
-      tenantId: this.#config.tenantId,
+      userId: this.#config?.userId,
+      tenantId: this.#config?.tenantId,
       preserveHeaders: this.#preserveHeaders,
     };
   }
@@ -271,6 +337,7 @@ export class Server {
    */
   #reset = () => {
     this.#config.headers = this.#headers ?? new Headers();
+    this.#config.extensionCtx = buildExtensionConfig(this);
     this.users = new Users(this.#config);
     this.tenants = new Tenants(this.#config);
     this.auth = new Auth(this.#config);

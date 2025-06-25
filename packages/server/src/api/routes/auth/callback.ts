@@ -27,7 +27,7 @@ export default async function route(req: Request, config: Config) {
       error('an error as occurred', e);
     });
 
-    const location = res?.headers.get('location');
+    const location = res?.headers?.get('location');
     if (location) {
       return new Response(res?.body, {
         status: 302,

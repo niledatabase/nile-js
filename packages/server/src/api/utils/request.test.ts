@@ -8,7 +8,7 @@ describe('request', () => {
     jest.resetAllMocks();
   });
 
-  fit('sets the correct GET headers', async () => {
+  it('sets the correct GET headers', async () => {
     global.fetch = jest.fn((url, p) => {
       return Promise.resolve({
         ...p,
@@ -53,11 +53,12 @@ describe('request', () => {
       host: 'localhost:3001',
       'nile-origin': 'http://localhost:3001',
       'content-type': 'application/x-www-form-urlencoded',
+      'nile-secure-cookies': 'false',
     };
     const headersObject = Object.entries(
       Object.fromEntries(res.headers.entries())
     );
-    expect(headersObject.length).toBe(3);
+    expect(headersObject.length).toBe(4);
     for (const [key, value] of headersObject) {
       const val = expectedHeaders[key];
       expect(value).toBe(val);
@@ -84,12 +85,13 @@ describe('request', () => {
       host: 'localhost:3001',
       'nile-origin': 'http://localhost:3001',
       'content-type': 'application/json',
+      'nile-secure-cookies': 'false',
     };
     const headersObject = Object.entries(
       Object.fromEntries(res.headers.entries())
     );
 
-    expect(headersObject.length).toBe(3);
+    expect(headersObject.length).toBe(4);
     for (const [key, value] of headersObject) {
       const val = expectedHeaders[key];
       expect(value).toBe(val);

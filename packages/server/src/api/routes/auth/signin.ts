@@ -53,6 +53,7 @@ export default async function route(req: Request, config: Config) {
   const params = new URLSearchParams(passThroughUrl.search);
 
   url = `${url}${params.toString() !== '' ? `?${params.toString()}` : ''}`;
+
   const res = await request(url, { ...init, request: req }, config);
 
   return res;
@@ -73,6 +74,5 @@ export async function fetchSignIn(
     headers: config.headers,
     body,
   });
-
   return (await config.handlers.POST(req)) as Response;
 }

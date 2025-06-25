@@ -53,7 +53,7 @@ export async function PUT(
   const url = `${apiRoutes(config).INVITE(tenantId)}`;
 
   const res = await request(url, init, config);
-  const location = res?.headers.get('location');
+  const location = res?.headers?.get('location');
   if (location) {
     return new Response(res?.body, {
       status: 302,

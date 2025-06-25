@@ -9,12 +9,31 @@ import inviteUsers, {
   matches as matchesInviteUsers,
 } from '../routes/tenants/[tenantId]/invite';
 import { Routes } from '../types';
+import { ExtensionState } from '../../types';
 import { Config } from '../../utils/Config';
 import * as authRoutes from '../routes/auth';
 
 export default function POSTER(configRoutes: Routes, config: Config) {
   const { info, warn, error } = config.logger('[POST MATCHER]');
-  return async function POST(req: Request) {
+  return async function POST(...params: unknown[]) {
+    // convert whatever `req` we are getting to something that will work with express.
+    const handledRequest = await config.extensionCtx?.runExtensions(
+      ExtensionState.onHandleRequest,
+      config,
+      params
+    );
+    // if this has been overridden, we don't do anything else.
+    // for express, when you do this, make a new internal instance that does not have
+    // `onHandleRequest`
+    if (handledRequest) {
+      return handledRequest;
+    }
+    // the default
+    const req = params[0] instanceof Request ? params[0] : null;
+    if (!req) {
+      error('Proxy requests failed, a Request object was not passed.');
+      return;
+    }
     // special case for logging client errors
     if (matchesLog(configRoutes, req)) {
       try {

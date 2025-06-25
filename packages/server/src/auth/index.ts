@@ -457,11 +457,15 @@ export default class Auth {
 
     const providers = await this.listProviders();
     info('Obtaining csrf');
-    const csrf = await this.getCsrf();
+    const csrf = await this.getCsrf<{ csrfToken: string; headers: Headers }>();
 
     let csrfToken;
     if ('csrfToken' in csrf) {
       csrfToken = csrf.csrfToken;
+      // const parsedCookie = csrf.headers.get('cookie');
+      // if (parsedCookie) {
+      // this.#config.headers.set('cookie', parsedCookie);
+      // }
     } else {
       throw new Error('Unable to obtain parse CSRF. Request blocked.');
     }
@@ -483,6 +487,9 @@ export default class Auth {
 
     info(`Obtaining providers for ${email}`);
     info(`Attempting sign in with email ${email}`);
+    if (!email) {
+      throw new Error('Email missing from payload, unable to sign in');
+    }
     const body = JSON.stringify({
       email,
       password,
@@ -596,7 +603,7 @@ export function parseToken(headers?: Headers) {
 /**
  * Internal helper for the password reset flow.
  */
-function parseResetToken(headers: Headers | void): string | void {
+export function parseResetToken(headers: Headers | void): string | void {
   let authCookie = headers?.get('set-cookie');
   if (!authCookie) {
     authCookie = headers?.get('cookie');

@@ -1,105 +1,118 @@
-import { NileConfig, Server } from '@niledatabase/server';
+import { ExtensionState, Server } from '@niledatabase/server';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+  NextFunction,
+} from 'express';
 
 export function cleaner(val: string) {
   return val.replaceAll(/\{([^}]+)\}/g, ':$1');
 }
 
-export function expressPaths(nile: Server) {
-  const nilePaths = nile.getPaths();
-  const paths = {
-    get: nilePaths.get.map(cleaner),
-    post: nilePaths.post.map(cleaner),
-    put: nilePaths.put.map(cleaner),
-    delete: nilePaths.delete.map(cleaner),
-  };
+export const express = (instance: Server) => {
+  const { error, debug } = instance.logger('[EXTENSION][express]');
   return {
-    paths,
-  };
-}
-
-type HandlerConfig = { muteResponse?: boolean; init?: RequestInit };
-export async function NileExpressHandler(
-  nile: Server,
-  config?: HandlerConfig & NileConfig
-) {
-  const error = config?.logger ? config?.logger('express').error : () => null;
-  async function handler(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    req: any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    res?: any
-  ): Promise<
-    | {
-        body: string;
-        status: number;
-        headers: Record<string, string | string[]>;
-        response: Response;
+    id: 'express',
+    onSetContext: (
+      req: ExpressRequest,
+      res: ExpressResponse,
+      next: NextFunction
+    ) => {
+      // do this first, since `cookies` does not persist across context set
+      if (req.params.tenantId) {
+        instance.setContext({ tenantId: req.params.tenantId });
       }
-    | null
-    | undefined
-  > {
-    const headers = new Headers();
-    if (!req || typeof req !== 'object') {
-      return null;
-    }
-    if (!('url' in req) || typeof req?.url !== 'string') {
-      error('A url is necessary for the nile express handler');
-      return null;
-    }
-    const method =
-      'method' in req && typeof req.method === 'string' ? req.method : 'GET';
 
-    if (
-      'headers' in req &&
-      typeof req.headers === 'object' &&
-      req.headers &&
-      'cookie' in req.headers &&
-      typeof req.headers.cookie === 'string'
-    ) {
-      headers.set('cookie', req.headers.cookie);
-    }
-    const _init: RequestInit = { method, ...config?.init };
-
-    if ('body' in req) {
-      if (method === 'POST' || method === 'PUT') {
-        headers.set('content-type', 'application/json');
-        _init.body = JSON.stringify(req.body);
+      if (req.headers) {
+        instance.setContext(req.headers);
       }
-    }
+      if (req instanceof Headers) {
+        instance.setContext(req);
+      }
 
-    _init.headers = headers;
+      if (typeof next === 'function') {
+        next();
+      }
+    },
+    onConfigure: () => {
+      const { paths: nilePaths } = instance;
+      const paths = {
+        get: nilePaths.get.map(cleaner),
+        post: nilePaths.post.map(cleaner),
+        put: nilePaths.put.map(cleaner),
+        delete: nilePaths.delete.map(cleaner),
+      };
+      debug(`paths configured ${JSON.stringify(paths)}`);
+      instance.paths = paths;
+    },
+    onHandleRequest: async (req: ExpressRequest, res: ExpressResponse) => {
+      // handle standard request objects
+      if (req instanceof Request) {
+        debug('using default response');
+        const response = await instance.handlers[
+          req.method as 'GET' | 'POST' | 'PUT' | 'DELETE'
+          // disable the extension so we don't re-handle
+        ](req, { disableExtensions: ['express'] });
+        return response;
+      }
 
-    const reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+      debug('handling response');
+      instance.setContext(req.headers);
 
-    // be sure its a valid url
-    try {
-      new URL(reqUrl);
-    } catch (e) {
-      error('Invalid URL', {
-        url: reqUrl,
-        error: e,
-      });
-      return null;
-    }
-    const proxyRequest = new Request(reqUrl, _init);
-    let response;
-    try {
-      response = await nile.handlers[
-        method as 'GET' | 'POST' | 'PUT' | 'DELETE'
-      ](proxyRequest);
-    } catch (e) {
-      error(e);
-    }
+      const reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 
-    let body;
+      // be sure its a valid url
+      try {
+        new URL(reqUrl);
+      } catch (e) {
+        throw new Error(
+          'Invalid URL sent for handle request. Are you running express?'
+        );
+      }
+      const { method } = req;
+      const init: RequestInit = { method, headers: new Headers() };
+      // seems like this should work without this, since `get/set context should do the things we think it should.
+      if (
+        'headers' in req &&
+        typeof req.headers === 'object' &&
+        req.headers &&
+        'cookie' in req.headers &&
+        typeof req.headers.cookie === 'string'
+      ) {
+        (init.headers as Headers).set('cookie', req.headers.cookie);
+      }
 
-    if (response instanceof Response) {
+      if ('body' in req) {
+        if (method === 'POST' || method === 'PUT') {
+          init.body = JSON.stringify(req.body);
+        }
+      }
+
+      const proxyRequest = new Request(reqUrl, init);
+      debug(
+        `[${method.toUpperCase()}]proxy request converted to ${reqUrl} with ${JSON.stringify(
+          init
+        )}`
+      );
+
+      let response: Response = null as unknown as Response;
+
+      try {
+        response = (await instance.handlers[
+          req.method as 'GET' | 'POST' | 'PUT' | 'DELETE'
+        ](proxyRequest, { disableExtensions: ['express'] })) as Response;
+      } catch (e) {
+        error(e);
+      }
+
+      let body;
       try {
         const tryJson = await response.clone();
         body = await tryJson.json();
       } catch (e) {
         body = await response.text();
       }
+
       const newHeaders: Record<string, string | string[]> = {};
       response.headers.forEach((value, key) => {
         if (
@@ -118,29 +131,17 @@ export async function NileExpressHandler(
         }
       });
 
-      if (config?.muteResponse !== true) {
-        if (res) {
-          res.status(response.status).set(newHeaders);
-          if (typeof body === 'string') {
-            res.send(body);
-          } else {
-            res.json(body ?? {});
-          }
+      if (!res.headersSent) {
+        debug('sending response');
+        res.status(response.status).set(newHeaders);
+        if (typeof body === 'string') {
+          res.send(body);
+        } else {
+          res.json(body ?? {});
         }
-        return;
       }
-
-      return {
-        body,
-        status: response.status,
-        headers: newHeaders,
-        response,
-      };
-    } else {
-      error('Bad response', { response });
-      return;
-    }
-  }
-  const { paths } = expressPaths(nile);
-  return { handler, paths };
-}
+      // always return to prevent infinite loop
+      return ExtensionState.onHandleRequest;
+    },
+  };
+};
