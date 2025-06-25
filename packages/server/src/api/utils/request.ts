@@ -1,3 +1,4 @@
+import { ExtensionState } from '../../types';
 import {
   HEADER_ORIGIN,
   HEADER_SECURE_COOKIES,
@@ -95,8 +96,12 @@ export default async function request(
     params.cache = 'no-store';
   }
 
-  await config.extensionCtx?.handleOnRequest(config, _init, params);
-
+  await config.extensionCtx?.runExtensions(
+    ExtensionState.onRequest,
+    config,
+    params,
+    _init
+  );
   try {
     const res: Response | void = await fetch(fullUrl, {
       ...params,
@@ -116,6 +121,16 @@ export default async function request(
       statusText: res?.statusText,
       text: await loggingRes?.text(),
     });
+    const updatedRes =
+      await config.extensionCtx?.runExtensions<Response | void>(
+        ExtensionState.onResponse,
+        config,
+        params
+      );
+
+    if (updatedRes) {
+      return updatedRes;
+    }
     return res;
   } catch (e) {
     if (e instanceof Error) {

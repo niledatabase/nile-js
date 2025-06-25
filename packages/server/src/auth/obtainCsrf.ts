@@ -12,6 +12,7 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
   // we're gonna use it, so set the headers now.
   const csrfCook = parseCSRF(res.headers);
 
+  const h = new Headers();
   // prefer the csrf from the headers over the saved one
   if (csrfCook) {
     const [, value] = csrfCook.split('=');
@@ -27,7 +28,8 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
         .filter(Boolean)
         .join('; ');
       config.headers.set('cookie', cookie);
-      updateHeaders(new Headers({ cookie }));
+      h.set('cookie', cookie);
+      updateHeaders(h);
     }
     if (!rawResponse) {
       return { csrfToken: token };
@@ -54,11 +56,9 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
     config.headers.set('cookie', cookie);
     updateHeaders(new Headers({ cookie }));
   }
-
   if (rawResponse) {
     return res as T;
   }
-
   try {
     return (await res.clone().json()) as T;
   } catch {

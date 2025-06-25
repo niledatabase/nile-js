@@ -8,20 +8,33 @@ export type Opts = {
   basePath?: string;
   fetch?: typeof fetch;
 };
-export interface ExtensionResult {
-  id?: string;
-  [key: string]: unknown;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+type Any = any;
+export type ExtensionResult = {
+  id: string;
   // Called before request is handled
-  onRequest?: (req: Request) => void | Promise<void | RequestInit>;
+  onRequest?: (...params: Any) => void | Promise<void | RequestInit>;
 
-  // Called after response is generated
-  onResponse?: (res: Response) => void | Promise<void>;
+  // Called after response is generated - probably a response
+  onResponse?: (...params: Any) => void | Promise<void>;
+
+  // called before requests to nile-auth, before onRequest
+  // used for making sure the request is an actual `Request` object (or handles otherwise)
+  onHandleRequest?: (...params: Any) => RouteReturn | Promise<RouteReturn>;
+
+  // allow runtime configurations by extensions
+  onConfigure?: (...params: Any) => void;
+
+  // maybe any function at all is a set context, who knows
+  onSetContext?: (...params: Any) => void;
+};
+
+export type Extension = (instance: Server) => ExtensionResult;
+export enum ExtensionState {
+  onHandleRequest = 'onHandleRequest',
+  onRequest = 'onRequest',
+  onResponse = 'onResposne',
 }
-
-export type Extension = (
-  instance: Server
-) => ExtensionResult | Promise<ExtensionResult>;
-
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
 export type LoggerType = {
   info: (args: unknown | unknown[]) => void;
@@ -240,3 +253,26 @@ export interface APIError {
 }
 
 export type NileResponse<T> = Promise<T | NResponse<T & APIError>>;
+
+type ExtensionConfig = { disableExtensions: string[] };
+export type RouteReturn = void | Request | Response | ExtensionState;
+export type RouteFunctions = {
+  GET: (
+    req: Request,
+    config?: ExtensionConfig,
+    ...args: unknown[]
+  ) => Promise<RouteReturn>;
+  POST: (req: Request, config?: ExtensionConfig) => Promise<RouteReturn>;
+  DELETE: (req: Request, config?: ExtensionConfig) => Promise<RouteReturn>;
+  PUT: (req: Request, config?: ExtensionConfig) => Promise<RouteReturn>;
+};
+type ContextReturn = {
+  response: RouteReturn;
+  nile: Server;
+};
+export type CTXHandlerType = {
+  GET: (req: Request) => Promise<ContextReturn>;
+  POST: (req: Request) => Promise<ContextReturn>;
+  DELETE: (req: Request) => Promise<ContextReturn>;
+  PUT: (req: Request) => Promise<ContextReturn>;
+};

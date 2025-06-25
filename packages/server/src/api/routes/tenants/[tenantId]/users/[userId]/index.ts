@@ -37,6 +37,7 @@ export default async function route(request: Request, config: Config) {
 
 export function matches(configRoutes: Routes, request: Request): boolean {
   const url = new URL(request.url);
+  // `link` may be on the end of this.
   const [, userId, possibleTenantId, tenantId] = url.pathname
     .split('/')
     .reverse();

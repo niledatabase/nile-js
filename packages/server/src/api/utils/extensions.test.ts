@@ -1,9 +1,9 @@
-import { Extension } from '../../types';
+import { Extension, ExtensionState } from '../../types';
 import { TENANT_COOKIE } from '../../utils/constants';
 import { Server } from '../../Server';
 import { Config } from '../../utils/Config';
 
-import { bindHandleOnRequest, buildExtensionConfig } from './extensions';
+import { bindRunExtensions, buildExtensionConfig } from './extensions';
 
 const createMockServer = (): Server => {
   let context: Record<string, unknown> = {};
@@ -39,15 +39,19 @@ describe('bindHandleOnRequest', () => {
   });
 
   it('does nothing when there are no extensions', async () => {
-    const handler = bindHandleOnRequest(mockServer);
-    await handler(config, { request: new Request('http://test') }, params);
+    const handler = bindRunExtensions(mockServer);
+    await handler(ExtensionState.onRequest, config, params, {
+      request: new Request('http://test'),
+    });
     expect(config.logger().debug).not.toHaveBeenCalled();
   });
 
   it('ignores non-function extensions', async () => {
     config.extensions = ['not a function' as unknown as Extension];
-    const handler = bindHandleOnRequest(mockServer);
-    await handler(config, { request: new Request('http://test') }, params);
+    const handler = bindRunExtensions(mockServer);
+    await handler(ExtensionState.onRequest, config, params, {
+      request: new Request('http://test'),
+    });
     expect(config.logger().debug).not.toHaveBeenCalled();
   });
 
@@ -65,10 +69,12 @@ describe('bindHandleOnRequest', () => {
       }),
     };
 
-    config.extensions = [jest.fn(() => Promise.resolve(ext))];
+    config.extensions = [jest.fn(() => ext) as unknown as Extension];
 
-    const handler = bindHandleOnRequest(mockServer);
-    await handler(config, { request: new Request('http://test') }, params);
+    const handler = bindRunExtensions(mockServer);
+    await handler(ExtensionState.onRequest, config, params, {
+      request: new Request('http://test'),
+    });
 
     expect(ext.onRequest).toHaveBeenCalled();
     expect(params.headers?.get('cookie')).toBe('foo=bar');
@@ -76,7 +82,7 @@ describe('bindHandleOnRequest', () => {
     expect(mockDebug).toHaveBeenCalledWith('mock-extension ran onRequest');
   });
 
-  fit('preserves previous cookies if preserveHeaders is true', async () => {
+  it('preserves previous cookies if preserveHeaders is true', async () => {
     const previousContext = {
       preserveHeaders: true,
       headers: new Headers({ cookie: 'session=123' }),
@@ -100,10 +106,12 @@ describe('bindHandleOnRequest', () => {
       }),
     };
 
-    config.extensions = [jest.fn(() => Promise.resolve(ext))];
+    config.extensions = [jest.fn(() => ext) as unknown as Extension];
 
-    const handler = bindHandleOnRequest(mockServer);
-    await handler(config, { request: new Request('http://test') }, params);
+    const handler = bindRunExtensions(mockServer);
+    await handler(ExtensionState.onRequest, config, params, {
+      request: new Request('http://test'),
+    });
 
     expect(params.headers?.get('cookie')).toBe('session=123; auth=456');
   });
@@ -113,6 +121,6 @@ describe('buildExtensionConfig', () => {
   it('returns an object with handleOnRequest bound to the instance', () => {
     const mockServer = createMockServer();
     const config = buildExtensionConfig(mockServer);
-    expect(typeof config.handleOnRequest).toBe('function');
+    expect(typeof config.runExtensions).toBe('function');
   });
 });

@@ -1,19 +1,11 @@
 import { Server } from '../../../Server';
-import { NileConfig } from '../../../types';
+import { CTXHandlerType, NileConfig, RouteReturn } from '../../../types';
 import { Config } from '../../../utils/Config';
 import getter from '../GET';
 import poster from '../POST';
 import deleter from '../DELETE';
 import puter from '../PUT';
 
-export type CTXHandlerType = {
-  GET: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
-  POST: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
-  DELETE: (
-    req: Request
-  ) => Promise<{ response: void | Response; nile: Server }>;
-  PUT: (req: Request) => Promise<{ response: void | Response; nile: Server }>;
-};
 export function handlersWithContext(config: Config): CTXHandlerType {
   const GET = getter(config.routes, config);
   const POST = poster(config.routes, config);
@@ -44,36 +36,38 @@ export function handlersWithContext(config: Config): CTXHandlerType {
 }
 
 export function updateConfig(
-  response: Response | void,
+  response: RouteReturn,
   config: Config
 ): NileConfig {
   let origin = 'http://localhost:3000';
   let headers: Headers | null = null;
 
-  if (response?.status === 302) {
-    const location = response.headers.get('location');
-    if (location) {
-      const urlLocation = new URL(location);
-      origin = urlLocation.origin;
-    }
-  }
-
-  const setCookies: string[] = [];
-
-  // Headers are iterable
-  if (response?.headers) {
-    for (const [key, value] of response.headers) {
-      if (key.toLowerCase() === 'set-cookie') {
-        setCookies.push(value);
+  if (response instanceof Response) {
+    if (response?.status === 302) {
+      const location = response.headers.get('location');
+      if (location) {
+        const urlLocation = new URL(location);
+        origin = urlLocation.origin;
       }
     }
-  }
-  if (setCookies.length > 0) {
-    const cookieHeader = setCookies
-      .map((cookieStr) => cookieStr.split(';')[0])
-      .join('; ');
 
-    headers = new Headers({ cookie: cookieHeader });
+    const setCookies: string[] = [];
+
+    // Headers are iterable
+    if (response?.headers) {
+      for (const [key, value] of response.headers) {
+        if (key.toLowerCase() === 'set-cookie') {
+          setCookies.push(value);
+        }
+      }
+    }
+    if (setCookies.length > 0) {
+      const cookieHeader = setCookies
+        .map((cookieStr) => cookieStr.split(';')[0])
+        .join('; ');
+
+      headers = new Headers({ cookie: cookieHeader });
+    }
   }
 
   return {
