@@ -172,10 +172,29 @@ export class Server {
       | { tenantId?: string; userId?: string },
     ...remaining: unknown[]
   ) => {
+    // we also support setting context in 1 go via tenantId and userId
+    // this is a little less good because auth is going to mess with this
+    // logically, not technically.
+    let ok = false;
+    if (req && typeof req === 'object' && 'tenantId' in req) {
+      ok = true;
+      this.#config.tenantId = req.tenantId as string | undefined;
+    }
+    if (req && typeof req === 'object' && 'userId' in req) {
+      ok = true;
+      this.#config.userId = req.userId as string | undefined;
+    }
+
+    if (req && typeof req === 'object' && 'preserveHeaders' in req) {
+      ok = true;
+      this.#preserveHeaders = Boolean(req.preserveHeaders);
+    }
+
     let atLeastOne = false;
-    // run the extensions last. this basically means "we don't know what to do"
+    // run the extensions next. this basically means "extensions know better"
     // so we are going to trust the developer to handle the next round trip,
-    // which should stop at one of the previous stops.
+    // which may stop at a previous cycle. We also assume they are handling the
+    // `instance` setContext as well.
     if (this.#config?.extensions) {
       for (const create of this.#config.extensions) {
         if (typeof create !== 'function') {
@@ -201,6 +220,7 @@ export class Server {
       return;
     }
 
+    // the "default" behavior. Headers or req, we know what to do.
     try {
       if (req instanceof Headers) {
         this.#handleHeaders(req);
@@ -215,31 +235,16 @@ export class Server {
     } catch {
       //noop
     }
-    // we also support setting context in 1 go via tenantId and userId
-    // this is a little less good because auth is going to mess with this
-    // logically, not technically.
-    let ok = false;
-    if (req && typeof req === 'object' && 'tenantId' in req) {
-      ok = true;
-      this.#config.tenantId = req.tenantId as string | undefined;
-    }
-    if (req && typeof req === 'object' && 'userId' in req) {
-      ok = true;
-      this.#config.userId = req.userId as string | undefined;
-    }
 
-    if (req && typeof req === 'object' && 'preserveHeaders' in req) {
-      ok = true;
-      this.#preserveHeaders = Boolean(req.preserveHeaders);
-    }
+    /**
+     * when an object is sent
+     * tenantId and userId is also an object, which is done first
+     * if that is the case, we should have exited if we parsed from `req` and `req.headers`
+     * if none of that is true, we're going to convert the req to Header, and maybe fail
+     */
     if (ok) {
       return;
     }
-    /**
-     * in some cases (like express) an object is sent
-     * tenantId and userId is also an object, so do that one first
-     * We bail out of this execution if that is set, since you can't really do both
-     */
 
     if (typeof req === 'object') {
       try {
@@ -265,6 +270,18 @@ export class Server {
   };
 
   getContext() {
+    if (this.#config?.extensions) {
+      for (const create of this.#config.extensions) {
+        if (typeof create !== 'function') {
+          continue;
+        }
+        const ext = create(this);
+        // we can only run this after config has a value, so we must wait, but we can't.
+        if (typeof ext.onGetContext === 'function') {
+          return ext.onGetContext();
+        }
+      }
+    }
     return {
       headers: this.#headers,
       userId: this.#config?.userId,

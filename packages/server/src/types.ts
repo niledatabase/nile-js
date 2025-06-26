@@ -27,6 +27,9 @@ export type ExtensionResult = {
 
   // maybe any function at all is a set context, who knows
   onSetContext?: (...params: Any) => void;
+
+  // maybe any function at all is get context, who knows
+  onGetContext?: () => Any;
 };
 
 export type Extension = (instance: Server) => ExtensionResult;

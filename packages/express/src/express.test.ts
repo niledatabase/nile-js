@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Express } from 'express';
 import { ExtensionState, Server } from '@niledatabase/server';
 import type {
   Request as ExpressRequest,
@@ -8,7 +8,7 @@ import type {
 import { express as expressExtension, cleaner } from '.';
 
 describe('express extension', () => {
-  let app;
+  let app: Express;
   let instance: Server;
 
   beforeEach(() => {
@@ -33,6 +33,16 @@ describe('express extension', () => {
           .mockResolvedValue(
             new Response(JSON.stringify({ msg: 'POST OK' }), { status: 201 })
           ),
+        PUT: jest
+          .fn()
+          .mockResolvedValue(
+            new Response(JSON.stringify({ msg: 'PUT OK' }), { status: 201 })
+          ),
+        DELETE: jest
+          .fn()
+          .mockResolvedValue(
+            new Response(JSON.stringify({ msg: 'DELET OK' }), { status: 201 })
+          ),
       },
       setContext: jest.fn(),
       paths: {
@@ -54,7 +64,7 @@ describe('express extension', () => {
 
   describe('onSetContext', () => {
     it('sets context from params and headers', () => {
-      const ext = expressExtension(instance);
+      const ext = expressExtension(app)(instance);
       const req = {
         params: { tenantId: 'abc' },
         headers: { 'x-foo': 'bar' },
@@ -70,9 +80,18 @@ describe('express extension', () => {
     });
   });
 
+  describe('onGetContext', () => {
+    it('returns context from async local storage', () => {
+      const ext = expressExtension(app)(instance);
+      const result = ext.onGetContext();
+      // Since AsyncLocalStorage requires a real context run, this will be undefined in this test
+      expect(result).toEqual({});
+    });
+  });
+
   describe('onConfigure', () => {
     it('cleans up path params and updates instance.paths', () => {
-      const ext = expressExtension(instance);
+      const ext = expressExtension(app)(instance);
       ext.onConfigure();
       expect(instance.paths).toEqual({
         get: ['/test/:id'],
@@ -85,7 +104,7 @@ describe('express extension', () => {
 
   describe('onHandleRequest', () => {
     it('proxies GET request with JSON response', async () => {
-      const ext = expressExtension(instance);
+      const ext = expressExtension(app)(instance);
       const req = {
         method: 'GET',
         protocol: 'http',
@@ -102,9 +121,8 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      const result = await ext.onHandleRequest(req, res);
+      const result = await ext.onHandleRequest(req, res, jest.fn());
 
-      expect(instance.setContext).toHaveBeenCalledWith(req.headers);
       expect(instance.handlers.GET).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ msg: 'GET OK' });
@@ -115,7 +133,7 @@ describe('express extension', () => {
       (instance.handlers.GET as jest.Mock).mockResolvedValue(
         new Response('Plain text body', { status: 200 })
       );
-      const ext = expressExtension(instance);
+      const ext = expressExtension(app)(instance);
 
       const req = {
         method: 'GET',
@@ -133,13 +151,13 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      await ext.onHandleRequest(req, res);
+      await ext.onHandleRequest(req, res, jest.fn());
 
       expect(res.send).toHaveBeenCalledWith('Plain text body');
     });
 
     it('does not re-send headers if already sent', async () => {
-      const ext = expressExtension(instance);
+      const ext = expressExtension(app)(instance);
 
       const req = {
         method: 'GET',
@@ -157,7 +175,7 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      const result = await ext.onHandleRequest(req, res);
+      const result = await ext.onHandleRequest(req, res, jest.fn());
 
       expect(res.status).not.toHaveBeenCalled();
       expect(result).toBe(ExtensionState.onHandleRequest);
