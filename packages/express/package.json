@@ -17,6 +17,9 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts",
     "test": "jest"
