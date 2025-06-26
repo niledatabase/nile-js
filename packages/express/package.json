@@ -34,7 +34,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@niledatabase/server": "*"
+    "@niledatabase/server": "*",
+    "express": "^5.0.0 || ^4.0.0"
   },
   "devDependencies": {
     "@types/express": "^5",
