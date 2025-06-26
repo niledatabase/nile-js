@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.16...v5.0.0-alpha.17) (2025-06-26)
+
+### Bug Fixes
+
+- **server:** allow full override for context ([2a2885a](https://github.com/niledatabase/nile-js/commit/2a2885aa8053e38759005d417a085bf7a606986c))
+
 # [5.0.0-alpha.16](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.15...v5.0.0-alpha.16) (2025-06-26)
 
 **Note:** Version bump only for package @niledatabase/express
