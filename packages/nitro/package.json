@@ -11,6 +11,9 @@
       "import": "./dist/index.mjs"
     }
   },
+  "files": [
+    "dist"
+  ],
   "prettier": {
     "printWidth": 80,
     "semi": true,
