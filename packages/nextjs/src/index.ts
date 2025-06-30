@@ -1,6 +1,7 @@
-import { Server, TENANT_COOKIE } from '@niledatabase/server';
+import { TENANT_COOKIE } from '@niledatabase/server';
+import type { Extension } from '@niledatabase/server';
 
-export function nextJs(instance: Server) {
+const nextJs: Extension = (instance) => {
   return {
     id: 'next-js-cookies',
     onRequest: async () => {
@@ -16,4 +17,6 @@ export function nextJs(instance: Server) {
       }
     },
   };
-}
+};
+
+export { nextJs };

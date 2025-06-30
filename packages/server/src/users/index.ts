@@ -81,8 +81,8 @@ export default class Users {
    *
    * @param [rawResponse] - When `true` return the raw {@link Response}.
    */
-  async getSelf<T = User | Response>(): Promise<T>;
-  async getSelf(rawResponse?: true): Promise<Response>;
+  async getSelf<T = User | Response>(rawResponse?: false): Promise<T>;
+  async getSelf(rawResponse: true): Promise<Response>;
   async getSelf<T = User | Response>(rawResponse?: boolean): Promise<T> {
     const res = await fetchMe(this.#config);
 
