@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.19...v5.0.0-alpha.20) (2025-06-30)
+
+### Bug Fixes
+
+- **server:** better types ([efe821d](https://github.com/niledatabase/nile-js/commit/efe821d7844ea714d7149c6867101cf6816af429))
+
 # [5.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.18...v5.0.0-alpha.19) (2025-06-30)
 
 **Note:** Version bump only for package @niledatabase/nextjs
