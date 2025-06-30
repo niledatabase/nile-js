@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.17...v5.0.0-alpha.18) (2025-06-30)
+
+### Bug Fixes
+
+- **server:** better types, peer deps ([e50f232](https://github.com/niledatabase/nile-js/commit/e50f2320289c67fc445522f5a9746d20517f097f))
+
 # [5.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.16...v5.0.0-alpha.17) (2025-06-26)
 
 **Note:** Version bump only for package @niledatabase/nitro
