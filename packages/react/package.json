@@ -31,7 +31,7 @@
     "test": "yarn jest"
   },
   "peerDependencies": {
-    "@niledatabase/client": "^5.0.0",
+    "@niledatabase/client": ">=5.0.0-alpha",
     "@tanstack/react-query": "^5.23.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
