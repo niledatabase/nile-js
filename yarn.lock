@@ -3261,7 +3261,7 @@ __metadata:
     ts-jest: "npm:^29.3.4"
     tsup: "npm:^8.5.0"
   peerDependencies:
-    "@niledatabase/server": "*"
+    "@niledatabase/server": ^5.0.0
     express: ^5.0.0 || ^4.0.0
   languageName: unknown
   linkType: soft
@@ -3273,7 +3273,7 @@ __metadata:
     next: "npm:^15.3.3"
     tsup: "npm:^8.5.0"
   peerDependencies:
-    "@niledatabase/server": "*"
+    "@niledatabase/server": ^5.0.0
     next: ^15
   languageName: unknown
   linkType: soft
@@ -3285,7 +3285,7 @@ __metadata:
     h3: "npm:^1"
     tsup: "npm:^8.5.0"
   peerDependencies:
-    "@niledatabase/server": "*"
+    "@niledatabase/server": ^5.0.0
     h3: ^1
   languageName: unknown
   linkType: soft
@@ -3387,7 +3387,7 @@ __metadata:
     typescript: "npm:^5.3.2"
     zod: "npm:^3.23.8"
   peerDependencies:
-    "@niledatabase/client": "*"
+    "@niledatabase/client": ^5.0.0
     "@tanstack/react-query": ^5.23.0
     react: ^19.0.0
     react-dom: ^19.0.0

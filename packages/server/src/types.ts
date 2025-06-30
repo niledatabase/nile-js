@@ -36,7 +36,7 @@ export type Extension = (instance: Server) => ExtensionResult;
 export enum ExtensionState {
   onHandleRequest = 'onHandleRequest',
   onRequest = 'onRequest',
-  onResponse = 'onResposne',
+  onResponse = 'onResponse',
 }
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
 export type LoggerType = {
