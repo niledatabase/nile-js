@@ -258,17 +258,20 @@ export interface APIError {
 export type NileResponse<T> = Promise<T | NResponse<T & APIError>>;
 
 type ExtensionConfig = { disableExtensions: string[] };
-export type RouteReturn = void | Request | Response | ExtensionState;
-export type RouteFunctions = {
+type DefaultRouteReturn = Request | Response | ExtensionState;
+export type RouteReturn<T = unknown> = void | T | Promise<void | T>;
+
+export type RouteFunctions<T = DefaultRouteReturn> = {
   GET: (
     req: Request,
     config?: ExtensionConfig,
     ...args: unknown[]
-  ) => Promise<RouteReturn>;
-  POST: (req: Request, config?: ExtensionConfig) => Promise<RouteReturn>;
-  DELETE: (req: Request, config?: ExtensionConfig) => Promise<RouteReturn>;
-  PUT: (req: Request, config?: ExtensionConfig) => Promise<RouteReturn>;
+  ) => RouteReturn<T>;
+  POST: (req: Request, config?: ExtensionConfig) => RouteReturn<T>;
+  DELETE: (req: Request, config?: ExtensionConfig) => RouteReturn<T>;
+  PUT: (req: Request, config?: ExtensionConfig) => RouteReturn<T>;
 };
+
 type ContextReturn = {
   response: RouteReturn;
   nile: Server;

@@ -20,3 +20,10 @@ const nextJs: Extension = (instance) => {
 };
 
 export { nextJs };
+
+export type Handlers<T = Response> = {
+  GET: (req: Request) => Promise<T>;
+  POST: (req: Request) => Promise<T>;
+  DELETE: (req: Request) => Promise<T>;
+  PUT: (req: Request) => Promise<T>;
+};
