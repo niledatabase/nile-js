@@ -15,7 +15,7 @@ import {
   FormMessage,
   Password,
 } from '../../../components/ui/form';
-import { useResetPassword } from '../hooks';
+import { useForgotPassword, useResetPassword } from '../hooks';
 import { Props } from '../types';
 
 const queryClient = new QueryClient();
@@ -37,6 +37,7 @@ function ResetForm(props: Props) {
       ...defaultValues,
     },
   });
+  const forgotPassword = useForgotPassword(params);
   const resetPassword = useResetPassword(params);
   const password = form.watch('password');
   const confirmPassword = form.watch('confirmPassword');
@@ -64,7 +65,11 @@ function ResetForm(props: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(({ email, password }) => {
-          resetPassword({ email, password });
+          if (!email) {
+            forgotPassword({ password });
+          } else {
+            resetPassword({ email, password });
+          }
         })}
         className="py-2"
       >

@@ -578,6 +578,47 @@ export default class Authorizer {
       error,
     } as any;
   }
+
+  async forgotPassword(options: {
+    baseUrl?: string;
+    init?: ResponseInit;
+    fetchUrl?: string;
+    password: string;
+    auth?: Authorizer | PartialAuthorizer;
+    callbackUrl?: string;
+    redirect?: boolean;
+  }) {
+    const { password, fetchUrl, redirect, callbackUrl = '/' } = options;
+
+    this.#configureFetch(options);
+
+    const resetPasswordUrl =
+      fetchUrl ?? `${this.apiBaseUrl}/auth/reset-password`;
+
+    let resetPasswordWithParams = resetPasswordUrl;
+
+    const searchParams = new URLSearchParams();
+
+    if (redirect === false) {
+      searchParams.set('json', 'true');
+    }
+    if (searchParams.size > 0) {
+      resetPasswordWithParams += `?${searchParams}`;
+    }
+
+    const data = await this.#sendData(resetPasswordWithParams, {
+      method: 'put',
+      body: JSON.stringify({
+        password,
+        callbackUrl,
+      }),
+    });
+    if (!data?.ok) {
+      throw new Error(await data?.clone().text());
+    }
+    return data;
+  }
+
   async resetPassword(options: {
     baseUrl?: string;
     init?: ResponseInit;
@@ -588,7 +629,7 @@ export default class Authorizer {
     callbackUrl?: string;
     redirect?: boolean;
   }) {
-    const { password, fetchUrl, email, redirect, callbackUrl } = options;
+    const { password, fetchUrl, email, redirect, callbackUrl = '/' } = options;
 
     this.#configureFetch(options);
 
@@ -719,6 +760,7 @@ export const signOut: typeof authorizer.signOut = async function signOut(
 ) {
   return auth.signOut(options);
 };
+
 export const signIn: typeof authorizer.signIn = async function signIn(
   provider,
   options,
@@ -730,7 +772,13 @@ export const signIn: typeof authorizer.signIn = async function signIn(
 export const signUp: typeof authorizer.signUp = async function signUp(options) {
   return auth.signUp(options);
 };
+
 export const resetPassword: typeof authorizer.resetPassword =
   async function resetPassword(options) {
     return auth.resetPassword(options);
+  };
+
+export const forgotPassword: typeof authorizer.forgotPassword =
+  async function forgotPassword(options) {
+    return auth.forgotPassword(options);
   };

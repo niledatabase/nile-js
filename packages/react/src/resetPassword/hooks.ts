@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { resetPassword } from '@niledatabase/client';
+import { resetPassword, forgotPassword } from '@niledatabase/client';
 
 import { useCsrf } from '../../lib/utils';
 
@@ -23,6 +23,44 @@ export function useResetPassword(params?: Params) {
       const data = possibleData ?? _data;
 
       return await resetPassword({
+        auth,
+        baseUrl,
+        callbackUrl,
+        fetchUrl,
+        init,
+        redirect,
+        ...data,
+      });
+    },
+    onSuccess: (data) => {
+      onSuccess && onSuccess(data);
+    },
+    onError,
+  });
+
+  useCsrf(params);
+
+  return mutation.mutate;
+}
+
+export function useForgotPassword(params?: Params) {
+  const {
+    auth,
+    baseUrl = '',
+    beforeMutate,
+    callbackUrl,
+    fetchUrl,
+    init,
+    onError,
+    onSuccess,
+    redirect = false,
+  } = params ?? {};
+  const mutation = useMutation({
+    mutationFn: async (_data: { password: string }) => {
+      const possibleData = beforeMutate && beforeMutate(_data);
+      const data = possibleData ?? _data;
+
+      return await forgotPassword({
         auth,
         baseUrl,
         callbackUrl,
