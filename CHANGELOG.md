@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.21](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.20...v5.0.0-alpha.21) (2025-07-02)
+
+### Bug Fixes
+
+- **client:** split forgotPassword and resetPassword ([f6e36f2](https://github.com/niledatabase/nile-js/commit/f6e36f258bff9f0a814291b2e288ae59170cdcbc))
+
 # [5.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.19...v5.0.0-alpha.20) (2025-06-30)
 
 ### Bug Fixes
