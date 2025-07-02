@@ -6,6 +6,7 @@ export {
   signIn,
   signUp,
   resetPassword,
+  forgotPassword,
   getProviders,
   default as Authorizer,
 } from './Authorizer';

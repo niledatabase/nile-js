@@ -496,7 +496,7 @@ describe('Authorizer', () => {
           email: 'user@example.com',
           password: '123',
           redirectUrl: 'https://example.com/api/auth/reset-password',
-          callbackUrl: undefined,
+          callbackUrl: '/',
         }),
       });
 
@@ -538,7 +538,7 @@ describe('Authorizer', () => {
           email: 'user@example.com',
           password: '123',
           redirectUrl: 'https://example.com/api/auth/reset-password',
-          callbackUrl: undefined,
+          callbackUrl: '/',
         }),
       });
     });
