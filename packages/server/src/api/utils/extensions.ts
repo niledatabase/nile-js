@@ -38,10 +38,10 @@ export function bindRunExtensions(instance: Server) {
           const result = await ext.onHandleRequest(
             ...(Array.isArray(params) ? params : [params])
           );
+          debug(`${ext.id ?? create.name} ran onHandleRequest`);
           if (result != null) {
             return result as T;
           }
-          continue;
         }
 
         const [param] = Array.isArray(params) ? params : [params];
@@ -86,15 +86,15 @@ export function bindRunExtensions(instance: Server) {
             }
           }
           debug(`${ext.id ?? create.name} ran onRequest`);
-          continue;
         }
 
         if (ext.onResponse && toRun === ExtensionState.onResponse) {
           const result = await ext.onResponse(param);
+
+          debug(`${ext.id ?? create.name} ran onResponse`);
           if (result != null) {
             return result as T;
           }
-          continue;
         }
       }
     }

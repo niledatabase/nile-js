@@ -267,18 +267,31 @@ export type RouteFunctions<T = DefaultRouteReturn> = {
     config?: ExtensionConfig,
     ...args: unknown[]
   ) => RouteReturn<T>;
-  POST: (req: Request, config?: ExtensionConfig) => RouteReturn<T>;
-  DELETE: (req: Request, config?: ExtensionConfig) => RouteReturn<T>;
-  PUT: (req: Request, config?: ExtensionConfig) => RouteReturn<T>;
+  POST: (
+    req: Request,
+    config?: ExtensionConfig,
+    ...args: unknown[]
+  ) => RouteReturn<T>;
+  DELETE: (
+    req: Request,
+    config?: ExtensionConfig,
+    ...args: unknown[]
+  ) => RouteReturn<T>;
+  PUT: (
+    req: Request,
+    config?: ExtensionConfig,
+    ...args: unknown[]
+  ) => RouteReturn<T>;
 };
 
-type ContextReturn = {
-  response: RouteReturn;
+export type ContextReturn<T = Response> = {
+  response: T;
   nile: Server;
 };
+
 export type CTXHandlerType = {
-  GET: (req: Request) => Promise<ContextReturn>;
-  POST: (req: Request) => Promise<ContextReturn>;
-  DELETE: (req: Request) => Promise<ContextReturn>;
-  PUT: (req: Request) => Promise<ContextReturn>;
+  GET: <T = Response>(req: Request) => Promise<ContextReturn<T>>;
+  POST: <T = Response>(req: Request) => Promise<ContextReturn<T>>;
+  DELETE: <T = Response>(req: Request) => Promise<ContextReturn<T>>;
+  PUT: <T = Response>(req: Request) => Promise<ContextReturn<T>>;
 };

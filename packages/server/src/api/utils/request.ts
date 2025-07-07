@@ -125,7 +125,7 @@ export default async function request(
       await config.extensionCtx?.runExtensions<Response | void>(
         ExtensionState.onResponse,
         config,
-        params
+        { ...params, response: res }
       );
 
     if (updatedRes) {
