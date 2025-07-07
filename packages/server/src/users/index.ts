@@ -122,16 +122,14 @@ export default class Users {
     rawResponse = false
   ): Promise<T> {
     const bypassEmail =
-      typeof options === 'object'
-        ? options.bypassEmail ?? process.env.NODE_ENV !== 'production'
-        : process.env.NODE_ENV !== 'production';
-
+      typeof options === 'object' && options?.bypassEmail === true;
     const callbackUrl =
       typeof options === 'object'
         ? options.callbackUrl
         : defaultCallbackUrl(this.#config).callbackUrl;
 
     let res;
+
     try {
       const me = await this.getSelf();
       if (me instanceof Response) {
@@ -139,19 +137,24 @@ export default class Users {
       }
       res = await verifyEmailAddress(this.#config, me, String(callbackUrl));
       return res as T;
-    } catch {
-      const message = 'Unable to verify email.';
-      this.#logger?.warn(message);
-      res = new Response(message, { status: 400 });
+    } catch (e) {
+      if (!bypassEmail) {
+        let message = 'Unable to verify email.';
+        if (e instanceof Error) {
+          message = e.message;
+        }
+        this.#logger?.error(
+          `${message} you can bypass this message by setting bypassEmail: true when calling 'verifySelf'`
+        );
+        res = new Response(message, { status: 400 });
+      }
     }
 
     if (bypassEmail) {
+      this.#logger?.info('bypassing email requirements for email verification');
       res = this.updateSelf({ emailVerified: true }, rawResponse);
     }
 
-    this.#logger.error(
-      'Unable to verify email address. Configure your SMTP server in the console.'
-    );
     return res as T;
   }
 }

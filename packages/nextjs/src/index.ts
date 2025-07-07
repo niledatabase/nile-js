@@ -1,4 +1,8 @@
-import { TENANT_COOKIE } from '@niledatabase/server';
+import {
+  parseResetToken,
+  parseToken,
+  TENANT_COOKIE,
+} from '@niledatabase/server';
 import type { Extension } from '@niledatabase/server';
 
 const nextJs: Extension = (instance) => {
@@ -13,6 +17,19 @@ const nextJs: Extension = (instance) => {
         const tenantCookie = cooks.get(TENANT_COOKIE);
         if (tenantCookie) {
           instance.setContext({ tenantId: tenantCookie.value });
+        }
+      }
+    },
+    onResponse: async ({ response }) => {
+      const resHeaders = response?.headers;
+      if (resHeaders) {
+        const token = parseToken(resHeaders);
+        const reset = parseResetToken(resHeaders);
+        const cookie = [token, reset].filter(Boolean).join('; ');
+        if (cookie.length) {
+          // set this to true (only works once) since the request is 100% server side until the next request
+          instance.setContext({ preserveHeaders: true });
+          instance.setContext(new Headers({ cookie }));
         }
       }
     },

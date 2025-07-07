@@ -1,5 +1,10 @@
 import { Server } from '../../../Server';
-import { CTXHandlerType, NileConfig, RouteReturn } from '../../../types';
+import {
+  ContextReturn,
+  CTXHandlerType,
+  NileConfig,
+  RouteReturn,
+} from '../../../types';
 import { Config } from '../../../utils/Config';
 import getter from '../GET';
 import poster from '../POST';
@@ -11,26 +16,27 @@ export function handlersWithContext(config: Config): CTXHandlerType {
   const POST = poster(config.routes, config);
   const DELETE = deleter(config.routes, config);
   const PUT = puter(config.routes, config);
+
   return {
-    GET: async (req) => {
+    GET: async <T = Response>(req: Request): Promise<ContextReturn<T>> => {
       const response = await GET(req);
       const updatedConfig = updateConfig(response, config);
-      return { response, nile: new Server(updatedConfig) };
+      return { response: response as T, nile: new Server(updatedConfig) };
     },
-    POST: async (req) => {
+    POST: async <T = Response>(req: Request): Promise<ContextReturn<T>> => {
       const response = await POST(req);
       const updatedConfig = updateConfig(response, config);
-      return { response, nile: new Server(updatedConfig) };
+      return { response: response as T, nile: new Server(updatedConfig) };
     },
-    DELETE: async (req) => {
+    DELETE: async <T = Response>(req: Request): Promise<ContextReturn<T>> => {
       const response = await DELETE(req);
       const updatedConfig = updateConfig(response, config);
-      return { response, nile: new Server(updatedConfig) };
+      return { response: response as T, nile: new Server(updatedConfig) };
     },
-    PUT: async (req) => {
+    PUT: async <T = Response>(req: Request): Promise<ContextReturn<T>> => {
       const response = await PUT(req);
       const updatedConfig = updateConfig(response, config);
-      return { response, nile: new Server(updatedConfig) };
+      return { response: response as T, nile: new Server(updatedConfig) };
     },
   };
 }
