@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.22](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.21...v5.0.0-alpha.22) (2025-07-07)
+
+### Bug Fixes
+
+- **nextjs:** update onResponse to handle cookies ([6b3317e](https://github.com/niledatabase/nile-js/commit/6b3317e26d35bedcadbbdbedcd82662e399a82f6))
+
 # [5.0.0-alpha.21](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.20...v5.0.0-alpha.21) (2025-07-02)
 
 ### Bug Fixes
