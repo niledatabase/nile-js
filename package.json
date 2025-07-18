@@ -4,12 +4,13 @@
   "version": "0.0.2",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "build:storybook": "yarn build && yarn workspace @niledatabase/react build:storybook",
     "dev:react": "yarn workspace @niledatabase/react dev",
-    "build": "yarn workspaces foreach --all run build",
+    "build": "yarn workspaces foreach --all  --exclude 'apps/*' run build",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "husky install",
     "prepare": "husky install",
