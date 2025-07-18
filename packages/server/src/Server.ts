@@ -1,6 +1,6 @@
 import pg from 'pg';
 
-import { CTXHandlerType, Extension, NileConfig, RouteFunctions } from './types';
+import { Extension, NileConfig, NileHandlers } from './types';
 import { Config, ConfigurablePaths } from './utils/Config';
 import { watchHeaders, watchTenantId, watchUserId } from './utils/Event';
 import DbManager from './db';
@@ -19,9 +19,7 @@ export class Server {
   tenants: Tenants;
   auth: Auth;
   #config: Config;
-  #handlers: RouteFunctions & {
-    withContext: CTXHandlerType;
-  };
+  #handlers: NileHandlers;
   #manager: DbManager;
   #headers: undefined | Headers;
   #preserveHeaders: boolean;
@@ -69,7 +67,7 @@ export class Server {
     this.tenants = new Tenants(this.#config);
     this.auth = new Auth(this.#config);
 
-    // for `onConfigure, we run it, but after the full
+    // for `onConfigure`, we run it, but after the full config is already made
     if (config?.extensions) {
       for (const create of config.extensions) {
         if (typeof create !== 'function') {
@@ -79,6 +77,17 @@ export class Server {
         // we can only run this after config has a value, so we must wait, but we can't.
         if (ext.onConfigure) {
           ext.onConfigure();
+        }
+
+        if (ext?.replace?.handlers) {
+          this.#config
+            .logger('[EXTENSION]')
+            .debug(`${ext.id} replacing handlers`);
+          // if you replace these handlers, you can't call the original ones, so we need to "replace" our headers within the request.
+          this.#handlers = ext.replace.handlers({
+            ...this.#config.handlers,
+            withContext: handlersWithContext(this.#config),
+          });
         }
       }
     }
@@ -125,7 +134,7 @@ export class Server {
   getInstance<T = Request | Headers | Record<string, string>>(
     config: NileConfig,
     req?: T
-  ): Server {
+  ) {
     const _config = { ...this.#config, ...config };
 
     // be sure the config is up to date
@@ -361,11 +370,11 @@ export class Server {
   };
 }
 
-let server: Server;
-export function create(config?: NileConfig): Server {
+let server: unknown;
+export function create<T = Server>(config?: NileConfig): T {
   if (!server) {
-    server = new Server(config);
+    server = new Server(config) as T;
   }
 
-  return server;
+  return server as T;
 }

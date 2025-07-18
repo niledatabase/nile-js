@@ -22,7 +22,7 @@ const baseLogger = (config: void | NileConfig, ...params: unknown[]) => ({
   },
   debug(message: string | unknown, meta?: Record<string, unknown>) {
     if (config?.debug) {
-      console.debug(
+      console.info(
         `${orange}[niledb]${reset}${purple}[DEBUG]${reset}${params.join(
           ''
         )}${reset} ${message}`,
