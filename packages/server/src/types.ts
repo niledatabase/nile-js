@@ -30,6 +30,12 @@ export type ExtensionResult = {
 
   // maybe any function at all is get context, who knows
   onGetContext?: () => Any;
+  replace?: {
+    handlers: (handlers: NileHandlers) => Any;
+  };
+};
+export type NileHandlers = RouteFunctions & {
+  withContext: CTXHandlerType;
 };
 
 export type Extension = (instance: Server) => ExtensionResult;
