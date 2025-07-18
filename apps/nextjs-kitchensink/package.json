@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/nextjs-kitchensink",
-  "version": "0.1.0",
+  "version": "5.0.0-alpha.25",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,10 +12,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
-    "@niledatabase/client": "^5.0.0-alpha.23",
-    "@niledatabase/nextjs": "^5.0.0-alpha.23",
-    "@niledatabase/react": "^5.0.0-alpha.23",
-    "@niledatabase/server": "^5.0.0-alpha.23",
+    "@niledatabase/client": "^5.0.0-alpha.25",
+    "@niledatabase/nextjs": "^5.0.0-alpha.25",
+    "@niledatabase/react": "^5.0.0-alpha.25",
+    "@niledatabase/server": "^5.0.0-alpha.25",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.3",
     "@radix-ui/react-separator": "^1.1.7",
