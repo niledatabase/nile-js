@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.23](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.22...v5.0.0-alpha.23) (2025-07-18)
+
+### Bug Fixes
+
+- **nitro:** get nitro to work ([e171dfb](https://github.com/niledatabase/nile-js/commit/e171dfb0f7bee30100596be69ff188f76891b945))
+
 # [5.0.0-alpha.22](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.21...v5.0.0-alpha.22) (2025-07-07)
 
 **Note:** Version bump only for package @niledatabase/nitro
