@@ -11,6 +11,8 @@
     "build:storybook": "yarn build && yarn workspace @niledatabase/react build:storybook",
     "dev:react": "yarn workspace @niledatabase/react dev",
     "build": "yarn workspaces foreach --all  --exclude 'apps/*' run build",
+    "build:nextjs": "yarn workspaces foreach --all --topological run build",
+    "start:nextjs": "yarn workspace @niledatabase/nextjs-kitchensink start",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "husky install",
     "prepare": "husky install",
@@ -49,5 +51,5 @@
   "lint-staged": {
     "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix ."
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.9.2"
 }
