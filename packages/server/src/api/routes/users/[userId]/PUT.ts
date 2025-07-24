@@ -50,7 +50,7 @@ export async function PUT(
 
   const [userId] = new URL(init.request.url).pathname.split('/').reverse();
 
-  const url = apiRoutes(config).USER(userId);
+  const url = apiRoutes(config.apiUrl).USER(userId);
 
   return await fetch(url, init, config);
 }

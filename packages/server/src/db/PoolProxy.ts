@@ -24,7 +24,15 @@ export function createProxyForPool(pool: pg.Pool, config: Config): pg.Pool {
         }
         const caller = target[property];
         return function query(...args: AllowAny) {
-          info('query', ...args);
+          let log = '[QUERY]';
+          const { userId, tenantId } = config.context;
+          if (tenantId) {
+            log = `${log}[TENANT:${tenantId}]`;
+          }
+          if (userId) {
+            log = `${log}[USER:${userId}]`;
+          }
+          info(log, ...args);
           // @ts-expect-error - not mine
           const called = caller.apply(this, args);
           return called;

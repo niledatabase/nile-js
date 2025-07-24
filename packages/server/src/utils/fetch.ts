@@ -1,4 +1,5 @@
-import { Config } from './Config';
+import { PartialContext } from '../types';
+
 import { TENANT_COOKIE, USER_COOKIE } from './constants';
 
 function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
@@ -26,14 +27,14 @@ function getTokenFromCookie(headers: Headers, cookieKey: void | string) {
   }
   return null;
 }
-export function getTenantFromHttp(headers: Headers, config: Config) {
+export function getTenantFromHttp(headers: Headers, context?: PartialContext) {
   const cookieTenant = getTokenFromCookie(headers, TENANT_COOKIE);
 
-  return cookieTenant ? cookieTenant : config?.tenantId;
+  return cookieTenant ? cookieTenant : context?.tenantId;
 }
 
 // do we do this any more?
-export function getUserFromHttp(headers: Headers, config: Config) {
+export function getUserFromHttp(headers: Headers, context?: PartialContext) {
   const userHeader = headers?.get(USER_COOKIE);
-  return userHeader ? userHeader : config.userId;
+  return userHeader ? userHeader : context?.userId;
 }

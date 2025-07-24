@@ -4,6 +4,7 @@ import pg from 'pg';
 import { Config } from '../utils/Config';
 import { evictPool } from '../utils/Event';
 import { AfterCreate } from '../types';
+import { ctx } from '../api/utils/request-context';
 
 import { createProxyForPool } from './PoolProxy';
 
@@ -118,13 +119,16 @@ function makeAfterCreate(config: Config, id: string): AfterCreate {
       done(e, conn);
     });
 
-    if (config.tenantId) {
-      const query = [`SET nile.tenant_id = '${config.tenantId}'`];
-      if (config.userId) {
-        if (!config.tenantId) {
+    // prefer context, I guess
+    const tenantId = config.context.tenantId;
+    const userId = config.context.userId;
+    if (tenantId) {
+      const query = [`SET nile.tenant_id = '${tenantId}'`];
+      if (userId) {
+        if (!tenantId) {
           warn('A user id cannot be set in context without a tenant id');
         }
-        query.push(`SET nile.user_id = '${config.userId}'`);
+        query.push(`SET nile.user_id = '${userId}'`);
       }
 
       // in this example we use pg driver's connection API
@@ -139,11 +143,11 @@ function makeAfterCreate(config: Config, id: string): AfterCreate {
           });
         } else {
           if (query.length === 1) {
-            debug(`connection context set: tenantId=${config.tenantId}`);
+            debug(`connection context set: tenantId=${tenantId}`);
           }
           if (query.length === 2) {
             debug(
-              `connection context set: tenantId=${config.tenantId} userId=${config.userId}`
+              `connection context set: tenantId=${tenantId} userId=${userId}`
             );
           }
         }

@@ -7,11 +7,12 @@ import {
   DefaultNileAuthRoutes,
 } from '../../utils/routes';
 import auth from '../../utils/auth';
+import { ctx } from '../../utils/request-context';
 
 const key = 'ME';
 
 export default async function route(request: Request, config: Config) {
-  const url = apiRoutes(config)[key];
+  const url = apiRoutes(config.apiUrl)[key];
 
   if (request.method === 'GET') {
     return await GET(url, { request }, config);
@@ -39,8 +40,9 @@ export async function fetchMe(
   body?: string
 ): Promise<Response> {
   const clientUrl = `${config.serverOrigin}${config.routePrefix}${DefaultNileAuthRoutes.ME}`;
+  const { headers } = ctx.get();
   const init: RequestInit = {
-    headers: config.headers,
+    headers,
     method: method ?? 'GET',
   };
   if (method === 'PUT') {

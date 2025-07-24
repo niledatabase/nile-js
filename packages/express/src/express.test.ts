@@ -44,7 +44,10 @@ describe('express extension', () => {
             new Response(JSON.stringify({ msg: 'DELET OK' }), { status: 201 })
           ),
       },
-      setContext: jest.fn(),
+      withContext: jest.fn((context, fn) => {
+        // Simulate calling the callback with the mocked instance itself
+        return fn(instance);
+      }),
       paths: {
         get: ['/test/{id}'],
         post: ['/submit/{formId}'],
@@ -59,33 +62,6 @@ describe('express extension', () => {
       expect(cleaner('/api/{tenantId}/resource')).toBe(
         '/api/:tenantId/resource'
       );
-    });
-  });
-
-  describe('onSetContext', () => {
-    it('sets context from params and headers', () => {
-      const ext = expressExtension(app)(instance);
-      const req = {
-        params: { tenantId: 'abc' },
-        headers: { 'x-foo': 'bar' },
-      } as unknown as ExpressRequest;
-      const res = {} as unknown as ExpressResponse;
-      const next = jest.fn();
-
-      ext.onSetContext(req, res, next);
-
-      expect(instance.setContext).toHaveBeenCalledWith({ tenantId: 'abc' });
-      expect(instance.setContext).toHaveBeenCalledWith(req.headers);
-      expect(next).toHaveBeenCalled();
-    });
-  });
-
-  describe('onGetContext', () => {
-    it('returns context from async local storage', () => {
-      const ext = expressExtension(app)(instance);
-      const result = ext.onGetContext();
-      // Since AsyncLocalStorage requires a real context run, this will be undefined in this test
-      expect(result).toEqual({});
     });
   });
 
@@ -121,7 +97,7 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      const result = await ext.onHandleRequest(req, res, jest.fn());
+      const result = await ext.onHandleRequest([req, res, jest.fn()]);
 
       expect(instance.handlers.GET).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
@@ -151,7 +127,7 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      await ext.onHandleRequest(req, res, jest.fn());
+      await ext.onHandleRequest([req, res, jest.fn()]);
 
       expect(res.send).toHaveBeenCalledWith('Plain text body');
     });
@@ -175,7 +151,7 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      const result = await ext.onHandleRequest(req, res, jest.fn());
+      const result = await ext.onHandleRequest([req, res, jest.fn()]);
 
       expect(res.status).not.toHaveBeenCalled();
       expect(result).toBe(ExtensionState.onHandleRequest);

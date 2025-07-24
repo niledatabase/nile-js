@@ -8,28 +8,53 @@ export type Opts = {
   basePath?: string;
   fetch?: typeof fetch;
 };
+
+export type Context = {
+  headers: Headers;
+  tenantId: string | undefined | null;
+  userId: string | undefined | null;
+  preserveHeaders: boolean;
+};
+
+// you can set headers to null, which will reset the them, keeping everything else
+// this is important for "resetting" after internal auth (like sign up user 1, then sign up user 2 and use that context for a while)
+export type PartialContext = {
+  headers?: null | Headers;
+  tenantId?: string | undefined | null;
+  userId?: string | undefined | null;
+  preserveHeaders?: boolean;
+};
+
+export type ContextParams = PartialContext & {
+  ddl?: boolean;
+};
+
+export type CTX = {
+  run: <T>(ctx: Partial<Context>, fn: () => T) => T;
+  get: () => Context;
+  set: (partial: Partial<PartialContext>) => void;
+  // mostly for convenience and testing.
+  getLastUsed: () => Context;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
 type Any = any;
-export type ExtensionResult = {
+export type ExtensionResult<TParams> = {
   id: string;
+  withContext?: (ctx: CTX) => Promise<void>;
   // Called before request is handled
-  onRequest?: (...params: Any) => void | Promise<void | RequestInit>;
+  onRequest?: (params: TParams, ctx: CTX) => void | Promise<void | RequestInit>;
 
   // Called after response is generated - probably a response
-  onResponse?: (...params: Any) => void | Promise<void>;
+  onResponse?: (params: TParams, ctx: CTX) => void | Promise<void>;
 
   // called before requests to nile-auth, before onRequest
   // used for making sure the request is an actual `Request` object (or handles otherwise)
-  onHandleRequest?: (...params: Any) => RouteReturn | Promise<RouteReturn>;
+  onHandleRequest?: (params?: TParams) => RouteReturn | Promise<RouteReturn>;
 
   // allow runtime configurations by extensions
-  onConfigure?: (...params: Any) => void;
+  onConfigure?: (params?: TParams) => void;
 
-  // maybe any function at all is a set context, who knows
-  onSetContext?: (...params: Any) => void;
-
-  // maybe any function at all is get context, who knows
-  onGetContext?: () => Any;
   replace?: {
     handlers: (handlers: NileHandlers) => Any;
   };
@@ -38,11 +63,14 @@ export type NileHandlers = RouteFunctions & {
   withContext: CTXHandlerType;
 };
 
-export type Extension = (instance: Server) => ExtensionResult;
+export type Extension<TParams = Any> = (
+  instance: Server
+) => ExtensionResult<TParams>;
 export enum ExtensionState {
   onHandleRequest = 'onHandleRequest',
   onRequest = 'onRequest',
   onResponse = 'onResponse',
+  withContext = 'withContext',
 }
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
 export type LoggerType = {

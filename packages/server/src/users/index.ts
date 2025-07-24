@@ -5,6 +5,7 @@ import { fetchVerifyEmail } from '../api/routes/auth/verify-email';
 import getCsrf from '../auth/obtainCsrf';
 import { Loggable } from '../utils/Logger';
 import { parseCallback } from '../auth';
+import { ctx, withNileContext } from '../api/utils/request-context';
 
 import { User } from './types';
 
@@ -45,15 +46,17 @@ export default class Users {
     >,
     rawResponse?: boolean
   ): Promise<T> {
-    const res = await fetchMe(this.#config, 'PUT', JSON.stringify(req));
-    if (rawResponse) {
-      return res as T;
-    }
-    try {
-      return await res?.clone().json();
-    } catch {
-      return res as T;
-    }
+    return withNileContext(this.#config, async () => {
+      const res = await fetchMe(this.#config, 'PUT', JSON.stringify(req));
+      if (rawResponse) {
+        return res as T;
+      }
+      try {
+        return await res?.clone().json();
+      } catch {
+        return res as T;
+      }
+    });
   }
 
   /**
@@ -64,13 +67,16 @@ export default class Users {
    * `packages/server/src/api/routes/me/index.ts` under `removeSelf`.
    */
   async removeSelf(): Promise<Response> {
-    const me = await this.getSelf();
-    if ('id' in me) {
-      this.#config.userId = (me as unknown as User).id;
-    }
-    const res = await fetchMe(this.#config, 'DELETE');
-    updateHeaders(new Headers());
-    return res;
+    return withNileContext(this.#config, async () => {
+      const me = await this.getSelf();
+      if ('id' in me) {
+        const userId = (me as unknown as User).id;
+        ctx.set({ userId });
+      }
+      const res = await fetchMe(this.#config, 'DELETE');
+      updateHeaders(new Headers());
+      return res;
+    });
   }
 
   /**
@@ -84,16 +90,18 @@ export default class Users {
   async getSelf<T = User | Response>(rawResponse?: false): Promise<T>;
   async getSelf(rawResponse: true): Promise<Response>;
   async getSelf<T = User | Response>(rawResponse?: boolean): Promise<T> {
-    const res = await fetchMe(this.#config);
+    return withNileContext(this.#config, async () => {
+      const res = await fetchMe(this.#config);
 
-    if (rawResponse) {
-      return res as T;
-    }
-    try {
-      return await res?.clone().json();
-    } catch {
-      return res as T;
-    }
+      if (rawResponse) {
+        return res as T;
+      }
+      try {
+        return await res?.clone().json();
+      } catch {
+        return res as T;
+      }
+    });
   }
 
   /**
@@ -121,41 +129,45 @@ export default class Users {
     options?: true | { bypassEmail?: boolean; callbackUrl?: string },
     rawResponse = false
   ): Promise<T> {
-    const bypassEmail =
-      typeof options === 'object' && options?.bypassEmail === true;
-    const callbackUrl =
-      typeof options === 'object'
-        ? options.callbackUrl
-        : defaultCallbackUrl(this.#config).callbackUrl;
+    return withNileContext(this.#config, async () => {
+      const bypassEmail =
+        typeof options === 'object' && options?.bypassEmail === true;
+      const callbackUrl =
+        typeof options === 'object'
+          ? options.callbackUrl
+          : defaultCallbackUrl().callbackUrl;
 
-    let res;
+      let res;
 
-    try {
-      const me = await this.getSelf();
-      if (me instanceof Response) {
-        return me as T;
-      }
-      res = await verifyEmailAddress(this.#config, me, String(callbackUrl));
-      return res as T;
-    } catch (e) {
-      if (!bypassEmail) {
-        let message = 'Unable to verify email.';
-        if (e instanceof Error) {
-          message = e.message;
+      try {
+        const me = await this.getSelf();
+        if (me instanceof Response) {
+          return me as T;
         }
-        this.#logger?.error(
-          `${message} you can bypass this message by setting bypassEmail: true when calling 'verifySelf'`
-        );
-        res = new Response(message, { status: 400 });
+        res = await verifyEmailAddress(this.#config, me, String(callbackUrl));
+        return res as T;
+      } catch (e) {
+        if (!bypassEmail) {
+          let message = 'Unable to verify email.';
+          if (e instanceof Error) {
+            message = e.message;
+          }
+          this.#logger?.error(
+            `${message} you can bypass this message by setting bypassEmail: true when calling 'verifySelf'`
+          );
+          res = new Response(message, { status: 400 });
+        }
       }
-    }
 
-    if (bypassEmail) {
-      this.#logger?.info('bypassing email requirements for email verification');
-      res = this.updateSelf({ emailVerified: true }, rawResponse);
-    }
+      if (bypassEmail) {
+        this.#logger?.info(
+          'bypassing email requirements for email verification'
+        );
+        res = this.updateSelf({ emailVerified: true }, rawResponse);
+      }
 
-    return res as T;
+      return res as T;
+    });
   }
 }
 
@@ -172,9 +184,11 @@ async function verifyEmailAddress(
   user: User,
   callback: string
 ) {
-  config.headers.set('content-type', 'application/x-www-form-urlencoded');
+  const { headers } = ctx.get();
+  headers?.set('content-type', 'application/x-www-form-urlencoded');
+  ctx.set({ headers });
   const { csrfToken } = await getCsrf<{ csrfToken: string }>(config);
-  const defaults = defaultCallbackUrl(config);
+  const defaults = defaultCallbackUrl();
   const callbackUrl = callback ?? String(defaults.callbackUrl);
   const res = await fetchVerifyEmail(
     config,
@@ -197,9 +211,10 @@ async function verifyEmailAddress(
  * @param config - Configuration whose headers may contain the cookie.
  * @returns An object with the parsed `callbackUrl` or `null`.
  */
-export function defaultCallbackUrl(config: Config) {
+export function defaultCallbackUrl() {
   let cb = null;
-  const fallbackCb = parseCallback(config.headers);
+  const { headers } = ctx.get();
+  const fallbackCb = parseCallback(headers);
   if (fallbackCb) {
     const [, value] = fallbackCb.split('=');
     cb = decodeURIComponent(value);

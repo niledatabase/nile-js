@@ -1,6 +1,13 @@
 import { AsyncLocalStorage } from 'async_hooks';
+import { IncomingHttpHeaders } from 'http';
 
-import { ExtensionState, Server } from '@niledatabase/server';
+import {
+  ContextParams,
+  Extension,
+  ExtensionResult,
+  ExtensionState,
+  Server,
+} from '@niledatabase/server';
 import type {
   Request as ExpressRequest,
   Response as ExpressResponse,
@@ -33,16 +40,17 @@ type NileWithExpress = Server & {
 const contextStore = new AsyncLocalStorage<Map<string, unknown>>();
 
 // Express extension factory
-export function express(app?: Express) {
+export const express = (app?: Express) => {
   let init = false;
 
   return (instance: Server) => {
     const { error, debug } = instance.logger('[EXTENSION][express]');
 
-    // Internal context helpers
-    const setRequestContext = (context: unknown) => {
+    // Internal context helpers - I think we delete this now?
+    const setRequestContext = (context: ContextParams) => {
       contextStore.getStore()?.set('context', context);
-      instance.setContext(context);
+
+      instance.withContext(context);
     };
 
     function doConfigure(server: NileWithExpress) {
@@ -64,14 +72,17 @@ export function express(app?: Express) {
 
       app.param('tenantId', (req, res, next, tenantId) => {
         debug(`tenantId param set: ${tenantId}`);
-        setRequestContext({ tenantId });
+        setRequestContext({
+          tenantId,
+          headers: new Headers(normalizeHeaders(req.headers)),
+        });
         next();
       });
 
       app.use((req, res, next) => {
-        const headers =
-          (typeof req === 'object' && 'headers' in req && req.headers) || {};
-        setRequestContext(headers);
+        setRequestContext({
+          headers: new Headers(normalizeHeaders(req.headers)),
+        });
         next();
       });
     }
@@ -80,28 +91,6 @@ export function express(app?: Express) {
 
     return {
       id: 'express',
-
-      onSetContext: (req: unknown, _res: unknown, next: unknown) => {
-        const maybeReq = req as ExpressRequest;
-
-        if (maybeReq?.params?.tenantId) {
-          setRequestContext({ tenantId: maybeReq.params.tenantId });
-        }
-
-        if (maybeReq?.headers) {
-          setRequestContext(maybeReq.headers);
-        }
-
-        if (req instanceof Headers) {
-          setRequestContext(req);
-        }
-
-        if (typeof next === 'function') next();
-      },
-
-      onGetContext: () => {
-        return contextStore.getStore()?.get('context') ?? {};
-      },
 
       onConfigure: () => {
         const { paths: rawPaths } = instance;
@@ -117,10 +106,9 @@ export function express(app?: Express) {
       },
 
       onHandleRequest: async (
-        req: ExpressRequest,
-        res: ExpressResponse,
-        next: NextFunction
+        params: [ExpressRequest, ExpressResponse, NextFunction]
       ) => {
+        const [req, res, next] = params;
         debug('handling response');
 
         const reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
@@ -146,10 +134,16 @@ export function express(app?: Express) {
         debug(`[${method}] proxy: ${reqUrl} ${JSON.stringify(init)}`);
 
         let response: Response;
+        const context = {
+          headers: new Headers(req.headers as HeadersInit),
+          tenantId: req.params?.tenantId || undefined,
+        };
         try {
-          response = (await instance.handlers[
-            method as 'GET' | 'POST' | 'PUT' | 'DELETE'
-          ](proxyRequest, { disableExtensions: ['express'] })) as Response;
+          response = await instance.withContext(context, async (ctx) => {
+            return (await ctx.handlers[
+              method as 'GET' | 'POST' | 'PUT' | 'DELETE'
+            ](proxyRequest, { disableExtensions: ['express'] })) as Response;
+          });
         } catch (e) {
           error(e);
           return next();
@@ -187,4 +181,16 @@ export function express(app?: Express) {
       },
     };
   };
+};
+
+function normalizeHeaders(headers: IncomingHttpHeaders): HeadersInit {
+  const normalized: Record<string, string> = {};
+  for (const [key, value] of Object.entries(headers)) {
+    if (typeof value === 'string') {
+      normalized[key] = value;
+    } else if (Array.isArray(value)) {
+      normalized[key] = value.join(','); // Join multi-values with commas
+    }
+  }
+  return normalized;
 }

@@ -1,5 +1,4 @@
 import { NileConfig } from './types';
-import { HEADER_ORIGIN, HEADER_SECURE_COOKIES } from './utils/constants';
 import { getTenantId } from './utils/Config/envVars';
 import { handlersWithContext } from './api/handlers/withContext';
 import DbManager from './db';
@@ -11,12 +10,18 @@ import { Server, create } from './Server';
 import { Config } from './utils/Config';
 
 // Mocks
-const mockWarn = jest.fn();
-const mockDebug = jest.fn();
-jest.mock('./utils/Logger', () => () => () => ({
-  warn: mockWarn,
-  debug: mockDebug,
-}));
+
+jest.mock('./utils/Logger', () => {
+  const mockWarn = jest.fn();
+  const mockDebug = jest.fn();
+
+  return () => () => ({
+    warn: mockWarn,
+    debug: mockDebug,
+    silly: jest.fn(),
+  });
+});
+
 jest.mock('./db');
 jest.mock('./users');
 jest.mock('./tenants');
@@ -80,14 +85,7 @@ describe('Server', () => {
     expect(watchUserId).toHaveBeenCalled();
     expect(watchHeaders).toHaveBeenCalled();
     // Should trigger resets and reinitializations
-    expect(Users).toHaveBeenCalledTimes(5);
-  });
-
-  it('should merge and normalize headers', () => {
-    const { headers } = server.getContext();
-    expect(headers?.get('x-custom')).toBe('value');
-    expect(headers?.get(HEADER_ORIGIN)).toBe('http://localhost');
-    expect(headers?.get(HEADER_SECURE_COOKIES)).toBe('true');
+    expect(Users).toHaveBeenCalledTimes(4);
   });
 
   it('should provide database access and clear method', () => {
@@ -110,42 +108,38 @@ describe('Server', () => {
     );
   });
 
-  it('should return updated context with setContext (Headers)', () => {
+  it('should return updated context with setContext (Headers)', async () => {
     const newHeaders = new Headers({ tenantid: '123', userid: 'abc' });
-    server.setContext(newHeaders);
-    const context = server.getContext();
-    expect(context.headers?.get('tenantid')).toBe('123');
+    const updated = await server.withContext({ headers: newHeaders });
+    const context = updated.getContext();
+    expect(context?.headers?.get('tenantid')).toBe('123');
   });
 
-  it('should return updated context with setContext (Request)', () => {
+  it('should return updated context with setContext (Request)', async () => {
     const request = new Request('http://localhost', {
       headers: { tenantid: '789' },
     });
-    server.setContext(request);
-    const context = server.getContext();
+    const updated = await server.withContext({ headers: request.headers });
+    const context = updated.getContext();
     expect(context.headers?.get('tenantid')).toBe('789');
   });
 
-  it('should support object-style context setting', () => {
-    server.setContext({ tenantId: 'override-tenant', userId: 'override-user' });
-    const context = server.getContext();
+  it('should support object-style context setting', async () => {
+    const updated = await server.withContext({
+      tenantId: 'override-tenant',
+      userId: 'override-user',
+    });
+    const context = updated.getContext();
     expect(context.tenantId).toBe('override-tenant');
     expect(context.userId).toBe('override-user');
   });
 
-  it('should warn on invalid context input', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    server.setContext(123 as any);
-    expect(mockWarn).toHaveBeenCalledWith(
-      'Set context expects a Request, Header instance or an object of Record<string, string>'
-    );
-  });
-
-  it('getInstance() should mutate and reset instance correctly', () => {
-    const inst = server.getInstance(
-      { tenantId: 'next-tenant', userId: 'next-user' },
-      new Headers({ 'x-next': 'yes' })
-    );
+  it('getInstance() should mutate and reset instance correctly', async () => {
+    const inst = await server.withContext({
+      tenantId: 'next-tenant',
+      userId: 'next-user',
+      headers: new Headers({ 'x-next': 'yes' }),
+    });
     const context = inst.getContext();
     expect(context.tenantId).toBe('next-tenant');
     expect(context.userId).toBe('next-user');

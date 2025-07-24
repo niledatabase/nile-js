@@ -43,7 +43,7 @@ export async function DELETE(
   }
 
   init.method = 'DELETE';
-  const url = `${apiRoutes(config).INVITE(tenantId)}/${inviteId}`;
+  const url = `${apiRoutes(config.apiUrl).INVITE(tenantId)}/${inviteId}`;
 
   return await fetch(url, init, config);
 }

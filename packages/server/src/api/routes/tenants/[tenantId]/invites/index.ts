@@ -1,3 +1,4 @@
+import { ctx } from '../../../../utils/request-context';
 import { Config } from '../../../../../utils/Config';
 import { DefaultNileAuthRoutes, isUUID } from '../../../../utils/routes';
 import { Routes } from '../../../../types';
@@ -23,12 +24,13 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 }
 
 export async function fetchInvites(config: Config) {
-  if (!config.tenantId) {
+  const { tenantId, headers } = ctx.get();
+  if (!tenantId) {
     throw new Error(
       'Unable to fetch invites for the tenant, the tenantId context is missing. Call nile.setContext({ tenantId })'
     );
   }
-  if (!isUUID(config.tenantId)) {
+  if (!isUUID(tenantId)) {
     config
       .logger('fetchInvites')
       .warn(
@@ -37,9 +39,9 @@ export async function fetchInvites(config: Config) {
   }
   const clientUrl = `${config.serverOrigin}${
     config.routePrefix
-  }${DefaultNileAuthRoutes.INVITES.replace('{tenantId}', config.tenantId)}`;
+  }${DefaultNileAuthRoutes.INVITES.replace('{tenantId}', tenantId)}`;
 
-  const req = new Request(clientUrl, { headers: config.headers });
+  const req = new Request(clientUrl, { headers });
 
   return (await config.handlers.GET(req)) as Response;
 }

@@ -6,6 +6,7 @@ import { fetchSignIn } from '../api/routes/auth/signin';
 import { fetchSignOut } from '../api/routes/auth/signout';
 import { fetchSignUp } from '../api/routes/signup';
 import { ActiveSession, JWT, Provider, ProviderName } from '../api/utils/auth';
+import { ctx, withNileContext } from '../api/utils/request-context';
 import { NileAuthRoutes } from '../api/utils/routes';
 import { User } from '../users/types';
 import { Config } from '../utils/Config';
@@ -59,19 +60,21 @@ export default class Auth {
   async getSession<T = JWT | ActiveSession | Response | undefined>(
     rawResponse = false
   ): Promise<T | Response> {
-    const res = await fetchSession(this.#config);
-    if (rawResponse) {
-      return res;
-    }
-    try {
-      const session = await res.clone().json();
-      if (Object.keys(session).length === 0) {
-        return undefined as T;
+    return withNileContext(this.#config, async () => {
+      const res = await fetchSession(this.#config);
+      if (rawResponse) {
+        return res;
       }
-      return session as T;
-    } catch {
-      return res;
-    }
+      try {
+        const session = await res.clone().json();
+        if (Object.keys(session).length === 0) {
+          return undefined as T;
+        }
+        return session as T;
+      } catch {
+        return res;
+      }
+    });
   }
   /**
    * Acquire a CSRF token for subsequent authenticated requests.
@@ -86,7 +89,9 @@ export default class Auth {
   async getCsrf<T = Response | JSON>(rawResponse?: false): Promise<T>;
   async getCsrf(rawResponse: true): Promise<Response>;
   async getCsrf<T = Response | JSON>(rawResponse = false) {
-    return await obtainCsrf<T>(this.#config, rawResponse);
+    return withNileContext(this.#config, async () => {
+      return await obtainCsrf<T>(this.#config, rawResponse);
+    });
   }
   /**
    * List all configured authentication providers.
@@ -105,15 +110,17 @@ export default class Auth {
   async listProviders<T = { [key: string]: Provider }>(
     rawResponse = false
   ): Promise<T | Response> {
-    const res = await fetchProviders(this.#config);
-    if (rawResponse) {
-      return res;
-    }
-    try {
-      return (await res.clone().json()) as T;
-    } catch {
-      return res;
-    }
+    return withNileContext(this.#config, async () => {
+      const res = await fetchProviders(this.#config);
+      if (rawResponse) {
+        return res;
+      }
+      try {
+        return (await res.clone().json()) as T;
+      } catch {
+        return res;
+      }
+    });
   }
   /**
    * Sign the current user out by calling `/api/auth/signout`.
@@ -122,22 +129,24 @@ export default class Auth {
    * from the internal configuration once the request completes.
    */
   async signOut(): Promise<Response> {
-    // check for csrf header, maybe its already there?
-    const csrfRes = await this.getCsrf();
-    if (!('csrfToken' in csrfRes)) {
-      throw new Error('Unable to obtain CSRF token. Sign out failed.');
-    }
+    return withNileContext(this.#config, async () => {
+      // check for csrf header, maybe its already there?
+      const csrfRes = await this.getCsrf();
+      if (!('csrfToken' in csrfRes)) {
+        throw new Error('Unable to obtain CSRF token. Sign out failed.');
+      }
 
-    const body = JSON.stringify({
-      csrfToken: csrfRes.csrfToken,
-      json: true,
+      const body = JSON.stringify({
+        csrfToken: csrfRes.csrfToken,
+        json: true,
+      });
+      const res = await fetchSignOut(this.#config, body);
+
+      updateHeaders(new Headers({}));
+      ctx.set({ headers: null });
+
+      return res;
     });
-    const res = await fetchSignOut(this.#config, body);
-
-    updateHeaders(new Headers({}));
-    this.#config.headers = new Headers();
-
-    return res;
   }
 
   /**
@@ -159,65 +168,72 @@ export default class Auth {
     payload: SignUpPayload,
     rawResponse?: boolean
   ): Promise<T> {
-    // be sure its fresh
-    this.#config.headers = new Headers();
-    const { email, password, ...params } = payload;
-    if (!email || !password) {
-      throw new Error(
-        'Server side sign up requires a user email and password.'
-      );
-    }
-
-    const providers = await this.listProviders();
-    const { credentials } = providers ?? {};
-    if (!credentials) {
-      throw new Error(
-        'Unable to obtain credential provider. Aborting server side sign up.'
-      );
-    }
-
-    const csrf = await this.getCsrf();
-
-    let csrfToken;
-    if ('csrfToken' in csrf) {
-      csrfToken = csrf.csrfToken;
-    } else {
-      throw new Error('Unable to obtain parse CSRF. Request blocked.');
-    }
-
-    const body = JSON.stringify({
-      email,
-      password,
-      csrfToken,
-      callbackUrl: credentials.callbackUrl,
-    });
-
-    const res = await fetchSignUp(this.#config, { body, params });
-    if (res.status > 299) {
-      this.#logger.error(await res.clone().text());
-      return undefined as T;
-    }
-    const token = parseToken(res.headers);
-    if (!token) {
-      throw new Error('Server side sign up failed. Session token not found');
-    }
-    this.#config.headers?.append('cookie', token);
-    updateHeaders(this.#config.headers);
-    if (rawResponse) {
-      return res as T;
-    }
-    try {
-      const json = (await res.clone().json()) as T;
-      if (json && typeof json === 'object' && 'tenants' in json) {
-        const tenantId = (json as unknown as User).tenants[0];
-        if (tenantId) {
-          updateTenantId(tenantId);
-        }
+    return withNileContext(this.#config, async () => {
+      // be sure its fresh
+      ctx.set({ headers: null });
+      const { email, password, ...params } = payload;
+      if (!email || !password) {
+        throw new Error(
+          'Server side sign up requires a user email and password.'
+        );
       }
-      return json;
-    } catch {
-      return res as T;
-    }
+
+      const providers = await this.listProviders();
+      const { credentials } = providers ?? {};
+      if (!credentials) {
+        throw new Error(
+          'Unable to obtain credential provider. Aborting server side sign up.'
+        );
+      }
+
+      const csrf = await obtainCsrf(this.#config);
+
+      let csrfToken;
+      if ('csrfToken' in csrf) {
+        csrfToken = csrf.csrfToken;
+      } else {
+        throw new Error('Unable to obtain parse CSRF. Request blocked.');
+      }
+
+      const body = JSON.stringify({
+        email,
+        password,
+        csrfToken,
+        callbackUrl: credentials.callbackUrl,
+      });
+
+      const res = await fetchSignUp(this.#config, { body, params });
+      if (res.status > 299) {
+        this.#logger.error(await res.clone().text());
+        return undefined as T;
+      }
+      const token = parseToken(res.headers);
+      if (!token) {
+        throw new Error('Server side sign up failed. Session token not found');
+      }
+      const { headers } = ctx.get();
+      headers?.append('cookie', token);
+      ctx.set({ headers });
+      // this will globally set headers for everyone, so how
+      // do you make it so you can chain these together? or at least
+      // call them sequentially safely? you gotta use the `withContext` callback
+      updateHeaders(headers);
+      if (rawResponse) {
+        return res as T;
+      }
+      try {
+        const json = (await res.clone().json()) as T;
+        if (json && typeof json === 'object' && 'tenants' in json) {
+          const tenantId = (json as unknown as User).tenants[0];
+          if (tenantId) {
+            updateTenantId(tenantId);
+          }
+        }
+        return json;
+      } catch {
+        return res as T;
+      }
+    });
   }
 
   /**
@@ -232,38 +248,38 @@ export default class Auth {
     callbackUrl?: string;
     redirectUrl?: string;
   }): Promise<Response> {
-    let email = '';
-    const defaults = defaultCallbackUrl({
-      config: this.#config,
+    return withNileContext(this.#config, async () => {
+      let email = '';
+      const defaults = defaultCallbackUrl(this.#config);
+      let callbackUrl = defaults.callbackUrl;
+      let redirectUrl = defaults.redirectUrl;
+
+      if ('email' in req) {
+        email = req.email;
+      }
+
+      if ('callbackUrl' in req) {
+        callbackUrl = fQUrl(req.callbackUrl ?? '', this.#config);
+      }
+      if ('redirectUrl' in req) {
+        redirectUrl = fQUrl(req.redirectUrl ?? '', this.#config);
+      }
+      const body = JSON.stringify({
+        email,
+        redirectUrl,
+        callbackUrl,
+      });
+
+      // we need a default
+      const data = await fetchResetPassword(
+        this.#config,
+        'POST',
+        body,
+        new URLSearchParams(),
+        false
+      );
+      return data;
     });
-    let callbackUrl = defaults.callbackUrl;
-    let redirectUrl = defaults.redirectUrl;
-
-    if ('email' in req) {
-      email = req.email;
-    }
-
-    if ('callbackUrl' in req) {
-      callbackUrl = req.callbackUrl ? req.callbackUrl : null;
-    }
-    if ('redirectUrl' in req) {
-      redirectUrl = req.redirectUrl ? req.redirectUrl : null;
-    }
-    const body = JSON.stringify({
-      email,
-      redirectUrl,
-      callbackUrl,
-    });
-
-    // we need a default
-    const data = await fetchResetPassword(
-      this.#config,
-      'POST',
-      body,
-      new URLSearchParams(),
-      false
-    );
-    return data;
   }
 
   /**
@@ -286,101 +302,106 @@ export default class Auth {
           redirectUrl?: string;
         }
   ): Promise<Response> {
-    let email = '';
-    let password = '';
-    const defaults = defaultCallbackUrl({ config: this.#config });
-    let callbackUrl = defaults.callbackUrl;
-    let redirectUrl = defaults.redirectUrl;
-    if (req instanceof Request) {
-      const body = await req.json();
-      email = body.email;
-      password = body.password;
-      const cbFromHeaders = parseCallback(req.headers);
-      if (cbFromHeaders) {
-        callbackUrl = cbFromHeaders;
+    return withNileContext(this.#config, async () => {
+      let email = '';
+      let password = '';
+      const defaults = defaultCallbackUrl(this.#config);
+      let callbackUrl = defaults.callbackUrl;
+      let redirectUrl = defaults.redirectUrl;
+      if (req instanceof Request) {
+        const body = await req.json();
+        email = body.email;
+        password = body.password;
+        const cbFromHeaders = parseCallback(req.headers);
+        if (cbFromHeaders) {
+          callbackUrl = cbFromHeaders;
+        }
+        if (body.callbackUrl) {
+          callbackUrl = body.callbackUrl;
+        }
+        if (body.redirectUrl) {
+          redirectUrl = body.redirectUrl;
+        }
+      } else {
+        if ('email' in req) {
+          email = req.email;
+        }
+        if ('password' in req) {
+          password = req.password;
+        }
+        if ('callbackUrl' in req) {
+          callbackUrl = req.callbackUrl ? req.callbackUrl : null;
+        }
+        if ('redirectUrl' in req) {
+          redirectUrl = req.redirectUrl ? req.redirectUrl : null;
+        }
       }
-      if (body.callbackUrl) {
-        callbackUrl = body.callbackUrl;
+      // we need a default
+      await this.getCsrf();
+      const body = JSON.stringify({
+        email,
+        password,
+        redirectUrl,
+        callbackUrl,
+      });
+      let urlWithParams;
+      try {
+        const data = await fetchResetPassword(this.#config, 'POST', body);
+        const cloned = data.clone();
+        if (data.status === 400) {
+          const text = await cloned.text();
+          this.#logger.error(text);
+          return data;
+        }
+
+        const { url } = await data.json();
+        urlWithParams = url;
+      } catch {
+        // failed
       }
-      if (body.redirectUrl) {
-        redirectUrl = body.redirectUrl;
+      let token;
+      try {
+        const worthyParams = new URL(urlWithParams).searchParams;
+        const answer = await fetchResetPassword(
+          this.#config,
+          'GET',
+          null,
+          worthyParams
+        );
+        token = parseResetToken(answer.headers);
+      } catch {
+        this.#logger.warn(
+          'Unable to parse reset password url. Password not reset.'
+        );
       }
-    } else {
-      if ('email' in req) {
-        email = req.email;
+
+      // this only needs to happen on the local config
+      const { headers } = ctx.get();
+      const cookie = headers?.get('cookie')?.split('; ');
+      if (token) {
+        cookie?.push(token);
+      } else {
+        throw new Error(
+          'Unable to reset password, reset token is missing from response'
+        );
       }
-      if ('password' in req) {
-        password = req.password;
+      if (cookie) {
+        headers?.set('cookie', cookie?.join('; '));
+        ctx.set({
+          headers,
+        });
       }
-      if ('callbackUrl' in req) {
-        callbackUrl = req.callbackUrl ? req.callbackUrl : null;
-      }
-      if ('redirectUrl' in req) {
-        redirectUrl = req.redirectUrl ? req.redirectUrl : null;
-      }
-    }
-    // we need a default
-    await this.getCsrf();
-    const body = JSON.stringify({
-      email,
-      password,
-      redirectUrl,
-      callbackUrl,
+      const res = await fetchResetPassword(this.#config, 'PUT', body);
+      // remove the token
+      cookie?.pop();
+      const cleaned: string[] =
+        cookie?.filter((c) => !c.includes('nile.session')) ?? [];
+      cleaned.push(String(parseToken(res.headers)));
+      const updatedHeaders = new Headers({ cookie: cleaned.join('; ') });
+      updateHeaders(updatedHeaders);
+
+      return res;
     });
-    let urlWithParams;
-    try {
-      const data = await fetchResetPassword(this.#config, 'POST', body);
-      const cloned = data.clone();
-      if (data.status === 400) {
-        const text = await cloned.text();
-        this.#logger.error(text);
-        return data;
-      }
-
-      const { url } = await data.json();
-      urlWithParams = url;
-    } catch {
-      // failed
-    }
-    let token;
-    try {
-      const worthyParams = new URL(urlWithParams).searchParams;
-      const answer = await fetchResetPassword(
-        this.#config,
-        'GET',
-        null,
-        worthyParams
-      );
-      token = parseResetToken(answer.headers);
-    } catch {
-      this.#logger.warn(
-        'Unable to parse reset password url. Password not reset.'
-      );
-    }
-
-    // this only needs to happen on the local config
-    const cookie = this.#config.headers.get('cookie')?.split('; ');
-    if (token) {
-      cookie?.push(token);
-    } else {
-      throw new Error(
-        'Unable to reset password, reset token is missing from response'
-      );
-    }
-    this.#config.headers = new Headers({
-      ...this.#config.headers,
-      cookie: cookie?.join('; '),
-    });
-    const res = await fetchResetPassword(this.#config, 'PUT', body);
-    // remove the token
-    cookie?.pop();
-    const cleaned: string[] =
-      cookie?.filter((c) => !c.includes('nile.session')) ?? [];
-    cleaned.push(String(parseToken(res.headers)));
-    const updatedHeaders = new Headers({ cookie: cleaned.join('; ') });
-    updateHeaders(updatedHeaders);
-
-    return res;
   }
   /**
    * Low level helper used by {@link signIn} to complete provider flows.
@@ -390,7 +411,9 @@ export default class Auth {
    */
   async callback(provider: ProviderName, body?: string | Request) {
     if (body instanceof Request) {
-      this.#config.headers = body.headers;
+      ctx.set({
+        headers: body.headers,
+      });
       return await fetchCallback(
         this.#config,
         provider,
@@ -421,137 +444,143 @@ export default class Auth {
     payload?: Request | { email: string; password: string },
     rawResponse?: boolean
   ): Promise<T> {
-    if (payload instanceof Request) {
-      const body = new URLSearchParams(await payload.text());
-      const origin = new URL(payload.url).origin;
+    return withNileContext(this.#config, async () => {
+      if (payload instanceof Request) {
+        const body = new URLSearchParams(await payload.text());
+        const origin = new URL(payload.url).origin;
 
-      const payloadUrl = body?.get('callbackUrl');
-      const csrfToken = body?.get('csrfToken');
+        const payloadUrl = body?.get('callbackUrl');
+        const csrfToken = body?.get('csrfToken');
 
-      const callbackUrl = `${
-        !payloadUrl?.startsWith('http') ? origin : ''
-      }${payloadUrl}`;
-      if (!csrfToken) {
+        const callbackUrl = `${
+          !payloadUrl?.startsWith('http') ? origin : ''
+        }${payloadUrl}`;
+        if (!csrfToken) {
+          throw new Error(
+            'CSRF token in missing from request. Request it by the client before calling sign in'
+          );
+        }
+
+        const updatedHeaders = new Headers(payload.headers);
+        updatedHeaders.set('Content-Type', 'application/x-www-form-urlencoded');
+
+        ctx.set({ headers: updatedHeaders });
+
+        const params = new URLSearchParams({
+          csrfToken,
+          json: String(true),
+        });
+        if (payloadUrl) {
+          params.set('callbackUrl', callbackUrl);
+        }
+        return (await fetchSignIn(this.#config, provider, params)) as T;
+      }
+
+      ctx.set({ headers: null });
+
+      const { info, error } = this.#logger;
+
+      const providers = await this.listProviders();
+      info('Obtaining csrf');
+      const csrf = await obtainCsrf(this.#config);
+
+      let csrfToken;
+      if ('csrfToken' in csrf) {
+        csrfToken = csrf.csrfToken;
+        // const parsedCookie = csrf.headers.get('cookie');
+        // if (parsedCookie) {
+        // this.#config.context.headers.set('cookie', parsedCookie);
+        // }
+      } else {
+        throw new Error('Unable to obtain parse CSRF. Request blocked.');
+      }
+
+      const { credentials } = providers ?? {};
+
+      if (!credentials) {
         throw new Error(
-          'CSRF token in missing from request. Request it by the client before calling sign in'
+          'Unable to obtain credential provider. Aborting server side sign in.'
         );
       }
-      this.#config.headers = new Headers(payload.headers);
 
-      this.#config.headers.set(
-        'Content-Type',
-        'application/x-www-form-urlencoded'
-      );
-      const params = new URLSearchParams({
+      const { email, password } = payload ?? {};
+      if (provider === 'email' && (!email || !password)) {
+        throw new Error(
+          'Server side sign in requires a user email and password.'
+        );
+      }
+
+      info(`Obtaining providers for ${email}`);
+      info(`Attempting sign in with email ${email}`);
+      if (!email) {
+        throw new Error('Email missing from payload, unable to sign in');
+      }
+      const body = JSON.stringify({
+        email,
+        password,
         csrfToken,
-        json: String(true),
+        callbackUrl: credentials.callbackUrl,
       });
-      if (payloadUrl) {
-        params.set('callbackUrl', callbackUrl);
+
+      const signInRes = await this.callback(provider, body);
+
+      const authCookie = signInRes?.headers.get('set-cookie');
+      if (!authCookie) {
+        throw new Error('authentication failed');
       }
-      return (await fetchSignIn(this.#config, provider, params)) as T;
-    }
 
-    this.#config.headers = new Headers();
-    const { info, error } = this.#logger;
+      const token = parseToken(signInRes?.headers);
+      const possibleError = signInRes?.headers.get('location');
+      if (possibleError) {
+        let urlError;
+        try {
+          urlError = new URL(possibleError).searchParams.get('error');
+        } catch {
+          //noop
+        }
+        if (urlError) {
+          error('Unable to log user in', { error: urlError });
+          return new Response(urlError, { status: signInRes.status }) as T;
+        }
+      }
+      if (!token) {
+        error('Unable to obtain auth token', {
+          authCookie,
+          signInRes,
+        });
+        throw new Error('Server login failed');
+      }
+      info('Server sign in successful', { authCookie });
 
-    const providers = await this.listProviders();
-    info('Obtaining csrf');
-    const csrf = await this.getCsrf<{ csrfToken: string; headers: Headers }>();
+      // last thing to do is be sure the next call is up to date with good headers
+      const setCookie = signInRes.headers.get('set-cookie');
+      const { headers } = ctx.get();
+      if (setCookie) {
+        const cookie = [
+          parseCSRF(headers),
+          parseCallback(signInRes.headers),
+          parseToken(signInRes.headers),
+        ]
+          .filter(Boolean)
+          .join('; ');
+        const uHeaders = new Headers({ cookie });
+        updateHeaders(uHeaders);
+        ctx.set({ headers: uHeaders });
+      } else {
+        error('Unable to set context after sign in', {
+          headers: signInRes.headers,
+        });
+      }
 
-    let csrfToken;
-    if ('csrfToken' in csrf) {
-      csrfToken = csrf.csrfToken;
-      // const parsedCookie = csrf.headers.get('cookie');
-      // if (parsedCookie) {
-      // this.#config.headers.set('cookie', parsedCookie);
-      // }
-    } else {
-      throw new Error('Unable to obtain parse CSRF. Request blocked.');
-    }
-
-    const { credentials } = providers ?? {};
-
-    if (!credentials) {
-      throw new Error(
-        'Unable to obtain credential provider. Aborting server side sign in.'
-      );
-    }
-
-    const { email, password } = payload ?? {};
-    if (provider === 'email' && (!email || !password)) {
-      throw new Error(
-        'Server side sign in requires a user email and password.'
-      );
-    }
-
-    info(`Obtaining providers for ${email}`);
-    info(`Attempting sign in with email ${email}`);
-    if (!email) {
-      throw new Error('Email missing from payload, unable to sign in');
-    }
-    const body = JSON.stringify({
-      email,
-      password,
-      csrfToken,
-      callbackUrl: credentials.callbackUrl,
-    });
-
-    const signInRes = await this.callback(provider, body);
-
-    const authCookie = signInRes?.headers.get('set-cookie');
-    if (!authCookie) {
-      throw new Error('authentication failed');
-    }
-
-    const token = parseToken(signInRes?.headers);
-    const possibleError = signInRes?.headers.get('location');
-    if (possibleError) {
-      let urlError;
+      if (rawResponse) {
+        return signInRes as T;
+      }
       try {
-        urlError = new URL(possibleError).searchParams.get('error');
+        return (await signInRes.clone().json()) as T;
       } catch {
-        //noop
+        return signInRes as T;
       }
-      if (urlError) {
-        error('Unable to log user in', { error: urlError });
-        return new Response(urlError, { status: signInRes.status }) as T;
-      }
-    }
-    if (!token) {
-      error('Unable to obtain auth token', {
-        authCookie,
-        signInRes,
-      });
-      throw new Error('Server login failed');
-    }
-    info('Server sign in successful', { authCookie });
-
-    // last thing to do is be sure the next call is up to date with good headers
-    const setCookie = signInRes.headers.get('set-cookie');
-    if (setCookie) {
-      const cookie = [
-        parseCSRF(this.#config.headers),
-        parseCallback(signInRes.headers),
-        parseToken(signInRes.headers),
-      ]
-        .filter(Boolean)
-        .join('; ');
-      updateHeaders(new Headers({ cookie }));
-    } else {
-      error('Unable to set context after sign in', {
-        headers: signInRes.headers,
-      });
-    }
-
-    if (rawResponse) {
-      return signInRes as T;
-    }
-    try {
-      return (await signInRes.clone().json()) as T;
-    } catch {
-      return signInRes as T;
-    }
+    });
   }
 }
 
@@ -616,20 +645,59 @@ export function parseResetToken(headers: Headers | void): string | void {
 }
 
 /**
+ * Extract the tenantId cookie from a set of headers.
+ */
+export function parseTenantId(headers?: Headers) {
+  let authCookie = headers?.get('set-cookie');
+  if (!authCookie) {
+    authCookie = headers?.get('cookie');
+  }
+  if (!authCookie) {
+    return undefined;
+  }
+  const [, token] =
+    /((__Secure-)?nile\.tenant-id=[^;]+)/.exec(authCookie) ?? [];
+  if (token) {
+    const [, tenantId] = token.split('=');
+    return tenantId;
+  }
+  return null;
+}
+
+/**
  * Determine the default callback and redirect URLs from the configured
  * headers. These are used during password reset flows when no explicit
  * callback is provided.
  */
-export function defaultCallbackUrl({ config }: { config: Config }) {
+export function defaultCallbackUrl(config: Config) {
   let cb = null;
   let redirect = null;
-  const fallbackCb = parseCallback(config.headers);
+  const { headers } = ctx.get();
+  const fallbackCb = parseCallback(headers);
   if (fallbackCb) {
     const [, value] = fallbackCb.split('=');
     cb = decodeURIComponent(value);
     if (value) {
-      redirect = `${new URL(cb).origin}${NileAuthRoutes.PASSWORD_RESET}`;
+      redirect = `${new URL(cb).origin}${config.routePrefix}${
+        NileAuthRoutes.PASSWORD_RESET
+      }`;
     }
   }
   return { callbackUrl: cb, redirectUrl: redirect };
+}
+
+function fQUrl(path: string, config: Config) {
+  if (path.startsWith('/')) {
+    const { callbackUrl } = defaultCallbackUrl(config);
+    if (callbackUrl) {
+      const { origin } = new URL(callbackUrl);
+      return `${origin}${path}`;
+    }
+  }
+  try {
+    new URL(path);
+  } catch {
+    throw new Error('An invalid URL has been passed.');
+  }
+  return path;
 }

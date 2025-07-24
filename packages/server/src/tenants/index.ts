@@ -8,6 +8,8 @@ import { fetchInvite } from '../api/routes/tenants/[tenantId]/invite';
 import { fetchInvites } from '../api/routes/tenants/[tenantId]/invites';
 import { fetchTenantUsers } from '../api/routes/tenants/[tenantId]/users';
 import { fetchTenantUser } from '../api/routes/tenants/[tenantId]/users/[userId]';
+import { runExtensionContext } from '../api/utils/extensions';
+import { ctx, withNileContext } from '../api/utils/request-context';
 import { DefaultNileAuthRoutes } from '../api/utils/routes';
 import { parseCallback } from '../auth';
 import obtainCsrf from '../auth/obtainCsrf';
@@ -54,24 +56,26 @@ export default class Tenants {
     req: { name: string; id?: string } | string,
     rawResponse?: boolean
   ): Promise<T | Response | undefined> {
-    let res;
-    if (typeof req === 'string') {
-      res = await fetchTenants(
-        this.#config,
-        'POST',
-        JSON.stringify({ name: req })
-      );
-    } else if (typeof req === 'object' && ('name' in req || 'id' in req)) {
-      res = await fetchTenants(this.#config, 'POST', JSON.stringify(req));
-    }
-    if (rawResponse) {
-      return res as T;
-    }
-    try {
-      return await res?.clone().json();
-    } catch {
-      return res;
-    }
+    return withNileContext(this.#config, async () => {
+      let res;
+      if (typeof req === 'string') {
+        res = await fetchTenants(
+          this.#config,
+          'POST',
+          JSON.stringify({ name: req })
+        );
+      } else if (typeof req === 'object' && ('name' in req || 'id' in req)) {
+        res = await fetchTenants(this.#config, 'POST', JSON.stringify(req));
+      }
+      if (rawResponse) {
+        return res as T;
+      }
+      try {
+        return await res?.clone().json();
+      } catch {
+        return res;
+      }
+    });
   }
 
   /**
@@ -93,14 +97,16 @@ export default class Tenants {
   async delete<T = Response>(
     req: NileRequest<void> | { id?: string } | string | Tenant
   ): Promise<T | Response> {
-    if (typeof req === 'string') {
-      this.#config.tenantId = req;
-    }
-    if (typeof req === 'object' && 'id' in req) {
-      this.#config.tenantId = req.id;
-    }
-    const res = await fetchTenant(this.#config, 'DELETE');
-    return res;
+    return withNileContext(this.#config, async () => {
+      if (typeof req === 'string') {
+        ctx.set({ tenantId: req });
+      }
+      if (typeof req === 'object' && 'id' in req) {
+        ctx.set({ tenantId: req.id });
+      }
+      const res = await fetchTenant(this.#config, 'DELETE');
+      return res;
+    });
   }
 
   get<T = Tenant | Response>(): Promise<T>;
@@ -120,21 +126,23 @@ export default class Tenants {
     req: boolean | { id: string } | string | void,
     rawResponse?: boolean
   ): Promise<T> {
-    if (typeof req === 'string') {
-      this.#config.tenantId = req;
-    } else if (typeof req === 'object' && 'id' in req) {
-      this.#config.tenantId = req.id;
-    }
-    const res = await fetchTenant(this.#config, 'GET');
-    if (rawResponse === true || req === true) {
-      return res as T;
-    }
+    return withNileContext(this.#config, async () => {
+      if (typeof req === 'string') {
+        ctx.set({ tenantId: req });
+      } else if (typeof req === 'object' && 'id' in req) {
+        ctx.set({ tenantId: req.id });
+      }
+      const res = await fetchTenant(this.#config, 'GET');
+      if (rawResponse === true || req === true) {
+        return res as T;
+      }
 
-    try {
-      return await res?.clone().json();
-    } catch {
-      return res as T;
-    }
+      try {
+        return await res?.clone().json();
+      } catch {
+        return res as T;
+      }
+    });
   }
 
   async update(req: Partial<Tenant>, rawResponse: true): Promise<Response>;
@@ -152,22 +160,24 @@ export default class Tenants {
     req: Partial<Tenant>,
     rawResponse?: boolean
   ): Promise<T> {
-    let res;
-    if (typeof req === 'object' && ('name' in req || 'id' in req)) {
-      const { id, ...remaining } = req;
-      if (id) {
-        this.#config.tenantId = id;
+    return withNileContext(this.#config, async () => {
+      let res;
+      if (typeof req === 'object' && ('name' in req || 'id' in req)) {
+        const { id, ...remaining } = req;
+        if (id) {
+          ctx.set({ tenantId: id });
+        }
+        res = await fetchTenant(this.#config, 'PUT', JSON.stringify(remaining));
       }
-      res = await fetchTenant(this.#config, 'PUT', JSON.stringify(remaining));
-    }
-    if (rawResponse) {
-      return res as T;
-    }
-    try {
-      return await res?.clone().json();
-    } catch {
-      return res as T;
-    }
+      if (rawResponse) {
+        return res as T;
+      }
+      try {
+        return await res?.clone().json();
+      } catch {
+        return res as T;
+      }
+    });
   }
 
   list<T = Tenant[] | Response>(): Promise<T>;
@@ -179,16 +189,22 @@ export default class Tenants {
   async list<T = Tenant[] | Response>(
     req: boolean | NileRequest<void> | Headers
   ): Promise<T | Response | undefined> {
-    const res = await fetchTenantsByUser(this.#config);
-    if (req === true) {
-      return res;
-    }
+    return withNileContext(
+      this.#config,
+      async () => {
+        const res = await fetchTenantsByUser(this.#config);
+        if (req === true) {
+          return res;
+        }
 
-    try {
-      return await res?.clone().json();
-    } catch {
-      return res;
-    }
+        try {
+          return await res?.clone().json();
+        } catch {
+          return res;
+        }
+      },
+      'listTenants'
+    );
   }
   /**
    * Leave the current tenant using `DELETE /api/tenants/{tenantId}/users/{userId}`.
@@ -198,21 +214,23 @@ export default class Tenants {
   async leaveTenant<T = Response>(
     req?: string | { tenantId: string }
   ): Promise<T> {
-    const me = await fetchMe(this.#config);
-    try {
-      const json = await me.json();
-      if ('id' in json) {
-        this.#config.userId = json.id;
+    return withNileContext(this.#config, async () => {
+      const me = await fetchMe(this.#config);
+      try {
+        const json = await me.json();
+        if ('id' in json) {
+          ctx.set({ userId: json.id, preserveHeaders: true });
+        }
+      } catch {
+        // maybe there's already a context, let `fetchTenantUser` deal with it
       }
-    } catch {
-      // maybe there's already a context, let `fetchTenantUser` deal with it
-    }
-    if (typeof req === 'string') {
-      this.#config.tenantId = req;
-    } else {
-      this.#handleContext(req);
-    }
-    return (await fetchTenantUser(this.#config, 'DELETE')) as T;
+      if (typeof req === 'string') {
+        ctx.set({ tenantId: req, preserveHeaders: true });
+      } else {
+        this.#handleContext(req);
+      }
+      return (await fetchTenantUser(this.#config, 'DELETE')) as T;
+    });
   }
 
   addMember(req: JoinTenantRequest, rawResponse: true): Promise<Response>;
@@ -230,14 +248,15 @@ export default class Tenants {
     req: JoinTenantRequest,
     rawResponse?: boolean
   ): Promise<T> {
-    if (typeof req === 'string') {
-      this.#config.userId = req;
-    } else {
-      this.#handleContext(req);
-    }
-
-    const res = await fetchTenantUser(this.#config, 'PUT');
-    return responseHandler(res, rawResponse);
+    return withNileContext(this.#config, async () => {
+      if (typeof req === 'string') {
+        ctx.set({ userId: req, preserveHeaders: true });
+      } else {
+        this.#handleContext(req);
+      }
+      const res = await fetchTenantUser(this.#config, 'PUT');
+      return responseHandler(res, rawResponse);
+    });
   }
 
   /**
@@ -250,9 +269,14 @@ export default class Tenants {
     req: JoinTenantRequest,
     rawResponse?: boolean
   ): Promise<Response> {
-    this.#handleContext(req);
-    const res = await fetchTenantUser(this.#config, 'DELETE');
-    return responseHandler(res, rawResponse);
+    return withNileContext(this.#config, async () => {
+      this.#handleContext(req);
+      if (typeof req === 'string') {
+        ctx.set({ userId: req, preserveHeaders: true });
+      }
+      const res = await fetchTenantUser(this.#config, 'DELETE');
+      return responseHandler(res, rawResponse);
+    });
   }
   /**
    * List users for a tenant via `GET /api/tenants/{tenantId}/users`.
@@ -269,22 +293,33 @@ export default class Tenants {
     req?: boolean | { tenantId?: string },
     rawResponse?: boolean
   ): Promise<T> {
-    this.#handleContext(req);
-    const res = await fetchTenantUsers(this.#config, 'GET');
-
-    return responseHandler(
-      res,
-      rawResponse || (typeof req === 'boolean' && req)
-    ) as T;
+    return withNileContext(
+      this.#config,
+      async () => {
+        this.#handleContext(req);
+        const res = await fetchTenantUsers(this.#config, 'GET');
+        return responseHandler(
+          res,
+          rawResponse || (typeof req === 'boolean' && req)
+        ) as T;
+      },
+      'users'
+    );
   }
 
   /**
    * List invites for the current tenant via `GET /api/tenants/{tenantId}/invites`.
    */
   async invites<T = Invite[] | Response>(): Promise<T> {
-    const res = await fetchInvites(this.#config);
+    return withNileContext(
+      this.#config,
+      async () => {
+        const res = await fetchInvites(this.#config);
 
-    return responseHandler(res);
+        return responseHandler(res);
+      },
+      'invites'
+    );
   }
 
   /**
@@ -305,41 +340,51 @@ export default class Tenants {
     req: string | { email: string; callbackUrl?: string; redirectUrl?: string },
     rawResponse?: boolean
   ): Promise<T> {
-    const { csrfToken } = await obtainCsrf<{ csrfToken: string }>(this.#config);
-
-    const defaults = defaultCallbackUrl(this.#config);
-    let identifier: string = req as string;
-    let callbackUrl: string = defaults.callbackUrl as string;
-    let redirectUrl: string = defaults.redirectUrl as string;
-
-    if (typeof req === 'object') {
-      if ('email' in req) {
-        identifier = req.email;
-      }
-
-      if ('callbackUrl' in req) {
-        callbackUrl = req.callbackUrl ? req.callbackUrl : '';
-      }
-      if ('redirectUrl' in req) {
-        redirectUrl = req.redirectUrl ? req.redirectUrl : '';
-      }
-    }
-
-    this.#config.headers.set(
-      'Content-Type',
-      'application/x-www-form-urlencoded'
-    );
-    const res = await fetchInvite(
+    // if we are going to call this, as *soon* as we do, we need to execute extensions
+    return withNileContext(
       this.#config,
-      'POST',
-      new URLSearchParams({
-        identifier,
-        csrfToken,
-        callbackUrl,
-        redirectUrl,
-      }).toString()
+      async () => {
+        await runExtensionContext(this.#config);
+
+        // need to get rid of the headers every where in favor of the context
+        const { csrfToken } = await obtainCsrf<{ csrfToken: string }>(
+          this.#config
+        );
+        const defaults = defaultCallbackUrl(this.#config);
+        let identifier: string = req as string;
+        let callbackUrl: string = defaults.callbackUrl as string;
+        let redirectUrl: string = defaults.redirectUrl as string;
+
+        if (typeof req === 'object') {
+          if ('email' in req) {
+            identifier = req.email;
+          }
+
+          if ('callbackUrl' in req) {
+            callbackUrl = fQUrl(req.callbackUrl ?? '', this.#config);
+          }
+          if ('redirectUrl' in req) {
+            redirectUrl = fQUrl(req.redirectUrl ?? '', this.#config);
+          }
+        }
+
+        const { headers } = ctx.get();
+        headers?.set('Content-Type', 'application/x-www-form-urlencoded');
+        ctx.set({ headers });
+        const res = await fetchInvite(
+          this.#config,
+          'POST',
+          new URLSearchParams({
+            identifier,
+            csrfToken,
+            callbackUrl,
+            redirectUrl,
+          }).toString()
+        );
+        return responseHandler(res, rawResponse);
+      },
+      'invites'
     );
-    return responseHandler(res, rawResponse);
   }
 
   /**
@@ -352,23 +397,25 @@ export default class Tenants {
     req?: { identifier: string; token: string; redirectUrl?: string },
     rawResponse?: boolean
   ): Promise<T> {
-    if (!req) {
-      throw new Error('The identifier and token are required.');
-    }
-    const { identifier, token } = req;
-    const defaults = defaultCallbackUrl(this.#config);
-    const callbackUrl = String(defaults.callbackUrl);
+    return withNileContext(this.#config, async () => {
+      if (!req) {
+        throw new Error('The identifier and token are required.');
+      }
+      const { identifier, token } = req;
+      const defaults = defaultCallbackUrl(this.#config);
+      const callbackUrl = String(defaults.callbackUrl);
 
-    const res = await fetchInvite(
-      this.#config,
-      'PUT',
-      new URLSearchParams({
-        identifier,
-        token,
-        callbackUrl,
-      }).toString()
-    );
-    return responseHandler(res, rawResponse);
+      const res = await fetchInvite(
+        this.#config,
+        'PUT',
+        new URLSearchParams({
+          identifier,
+          token,
+          callbackUrl,
+        }).toString()
+      );
+      return responseHandler(res, rawResponse);
+    });
   }
 
   /**
@@ -377,28 +424,30 @@ export default class Tenants {
    * @param req - Identifier of the invite to remove.
    */
   async deleteInvite<T = Response>(req: string | { id: string }): Promise<T> {
-    let id = '';
-    if (typeof req === 'object') {
-      id = req.id;
-    } else {
-      id = req;
-    }
+    return withNileContext(this.#config, async () => {
+      let id = '';
+      if (typeof req === 'object') {
+        id = req.id;
+      } else {
+        id = req;
+      }
 
-    if (!id) {
-      throw new Error('An invite id is required.');
-    }
+      if (!id) {
+        throw new Error('An invite id is required.');
+      }
 
-    const res = await fetchInvite(this.#config, 'DELETE', id);
-    return responseHandler(res, true);
+      const res = await fetchInvite(this.#config, 'DELETE', id);
+      return responseHandler(res, true);
+    });
   }
 
   #handleContext(req: JoinTenantRequest | boolean | undefined) {
     if (typeof req === 'object') {
       if ('tenantId' in req) {
-        this.#config.tenantId = req.tenantId;
+        ctx.set({ tenantId: req.tenantId, preserveHeaders: true });
       }
       if ('userId' in req) {
-        this.#config.tenantId = req.tenantId;
+        ctx.set({ userId: req.userId, preserveHeaders: true });
       }
     }
   }
@@ -430,18 +479,32 @@ async function responseHandler(res: Response, rawResponse?: boolean) {
 export function defaultCallbackUrl(config: Config) {
   let cb = null;
   let redirect = null;
-  const fallbackCb = parseCallback(config.headers);
+  const { headers, tenantId } = ctx.get();
+  const fallbackCb = parseCallback(headers);
   if (fallbackCb) {
     const [, value] = fallbackCb.split('=');
     cb = decodeURIComponent(value);
     if (value) {
       redirect = `${new URL(cb).origin}${
         config.routePrefix
-      }${DefaultNileAuthRoutes.INVITE.replace(
-        '{tenantId}',
-        String(config.tenantId)
-      )}`;
+      }${DefaultNileAuthRoutes.INVITE.replace('{tenantId}', String(tenantId))}`;
     }
   }
   return { callbackUrl: cb, redirectUrl: redirect };
+}
+
+function fQUrl(path: string, config: Config) {
+  if (path.startsWith('/')) {
+    const { callbackUrl } = defaultCallbackUrl(config);
+    if (callbackUrl) {
+      const { origin } = new URL(callbackUrl);
+      return `${origin}${path}`;
+    }
+  }
+  try {
+    new URL(path);
+  } catch {
+    throw new Error('An invalid URL has been passed.');
+  }
+  return path;
 }
