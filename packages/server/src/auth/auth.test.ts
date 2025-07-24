@@ -7,6 +7,7 @@ import { fetchSignOut } from '../api/routes/auth/signout';
 import { fetchSignUp } from '../api/routes/signup';
 import { updateHeaders } from '../utils/Event';
 import { Config } from '../utils/Config';
+import { ctx } from '../api/utils/request-context';
 
 jest.mock('../api/routes/auth/callback');
 jest.mock('../api/routes/auth/csrf');
@@ -21,7 +22,9 @@ jest.mock('../utils/Logger', () => ({
   default: jest.fn(() => () => ({
     info: jest.fn(),
     warn: jest.fn(),
+    debug: jest.fn(),
     error: jest.fn(),
+    silly: jest.fn(),
   })),
 }));
 
@@ -102,7 +105,7 @@ describe('Auth', () => {
       );
 
       await auth.signOut();
-      expect(updateHeaders).toHaveBeenCalledWith(new Headers({}));
+      expect(ctx.getLastUsed().headers).toEqual(new Headers({}));
     });
   });
 

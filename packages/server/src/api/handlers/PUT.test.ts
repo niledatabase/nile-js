@@ -29,6 +29,9 @@ describe('Putter', () => {
       (str) =>
         str !== DefaultNileAuthRoutes.SIGNUP &&
         str !== DefaultNileAuthRoutes.TENANT_USERS &&
+        str !== DefaultNileAuthRoutes.USER_TENANTS &&
+        str !== DefaultNileAuthRoutes.USERS &&
+        str !== DefaultNileAuthRoutes.USER &&
         str !== DefaultNileAuthRoutes.TENANT_USER
     )
     .forEach((key) => {

@@ -50,7 +50,7 @@ export async function PUT(
     init.body = new URLSearchParams(yurl.searchParams).toString();
   }
   init.method = 'PUT';
-  const url = `${apiRoutes(config).INVITE(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).INVITE(tenantId)}`;
 
   const res = await request(url, init, config);
   const location = res?.headers?.get('location');

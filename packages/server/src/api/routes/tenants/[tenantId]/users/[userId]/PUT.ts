@@ -40,11 +40,9 @@ export async function PUT(
   const yurl = new URL(init.request.url);
 
   const [, userId, , tenantId] = yurl.pathname.split('/').reverse();
-  config.tenantId = tenantId;
-  config.userId = userId;
 
   init.method = 'PUT';
-  const url = `${apiRoutes(config).TENANT_USER}/link`;
+  const url = `${apiRoutes(config.apiUrl).TENANT_USER(tenantId, userId)}/link`;
 
   return await fetch(url, init, config);
 }

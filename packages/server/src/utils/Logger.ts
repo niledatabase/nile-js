@@ -10,6 +10,16 @@ const orange = '\x1b[38;2;255;165;0m';
 const reset = '\x1b[0m';
 
 const baseLogger = (config: void | NileConfig, ...params: unknown[]) => ({
+  silly(message: string | unknown, meta?: Record<string, unknown>) {
+    if (config?.debug && process.env.LOG_LEVEL === 'silly') {
+      console.log(
+        `${orange}[niledb]${reset}${purple}[DEBUG]${reset}${params.join(
+          ''
+        )}${reset} ${message}`,
+        meta ? `${JSON.stringify(meta)}` : ''
+      );
+    }
+  },
   info(message: string | unknown, meta?: Record<string, unknown>) {
     if (config?.debug) {
       console.info(
@@ -22,7 +32,7 @@ const baseLogger = (config: void | NileConfig, ...params: unknown[]) => ({
   },
   debug(message: string | unknown, meta?: Record<string, unknown>) {
     if (config?.debug) {
-      console.info(
+      console.log(
         `${orange}[niledb]${reset}${purple}[DEBUG]${reset}${params.join(
           ''
         )}${reset} ${message}`,
@@ -61,12 +71,13 @@ export type Loggable = {
   debug: LogFunction;
   warn: LogFunction;
   error: LogFunction;
+  silly: LogFunction;
 };
 export type LogReturn = (prefixes?: string | string[]) => Loggable;
 
 export default function Logger(config?: NileConfig): LogReturn {
   return (prefixes) => {
-    const { info, debug, warn, error } =
+    const { info, debug, warn, error, silly } =
       config && typeof config?.logger === 'function'
         ? config.logger(prefixes)
         : baseLogger(config, prefixes);
@@ -76,6 +87,7 @@ export default function Logger(config?: NileConfig): LogReturn {
       debug,
       warn,
       error,
+      silly,
     };
   };
 }

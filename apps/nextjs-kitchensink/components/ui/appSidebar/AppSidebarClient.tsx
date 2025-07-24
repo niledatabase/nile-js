@@ -68,12 +68,13 @@ const items = [
 ];
 export default function SidebarClient() {
   const path = usePathname();
+  const [, root] = path.split('/');
   return (
     <SidebarMenu>
       {items.map((item) => {
         return (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild isActive={path.endsWith(item.url)}>
+            <SidebarMenuButton asChild isActive={`/${root}`.endsWith(item.url)}>
               <Link href={item.url}>
                 <item.icon />
                 <span>{item.title}</span>

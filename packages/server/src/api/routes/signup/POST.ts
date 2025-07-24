@@ -70,7 +70,7 @@ export async function POST(
 ) {
   init.body = init.request.body;
   init.method = 'POST';
-  const url = `${apiRoutes(config).SIGNUP}`;
+  const url = `${apiRoutes(config.apiUrl).SIGNUP}`;
 
   return await request(url, init, config);
 }

@@ -54,6 +54,7 @@ export function useTenantId(
 
   useEffect(() => {
     if (!tenant) {
+      // can't trust this value until we get the tenant id, which probably needs set in a call.
       const tenantId = getCookie(TENANT_COOKIE);
       if (tenantId) {
         setTenant(tenantId);

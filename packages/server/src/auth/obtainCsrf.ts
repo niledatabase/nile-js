@@ -1,6 +1,7 @@
 import { fetchCsrf } from '../api/routes/auth/csrf';
 import { updateHeaders } from '../utils/Event';
 import { Config } from '../utils/Config';
+import { ctx } from '../api/utils/request-context';
 
 import { parseCallback, parseCSRF, parseToken } from '.';
 
@@ -8,11 +9,11 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
   config: Config,
   rawResponse = false
 ) {
+  const { headers } = ctx.get();
   const res = await fetchCsrf(config);
   // we're gonna use it, so set the headers now.
   const csrfCook = parseCSRF(res.headers);
 
-  const h = new Headers();
   // prefer the csrf from the headers over the saved one
   if (csrfCook) {
     const [, value] = csrfCook.split('=');
@@ -27,33 +28,31 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
       ]
         .filter(Boolean)
         .join('; ');
-      config.headers.set('cookie', cookie);
-      h.set('cookie', cookie);
-      updateHeaders(h);
+      headers.set('cookie', cookie);
+      ctx.set({ headers, preserveHeaders: true });
+      updateHeaders(headers);
     }
     if (!rawResponse) {
       return { csrfToken: token };
     }
   } else {
     // for csrf, preserve the existing cookies
-    const existingCookie = config.headers.get('cookie');
+    const existingCookie = headers.get('cookie');
     const cookieParts = [];
     if (existingCookie) {
-      cookieParts.push(
-        parseToken(config.headers),
-        parseCallback(config.headers)
-      );
+      cookieParts.push(parseToken(headers), parseCallback(headers));
     }
     if (csrfCook) {
       cookieParts.push(csrfCook);
     } else {
       // use the one tha tis already there
-      cookieParts.push(parseCSRF(config.headers));
+      cookieParts.push(parseCSRF(headers));
     }
     const cookie = cookieParts.filter(Boolean).join('; ');
 
     // we need to do it in both places in case its the very first time
-    config.headers.set('cookie', cookie);
+    headers.set('cookie', cookie);
+    ctx.set({ headers, preserveHeaders: true });
     updateHeaders(new Headers({ cookie }));
   }
   if (rawResponse) {

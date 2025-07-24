@@ -1,3 +1,4 @@
+import { ctx } from '../../../../../utils/request-context';
 import { Config } from '../../../../../../utils/Config';
 import { DefaultNileAuthRoutes, urlMatches } from '../../../../../utils/routes';
 import { Routes } from '../../../../../types';
@@ -54,26 +55,28 @@ export async function fetchTenantUser(
   config: Config,
   method: 'DELETE' | 'PUT'
 ) {
-  if (!config.tenantId) {
+  const { headers, tenantId, userId } = ctx.get();
+  const action = method === 'PUT' ? 'add' : 'delete';
+  if (!tenantId) {
     throw new Error(
-      'The tenantId context is missing. Call nile.setContext({ tenantId })'
+      `Unable to ${action} user to the tenant, the tenantId context is missing. Use nile.withContext({ tenantId })`
     );
   }
 
-  if (!config.userId) {
+  if (!userId) {
     throw new Error(
-      'the userId context is missing. Call nile.setContext({ userId })'
+      `Unable to ${action} user to tenant. The userId context is missing. Use nile.withContext({ userId })`
     );
   }
 
   const clientUrl = `${config.serverOrigin}${
     config.routePrefix
-  }${DefaultNileAuthRoutes.TENANT_USER.replace(
-    '{tenantId}',
-    config.tenantId
-  ).replace('{userId}', config.userId)}/link`;
+  }${DefaultNileAuthRoutes.TENANT_USER.replace('{tenantId}', tenantId).replace(
+    '{userId}',
+    userId
+  )}/link`;
   const req = new Request(clientUrl, {
-    headers: config.headers,
+    headers,
     method,
   });
 

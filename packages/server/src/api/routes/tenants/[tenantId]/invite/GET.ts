@@ -43,7 +43,7 @@ export async function GET(
   }
 
   init.method = 'GET';
-  const url = `${apiRoutes(config).INVITE(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).INVITE(tenantId)}`;
 
   return await fetch(url, init, config);
 }

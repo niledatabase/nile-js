@@ -13,6 +13,7 @@ describe('env vars', () => {
           warn: jest.fn,
           error: jest.fn,
           debug: jest.fn,
+          silly: jest.fn,
         }),
       },
     };
