@@ -7,6 +7,7 @@ import {
   Extension,
   ExtensionState,
   RouteFunctions,
+  PartialContext,
 } from '../../types';
 import Logger, { LogReturn } from '../Logger';
 
@@ -22,11 +23,12 @@ export type ExtensionCtx = {
     toRun: ExtensionState,
     config: Config,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    params: any,
+    params?: any,
     _init?: RequestInit & { request: Request }
   ) => Promise<T>;
 };
 type ConfigConstructor = NileConfig & { extensionCtx?: ExtensionCtx };
+
 import {
   EnvConfig,
   getDatabaseName,
@@ -46,19 +48,7 @@ export class Config {
   extensionCtx: ExtensionCtx;
   extensions?: Extension[];
   logger: LogReturn;
-  /**
-   * Stores the set tenant id from Server for use in sub classes
-   */
-  tenantId: string | null | undefined;
-  /**
-   * Stores the set user id from Server for use in sub classes
-   */
-  userId: string | null | undefined;
-
-  /**
-   * Stores the headers to be used in `fetch` calls
-   */
-  headers: Headers;
+  context: PartialContext;
 
   /**
    * The nile-auth url
@@ -122,13 +112,13 @@ export class Config {
       this.db.database = databaseName;
     }
 
-    // we need these values no matter what, so break if they are missing
-
-    if (config?.headers) {
-      this.headers = config?.headers as Headers;
-    } else {
-      this.headers = new Headers();
-    }
+    // If you configured nile globally, we keep these to be sure they are honored per-request
+    this.context = {
+      tenantId: config?.tenantId,
+      userId: config?.userId,
+      headers: config?.headers ? new Headers(config.headers) : new Headers(),
+      preserveHeaders: false,
+    };
 
     this.routes = {
       ...appRoutes(config?.routePrefix),
@@ -174,7 +164,5 @@ export class Config {
       ],
       delete: [this.routes.TENANT_USER, this.routes.TENANT],
     };
-    this.tenantId = config?.tenantId;
-    this.userId = config?.userId;
   }
 }

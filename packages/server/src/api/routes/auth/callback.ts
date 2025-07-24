@@ -3,6 +3,7 @@ import request from '../../utils/request';
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
 import { ProviderName } from '../../utils/auth';
+import { ctx } from '../../utils/request-context';
 
 const key = 'CALLBACK';
 
@@ -12,7 +13,7 @@ export default async function route(req: Request, config: Config) {
   try {
     const passThroughUrl = new URL(req.url);
     const params = new URLSearchParams(passThroughUrl.search);
-    const url = `${proxyRoutes(config)[key]}/${provider}${
+    const url = `${proxyRoutes(config.apiUrl)[key]}/${provider}${
       params.toString() !== '' ? `?${params.toString()}` : ''
     }`;
 
@@ -55,12 +56,13 @@ export async function fetchCallback(
   request?: Request,
   method: 'POST' | 'GET' = 'POST'
 ): Promise<Response> {
+  const { headers } = ctx.get();
   const clientUrl = `${config.serverOrigin}${config.routePrefix}${
     NileAuthRoutes.CALLBACK
   }/${provider}${request ? `?${new URL(request.url).searchParams}` : ''}`;
   const req = new Request(clientUrl, {
     method,
-    headers: config.headers,
+    headers,
     body,
   });
 

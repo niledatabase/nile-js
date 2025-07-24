@@ -28,8 +28,6 @@ export async function GET(req: NextRequest) {
     }
     tenantId = tenant.id;
   }
-  // set the context for the insert
-  nile.setContext({ tenantId });
 
   await nile.db.query(
     "insert into todos2 (title, complete, tenant_id) values ('a title', false, $1)",

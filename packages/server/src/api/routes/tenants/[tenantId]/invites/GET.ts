@@ -42,7 +42,7 @@ export async function GET(
   }
 
   init.method = 'GET';
-  const url = `${apiRoutes(config).INVITES(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).INVITES(tenantId)}`;
 
   return await request(url, init, config);
 }

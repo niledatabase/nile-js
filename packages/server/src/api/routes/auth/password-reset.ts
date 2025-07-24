@@ -2,10 +2,11 @@ import { Routes } from '../../types';
 import { urlMatches, proxyRoutes, NileAuthRoutes } from '../../utils/routes';
 import request from '../../utils/request';
 import { Config } from '../../../utils/Config';
+import { ctx } from '../../utils/request-context';
 
 const key = 'PASSWORD_RESET';
 export default async function route(req: Request, config: Config) {
-  const url = proxyRoutes(config)[key];
+  const url = proxyRoutes(config.apiUrl)[key];
 
   const res = await request(
     url,
@@ -43,12 +44,13 @@ export async function fetchResetPassword(
   if (useJson) {
     authParams?.set('json', 'true');
   }
+  const { headers } = ctx.get();
   const clientUrl = `${config.serverOrigin}${config.routePrefix}${
     NileAuthRoutes.PASSWORD_RESET
   }?${authParams?.toString()}`;
   const init: RequestInit = {
     method,
-    headers: config.headers,
+    headers,
   };
   if (body && method !== 'GET') {
     init.body = body;

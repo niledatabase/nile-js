@@ -1,5 +1,6 @@
 import { Config } from '../../../utils/Config';
 import { Routes } from '../../types';
+import { ctx } from '../../utils/request-context';
 import { urlMatches, DefaultNileAuthRoutes } from '../../utils/routes';
 
 import { POST } from './POST';
@@ -38,9 +39,10 @@ export async function fetchSignUp(
   const clientUrl = `${config.serverOrigin}${config.routePrefix}${
     DefaultNileAuthRoutes.SIGNUP
   }${q.size > 0 ? `?${q}` : ''}`;
+  const { headers } = ctx.get();
   const req = new Request(clientUrl, {
     method: 'POST',
-    headers: config.headers,
+    headers,
     body,
   });
 

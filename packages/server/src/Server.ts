@@ -1,18 +1,24 @@
 import pg from 'pg';
 
-import { Extension, NileConfig, NileHandlers } from './types';
+import {
+  Context,
+  Extension,
+  NileConfig,
+  NileHandlers,
+  PartialContext,
+} from './types';
 import { Config, ConfigurablePaths } from './utils/Config';
 import { watchHeaders, watchTenantId, watchUserId } from './utils/Event';
 import DbManager from './db';
 import Users from './users';
 import Tenants from './tenants';
 import Auth from './auth';
-import { getTenantId } from './utils/Config/envVars';
 import Logger from './utils/Logger';
 import { HEADER_ORIGIN, HEADER_SECURE_COOKIES } from './utils/constants';
 import { handlersWithContext } from './api/handlers/withContext';
-import { getTenantFromHttp } from './utils/fetch';
 import { buildExtensionConfig } from './api/utils/extensions';
+import { ctx, withNileContext } from './api/utils/request-context';
+import { getTenantId } from './utils/Config/envVars';
 
 export class Server {
   users: Users;
@@ -21,8 +27,8 @@ export class Server {
   #config: Config;
   #handlers: NileHandlers;
   #manager: DbManager;
-  #headers: undefined | Headers;
-  #preserveHeaders: boolean;
+  // #headers: undefined | Headers;
+  // #preserveHeaders: boolean;
 
   constructor(config?: NileConfig) {
     this.#config = new Config({
@@ -31,23 +37,27 @@ export class Server {
     });
 
     // watch first, they may mutate first
+    // unsure if this is still useful, with `ctx` around
     watchTenantId((tenantId) => {
-      if (tenantId !== this.#config.tenantId) {
-        this.#config.tenantId = tenantId;
+      if (tenantId !== this.#config.context.tenantId) {
+        this.#config.context.tenantId = String(tenantId);
         this.#reset();
       }
     });
 
     watchUserId((userId) => {
-      if (userId !== this.#config.userId) {
-        this.#config.userId = userId;
+      if (userId !== this.#config.context.userId) {
+        this.#config.context.userId = String(userId);
         this.#reset();
       }
     });
 
     watchHeaders((headers) => {
-      this.setContext(headers);
-      this.#reset();
+      if (headers) {
+        this.#config.context.headers = new Headers(headers);
+        // this.setContext(headers);
+        this.#reset();
+      }
     });
 
     this.#handlers = {
@@ -55,9 +65,10 @@ export class Server {
       withContext: handlersWithContext(this.#config),
     };
 
-    this.#preserveHeaders = config?.preserveHeaders ?? false;
+    this.#config.context.preserveHeaders = config?.preserveHeaders ?? false;
 
-    this.#config.tenantId = getTenantId({ config: this.#config });
+    this.#config.context.tenantId = getTenantId({ config: this.#config });
+
     this.#manager = new DbManager(this.#config);
 
     // headers first, so instantiation is right the first time
@@ -127,32 +138,6 @@ export class Server {
     };
   }
 
-  /**
-   * A convenience function that applies a config and ensures whatever was passed is set properly
-   */
-
-  getInstance<T = Request | Headers | Record<string, string>>(
-    config: NileConfig,
-    req?: T
-  ) {
-    const _config = { ...this.#config, ...config };
-
-    // be sure the config is up to date
-    const updatedConfig = new Config(_config);
-    this.#config = new Config(updatedConfig);
-    // propagate special config items
-    this.#config.tenantId = config.tenantId;
-    this.#config.userId = config.userId;
-
-    if (req) {
-      this.setContext(req);
-    }
-
-    this.#reset();
-
-    return this;
-  }
-
   get handlers() {
     return this.#handlers;
   }
@@ -169,10 +154,17 @@ export class Server {
    * Allow the setting of headers from a req or header object.
    * Makes it possible to handle REST requests easily
    * Also makes it easy to set user + tenant in some way
+   * This is a global configuration, so you can run into concurrency problems.
+   * Use extensions to handle per-request configuration (vs this being *mostly* global)
+   *
+   * I don't think anyone should do this any more? the context is in the container, so this would only be for internal things to
+   * set the "initial", to persist back... but it seems like you should just `withContext` anyway?
+   * maybe not, since you could do 1 then the other back to back in a "different" context.
+   *
    * @param req
    * @returns undefined
    */
-  setContext = (
+  #setContext = (
     req:
       | Request
       | Headers
@@ -187,16 +179,16 @@ export class Server {
     let ok = false;
     if (req && typeof req === 'object' && 'tenantId' in req) {
       ok = true;
-      this.#config.tenantId = req.tenantId as string | undefined;
+      // this.#config.tenantId = req.tenantId as string | undefined;
     }
     if (req && typeof req === 'object' && 'userId' in req) {
       ok = true;
-      this.#config.userId = req.userId as string | undefined;
+      // this.#config.userId = req.userId as string | undefined;
     }
 
     if (req && typeof req === 'object' && 'preserveHeaders' in req) {
       ok = true;
-      this.#preserveHeaders = Boolean(req.preserveHeaders);
+      this.#config.context.preserveHeaders = Boolean(req.preserveHeaders);
     }
 
     let atLeastOne = false;
@@ -277,26 +269,38 @@ export class Server {
       );
     }
   };
-
-  getContext() {
-    if (this.#config?.extensions) {
-      for (const create of this.#config.extensions) {
-        if (typeof create !== 'function') {
-          continue;
-        }
-        const ext = create(this);
-        // we can only run this after config has a value, so we must wait, but we can't.
-        if (typeof ext.onGetContext === 'function') {
-          return ext.onGetContext();
-        }
-      }
+  /** Allows setting of context outside of the request lifecycle
+   * Basically means you want to disregard cookies and do everything manually
+   */
+  async withContext(config: PartialContext): Promise<this>;
+  async withContext<T>(
+    config: PartialContext,
+    fn: (sdk: this) => Promise<T>
+  ): Promise<T>;
+  async withContext<T>(
+    config: PartialContext,
+    fn?: (sdk: this) => Promise<T>
+  ): Promise<T | this> {
+    this.#config.context = config;
+    // optimize for subsequent calls based on that last used context. Internally, extensions should be overriding this global-ish context anyway
+    const preserve =
+      ('preserveHeaders' in config && config.preserveHeaders) ?? true;
+    if (preserve) {
+      this.#config.context = { ...this.getContext(), ...config };
     }
-    return {
-      headers: this.#headers,
-      userId: this.#config?.userId,
-      tenantId: this.#config?.tenantId,
-      preserveHeaders: this.#preserveHeaders,
-    };
+    return withNileContext(this.#config, async () => {
+      if (fn) {
+        return fn(this);
+      }
+      return this;
+    });
+  }
+  /**
+   *
+   * @returns the last used (basically global) context object
+   */
+  getContext(): Context {
+    return ctx.getLastUsed();
   }
 
   /**
@@ -308,7 +312,7 @@ export class Server {
   ) {
     const updates: [string, string][] = [];
     let headers;
-    this.#headers = new Headers();
+    this.#config.context.headers = new Headers();
 
     if (config instanceof Headers) {
       headers = config;
@@ -317,10 +321,13 @@ export class Server {
       headers = config?.headers;
       if (config && config.origin) {
         // DO SOMETHING TO SURFACE A WARNING?
-        this.#headers.set(HEADER_ORIGIN, config.origin);
+        this.#config.context.headers.set(HEADER_ORIGIN, config.origin);
       }
       if (config && config.secureCookies != null) {
-        this.#headers.set(HEADER_SECURE_COOKIES, String(config.secureCookies));
+        this.#config.context.headers.set(
+          HEADER_SECURE_COOKIES,
+          String(config.secureCookies)
+        );
       }
     }
 
@@ -337,9 +344,9 @@ export class Server {
     const merged: Record<string, string> = {};
 
     // if we do have a cookie, grab anything useful before it is destroyed.
-    this.#config.tenantId = getTenantFromHttp(this.#headers, this.#config);
+    // this.#config.tenantId = getTenantFromHttp(this.#headers, this.#config);
 
-    this.#headers?.forEach((value, key) => {
+    this.#config.context.headers?.forEach((value, key) => {
       // It is expected that if the 'cookie' is missing when you set headers, it should be removed.
       if (key.toLowerCase() !== 'cookie') {
         merged[key.toLowerCase()] = value;
@@ -351,18 +358,18 @@ export class Server {
     }
 
     for (const [key, value] of Object.entries(merged)) {
-      this.#headers.set(key, value);
+      this.#config.context.headers.set(key, value);
     }
 
     this.#config.logger('[handleHeaders]').debug(JSON.stringify(merged));
-    this.#config.headers = this.#headers;
+    // this.#config.headers = this.#headers;
   }
 
   /**
    * Allow some internal mutations to reset our config + headers
    */
   #reset = () => {
-    this.#config.headers = this.#headers ?? new Headers();
+    // this.#config.headers = this.#headers ?? new Headers();
     this.#config.extensionCtx = buildExtensionConfig(this);
     this.users = new Users(this.#config);
     this.tenants = new Tenants(this.#config);

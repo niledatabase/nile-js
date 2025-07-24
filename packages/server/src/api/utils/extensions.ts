@@ -3,6 +3,8 @@ import { Server } from '../../Server';
 import { Config, ExtensionCtx, ExtensionReturns } from '../../utils/Config';
 import { TENANT_COOKIE } from '../../utils/constants';
 
+import { ctx } from './request-context';
+
 export function getRequestConfig(params: unknown[]): Record<string, string> {
   if (typeof params[1] === 'object') {
     return params[1] as Record<string, string>;
@@ -15,7 +17,7 @@ export function bindRunExtensions(instance: Server) {
   return async function runExtensions<T = ExtensionReturns>(
     toRun: ExtensionState,
     config: Config,
-    params: unknown | unknown[],
+    params?: unknown | unknown[],
     _init?: RequestInit & { request: Request }
   ): Promise<T> {
     const { debug } = config.logger('[EXTENSIONS]');
@@ -34,9 +36,13 @@ export function bindRunExtensions(instance: Server) {
           continue;
         }
 
+        if (ext.withContext && toRun === ExtensionState.withContext) {
+          await ext.withContext(ctx);
+        }
+
         if (ext.onHandleRequest && toRun === ExtensionState.onHandleRequest) {
           const result = await ext.onHandleRequest(
-            ...(Array.isArray(params) ? params : [params])
+            Array.isArray(params) ? params : [params]
           );
           debug(`${ext.id ?? create.name} ran onHandleRequest`);
           if (result != null) {
@@ -51,10 +57,12 @@ export function bindRunExtensions(instance: Server) {
         if (ext.onRequest && toRun === ExtensionState.onRequest) {
           // in the case where we have an existing server with headers (when handlersWithContext is used)
           // we need to merge previous headers with incoming headers, preferring the server headers in the case of a context.
-          const previousContext = instance.getContext();
+          const { ...previousContext } = ctx.get();
 
-          if (previousContext.preserveHeaders) {
-            instance.setContext({ preserveHeaders: false });
+          const preserveHeaders = previousContext.preserveHeaders;
+
+          if (preserveHeaders) {
+            ctx.set({ preserveHeaders: false });
           }
           if (!_init) {
             // this isn't strictly possible, since it was called from the sdk.
@@ -62,20 +70,17 @@ export function bindRunExtensions(instance: Server) {
             continue;
           }
 
-          await ext.onRequest(_init.request);
-          const updatedContext = instance.getContext();
+          const previousHeaders = new Headers(previousContext.headers);
+          await ext.onRequest(_init.request, ctx);
+          const updatedContext = ctx.get();
           if (updatedContext?.headers) {
             const cookie = updatedContext.headers.get('cookie');
             if (cookie && param.headers) {
-              param.headers.set(
-                'cookie',
-                mergeCookies(
-                  previousContext.preserveHeaders
-                    ? previousContext.headers?.get('cookie')
-                    : null,
-                  updatedContext.headers.get('cookie')
-                )
+              const updatedCookies = mergeCookies(
+                preserveHeaders ? previousHeaders?.get('cookie') : null,
+                updatedContext.headers.get('cookie')
               );
+              param.headers.set('cookie', updatedCookies);
             }
 
             if (updatedContext.tenantId && param.headers) {
@@ -84,12 +89,14 @@ export function bindRunExtensions(instance: Server) {
                 String(updatedContext.headers.get(TENANT_COOKIE))
               );
             }
+
+            ctx.set({ headers: param.headers });
           }
           debug(`${ext.id ?? create.name} ran onRequest`);
         }
 
         if (ext.onResponse && toRun === ExtensionState.onResponse) {
-          const result = await ext.onResponse(param);
+          const result = await ext.onResponse(param, ctx);
 
           debug(`${ext.id ?? create.name} ran onResponse`);
           if (result != null) {
@@ -117,4 +124,10 @@ function mergeCookies(...cookieStrings: (string | null | undefined)[]) {
     }
   }
   return [...cookieMap.entries()].map(([k, v]) => `${k}=${v}`).join('; ');
+}
+
+//just makes typing faster
+
+export async function runExtensionContext(config: Config) {
+  await config?.extensionCtx?.runExtensions(ExtensionState.withContext, config);
 }

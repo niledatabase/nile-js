@@ -1,3 +1,4 @@
+import { ctx } from '../../../../utils/request-context';
 import { Config } from '../../../../../utils/Config';
 import {
   DefaultNileAuthRoutes,
@@ -56,12 +57,13 @@ export async function fetchTenantUsers(
   }
 ) {
   const { body, params } = payload ?? {};
-  if (!config.tenantId) {
+  const { tenantId, headers } = ctx.get();
+  if (!tenantId) {
     throw new Error(
       "Unable to fetch the user's tenants, the tenantId context is missing. Call nile.setContext({ tenantId })"
     );
   }
-  if (!isUUID(config.tenantId)) {
+  if (!isUUID(tenantId)) {
     config
       .logger('fetchTenantUsers')
       .warn(
@@ -77,14 +79,12 @@ export async function fetchTenantUsers(
   }
   const clientUrl = `${config.serverOrigin}${
     config.routePrefix
-  }${DefaultNileAuthRoutes.TENANT_USERS.replace(
-    '{tenantId}',
-    config.tenantId
-  )}`;
+  }${DefaultNileAuthRoutes.TENANT_USERS.replace('{tenantId}', tenantId)}`;
+
   const m = method ?? 'GET';
   const init: RequestInit = {
     method: m,
-    headers: config.headers,
+    headers,
   };
   // I don't think post works
   if (method === 'POST') {

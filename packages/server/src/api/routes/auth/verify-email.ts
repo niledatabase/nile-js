@@ -2,10 +2,11 @@ import { Routes } from '../../types';
 import { urlMatches, proxyRoutes, NileAuthRoutes } from '../../utils/routes';
 import request from '../../utils/request';
 import { Config } from '../../../utils/Config';
+import { ctx } from '../../utils/request-context';
 
 const key = 'VERIFY_EMAIL';
 export default async function route(req: Request, config: Config) {
-  const url = proxyRoutes(config)[key];
+  const url = proxyRoutes(config.apiUrl)[key];
 
   const res = await request(
     url,
@@ -38,9 +39,10 @@ export async function fetchVerifyEmail(
   body?: string
 ): Promise<Response> {
   const clientUrl = `${config.serverOrigin}${config.routePrefix}${NileAuthRoutes.VERIFY_EMAIL}`;
+  const { headers } = ctx.get();
   const init: RequestInit = {
     method,
-    headers: config.headers,
+    headers,
   };
   if (body) {
     init.body = body;

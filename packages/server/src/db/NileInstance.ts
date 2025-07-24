@@ -118,13 +118,13 @@ function makeAfterCreate(config: Config, id: string): AfterCreate {
       done(e, conn);
     });
 
-    if (config.tenantId) {
-      const query = [`SET nile.tenant_id = '${config.tenantId}'`];
-      if (config.userId) {
-        if (!config.tenantId) {
+    if (config.context.tenantId) {
+      const query = [`SET nile.tenant_id = '${config.context.tenantId}'`];
+      if (config.context.userId) {
+        if (!config.context.tenantId) {
           warn('A user id cannot be set in context without a tenant id');
         }
-        query.push(`SET nile.user_id = '${config.userId}'`);
+        query.push(`SET nile.user_id = '${config.context.userId}'`);
       }
 
       // in this example we use pg driver's connection API
@@ -139,11 +139,13 @@ function makeAfterCreate(config: Config, id: string): AfterCreate {
           });
         } else {
           if (query.length === 1) {
-            debug(`connection context set: tenantId=${config.tenantId}`);
+            debug(
+              `connection context set: tenantId=${config.context.tenantId}`
+            );
           }
           if (query.length === 2) {
             debug(
-              `connection context set: tenantId=${config.tenantId} userId=${config.userId}`
+              `connection context set: tenantId=${config.context.tenantId} userId=${config.context.userId}`
             );
           }
         }

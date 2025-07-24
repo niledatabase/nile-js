@@ -44,7 +44,7 @@ export async function POST(
 
   init.method = 'POST';
   init.body = init.request.body;
-  const url = `${apiRoutes(config).INVITE(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).INVITE(tenantId)}`;
 
   return await fetch(url, init, config);
 }

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "generate:snippets": "node scripts/generate-snippets.mjs",
+    "resolve:dev": "node scripts/fix-resolutions.mjs",
     "dev": "next dev",
     "build": "yarn generate:snippets && next build",
     "start": "next start",

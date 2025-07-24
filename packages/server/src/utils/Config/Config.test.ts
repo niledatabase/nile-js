@@ -61,8 +61,8 @@ describe('Config', () => {
 
     expect(config.db.user).toBe('config-user');
     expect(config.db.password).toBe('config-password');
-    expect(config.tenantId).toBe('tenant-from-config'); // config wins
-    expect(config.userId).toBe('user-from-config');
+    expect(config.context.tenantId).toBe('tenant-from-config'); // config wins
+    expect(config.context.userId).toBe('user-from-config');
     expect(config.debug).toBe(true);
 
     expect(config.db).toEqual(
@@ -88,8 +88,8 @@ describe('Config', () => {
 
     expect(config.db.user).toBe('env-user');
     expect(config.db.password).toBe('env-password');
-    expect(config.tenantId).toBe(undefined);
-    expect(config.userId).toBe(undefined);
+    expect(config.context.tenantId).toBe(undefined);
+    expect(config.context.userId).toBe(undefined);
 
     expect(config.callbackUrl).toBe('https://callback.test');
     expect(config.secureCookies).toBe(true);
