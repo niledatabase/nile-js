@@ -21,7 +21,13 @@ describe('poster', () => {
   });
 
   [...Object.values(NileAuthRoutes), ...Object.values(DefaultNileAuthRoutes)]
-    .filter((str) => str !== DefaultNileAuthRoutes.ME)
+    .filter(
+      (str) =>
+        str !== DefaultNileAuthRoutes.USER_TENANTS &&
+        str !== DefaultNileAuthRoutes.USERS &&
+        str !== DefaultNileAuthRoutes.USER &&
+        str !== DefaultNileAuthRoutes.ME
+    )
     .forEach((key) => {
       it(`matches ${key} `, async () => {
         const headersArray: { key: string; value: string }[] = [];

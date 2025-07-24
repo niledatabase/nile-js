@@ -55,32 +55,30 @@ export const appRoutes = (prefix = DEFAULT_PREFIX): Routes => ({
 });
 
 // these map to nile-auth
-export const apiRoutes = (config: Config) => ({
-  ME: makeRestUrl(config, '/me'),
+export const apiRoutes = (apiUrl: string) => ({
+  ME: makeRestUrl(apiUrl, '/me'),
   USERS: (qp: { tenantId?: null | string; newTenantName?: null | string }) =>
-    makeRestUrl(config, '/users', qp),
-  USER: (userId: string) => makeRestUrl(config, `/users/${userId}`),
-  TENANTS: makeRestUrl(config, '/tenants'),
-  TENANT: (tenantId: string) => makeRestUrl(config, `/tenants/${tenantId}`),
-  SIGNUP: makeRestUrl(config, '/signup'),
+    makeRestUrl(apiUrl, '/users', qp),
+  USER: (userId: string) => makeRestUrl(apiUrl, `/users/${userId}`),
+  TENANTS: makeRestUrl(apiUrl, '/tenants'),
+  TENANT: (tenantId: string) => makeRestUrl(apiUrl, `/tenants/${tenantId}`),
+  SIGNUP: makeRestUrl(apiUrl, '/signup'),
   TENANT_USERS: (tenantId: string) =>
-    makeRestUrl(config, `/tenants/${tenantId}/users`),
+    makeRestUrl(apiUrl, `/tenants/${tenantId}/users`),
   INVITES: (tenantId: string) =>
-    makeRestUrl(config, `/tenants/${tenantId}/invites`),
+    makeRestUrl(apiUrl, `/tenants/${tenantId}/invites`),
   INVITE: (tenantId: string) =>
-    makeRestUrl(config, `/tenants/${tenantId}/invite`),
-  TENANT_USER: makeRestUrl(
-    config,
-    `/tenants/${config.tenantId}/users/${config.userId}`
-  ),
+    makeRestUrl(apiUrl, `/tenants/${tenantId}/invite`),
+  TENANT_USER: (tenantId: string, userId: string) =>
+    makeRestUrl(apiUrl, `/tenants/${tenantId}/users/${userId}`),
   USER_TENANTS: (userId: string) =>
-    makeRestUrl(config, `/users/${userId}/tenants`),
+    makeRestUrl(apiUrl, `/users/${userId}/tenants`),
 });
 type ApiRouteKeys = keyof typeof apiRoutes;
 export type ApiRoutePaths = (typeof apiRoutes)[ApiRouteKeys];
 
 // these map to nile-auth
-export const proxyRoutes = (config: Config) => ({
+export const proxyRoutes = (config: string) => ({
   SIGNIN: makeRestUrl(config, NileAuthRoutes.SIGNIN),
   PROVIDERS: makeRestUrl(config, NileAuthRoutes.PROVIDERS),
   SESSION: makeRestUrl(config, NileAuthRoutes.SESSION),
@@ -109,11 +107,11 @@ function filterNullUndefined(
 }
 
 export function makeRestUrl(
-  config: Config,
+  apiUrl: string,
   path: string,
   qp?: Record<string, string | null>
 ) {
-  const url = config.apiUrl || NILEDB_API_URL;
+  const url = apiUrl || NILEDB_API_URL;
   if (!url) {
     throw new Error(
       'An API url is required. Set it via NILEDB_API_URL. Was auto configuration run?'

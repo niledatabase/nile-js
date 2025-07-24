@@ -1,5 +1,6 @@
-import { User } from '@niledatabase/server';
+import { parseTenantId, User } from '@niledatabase/server';
 import { TenantSelector, UserInfo } from '@niledatabase/react';
+import { headers } from 'next/headers';
 
 import { nile } from '../api/[...nile]/nile';
 
@@ -9,17 +10,30 @@ import MembersTable from './MembersTable';
 import { inviteUser, setActiveTenant } from './actions';
 
 export default async function TenantsAndTables({ me }: { me: User }) {
-  nile.setContext({ userId: me.id });
-  // do some extra context setting if we're new
-  if (!nile.getContext().tenantId) {
-    nile.setContext({ tenantId: me.tenants[0] });
-  }
-  const { tenantId } = nile.getContext();
-  const [invites, users, tenants] = await Promise.all([
-    tenantId ? nile.tenants.invites() : [],
-    tenantId ? nile.tenants.users() : [],
-    tenantId ? nile.tenants.list() : [],
-  ]);
+  // Getting the tenant id from the cookie is handled automatically,
+  // but we want a nice fallback if it does not exist, so we are going to
+  // manually set it so we don't have flicker.
+  const tenantId = parseTenantId(await headers());
+
+  // override or exclude something that is missing from the cookies.
+  // Eg we are making this depending on the API, not client state
+  // it is way easier to just not do this and handle everything with a cookie
+  // but there are other use cases.
+  const config = {
+    userId: me.id,
+    tenantId: tenantId ?? me.tenants[0],
+    preserveHeaders: true,
+  };
+  const [invites, users, tenants] = await nile.withContext(
+    config,
+    async (_nile) => {
+      return Promise.all([
+        _nile.tenants.invites(),
+        _nile.tenants.users(),
+        _nile.tenants.list(),
+      ]);
+    }
+  );
 
   return (
     <div className="w-2xl mx-auto p-10 flex flex-col gap-10">
@@ -28,7 +42,7 @@ export default async function TenantsAndTables({ me }: { me: User }) {
         <div className="text-5xl font-bold">
           <TenantSelector
             tenants={tenants instanceof Response ? [] : tenants}
-            activeTenant={nile.getContext().tenantId}
+            activeTenant={tenantId}
             onTenantChange={setActiveTenant}
           />
         </div>

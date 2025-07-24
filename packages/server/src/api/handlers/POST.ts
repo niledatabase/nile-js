@@ -1,5 +1,4 @@
 import { matchesLog } from '../../utils/Logger';
-import users, { matches as matchesUsers } from '../routes/users';
 import tenants, { matches as matchesTenants } from '../routes/tenants';
 import signup, { matches as matchesSignup } from '../routes/signup';
 import tenantUsers, {
@@ -60,10 +59,6 @@ export default function POSTER(configRoutes: Routes, config: Config) {
       return signup(req, config);
     }
 
-    if (matchesUsers(configRoutes, req)) {
-      info('matches users');
-      return users(req, config);
-    }
     if (matchesTenants(configRoutes, req)) {
       info('matches tenants');
       return tenants(req, config);

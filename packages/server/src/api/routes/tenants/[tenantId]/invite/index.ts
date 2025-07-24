@@ -5,6 +5,7 @@ import {
   urlMatches,
 } from '../../../../utils/routes';
 import { Routes } from '../../../../types';
+import { ctx } from '../../../../utils/request-context';
 
 import { PUT } from './PUT';
 import { POST } from './POST';
@@ -38,12 +39,13 @@ export async function fetchInvite(
   method?: 'POST' | 'PUT' | 'DELETE',
   body?: string
 ) {
-  if (!config.tenantId) {
+  const { headers, tenantId } = ctx.get();
+  if (!tenantId) {
     throw new Error(
       'Unable to fetch the invite for the tenant, the tenantId context is missing. Call nile.setContext({ tenantId })'
     );
   }
-  if (!isUUID(config.tenantId)) {
+  if (!isUUID(tenantId)) {
     config
       .logger('fetchInvite')
       .warn(
@@ -52,11 +54,11 @@ export async function fetchInvite(
   }
   let clientUrl = `${config.serverOrigin}${
     config.routePrefix
-  }${DefaultNileAuthRoutes.INVITE.replace('{tenantId}', config.tenantId)}`;
+  }${DefaultNileAuthRoutes.INVITE.replace('{tenantId}', tenantId)}`;
   const m = method ?? 'GET';
   const init: RequestInit = {
     method: m,
-    headers: config.headers,
+    headers,
   };
   if (method === 'POST' || method === 'PUT') {
     init.body = body;

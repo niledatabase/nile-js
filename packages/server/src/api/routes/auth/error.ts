@@ -6,7 +6,7 @@ import { Config } from '../../../utils/Config';
 const key = 'ERROR';
 export default async function route(req: Request, config: Config) {
   return request(
-    proxyRoutes(config)[key],
+    proxyRoutes(config.apiUrl)[key],
     {
       method: req.method,
       request: req,

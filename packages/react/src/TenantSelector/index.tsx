@@ -110,7 +110,7 @@ function SelectTenant(props: ComponentProps) {
         <div className="flex flex-row w-full flex-1 items-center gap-1">
           <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger
-              className="group w-80"
+              className="group w-80 font-medium text-sm"
               disabled={!tenant?.name}
               onClick={() => {
                 setOpen(true);

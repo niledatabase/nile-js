@@ -49,7 +49,7 @@ export async function GET(
   }
 
   init.method = 'GET';
-  const url = `${apiRoutes(config).TENANT(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).TENANT(tenantId)}`;
 
   return await request(url, init, config);
 }

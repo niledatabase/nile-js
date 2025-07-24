@@ -17,6 +17,7 @@ export default async function ForgotPasswordServer() {
     const email = formData.get('email') as string;
     const response = await nile.auth.forgotPassword({
       email,
+      callbackUrl: `/reset-password/reset?email=${email}`,
     });
 
     if (response.ok) {

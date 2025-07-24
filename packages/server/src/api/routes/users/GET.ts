@@ -41,13 +41,14 @@ export async function GET(
 ) {
   const yurl = new URL(init.request.url);
   const tenantId = yurl.searchParams.get('tenantId');
-  const tenant = tenantId ?? getTenantFromHttp(init.request.headers, config);
+  const tenant =
+    tenantId ?? getTenantFromHttp(init.request.headers, config.context);
 
   if (!tenant) {
     log('[GET] No tenant id provided.');
     return new Response(null, { status: 404 });
   }
   init.method = 'GET'; // for testing
-  const url = apiRoutes(config).TENANT_USERS(tenant);
+  const url = apiRoutes(config.apiUrl).TENANT_USERS(tenant);
   return await request(url, init, config);
 }

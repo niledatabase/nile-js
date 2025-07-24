@@ -31,27 +31,34 @@ const tu = {
 const specificTenantId = generateUUIDv7();
 
 describe('api integration', () => {
-  const nile = Nile(config);
+  let nile = Nile(config);
   it('does api calls for the api sdk', async () => {
     // debugging clean up
     await initialDebugCleanup(nile);
     // make this user for later
-    const tenantUser = await nile.auth.signUp<User>(tu);
-    const verifiedMe = await nile.users.verifySelf<User>();
+    // you have to group things now that are "similar", else you will pollute everything.
+    const [tenantUser, verifiedMe] = await nile.withContext(
+      {},
+      async (nile) => {
+        const tenantUser = await nile.auth.signUp<User>(tu);
+        const verifiedMe = await nile.users.verifySelf<User>();
+        return [tenantUser, verifiedMe];
+      }
+    );
+
     expect(verifiedMe.emailVerified).not.toBeNull();
 
     expect(tenantUser).toMatchObject({ email: tu.email });
-    // signs up a user to a tenant
+
     let user = await nile.auth.signUp<User>(primaryUser);
+    // switch to primary user
+    nile = await nile.withContext({
+      tenantId: user.tenants[0],
+      preserveHeaders: true,
+    });
+
     const invite = await nile.tenants.invite(userToInvite.email, true);
-    if (invite) {
-      // for now
-      // expect(invite.status).toEqual(201);
-      expect(invite.status).toEqual(400);
-      expect(await invite.text()).toEqual(
-        'Invalid login: 451 Authentication failed: Maximum credits exceeded'
-      );
-    }
+    expect(invite.status).toEqual(201);
     const obtainedInvite = await nile.db.query<Invite>(
       'select * from auth.invites where identifier = $1',
       [userToInvite.email]
@@ -73,17 +80,19 @@ describe('api integration', () => {
     };
     // this user was deleted
     const user2 = await nile.auth.signUp<User>(newUser);
+    // save the user's context
+    const user2Ctx = await nile.withContext({ preserveHeaders: true });
     expect(user2).toMatchObject({ email: powerCreate.email });
     expect(user2.tenants[0]).toEqual(user.tenants[0]);
-    const me2 = await nile.users.getSelf();
+    const me2 = await user2Ctx.users.getSelf();
     expect(user2).toMatchObject(me2);
 
     // be sure its two unique users
-    const user2Token = parseToken(nile.getContext().headers);
+    const user2Token = parseToken(user2Ctx.getContext().headers);
     expect(user1Token).not.toEqual(user2Token);
 
     await nile.auth.signOut();
-    expect(nile.getContext().headers).toEqual(new Headers());
+    expect(nile.getContext().headers.get('cookie')).toEqual(null);
     const failedMe = await nile.users.getSelf(true);
     expect(failedMe.status).toEqual(401);
 
@@ -154,7 +163,11 @@ describe('api integration', () => {
     });
 
     // contextualize the remaining queries
-    nile.setContext({ tenantId: newTenant.id });
+
+    nile = await nile.withContext({
+      tenantId: newTenant.id,
+      preserveHeaders: true,
+    });
 
     // rename tenant
     const updated = await nile.tenants.update<Tenant>({
@@ -166,7 +179,6 @@ describe('api integration', () => {
     expect(newTenantUser).toMatchObject({ email: tenantUser.email });
 
     // list users in the tenant to be sure they are updated
-
     expect((await nile.tenants.users<User[]>()).length).toEqual(2);
 
     // remove a user from the tenant

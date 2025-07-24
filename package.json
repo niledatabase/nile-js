@@ -49,7 +49,7 @@
     "typescript": "^5.5.0"
   },
   "lint-staged": {
-    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix ."
+    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "prettier --write"
   },
   "packageManager": "yarn@4.9.2"
 }

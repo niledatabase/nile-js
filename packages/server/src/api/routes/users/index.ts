@@ -6,6 +6,7 @@ import {
   urlMatches,
 } from '../../utils/routes';
 import { Config } from '../../../utils/Config';
+import { ctx } from '../../utils/request-context';
 
 import { POST } from './POST';
 import { GET } from './GET';
@@ -34,18 +35,19 @@ export function matches(configRoutes: Routes, request: Request): boolean {
 
 export async function fetchUser(config: Config, method: 'PUT') {
   let clientUrl = `${prefixAppRoute(config)}${DefaultNileAuthRoutes.USERS}`;
+  const { userId, headers } = ctx.get();
 
   if (method === 'PUT')
-    if (!config.userId) {
+    if (!userId) {
       throw new Error(
         'Unable to update user, the userId context is missing. Call nile.setContext({ userId }), set nile.userId = "userId", or add it to the function call'
       );
     } else {
       clientUrl = `${prefixAppRoute(
         config
-      )}${DefaultNileAuthRoutes.USER.replace('{userId}', config.userId)}`;
+      )}${DefaultNileAuthRoutes.USER.replace('{userId}', userId)}`;
     }
-  if (!isUUID(config.userId)) {
+  if (!isUUID(userId)) {
     config
       .logger('[fetchUser]')
       .warn(
@@ -55,7 +57,7 @@ export async function fetchUser(config: Config, method: 'PUT') {
 
   const init: RequestInit = {
     method,
-    headers: config.headers,
+    headers,
   };
   const req = new Request(clientUrl, init);
 

@@ -56,7 +56,7 @@ export async function POST(
   const [, tenantId] = yurl.pathname.split('/').reverse();
   init.body = JSON.stringify({ email: session.email });
   init.method = 'POST';
-  const url = apiRoutes(config).TENANT_USERS(tenantId);
+  const url = apiRoutes(config.apiUrl).TENANT_USERS(tenantId);
 
   return await fetch(url, init, config);
 }

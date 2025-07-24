@@ -40,6 +40,6 @@ export async function GET(
   const yurl = new URL(init.request.url);
   const [, tenantId] = yurl.pathname.split('/').reverse();
 
-  const url = `${apiRoutes(config).TENANT_USERS(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).TENANT_USERS(tenantId)}`;
   return await request(url, init, config);
 }

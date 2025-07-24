@@ -4,6 +4,7 @@ import { Server } from '../../Server';
 import { Config } from '../../utils/Config';
 
 import { bindRunExtensions, buildExtensionConfig } from './extensions';
+import { ctx } from './request-context';
 
 const createMockServer = (): Server => {
   let context: Record<string, unknown> = {};
@@ -29,6 +30,7 @@ describe('bindHandleOnRequest', () => {
         info: jest.fn(),
         warn: jest.fn(),
         error: jest.fn(),
+        silly: jest.fn(),
       }),
       extensions: [],
     });
@@ -56,30 +58,47 @@ describe('bindHandleOnRequest', () => {
   });
 
   it('runs valid extensions with onRequest', async () => {
-    const ext = {
-      id: 'mock-extension',
-      onRequest: jest.fn(async () => {
-        mockServer.setContext({
-          headers: new Headers({
-            cookie: 'foo=bar',
-            [TENANT_COOKIE]: 'abc123',
-          }),
-          tenantId: 'abc123',
-        });
-      }),
-    };
+    await ctx.run({}, async () => {
+      const ext = {
+        id: 'mock-extension',
+        onRequest: jest.fn(async (_request, ctx) => {
+          ctx.set({
+            headers: new Headers({
+              cookie: 'foo=bar',
+              [TENANT_COOKIE]: 'abc123',
+            }),
+            tenantId: 'abc123',
+          });
+        }),
+      };
 
-    config.extensions = [jest.fn(() => ext) as unknown as Extension];
+      config.extensions = [jest.fn(() => ext) as unknown as Extension];
 
-    const handler = bindRunExtensions(mockServer);
-    await handler(ExtensionState.onRequest, config, params, {
-      request: new Request('http://test'),
+      const handler = bindRunExtensions(mockServer);
+
+      const params = {
+        headers: new Headers(),
+      };
+
+      await handler(ExtensionState.onRequest, config, [params], {
+        request: new Request('http://test'),
+      });
+
+      expect(ext.onRequest).toHaveBeenCalled();
+
+      const [calledRequest, calledCtx] = ext.onRequest.mock.calls[0];
+
+      expect(calledRequest).toBeInstanceOf(Request);
+      expect(typeof calledCtx.get).toBe('function');
+
+      const updatedContext = calledCtx.get();
+      expect(updatedContext.headers.get('cookie')).toEqual('foo=bar');
+      expect(updatedContext.tenantId).toBe('abc123');
+      expect(params.headers.get('cookie')).toBe('foo=bar');
+      expect(params.headers.get(TENANT_COOKIE)).toBe('abc123');
+
+      expect(mockDebug).toHaveBeenCalledWith('mock-extension ran onRequest');
     });
-
-    expect(ext.onRequest).toHaveBeenCalled();
-    expect(params.headers?.get('cookie')).toBe('foo=bar');
-    expect(params.headers?.get(TENANT_COOKIE)).toBe('abc123');
-    expect(mockDebug).toHaveBeenCalledWith('mock-extension ran onRequest');
   });
 
   it('preserves previous cookies if preserveHeaders is true', async () => {
@@ -90,30 +109,30 @@ describe('bindHandleOnRequest', () => {
       tenantId: null,
     };
 
-    // Second call to getContext (after ext.onRequest)
     const updatedContext = {
       headers: new Headers({ cookie: 'auth=456' }),
     };
 
-    mockServer.getContext = jest
-      .fn()
-      .mockImplementationOnce(() => previousContext)
-      .mockImplementationOnce(() => updatedContext);
+    await ctx.run({ ...previousContext }, async () => {
+      const ext = {
+        id: 'mock-extension',
+        onRequest: jest.fn(async (_request, ctx) => {
+          ctx.set(updatedContext);
+        }),
+      };
 
-    const ext = {
-      onRequest: jest.fn(async () => {
-        mockServer.setContext(updatedContext);
-      }),
-    };
+      config.extensions = [jest.fn(() => ext) as unknown as Extension];
 
-    config.extensions = [jest.fn(() => ext) as unknown as Extension];
+      const handler = bindRunExtensions(mockServer);
+      const params = { headers: new Headers() };
 
-    const handler = bindRunExtensions(mockServer);
-    await handler(ExtensionState.onRequest, config, params, {
-      request: new Request('http://test'),
+      await handler(ExtensionState.onRequest, config, [params], {
+        request: new Request('http://test'),
+      });
+
+      // ✅ merged result of previousContext + updatedContext
+      expect(params.headers.get('cookie')).toBe('session=123; auth=456');
     });
-
-    expect(params.headers?.get('cookie')).toBe('session=123; auth=456');
   });
 });
 
