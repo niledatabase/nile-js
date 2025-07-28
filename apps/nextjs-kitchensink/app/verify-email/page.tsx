@@ -57,6 +57,7 @@ export default async function VerifyEmailPage() {
   );
 }
 
+// not common, but update the users without tenant context, because that's what I want to do.
 async function unVerifyEmail() {
   'use server';
   const me = await nile.users.getSelf();
@@ -66,10 +67,12 @@ async function unVerifyEmail() {
       error: 'Not logged in',
     };
   }
-  await nile.db.query(
-    'update users.users set email_verified = NULL where id = $1',
-    [me.id]
-  );
+  await nile.withContext({ ddl: true }, async (ddl) => {
+    await ddl.db.query(
+      'update users.users set email_verified = NULL where id = $1',
+      [me.id]
+    );
+  });
   revalidatePath('/verify-email');
   return { ok: true };
 }
