@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.28](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.27...v5.0.0-alpha.28) (2025-07-28)
+
+### Bug Fixes
+
+- **server:** pass valid sign in to context server side ([afc32be](https://github.com/niledatabase/nile-js/commit/afc32be484f651477a12f6420f55b78a35b088f8))
+
 # [5.0.0-alpha.27](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.26...v5.0.0-alpha.27) (2025-07-28)
 
 ### Bug Fixes
