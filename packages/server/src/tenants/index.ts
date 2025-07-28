@@ -16,6 +16,7 @@ import obtainCsrf from '../auth/obtainCsrf';
 import { NileRequest } from '../types';
 import { User } from '../users/types';
 import { Config } from '../utils/Config';
+import { fQUrl } from '../utils/qualifyDomain';
 
 import { Invite, Tenant } from './types';
 
@@ -360,11 +361,12 @@ export default class Tenants {
             identifier = req.email;
           }
 
+          const { callbackUrl: cbUrl } = defaultCallbackUrl(this.#config);
           if ('callbackUrl' in req) {
-            callbackUrl = fQUrl(req.callbackUrl ?? '', this.#config);
+            callbackUrl = fQUrl(cbUrl, req.callbackUrl ?? '/');
           }
           if ('redirectUrl' in req) {
-            redirectUrl = fQUrl(req.redirectUrl ?? '', this.#config);
+            redirectUrl = fQUrl(cbUrl, req.redirectUrl ?? '/');
           }
         }
 
@@ -491,20 +493,4 @@ export function defaultCallbackUrl(config: Config) {
     }
   }
   return { callbackUrl: cb, redirectUrl: redirect };
-}
-
-function fQUrl(path: string, config: Config) {
-  if (path.startsWith('/')) {
-    const { callbackUrl } = defaultCallbackUrl(config);
-    if (callbackUrl) {
-      const { origin } = new URL(callbackUrl);
-      return `${origin}${path}`;
-    }
-  }
-  try {
-    new URL(path);
-  } catch {
-    throw new Error('An invalid URL has been passed.');
-  }
-  return path;
 }

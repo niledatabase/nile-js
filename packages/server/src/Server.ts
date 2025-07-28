@@ -59,8 +59,10 @@ export class Server {
 
     watchHeaders((headers) => {
       if (headers) {
+        // internally we can call this for sign in, among other things. Be sure the next request still works.
         this.#config.context.headers = new Headers(headers);
-        // this.setContext(headers);
+        // this is always true when called internally
+        this.#config.context.preserveHeaders = true;
         this.#reset();
       }
     });

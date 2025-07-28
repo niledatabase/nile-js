@@ -57,8 +57,17 @@ export const ctx: CTX = {
     if (partial.headers === null) {
       store.headers = new Headers();
     } else if (partial.headers && store.headers instanceof Headers) {
-      for (const [k, v] of new Headers(partial.headers).entries()) {
-        store.headers.set(k, v);
+      for (const [key, value] of new Headers(partial.headers).entries()) {
+        if (key.toLowerCase() === 'cookie') {
+          const existingCookies = parseCookieHeader(
+            store.headers.get('cookie') || ''
+          );
+          const newCookies = parseCookieHeader(value);
+          const mergedCookies = { ...existingCookies, ...newCookies };
+          store.headers.set('cookie', serializeCookies(mergedCookies));
+        } else {
+          store.headers.set(key, value);
+        }
       }
     }
 
@@ -147,4 +156,22 @@ function serializeContext(context: Context): string {
     userId: context.userId,
     preserveHeaders: context.preserveHeaders,
   });
+}
+
+function parseCookieHeader(header: string): Record<string, string> {
+  return header
+    .split(';')
+    .map((c) => c.trim())
+    .filter(Boolean)
+    .reduce((acc, curr) => {
+      const [key, ...val] = curr.split('=');
+      if (key) acc[key] = val.join('=');
+      return acc;
+    }, {} as Record<string, string>);
+}
+
+function serializeCookies(cookies: Record<string, string>): string {
+  return Object.entries(cookies)
+    .map(([k, v]) => `${k}=${v}`)
+    .join('; ');
 }

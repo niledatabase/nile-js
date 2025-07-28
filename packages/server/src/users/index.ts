@@ -6,6 +6,7 @@ import getCsrf from '../auth/obtainCsrf';
 import { Loggable } from '../utils/Logger';
 import { parseCallback } from '../auth';
 import { ctx, withNileContext } from '../api/utils/request-context';
+import { fQUrl } from '../utils/qualifyDomain';
 
 import { User } from './types';
 
@@ -132,10 +133,10 @@ export default class Users {
     return withNileContext(this.#config, async () => {
       const bypassEmail =
         typeof options === 'object' && options?.bypassEmail === true;
-      const callbackUrl =
-        typeof options === 'object'
-          ? options.callbackUrl
-          : defaultCallbackUrl().callbackUrl;
+      const callbackUrl = fQUrl(
+        defaultCallbackUrl().callbackUrl,
+        typeof options === 'object' ? String(options.callbackUrl) : '/'
+      );
 
       let res;
 
