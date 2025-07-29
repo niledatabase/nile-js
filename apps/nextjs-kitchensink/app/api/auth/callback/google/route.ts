@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
   let tenantId = me.tenants[0];
   if (!tenantId) {
-    const tenant = await nile.tenants.create('myTenant1');
+    const tenant = await nile.tenants.create(me.email);
     if (tenant instanceof Response) {
       // something went wrong with the cookie
       return handleFailure(nile, response);

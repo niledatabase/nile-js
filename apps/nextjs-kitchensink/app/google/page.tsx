@@ -11,7 +11,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default async function GooglePage() {
   const todos = await selectTodos();
-  const allTodos = await nile.db.query('select * from todos2');
+  const allTodos = await nile.noContext(async (_n) => {
+    const res = await _n.db.query('select * from todos2');
+    return res;
+  });
   return (
     <div className="container mx-auto pt-40">
       <div className="flex flex-col gap-4">

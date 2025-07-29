@@ -2,7 +2,6 @@ import pg from 'pg';
 
 import {
   Context,
-  ContextParams,
   Extension,
   NileConfig,
   NileHandlers,
@@ -14,7 +13,6 @@ import DbManager from './db';
 import Users from './users';
 import Tenants from './tenants';
 import Auth from './auth';
-import Logger from './utils/Logger';
 import { HEADER_ORIGIN, HEADER_SECURE_COOKIES } from './utils/constants';
 import { handlersWithContext } from './api/handlers/withContext';
 import { buildExtensionConfig } from './api/utils/extensions';
@@ -32,8 +30,6 @@ export class Server {
   #config: Config;
   #handlers: NileHandlers;
   #manager: DbManager;
-  // #headers: undefined | Headers;
-  // #preserveHeaders: boolean;
 
   constructor(config?: NileConfig) {
     this.#config = new Config({
@@ -112,6 +108,7 @@ export class Server {
   }
 
   get db(): pg.Pool & { clearConnections: () => void } {
+    this.#config.context = { ...this.getContext() };
     const pool = this.#manager.getConnection(this.#config);
 
     return Object.assign(pool, {
@@ -161,17 +158,17 @@ export class Server {
    * Basically means you want to disregard cookies and do everything manually
    * If we elect to DDL, we don't want to use tenant id or user id, so remove those.
    */
-  async withContext(context?: ContextParams): Promise<this>;
+  async withContext(context?: PartialContext): Promise<this>;
   async withContext<T>(
-    context: ContextParams,
+    context: PartialContext,
     fn: (sdk: this) => Promise<T>
   ): Promise<T>;
   async withContext<T>(
-    context?: ContextParams,
+    context?: PartialContext,
     fn?: (sdk: this) => Promise<T>
   ): Promise<T | this> {
-    const { ddl, ...ctx } = (context ?? defaultContext) as ContextParams;
-    this.#config.context = { ...ctx };
+    const { ...initialContext } = (context ?? defaultContext) as PartialContext;
+    this.#config.context = { ...initialContext };
     // optimize for subsequent calls based on that last used context. Internally, extensions should be overriding this global-ish context anyway
     const preserve =
       (context && 'preserveHeaders' in context && context.preserveHeaders) ??
@@ -180,13 +177,29 @@ export class Server {
     if (preserve) {
       this.#config.context = { ...this.getContext(), ...context };
     }
+    return withNileContext(this.#config, async () => {
+      if (fn) {
+        return fn(this);
+      }
+      return this;
+    });
+  }
 
-    if (ddl) {
-      delete this.#config.context.tenantId;
-      delete this.#config.context.userId;
-    }
+  /**
+   * Creates a context without a user id and a tenant id, but keeps the headers around for auth at least.
+   */
+  async noContext(): Promise<this>;
+  async noContext<T>(fn: (sdk: this) => Promise<T>): Promise<T>;
+  async noContext<T>(fn?: (sdk: this) => Promise<T>): Promise<T | this> {
+    this.#config.context.tenantId = undefined;
+    this.#config.context.userId = undefined;
 
     return withNileContext(this.#config, async () => {
+      // there are some cases where you need to "override" stuff, and the extension context
+      // is going to keep adding it back. For instance, nextjs is always going to set a tenant_id from the cookie
+      // we need to honor the incoming config over the extension, else you can never just "call" things.
+      ctx.set({ userId: undefined, tenantId: undefined });
+
       if (fn) {
         return fn(this);
       }
@@ -203,6 +216,7 @@ export class Server {
 
   /**
    * Merge headers together
+   * Saves them in a singleton for use in a request later. It's basically the "default" value
    * Internally, passed a NileConfig, externally, should be using Headers
    */
   #handleHeaders(
@@ -260,14 +274,12 @@ export class Server {
     }
 
     this.#config.logger('[handleHeaders]').debug(JSON.stringify(merged));
-    // this.#config.headers = this.#headers;
   }
 
   /**
    * Allow some internal mutations to reset our config + headers
    */
   #reset = () => {
-    // this.#config.headers = this.#headers ?? new Headers();
     this.#config.extensionCtx = buildExtensionConfig(this);
     this.users = new Users(this.#config);
     this.tenants = new Tenants(this.#config);

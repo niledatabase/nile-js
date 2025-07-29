@@ -25,10 +25,6 @@ export type PartialContext = {
   preserveHeaders?: boolean;
 };
 
-export type ContextParams = PartialContext & {
-  ddl?: boolean;
-};
-
 export type CTX = {
   run: <T>(ctx: Partial<Context>, fn: () => T) => T;
   get: () => Context;
