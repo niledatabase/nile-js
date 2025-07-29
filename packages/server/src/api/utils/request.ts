@@ -1,3 +1,4 @@
+import { parseCallback } from '../../auth';
 import { ExtensionState } from '../../types';
 import {
   HEADER_ORIGIN,
@@ -7,13 +8,14 @@ import {
 import { Config } from '../../utils/Config';
 
 import { DEFAULT_PREFIX } from './routes';
+import { ctx } from './request-context';
 
 export default async function request(
   url: string,
   _init: RequestInit & { request: Request },
   config: Config
 ) {
-  const { debug, info, error } = config.logger('[REQUEST]');
+  const { debug, info, error, warn } = config.logger('[REQUEST]');
   const { request, ...init } = _init;
   const requestUrl = new URL(request.url);
   const updatedHeaders = new Headers({});
@@ -51,13 +53,23 @@ export default async function request(
     if (passedOrigin) {
       updatedHeaders.set(HEADER_ORIGIN, passedOrigin);
     } else {
-      const reqOrigin =
-        config.routePrefix !== DEFAULT_PREFIX
-          ? `${requestUrl.origin}${config.routePrefix}`
-          : requestUrl.origin;
+      // REST requests won't have a context
+      const { headers } = ctx.get();
+      const host = headers.get('host');
+      if (host) {
+        const serverSideOrigin = `${getProtocolFromHeaders(headers)}://${host}`;
+        updatedHeaders.set(HEADER_ORIGIN, serverSideOrigin);
 
-      updatedHeaders.set(HEADER_ORIGIN, reqOrigin);
-      debug(`Obtained origin from request ${reqOrigin}`);
+        debug(`Obtained origin from server side headers ${serverSideOrigin}`);
+      } else {
+        const reqOrigin =
+          config.routePrefix !== DEFAULT_PREFIX
+            ? `${requestUrl.origin}${config.routePrefix}`
+            : requestUrl.origin;
+
+        updatedHeaders.set(HEADER_ORIGIN, reqOrigin);
+        debug(`Obtained origin from request ${reqOrigin}`);
+      }
     }
   }
   const params = { ...init };
@@ -144,4 +156,28 @@ export default async function request(
       { status: 500 }
     );
   }
+}
+
+function getProtocolFromHeaders(
+  headers: Headers | Record<string, string>
+): string {
+  const get = (key: string) =>
+    headers instanceof Headers ? headers.get(key) : headers[key.toLowerCase()];
+
+  // Check x-forwarded-proto
+  const xfp = get('x-forwarded-proto');
+  if (xfp) return xfp.toLowerCase();
+
+  // Check Forwarded header
+  const forwarded = get('forwarded');
+  if (forwarded) {
+    const match = forwarded.match(/proto=(https?)/i);
+    if (match) return match[1].toLowerCase();
+  }
+
+  // Check referer or origin
+  const ref = get('referer') || get('origin');
+  if (ref && ref.startsWith('https')) return 'https';
+
+  return 'http'; // fallback
 }

@@ -8,7 +8,6 @@ import { fetchInvite } from '../api/routes/tenants/[tenantId]/invite';
 import { fetchInvites } from '../api/routes/tenants/[tenantId]/invites';
 import { fetchTenantUsers } from '../api/routes/tenants/[tenantId]/users';
 import { fetchTenantUser } from '../api/routes/tenants/[tenantId]/users/[userId]';
-import { runExtensionContext } from '../api/utils/extensions';
 import { ctx, withNileContext } from '../api/utils/request-context';
 import { DefaultNileAuthRoutes } from '../api/utils/routes';
 import { parseCallback } from '../auth';
@@ -345,8 +344,6 @@ export default class Tenants {
     return withNileContext(
       this.#config,
       async () => {
-        await runExtensionContext(this.#config);
-
         // need to get rid of the headers every where in favor of the context
         const { csrfToken } = await obtainCsrf<{ csrfToken: string }>(
           this.#config
@@ -396,7 +393,7 @@ export default class Tenants {
    * @param [rawResponse] - When true, return the raw {@link Response}.
    */
   async acceptInvite<T = Response>(
-    req?: { identifier: string; token: string; redirectUrl?: string },
+    req?: { identifier: string; token: string; callbackUrl?: string },
     rawResponse?: boolean
   ): Promise<T> {
     return withNileContext(this.#config, async () => {
@@ -404,8 +401,8 @@ export default class Tenants {
         throw new Error('The identifier and token are required.');
       }
       const { identifier, token } = req;
-      const defaults = defaultCallbackUrl(this.#config);
-      const callbackUrl = String(defaults.callbackUrl);
+      const { callbackUrl: cbUrl } = defaultCallbackUrl(this.#config);
+      const callbackUrl = fQUrl(cbUrl, req?.callbackUrl ?? '/');
 
       const res = await fetchInvite(
         this.#config,
