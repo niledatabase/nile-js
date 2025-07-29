@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.29](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.28...v5.0.0-alpha.29) (2025-07-29)
+
+**Note:** Version bump only for package @niledatabase/nextjs-kitchensink
+
 # [5.0.0-alpha.28](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.27...v5.0.0-alpha.28) (2025-07-28)
 
 ### Bug Fixes
