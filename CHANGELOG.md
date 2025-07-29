@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.30](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.29...v5.0.0-alpha.30) (2025-07-29)
+
+### Bug Fixes
+
+- **server:** use the last used context for db queries ([7663153](https://github.com/niledatabase/nile-js/commit/7663153d87423fad43ff4113696b2abf67df360b))
+
 # [5.0.0-alpha.29](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.28...v5.0.0-alpha.29) (2025-07-29)
 
 ### Bug Fixes
