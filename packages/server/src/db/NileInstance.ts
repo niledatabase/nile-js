@@ -120,8 +120,7 @@ function makeAfterCreate(config: Config, id: string): AfterCreate {
     });
 
     // prefer context, I guess
-    const tenantId = config.context.tenantId;
-    const userId = config.context.userId;
+    const { tenantId, userId } = ctx.getLastUsed();
     if (tenantId) {
       const query = [`SET nile.tenant_id = '${tenantId}'`];
       if (userId) {

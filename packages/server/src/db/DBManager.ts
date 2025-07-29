@@ -3,6 +3,7 @@ import pg from 'pg';
 import { Config } from '../utils/Config';
 import { watchEvictPool } from '../utils/Event';
 import Logger from '../utils/Logger';
+import { ctx } from '../api/utils/request-context';
 
 import NileDatabase from './NileInstance';
 
@@ -43,7 +44,8 @@ export default class DBManager {
 
   getConnection = (config: Config): pg.Pool => {
     const { info } = Logger(config)('[DBManager]');
-    const id = this.makeId(config.context.tenantId, config.context.userId);
+    const { tenantId, userId } = ctx.getLastUsed();
+    const id = this.makeId(tenantId, userId);
 
     const existing = this.connections.get(id);
     info(`# of instances: ${this.connections.size}`);

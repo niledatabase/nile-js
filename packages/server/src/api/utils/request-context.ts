@@ -71,9 +71,8 @@ export const ctx: CTX = {
       }
     }
 
-    if ('tenantId' in partial)
-      store.tenantId = partial.tenantId ?? store.tenantId;
-    if ('userId' in partial) store.userId = partial.userId ?? store.userId;
+    if ('tenantId' in partial) store.tenantId = partial.tenantId;
+    if ('userId' in partial) store.userId = partial.userId;
     if ('preserveHeaders' in partial)
       store.preserveHeaders = Boolean(partial.preserveHeaders);
 
@@ -121,17 +120,15 @@ export function withNileContext<T>(
     });
   }
 
-  const tenantId = 'tenantId' in initialContext && initialContext.tenantId;
-  const userId = 'userId' in initialContext && initialContext.userId;
-  const preserveHeaders =
-    'preserveHeaders' in initialContext && initialContext.preserveHeaders;
-
+  const hasTenantId = 'tenantId' in initialContext;
+  const hasUserId = 'userId' in initialContext;
+  const hasPreserveHeaders = 'preserveHeaders' in initialContext;
   const context = {
     headers: mergedHeaders,
-    tenantId: tenantId ? tenantId : existing.tenantId,
-    userId: userId ? userId : existing.userId,
-    preserveHeaders: preserveHeaders
-      ? preserveHeaders
+    tenantId: hasTenantId ? initialContext.tenantId : existing.tenantId,
+    userId: hasUserId ? initialContext.userId : existing.userId,
+    preserveHeaders: hasPreserveHeaders
+      ? Boolean(initialContext.preserveHeaders)
       : existing.preserveHeaders ?? false,
   };
 
@@ -139,6 +136,7 @@ export function withNileContext<T>(
   return ctx.run(context, async () => {
     // run the extension context last, its always better than us
     await runExtensionContext(config);
+
     return fn();
   });
 }

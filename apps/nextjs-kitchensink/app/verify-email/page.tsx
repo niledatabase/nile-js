@@ -67,7 +67,7 @@ async function unVerifyEmail() {
       error: 'Not logged in',
     };
   }
-  await nile.withContext({ ddl: true }, async (ddl) => {
+  await nile.noContext(async (ddl) => {
     await ddl.db.query(
       'update users.users set email_verified = NULL where id = $1',
       [me.id]

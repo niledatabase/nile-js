@@ -1,13 +1,7 @@
 import { AsyncLocalStorage } from 'async_hooks';
 import { IncomingHttpHeaders } from 'http';
 
-import {
-  ContextParams,
-  Extension,
-  ExtensionResult,
-  ExtensionState,
-  Server,
-} from '@niledatabase/server';
+import { PartialContext, ExtensionState, Server } from '@niledatabase/server';
 import type {
   Request as ExpressRequest,
   Response as ExpressResponse,
@@ -47,7 +41,7 @@ export const express = (app?: Express) => {
     const { error, debug } = instance.logger('[EXTENSION][express]');
 
     // Internal context helpers - I think we delete this now?
-    const setRequestContext = (context: ContextParams) => {
+    const setRequestContext = (context: PartialContext) => {
       contextStore.getStore()?.set('context', context);
 
       instance.withContext(context);
