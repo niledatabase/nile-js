@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
+import { Server } from '@niledatabase/server';
 
-import { handlers, nile as globalNile } from '../../../[...nile]/nile';
+import { handlers } from '../../../[...nile]/nile';
 
 export async function GET(req: NextRequest) {
   const { response, nile } = await handlers.withContext.GET(req);
@@ -11,13 +12,15 @@ export async function GET(req: NextRequest) {
     return handleFailure(nile, response);
   }
   // add user to tenant - this is a terrible place to do this
-  await globalNile.db.query(`CREATE TABLE IF NOT EXISTS "todos2" (
+  await nile.noContext(async ({ db }) => {
+    await db.query(`CREATE TABLE IF NOT EXISTS "todos2" (
     "id" uuid DEFAULT gen_random_uuid(),
     "tenant_id" uuid,
     "title" varchar(256),
     "complete" boolean,
     CONSTRAINT todos2_tenant_id_id PRIMARY KEY("tenant_id","id")
   );`);
+  });
 
   let tenantId = me.tenants[0];
   if (!tenantId) {
@@ -38,7 +41,7 @@ export async function GET(req: NextRequest) {
   return response;
 }
 
-async function handleFailure(nile: typeof globalNile, response: Response) {
+async function handleFailure(nile: Server, response: Response) {
   const signOutRes = await nile.auth.signOut();
   // pass along the cookie invalidation headers, but also redirect
   const newHeaders = new Headers(signOutRes.headers);
