@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.33](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.32...v5.0.0-alpha.33) (2025-07-30)
+
+### Bug Fixes
+
+- **server:** make nile.query and nile.db.query proxy for context ([5c55ff7](https://github.com/niledatabase/nile-js/commit/5c55ff7d4e55c8d5f687a5a36040ba8b4d54ac82))
+
 # [5.0.0-alpha.32](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.31...v5.0.0-alpha.32) (2025-07-30)
 
 ### Features
