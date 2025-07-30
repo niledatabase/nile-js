@@ -54,7 +54,6 @@ describe('api integration', () => {
     // switch to primary user
     nile = await nile.withContext({
       tenantId: user.tenants[0],
-      preserveHeaders: true,
     });
 
     const invite = await nile.tenants.invite(userToInvite.email, true);
@@ -81,7 +80,7 @@ describe('api integration', () => {
     // this user was deleted
     const user2 = await nile.auth.signUp<User>(newUser);
     // save the user's context
-    const user2Ctx = await nile.withContext({ preserveHeaders: true });
+    const user2Ctx = await nile.withContext();
     expect(user2).toMatchObject({ email: powerCreate.email });
     expect(user2.tenants[0]).toEqual(user.tenants[0]);
     const me2 = await user2Ctx.users.getSelf();
@@ -166,7 +165,6 @@ describe('api integration', () => {
 
     nile = await nile.withContext({
       tenantId: newTenant.id,
-      preserveHeaders: true,
     });
 
     // rename tenant

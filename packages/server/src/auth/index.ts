@@ -565,7 +565,7 @@ export default class Auth {
           .join('; ');
         const uHeaders = new Headers({ cookie });
         updateHeaders(uHeaders);
-        ctx.set({ headers: uHeaders, preserveHeaders: true });
+        ctx.set({ headers: uHeaders });
       } else {
         error('Unable to set context after sign in', {
           headers: signInRes.headers,

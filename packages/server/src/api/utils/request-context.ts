@@ -14,7 +14,6 @@ export const defaultContext: Context = {
   headers: new Headers(),
   tenantId: undefined,
   userId: undefined,
-  preserveHeaders: false,
 };
 
 let lastUsedContext: Context = defaultContext;
@@ -73,8 +72,6 @@ export const ctx: CTX = {
 
     if ('tenantId' in partial) store.tenantId = partial.tenantId;
     if ('userId' in partial) store.userId = partial.userId;
-    if ('preserveHeaders' in partial)
-      store.preserveHeaders = Boolean(partial.preserveHeaders);
 
     silly(`[SET] ${serializeContext(store)}`);
     lastUsedContext = { ...store };
@@ -102,7 +99,6 @@ export function withNileContext<T>(
       headers: mergedHeaders,
       tenantId: existing.tenantId,
       userId: existing.userId,
-      preserveHeaders: existing.preserveHeaders ?? false,
     };
 
     silly(`${name} [INITIAL - Request] ${serializeContext(context)}`);
@@ -122,14 +118,10 @@ export function withNileContext<T>(
 
   const hasTenantId = 'tenantId' in initialContext;
   const hasUserId = 'userId' in initialContext;
-  const hasPreserveHeaders = 'preserveHeaders' in initialContext;
   const context = {
     headers: mergedHeaders,
     tenantId: hasTenantId ? initialContext.tenantId : existing.tenantId,
     userId: hasUserId ? initialContext.userId : existing.userId,
-    preserveHeaders: hasPreserveHeaders
-      ? Boolean(initialContext.preserveHeaders)
-      : existing.preserveHeaders ?? false,
   };
 
   silly(`${name} [INITIAL - Partial<Context>] ${serializeContext(context)}`);
@@ -152,7 +144,6 @@ function serializeContext(context: Context): string {
     headers,
     tenantId: context.tenantId,
     userId: context.userId,
-    preserveHeaders: context.preserveHeaders,
   });
 }
 

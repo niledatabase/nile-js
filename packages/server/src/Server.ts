@@ -57,8 +57,6 @@ export class Server {
       if (headers) {
         // internally we can call this for sign in, among other things. Be sure the next request still works.
         this.#config.context.headers = new Headers(headers);
-        // this is always true when called internally
-        this.#config.context.preserveHeaders = true;
         this.#reset();
       }
     });
@@ -67,8 +65,6 @@ export class Server {
       ...this.#config.handlers,
       withContext: handlersWithContext(this.#config),
     };
-
-    this.#config.context.preserveHeaders = config?.preserveHeaders ?? false;
 
     this.#config.context.tenantId = getTenantId({ config: this.#config });
 
@@ -170,16 +166,16 @@ export class Server {
   ): Promise<T | this> {
     const isFn = typeof contextOrFn === 'function';
 
-    const context = isFn ? defaultContext : contextOrFn ?? defaultContext;
+    const context = isFn ? {} : contextOrFn ?? {};
     const fn = isFn ? (contextOrFn as AsyncCallback<this, T>) : maybeFn;
 
     const preserve =
-      ('preserveHeaders' in context && context.preserveHeaders) ?? true;
+      'useLastContext' in context ? context.useLastContext : true;
 
     if (preserve) {
       this.#config.context = { ...this.getContext(), ...context };
     } else {
-      this.#config.context = { ...context };
+      this.#config.context = { ...defaultContext, ...context };
     }
 
     return withNileContext(this.#config, async () => {

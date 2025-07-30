@@ -36,6 +36,16 @@ export function bindRunExtensions(instance: Server) {
           continue;
         }
 
+        if (ext.withTenantId && toRun === ExtensionState.withTenantId) {
+          ctx.set({
+            tenantId: await ext.withTenantId(),
+          });
+        }
+
+        if (ext.withUserId && toRun === ExtensionState.withUserId) {
+          ctx.set({ userId: await ext.withUserId() });
+        }
+
         if (ext.withContext && toRun === ExtensionState.withContext) {
           await ext.withContext(ctx);
         }
@@ -59,11 +69,6 @@ export function bindRunExtensions(instance: Server) {
           // we need to merge previous headers with incoming headers, preferring the server headers in the case of a context.
           const { ...previousContext } = ctx.get();
 
-          const preserveHeaders = previousContext.preserveHeaders;
-
-          if (preserveHeaders) {
-            ctx.set({ preserveHeaders: false });
-          }
           if (!_init) {
             // this isn't strictly possible, since it was called from the sdk.
             // the divergence between `onRequest` and `onHandleRequest` causes this
@@ -77,7 +82,7 @@ export function bindRunExtensions(instance: Server) {
             const cookie = updatedContext.headers.get('cookie');
             if (cookie && param.headers) {
               const updatedCookies = mergeCookies(
-                preserveHeaders ? previousHeaders?.get('cookie') : null,
+                previousHeaders?.get('cookie'),
                 updatedContext.headers.get('cookie')
               );
               param.headers.set('cookie', updatedCookies);
@@ -127,7 +132,12 @@ function mergeCookies(...cookieStrings: (string | null | undefined)[]) {
 }
 
 //just makes typing faster
-
 export async function runExtensionContext(config: Config) {
   await config?.extensionCtx?.runExtensions(ExtensionState.withContext, config);
+
+  await config?.extensionCtx?.runExtensions(
+    ExtensionState.withTenantId,
+    config
+  );
+  await config?.extensionCtx?.runExtensions(ExtensionState.withUserId, config);
 }

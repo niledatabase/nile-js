@@ -10,10 +10,10 @@ async function nextJsHeaders({ set }: CTX) {
   const { cookies, headers } = await import('next/headers');
   const headersHelper = await headers();
   const cooks = await cookies();
-  set({ headers: headersHelper, preserveHeaders: true });
+  set({ headers: headersHelper });
   const tenantCookie = cooks.get(TENANT_COOKIE);
   if (tenantCookie) {
-    set({ tenantId: tenantCookie.value, preserveHeaders: true });
+    set({ tenantId: tenantCookie.value });
   }
 }
 const nextJs: Extension = () => {
@@ -32,7 +32,6 @@ const nextJs: Extension = () => {
         if (cookie.length) {
           // set this to true (only works once) since the request is 100% server side until the next request
           setContext({
-            preserveHeaders: true,
             headers: new Headers({ cookie }),
           });
         }

@@ -117,7 +117,6 @@ export class Config {
       tenantId: config?.tenantId,
       userId: config?.userId,
       headers: config?.headers ? new Headers(config.headers) : new Headers(),
-      preserveHeaders: false,
     };
 
     this.routes = {

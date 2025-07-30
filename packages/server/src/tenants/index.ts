@@ -219,13 +219,13 @@ export default class Tenants {
       try {
         const json = await me.json();
         if ('id' in json) {
-          ctx.set({ userId: json.id, preserveHeaders: true });
+          ctx.set({ userId: json.id });
         }
       } catch {
         // maybe there's already a context, let `fetchTenantUser` deal with it
       }
       if (typeof req === 'string') {
-        ctx.set({ tenantId: req, preserveHeaders: true });
+        ctx.set({ tenantId: req });
       } else {
         this.#handleContext(req);
       }
@@ -250,7 +250,7 @@ export default class Tenants {
   ): Promise<T> {
     return withNileContext(this.#config, async () => {
       if (typeof req === 'string') {
-        ctx.set({ userId: req, preserveHeaders: true });
+        ctx.set({ userId: req });
       } else {
         this.#handleContext(req);
       }
@@ -272,7 +272,7 @@ export default class Tenants {
     return withNileContext(this.#config, async () => {
       this.#handleContext(req);
       if (typeof req === 'string') {
-        ctx.set({ userId: req, preserveHeaders: true });
+        ctx.set({ userId: req });
       }
       const res = await fetchTenantUser(this.#config, 'DELETE');
       return responseHandler(res, rawResponse);
@@ -443,10 +443,10 @@ export default class Tenants {
   #handleContext(req: JoinTenantRequest | boolean | undefined) {
     if (typeof req === 'object') {
       if ('tenantId' in req) {
-        ctx.set({ tenantId: req.tenantId, preserveHeaders: true });
+        ctx.set({ tenantId: req.tenantId });
       }
       if ('userId' in req) {
-        ctx.set({ userId: req.userId, preserveHeaders: true });
+        ctx.set({ userId: req.userId });
       }
     }
   }

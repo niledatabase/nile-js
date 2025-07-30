@@ -51,7 +51,7 @@ describe('handlersWithContext', () => {
       ...config,
       headers: undefined,
       origin: 'http://localhost:3000',
-      preserveHeaders: true,
+      useLastContext: true,
     });
     //@ts-expect-error - internal inspection
     expect(result.nile.config.origin).toBe('http://localhost:3000');

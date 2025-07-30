@@ -80,6 +80,6 @@ export function updateConfig(
     ...config,
     origin,
     headers: headers ?? undefined,
-    preserveHeaders: true,
+    useLastContext: true,
   };
 }
