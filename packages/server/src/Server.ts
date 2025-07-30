@@ -154,39 +154,42 @@ export class Server {
     this.#config.paths = paths;
   }
 
-  /** Allows setting of context outside of the request lifecycle
-   * Basically means you want to disregard cookies and do everything manually
-   * If we elect to DDL, we don't want to use tenant id or user id, so remove those.
+  /**
+   * Sets the context for a particular set of requests or db calls to be sure the context is fully managed for the entire lifecycle
    */
-  async withContext(context?: PartialContext): Promise<this>;
+  async withContext(): Promise<this>;
   async withContext<T>(
     context: PartialContext,
-    fn: (sdk: this) => Promise<T>
+    fn: AsyncCallback<this, T>
   ): Promise<T>;
+  async withContext(context: PartialContext): Promise<this>;
+  async withContext<T>(fn: AsyncCallback<this, T>): Promise<T>;
   async withContext<T>(
-    context?: PartialContext,
-    fn?: (sdk: this) => Promise<T>
+    contextOrFn?: PartialContext | AsyncCallback<this, T>,
+    maybeFn?: AsyncCallback<this, T>
   ): Promise<T | this> {
-    const { ...initialContext } = (context ?? defaultContext) as PartialContext;
-    this.#config.context = { ...initialContext };
-    // optimize for subsequent calls based on that last used context. Internally, extensions should be overriding this global-ish context anyway
+    const isFn = typeof contextOrFn === 'function';
+
+    const context = isFn ? defaultContext : contextOrFn ?? defaultContext;
+    const fn = isFn ? (contextOrFn as AsyncCallback<this, T>) : maybeFn;
+
     const preserve =
-      (context && 'preserveHeaders' in context && context.preserveHeaders) ??
-      true;
+      ('preserveHeaders' in context && context.preserveHeaders) ?? true;
 
     if (preserve) {
       this.#config.context = { ...this.getContext(), ...context };
+    } else {
+      this.#config.context = { ...context };
     }
+
     return withNileContext(this.#config, async () => {
-      if (fn) {
-        return fn(this);
-      }
-      return this;
+      return fn ? fn(this) : this;
     });
   }
 
   /**
    * Creates a context without a user id and a tenant id, but keeps the headers around for auth at least.
+   * This is useful for DDL/DML, since most extensions will set the context by default
    */
   async noContext(): Promise<this>;
   async noContext<T>(fn: (sdk: this) => Promise<T>): Promise<T>;
@@ -295,3 +298,4 @@ export function create<T = Server>(config?: NileConfig): T {
 
   return server as T;
 }
+type AsyncCallback<TInstance, TResult> = (sdk: TInstance) => Promise<TResult>;
