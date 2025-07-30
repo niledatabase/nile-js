@@ -37,14 +37,11 @@ describe('api integration', () => {
     await initialDebugCleanup(nile);
     // make this user for later
     // you have to group things now that are "similar", else you will pollute everything.
-    const [tenantUser, verifiedMe] = await nile.withContext(
-      {},
-      async (nile) => {
-        const tenantUser = await nile.auth.signUp<User>(tu);
-        const verifiedMe = await nile.users.verifySelf<User>();
-        return [tenantUser, verifiedMe];
-      }
-    );
+    const [tenantUser, verifiedMe] = await nile.noContext(async (nile) => {
+      const tenantUser = await nile.auth.signUp<User>(tu);
+      const verifiedMe = await nile.users.verifySelf<User>();
+      return [tenantUser, verifiedMe];
+    });
 
     expect(verifiedMe.emailVerified).not.toBeNull();
 

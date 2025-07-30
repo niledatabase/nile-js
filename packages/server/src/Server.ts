@@ -1,4 +1,4 @@
-import pg from 'pg';
+import pg, { Pool } from 'pg';
 
 import {
   Context,
@@ -103,9 +103,25 @@ export class Server {
     }
   }
 
-  get db(): pg.Pool & { clearConnections: () => void } {
+  /**
+   * Query the database with the current context
+   */
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Pool['query'] = (queryStream: any, values?: any) => {
     this.#config.context = { ...this.getContext() };
     const pool = this.#manager.getConnection(this.#config);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return pool.query(queryStream as any, values);
+  };
+
+  /**
+   * Return a db object that can be used to talk to the database
+   * Does not have a context by default
+   */
+  get db(): pg.Pool & { clearConnections: () => void } {
+    const pool = this.#manager.getConnection(this.#config, true);
 
     return Object.assign(pool, {
       clearConnections: () => {
@@ -113,6 +129,7 @@ export class Server {
       },
     });
   }
+
   get logger() {
     return this.#config.logger;
   }
