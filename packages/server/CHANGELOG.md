@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.32](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.31...v5.0.0-alpha.32) (2025-07-30)
+
+### Features
+
+- **server:** default preserve headers, extensions for userId and tenantId ([e023391](https://github.com/niledatabase/nile-js/commit/e02339109f168bdf6e477a2a5aca057d89e303dc))
+- **server:** support a function as the first param withContext ([9960ea7](https://github.com/niledatabase/nile-js/commit/9960ea71637df81bfef00cebb16a418dec4a5f04))
+
 # [5.0.0-alpha.31](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.30...v5.0.0-alpha.31) (2025-07-29)
 
 **Note:** Version bump only for package @niledatabase/server
