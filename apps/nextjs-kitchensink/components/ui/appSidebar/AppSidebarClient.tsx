@@ -2,6 +2,7 @@
 import {
   ArrowBigRight,
   ArrowBigRightDash,
+  Building2,
   Home,
   Key,
   LogIn,
@@ -64,6 +65,11 @@ const items = [
     title: 'Verify email (manual)',
     url: '/verify-email',
     icon: MailCheck,
+  },
+  {
+    title: 'Tenant list',
+    url: '/tenant-list',
+    icon: Building2,
   },
 ];
 export default function SidebarClient() {
