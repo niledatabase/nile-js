@@ -42,9 +42,9 @@ export default class DBManager {
     }
   };
 
-  getConnection = (config: Config): pg.Pool => {
+  getConnection = (config: Config, noContext = false): pg.Pool => {
     const { info } = Logger(config)('[DBManager]');
-    const { tenantId, userId } = ctx.getLastUsed();
+    const { tenantId, userId } = noContext ? {} : ctx.getLastUsed();
     const id = this.makeId(tenantId, userId);
 
     const existing = this.connections.get(id);
@@ -54,7 +54,7 @@ export default class DBManager {
       existing.startTimeout();
       return existing.pool;
     }
-    const newOne = new NileDatabase(config, id);
+    const newOne = new NileDatabase(config.db, config.logger, id);
     this.connections.set(id, newOne);
     info(`created new ${id}`);
     info(`# of instances: ${this.connections.size}`);

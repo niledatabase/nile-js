@@ -13,7 +13,7 @@ describe('nile instance', () => {
         idleTimeoutMillis: 1,
       },
     });
-    new NileDatabase(config, 'someId');
+    new NileDatabase(config.db, config.logger, 'someId');
     watchEvictPool((id) => {
       expect(id).toEqual('someId');
       done();
