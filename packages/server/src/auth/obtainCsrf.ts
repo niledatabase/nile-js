@@ -29,7 +29,7 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
         .filter(Boolean)
         .join('; ');
       headers.set('cookie', cookie);
-      ctx.set({ headers, preserveHeaders: true });
+      ctx.set({ headers });
       updateHeaders(headers);
     }
     if (!rawResponse) {
@@ -52,7 +52,7 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
 
     // we need to do it in both places in case its the very first time
     headers.set('cookie', cookie);
-    ctx.set({ headers, preserveHeaders: true });
+    ctx.set({ headers });
     updateHeaders(new Headers({ cookie }));
   }
   if (rawResponse) {

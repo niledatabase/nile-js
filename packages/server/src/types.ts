@@ -13,7 +13,6 @@ export type Context = {
   headers: Headers;
   tenantId: string | undefined | null;
   userId: string | undefined | null;
-  preserveHeaders: boolean;
 };
 
 // you can set headers to null, which will reset the them, keeping everything else
@@ -22,7 +21,7 @@ export type PartialContext = {
   headers?: null | Headers;
   tenantId?: string | undefined | null;
   userId?: string | undefined | null;
-  preserveHeaders?: boolean;
+  useLastContext?: boolean;
 };
 
 export type CTX = {
@@ -51,6 +50,12 @@ export type ExtensionResult<TParams> = {
   // allow runtime configurations by extensions
   onConfigure?: (params?: TParams) => void;
 
+  // sets the context for the user id
+  withUserId?: () => string;
+
+  // sets the context for the tenant id
+  withTenantId?: () => string;
+
   replace?: {
     handlers: (handlers: NileHandlers) => Any;
   };
@@ -67,6 +72,8 @@ export enum ExtensionState {
   onRequest = 'onRequest',
   onResponse = 'onResponse',
   withContext = 'withContext',
+  withTenantId = 'withTenantId',
+  withUserId = 'withUserId',
 }
 export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
 export type LoggerType = {
@@ -177,9 +184,9 @@ export type NileConfig = {
   extensions?: Extension[];
 
   /**
-   * Preserve incoming request headers when running extensions.
+   * Re-use the last set context
    */
-  preserveHeaders?: boolean;
+  useLastContext?: boolean;
 };
 
 export type NileDb = NilePoolConfig & { tenantId?: string };
