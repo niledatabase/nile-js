@@ -102,19 +102,30 @@ export const express = (app?: Express) => {
       onHandleRequest: async (
         params: [ExpressRequest, ExpressResponse, NextFunction]
       ) => {
+        // there are two cases here.
+        // One is a server side request (normal Request/Response, the other is GET/POST/PUT/DELETE)
         const [req, res, next] = params;
         debug('handling response');
 
-        const reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+        let reqUrl = '';
+        const method = req.method;
+        const init: RequestInit = { method, headers: new Headers() };
+        if (req instanceof Request) {
+          reqUrl = req.url;
+          init.headers = req.headers;
+        } else {
+          try {
+            reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+          } catch {
+            // handled later
+          }
+        }
 
         try {
           new URL(reqUrl);
         } catch {
           throw new Error('Invalid URL — are you running Express?');
         }
-
-        const method = req.method;
-        const init: RequestInit = { method, headers: new Headers() };
 
         if (req.headers?.cookie) {
           (init.headers as Headers).set('cookie', req.headers.cookie);
@@ -165,6 +176,11 @@ export const express = (app?: Express) => {
             }
           }
         });
+
+        if (!res) {
+          return response;
+        }
+
         if (!res.headersSent) {
           debug('sending response');
           res.status(response.status).set(newHeaders);
