@@ -1,8 +1,8 @@
 import { Config } from '../../../utils/Config';
-import urlMatches from '../../utils/routes/urlMatches';
 import { Routes } from '../../types';
 import auth from '../../utils/auth';
-import Logger from '../../../utils/Logger';
+import { urlMatches, DefaultNileAuthRoutes, isUUID } from '../../utils/routes';
+import { ctx } from '../../utils/request-context';
 
 import { GET } from './GET';
 import { GET as TENANT_GET } from './[tenantId]/GET';
@@ -10,24 +10,10 @@ import { DELETE } from './[tenantId]/DELETE';
 import { PUT } from './[tenantId]/PUT';
 import { POST } from './POST';
 
-function isUUID(value: string | null | undefined) {
-  if (!value) {
-    return false;
-  }
-  // is any UUID
-  const regex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5|7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-
-  return regex.test(value);
-}
-
 const key = 'TENANTS';
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger(
-    { ...config, debug: config.debug } as Config,
-    `[ROUTES][${key}]`
-  );
+  const { info } = config.logger(`[ROUTES][${key}]`);
   const session = await auth(request, config);
 
   if (!session) {
@@ -56,4 +42,76 @@ export default async function route(request: Request, config: Config) {
 
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes[key]);
+}
+
+export async function fetchTenants(
+  config: Config,
+  method: 'POST' | 'GET',
+  body?: string
+): Promise<Response> {
+  const { headers } = ctx.get();
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${DefaultNileAuthRoutes.TENANTS}`;
+
+  const init: RequestInit = {
+    method,
+    headers,
+  };
+  if (method === 'POST') {
+    init.body = body;
+  }
+  const req = new Request(clientUrl, init);
+
+  return (await config.handlers.POST(req)) as Response;
+}
+
+export async function fetchTenant(
+  config: Config,
+  method: 'GET' | 'DELETE' | 'PUT',
+  body?: string
+) {
+  const { headers, tenantId } = ctx.get();
+  if (!tenantId) {
+    throw new Error(
+      'Unable to fetch tenants, the tenantId context is missing. Call nile.setContext({ tenantId })'
+    );
+  }
+  if (!isUUID(tenantId)) {
+    config
+      .logger('fetch tenant')
+      .warn(
+        'nile.tenantId is not a valid UUID. This may lead to unexpected behavior in your application.'
+      );
+  }
+  const clientUrl = `${config.serverOrigin}${
+    config.routePrefix
+  }${DefaultNileAuthRoutes.TENANT.replace('{tenantId}', tenantId)}`;
+  const m = method ?? 'GET';
+  const init: RequestInit = {
+    method: m,
+    headers,
+  };
+  if (m === 'PUT') {
+    init.body = body;
+  }
+  const req = new Request(clientUrl, init);
+
+  return (await config.handlers[m](req)) as Response;
+}
+
+export async function fetchTenantsByUser(config: Config) {
+  const { warn } = config.logger(' fetchTenantsByUser ');
+  const { userId, headers } = ctx.get();
+  if (!userId) {
+    warn(
+      'nile.userId is not set. The call will still work for the API, but the database context is not set properly and may lead to unexpected behavior in your application.'
+    );
+  } else if (!isUUID(userId)) {
+    warn(
+      'nile.userId is not a valid UUID. This may lead to unexpected behavior in your application.'
+    );
+  }
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${DefaultNileAuthRoutes.TENANTS}`;
+  const req = new Request(clientUrl, { headers });
+
+  return (await config.handlers.GET(req)) as Response;
 }

@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
+import { signIn } from '@niledatabase/client';
 
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
-import { signIn } from '../../lib/auth/Authorizer';
+import { SSOButtonProps } from '../types';
 
 const SlackSignInButton = ({
   callbackUrl,
@@ -14,13 +15,10 @@ const SlackSignInButton = ({
   variant,
   size,
   init,
+  onClick,
   asChild = false,
   ...props
-}: ButtonProps & {
-  callbackUrl?: string;
-  buttonText?: string;
-  init?: RequestInit;
-}) => {
+}: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
   return (
     <Comp
@@ -29,8 +27,9 @@ const SlackSignInButton = ({
         'bg-[#4A154B] hover:bg-[#4A154B] pl-[3px] hover:bg-opacity-85 gap-4 transition-colors shadow-md text-white'
       )}
       data-slot="slack-button"
-      onClick={() => {
-        signIn('slack', { callbackUrl, init });
+      onClick={async (e) => {
+        const res = await signIn('slack', { callbackUrl, init });
+        onClick && onClick(e, res);
       }}
       {...props}
     >

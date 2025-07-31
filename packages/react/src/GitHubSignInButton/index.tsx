@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
+import { signIn } from '@niledatabase/client';
 
-import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 import { SSOButtonProps } from '../types';
@@ -19,6 +19,7 @@ const GitHubSignInButton = ({
   auth,
   fetchUrl,
   baseUrl,
+  onClick,
   ...props
 }: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
@@ -29,8 +30,15 @@ const GitHubSignInButton = ({
         buttonVariants({ variant, size, className }),
         'bg-black hover:bg-slate-800 pl-[3px] text-white gap-4 transition-colors shadow-md'
       )}
-      onClick={() => {
-        signIn('github', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      onClick={async (e) => {
+        const res = await signIn('github', {
+          callbackUrl,
+          init,
+          auth,
+          fetchUrl,
+          baseUrl,
+        });
+        onClick && onClick(e, res);
       }}
       {...props}
     >

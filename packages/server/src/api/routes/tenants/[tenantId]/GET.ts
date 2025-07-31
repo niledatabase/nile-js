@@ -1,6 +1,6 @@
+import { apiRoutes } from '../../../utils/routes';
 import { Config } from '../../../../utils/Config';
 import request from '../../../utils/request';
-import { apiRoutes } from '../../../utils/routes/apiRoutes';
 
 /**
  * @swagger
@@ -18,7 +18,8 @@ import { apiRoutes } from '../../../utils/routes/apiRoutes';
  *        type: string
  *    responses:
  *      "200":
- *        description: the desired tenant
+ *       description: the desired tenant
+ *       content:
  *        application/json:
  *          schema:
  *            $ref: '#/components/schemas/Tenant'
@@ -48,7 +49,7 @@ export async function GET(
   }
 
   init.method = 'GET';
-  const url = `${apiRoutes(config).TENANT(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).TENANT(tenantId)}`;
 
   return await request(url, init, config);
 }

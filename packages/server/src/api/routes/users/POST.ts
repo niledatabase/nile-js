@@ -1,6 +1,6 @@
 import { getTenantFromHttp } from '../../../utils/fetch';
 import request from '../../utils/request';
-import { apiRoutes } from '../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../utils/routes';
 import { Config } from '../../../utils/Config';
 /**
  * @swagger
@@ -76,7 +76,10 @@ export async function POST(
   const newTenantName = yurl.searchParams.get('newTenantName');
   const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
 
-  const url = apiRoutes(config).USERS({ tenantId: tenant, newTenantName });
+  const url = apiRoutes(config.apiUrl).USERS({
+    tenantId: tenant,
+    newTenantName,
+  });
 
   return await request(url, init, config);
 }

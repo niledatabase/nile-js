@@ -1,9 +1,11 @@
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-
-import Authorizer, { auth as authorizer } from './auth/Authorizer';
-import { PartialAuthorizer } from './auth/types';
+import {
+  auth as authorizer,
+  PartialAuthorizer,
+  Authorizer,
+} from '@niledatabase/client';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

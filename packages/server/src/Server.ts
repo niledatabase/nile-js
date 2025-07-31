@@ -1,137 +1,314 @@
-import pg from 'pg';
+import pg, { Pool } from 'pg';
 
-import { ServerConfig } from './types';
-import { Config } from './utils/Config';
-import { watchTenantId, watchToken, watchUserId } from './utils/Event';
+import {
+  Context,
+  Extension,
+  NileConfig,
+  NileHandlers,
+  PartialContext,
+} from './types';
+import { Config, ConfigurablePaths } from './utils/Config';
+import { watchHeaders, watchTenantId, watchUserId } from './utils/Event';
 import DbManager from './db';
-import { Api } from './Api';
+import Users from './users';
+import Tenants from './tenants';
+import Auth from './auth';
+import { HEADER_ORIGIN, HEADER_SECURE_COOKIES } from './utils/constants';
+import { handlersWithContext } from './api/handlers/withContext';
+import { buildExtensionConfig } from './api/utils/extensions';
+import {
+  ctx,
+  defaultContext,
+  withNileContext,
+} from './api/utils/request-context';
+import { getTenantId } from './utils/Config/envVars';
 
 export class Server {
-  config: Config;
-  api: Api;
-  private manager!: DbManager;
+  users: Users;
+  tenants: Tenants;
+  auth: Auth;
+  #config: Config;
+  #handlers: NileHandlers;
+  #manager: DbManager;
 
-  constructor(config?: ServerConfig) {
-    this.config = new Config(config as ServerConfig, '[initial config]');
-    this.api = new Api(this.config);
-    this.manager = new DbManager(this.config);
+  constructor(config?: NileConfig) {
+    this.#config = new Config({
+      ...config,
+      extensionCtx: buildExtensionConfig(this),
+    });
 
+    // watch first, they may mutate first
+    // unsure if this is still useful, with `ctx` around
     watchTenantId((tenantId) => {
-      this.tenantId = tenantId;
+      if (tenantId !== this.#config.context.tenantId) {
+        this.#config.context.tenantId = String(tenantId);
+        this.#reset();
+      }
     });
 
     watchUserId((userId) => {
-      this.userId = userId;
+      if (userId !== this.#config.context.userId) {
+        this.#config.context.userId = String(userId);
+        this.#reset();
+      }
     });
 
-    watchToken((token) => {
-      this.token = token;
+    watchHeaders((headers) => {
+      if (headers) {
+        // internally we can call this for sign in, among other things. Be sure the next request still works.
+        this.#config.context.headers = new Headers(headers);
+        this.#reset();
+      }
     });
-  }
 
-  setConfig(cfg: Config) {
-    this.config = new Config(cfg);
-    this.api.updateConfig(this.config);
-  }
+    this.#handlers = {
+      ...this.#config.handlers,
+      withContext: handlersWithContext(this.#config),
+    };
 
-  async init(cfg?: Config) {
-    const updatedConfig = await this.config.configure({
-      ...this.config,
-      ...cfg,
-    });
-    this.setConfig(updatedConfig);
+    this.#config.context.tenantId = getTenantId({ config: this.#config });
 
-    return this;
-  }
+    this.#manager = new DbManager(this.#config);
 
-  set databaseId(val: string | void) {
-    if (val) {
-      this.config.databaseId = val;
-      this.api.users.databaseId = val;
-      this.api.tenants.databaseId = val;
-    }
-  }
+    // headers first, so instantiation is right the first time
+    this.#handleHeaders(config);
 
-  get userId(): string | undefined | null {
-    return this.config.userId;
-  }
+    this.users = new Users(this.#config);
+    this.tenants = new Tenants(this.#config);
+    this.auth = new Auth(this.#config);
 
-  set userId(userId: string | undefined | null) {
-    this.databaseId = this.config.databaseId;
+    // for `onConfigure`, we run it, but after the full config is already made
+    if (config?.extensions) {
+      for (const create of config.extensions) {
+        if (typeof create !== 'function') {
+          continue;
+        }
+        const ext = create(this);
+        // we can only run this after config has a value, so we must wait, but we can't.
+        if (ext.onConfigure) {
+          ext.onConfigure();
+        }
 
-    this.config.userId = userId;
-
-    if (this.api) {
-      this.api.users.userId = this.config.userId;
-      this.api.tenants.userId = this.config.userId;
-    }
-  }
-
-  get tenantId(): string | undefined | null {
-    return this.config.tenantId;
-  }
-
-  set tenantId(tenantId: string | undefined | null) {
-    this.databaseId = this.config.databaseId;
-    this.config.tenantId = tenantId;
-
-    if (this.api) {
-      this.api.users.tenantId = tenantId;
-      this.api.tenants.tenantId = tenantId;
-    }
-  }
-
-  get token(): string | undefined | null {
-    return this.config?.api?.token;
-  }
-
-  set token(token: string | undefined | null) {
-    if (token) {
-      this.config.api.token = token;
-      if (this.api) {
-        this.api.users.api.token = token;
-        this.api.tenants.api.token = token;
+        if (ext?.replace?.handlers) {
+          this.#config
+            .logger('[EXTENSION]')
+            .debug(`${ext.id} replacing handlers`);
+          // if you replace these handlers, you can't call the original ones, so we need to "replace" our headers within the request.
+          this.#handlers = ext.replace.handlers({
+            ...this.#config.handlers,
+            withContext: handlersWithContext(this.#config),
+          });
+        }
       }
     }
   }
-  get db(): pg.Pool {
-    return this.manager.getConnection(this.config);
+
+  /**
+   * Query the database with the current context
+   */
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Pool['query'] = (queryStream: any, values?: any) => {
+    this.#config.context = { ...this.getContext() };
+    const pool = this.#manager.getConnection(this.#config);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return pool.query(queryStream as any, values);
+  };
+
+  /**
+   * Return a db object that can be used to talk to the database
+   * Does not have a context by default
+   */
+  get db(): pg.Pool & { clearConnections: () => void } {
+    const pool = this.#manager.getConnection(this.#config, true);
+
+    return Object.assign(pool, {
+      clearConnections: () => {
+        this.#manager.clear(this.#config);
+      },
+    });
   }
 
-  clearConnections() {
-    this.manager.clear(this.config);
+  get logger() {
+    return this.#config.logger;
+  }
+
+  get extensions() {
+    return {
+      remove: async (id: string) => {
+        if (!this.#config.extensions) return;
+
+        const resolved = this.#config.extensions.map((ext) => ext(this));
+        const index = resolved.findIndex((ext) => ext.id === id);
+        if (index !== -1) {
+          this.#config.extensions.splice(index, 1);
+        }
+        return resolved;
+      },
+      add: (extension: Extension) => {
+        if (!this.#config.extensions) {
+          this.#config.extensions = [];
+        }
+        this.#config.extensions.push(extension);
+      },
+    };
+  }
+
+  get handlers() {
+    return this.#handlers;
+  }
+
+  get paths(): ConfigurablePaths {
+    return this.#config.paths;
+  }
+
+  set paths(paths: ConfigurablePaths) {
+    this.#config.paths = paths;
   }
 
   /**
-   * A convenience function that applies a config and ensures whatever was passed is set properly
+   * Sets the context for a particular set of requests or db calls to be sure the context is fully managed for the entire lifecycle
    */
+  async withContext(): Promise<this>;
+  async withContext<T>(
+    context: PartialContext,
+    fn: AsyncCallback<this, T>
+  ): Promise<T>;
+  async withContext(context: PartialContext): Promise<this>;
+  async withContext<T>(fn: AsyncCallback<this, T>): Promise<T>;
+  async withContext<T>(
+    contextOrFn?: PartialContext | AsyncCallback<this, T>,
+    maybeFn?: AsyncCallback<this, T>
+  ): Promise<T | this> {
+    const isFn = typeof contextOrFn === 'function';
 
-  getInstance(config: ServerConfig): Server {
-    const _config = { ...this.config, ...config };
+    const context = isFn ? {} : contextOrFn ?? {};
+    const fn = isFn ? (contextOrFn as AsyncCallback<this, T>) : maybeFn;
 
-    // be sure the config is up to date
-    const updatedConfig = new Config(_config);
-    this.setConfig(updatedConfig);
-    // propagate special config items
-    this.tenantId = updatedConfig.tenantId;
-    this.userId = updatedConfig.userId;
-    // if we have a token, update it, else use the one that was there
-    if (updatedConfig.api.token) {
-      this.token = updatedConfig.api.token;
+    const preserve =
+      'useLastContext' in context ? context.useLastContext : true;
+
+    if (preserve) {
+      this.#config.context = { ...this.getContext(), ...context };
+    } else {
+      this.#config.context = { ...defaultContext, ...context };
     }
-    this.databaseId = updatedConfig.databaseId;
 
-    return this;
+    return withNileContext(this.#config, async () => {
+      return fn ? fn(this) : this;
+    });
   }
+
+  /**
+   * Creates a context without a user id and a tenant id, but keeps the headers around for auth at least.
+   * This is useful for DDL/DML, since most extensions will set the context by default
+   */
+  async noContext(): Promise<this>;
+  async noContext<T>(fn: (sdk: this) => Promise<T>): Promise<T>;
+  async noContext<T>(fn?: (sdk: this) => Promise<T>): Promise<T | this> {
+    this.#config.context.tenantId = undefined;
+    this.#config.context.userId = undefined;
+
+    return withNileContext(this.#config, async () => {
+      // there are some cases where you need to "override" stuff, and the extension context
+      // is going to keep adding it back. For instance, nextjs is always going to set a tenant_id from the cookie
+      // we need to honor the incoming config over the extension, else you can never just "call" things.
+      ctx.set({ userId: undefined, tenantId: undefined });
+
+      if (fn) {
+        return fn(this);
+      }
+      return this;
+    });
+  }
+  /**
+   *
+   * @returns the last used (basically global) context object, useful for debugging or making your own context
+   */
+  getContext(): Context {
+    return ctx.getLastUsed();
+  }
+
+  /**
+   * Merge headers together
+   * Saves them in a singleton for use in a request later. It's basically the "default" value
+   * Internally, passed a NileConfig, externally, should be using Headers
+   */
+  #handleHeaders(
+    config?: NileConfig | void | Headers | Record<string, string> | null
+  ) {
+    const updates: [string, string][] = [];
+    let headers;
+    this.#config.context.headers = new Headers();
+
+    if (config instanceof Headers) {
+      headers = config;
+    } else if (config?.headers) {
+      // handle a config object internally,
+      headers = config?.headers;
+      if (config && config.origin) {
+        // DO SOMETHING TO SURFACE A WARNING?
+        this.#config.context.headers.set(HEADER_ORIGIN, config.origin);
+      }
+      if (config && config.secureCookies != null) {
+        this.#config.context.headers.set(
+          HEADER_SECURE_COOKIES,
+          String(config.secureCookies)
+        );
+      }
+    }
+
+    if (headers instanceof Headers) {
+      headers.forEach((value, key) => {
+        updates.push([key.toLowerCase(), value]);
+      });
+    } else {
+      for (const [key, value] of Object.entries(headers ?? {})) {
+        updates.push([key.toLowerCase(), value]);
+      }
+    }
+
+    const merged: Record<string, string> = {};
+
+    // if we do have a cookie, grab anything useful before it is destroyed.
+    // this.#config.tenantId = getTenantFromHttp(this.#headers, this.#config);
+
+    this.#config.context.headers?.forEach((value, key) => {
+      // It is expected that if the 'cookie' is missing when you set headers, it should be removed.
+      if (key.toLowerCase() !== 'cookie') {
+        merged[key.toLowerCase()] = value;
+      }
+    });
+
+    for (const [key, value] of updates) {
+      merged[key] = value;
+    }
+
+    for (const [key, value] of Object.entries(merged)) {
+      this.#config.context.headers.set(key, value);
+    }
+
+    this.#config.logger('[handleHeaders]').debug(JSON.stringify(merged));
+  }
+
+  /**
+   * Allow some internal mutations to reset our config + headers
+   */
+  #reset = () => {
+    this.#config.extensionCtx = buildExtensionConfig(this);
+    this.users = new Users(this.#config);
+    this.tenants = new Tenants(this.#config);
+    this.auth = new Auth(this.#config);
+  };
 }
 
-let server: Server;
-export async function create(config?: ServerConfig): Promise<Server> {
+let server: unknown;
+export function create<T = Server>(config?: NileConfig): T {
   if (!server) {
-    server = new Server(config);
+    server = new Server(config) as T;
   }
-  if (config) {
-    return await server.init(new Config(config));
-  }
-  return await server.init();
+
+  return server as T;
 }
+type AsyncCallback<TInstance, TResult> = (sdk: TInstance) => Promise<TResult>;

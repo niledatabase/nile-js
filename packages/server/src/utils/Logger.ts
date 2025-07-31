@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
 import { Routes } from '../api/types';
-import urlMatches from '../api/utils/routes/urlMatches';
-import { ServerConfig } from '../types';
-
-import { Config } from './Config';
+import { urlMatches } from '../api/utils/routes';
+import { NileConfig } from '../types';
 
 const red = '\x1b[31m';
 const yellow = '\x1b[38;2;255;255;0m';
@@ -11,7 +9,17 @@ const purple = '\x1b[38;2;200;160;255m';
 const orange = '\x1b[38;2;255;165;0m';
 const reset = '\x1b[0m';
 
-const baseLogger = (config: void | ServerConfig, ...params: unknown[]) => ({
+const baseLogger = (config: void | NileConfig, ...params: unknown[]) => ({
+  silly(message: string | unknown, meta?: Record<string, unknown>) {
+    if (config?.debug && process.env.LOG_LEVEL === 'silly') {
+      console.log(
+        `${orange}[niledb]${reset}${purple}[DEBUG]${reset}${params.join(
+          ''
+        )}${reset} ${message}`,
+        meta ? `${JSON.stringify(meta)}` : ''
+      );
+    }
+  },
   info(message: string | unknown, meta?: Record<string, unknown>) {
     if (config?.debug) {
       console.info(
@@ -24,7 +32,7 @@ const baseLogger = (config: void | ServerConfig, ...params: unknown[]) => ({
   },
   debug(message: string | unknown, meta?: Record<string, unknown>) {
     if (config?.debug) {
-      console.debug(
+      console.log(
         `${orange}[niledb]${reset}${purple}[DEBUG]${reset}${params.join(
           ''
         )}${reset} ${message}`,
@@ -53,16 +61,35 @@ const baseLogger = (config: void | ServerConfig, ...params: unknown[]) => ({
   },
 });
 
-export default function Logger(
-  config?: Config | ServerConfig,
-  ...params: unknown[]
-) {
-  const base = baseLogger(config, params);
-  const info = config?.logger?.info ?? base.info;
-  const debug = config?.logger?.debug ?? base.debug;
-  const warn = config?.logger?.warn ?? base.warn;
-  const error = config?.logger?.error ?? base.error;
-  return { info, warn, error, debug };
+export type LogFunction = (
+  message: string | unknown,
+  meta?: Record<string, unknown>
+) => void;
+
+export type Loggable = {
+  info: LogFunction;
+  debug: LogFunction;
+  warn: LogFunction;
+  error: LogFunction;
+  silly: LogFunction;
+};
+export type LogReturn = (prefixes?: string | string[]) => Loggable;
+
+export default function Logger(config?: NileConfig): LogReturn {
+  return (prefixes) => {
+    const { info, debug, warn, error, silly } =
+      config && typeof config?.logger === 'function'
+        ? config.logger(prefixes)
+        : baseLogger(config, prefixes);
+
+    return {
+      info,
+      debug,
+      warn,
+      error,
+      silly,
+    };
+  };
 }
 
 export function matchesLog(configRoutes: Routes, request: Request): boolean {

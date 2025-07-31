@@ -1,4 +1,4 @@
-import { apiRoutes } from '../../../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../../../utils/routes';
 import { Config } from '../../../../../utils/Config';
 import request from '../../../../utils/request';
 
@@ -40,6 +40,6 @@ export async function GET(
   const yurl = new URL(init.request.url);
   const [, tenantId] = yurl.pathname.split('/').reverse();
 
-  const url = `${apiRoutes(config).TENANT_USERS(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).TENANT_USERS(tenantId)}`;
   return await request(url, init, config);
 }

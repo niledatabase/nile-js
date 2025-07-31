@@ -1,7 +1,7 @@
 import { Config } from '../../../utils/Config';
 import { ActiveSession } from '../../utils/auth';
 import request from '../../utils/request';
-import { apiRoutes } from '../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../utils/routes';
 
 /**
  * @swagger
@@ -36,11 +36,10 @@ export async function GET(
   session: ActiveSession,
   init: RequestInit & { request: Request }
 ) {
-  let url = `${apiRoutes(config).USER_TENANTS(session.id)}`;
+  let url = `${apiRoutes(config.apiUrl).USER_TENANTS(session.id)}`;
   if (typeof session === 'object' && 'user' in session && session.user) {
-    url = `${apiRoutes(config).USER_TENANTS(session.user.id)}`;
+    url = `${apiRoutes(config.apiUrl).USER_TENANTS(session.user.id)}`;
   }
 
-  const res = await request(url, init, config);
-  return res;
+  return await request(url, init, config);
 }

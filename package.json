@@ -4,24 +4,23 @@
   "version": "0.0.2",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
-    "build:browser": "yarn workspace @niledatabase/browser build",
     "build:storybook": "yarn build && yarn workspace @niledatabase/react build:storybook",
     "dev:react": "yarn workspace @niledatabase/react dev",
-    "build:react": "yarn workspace @niledatabase/react build",
-    "build:web": "yarn workspace @niledatabase/web build",
-    "build:server": "yarn workspace @niledatabase/server build",
-    "build:edge": "yarn workspace @niledatabase/edge build",
-    "build": "yarn build:server && yarn build:edge && yarn build:browser && yarn build:react && yarn build:web",
+    "build": "yarn workspaces foreach --all  --exclude 'apps/*' run build",
+    "build:nextjs": "yarn workspaces foreach --all --topological run build",
+    "start:nextjs": "yarn workspace @niledatabase/nextjs-kitchensink start",
     "lint": "yarn eslint . --max-warnings=0",
     "postinstall": "husky install",
     "prepare": "husky install",
     "publish": "yarn lerna publish",
-    "test:browser": "yarn workspace @niledatabase/browser test",
     "test:react": "yarn workspace @niledatabase/react test",
-    "test:server": "yarn workspace @niledatabase/server test"
+    "test:server": "yarn workspace @niledatabase/server test",
+    "test:client": "yarn workspace @niledatabase/client test",
+    "test:express": "yarn workspace @niledatabase/express test"
   },
   "resolutions": {
     "@types/mime": "3.0.4",
@@ -50,7 +49,7 @@
     "typescript": "^5.5.0"
   },
   "lint-staged": {
-    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "yarn lint --cache --fix ."
+    "packages/**/**/*.{mjs,js,ts,jsx,tsx}": "prettier --write"
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.9.2"
 }

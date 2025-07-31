@@ -1,6 +1,5 @@
-import { proxyRoutes } from '../../utils/routes/proxyRoutes';
+import { urlMatches, proxyRoutes } from '../../utils/routes';
 import request from '../../utils/request';
-import urlMatches from '../../utils/routes/urlMatches';
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
 
@@ -8,7 +7,7 @@ const key = 'VERIFY_REQUEST';
 
 export default async function route(req: Request, config: Config) {
   return request(
-    proxyRoutes(config)[key],
+    proxyRoutes(config.apiUrl)[key],
     {
       method: req.method,
       request: req,

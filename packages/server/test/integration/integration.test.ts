@@ -1,207 +1,263 @@
-import { Server } from '../../src/Server';
-import { ServerConfig } from '../../src/types';
+import {
+  Nile,
+  Server,
+  User,
+  NileConfig,
+  parseToken,
+  Tenant,
+  Invite,
+} from '../../src/index';
 
-const config: ServerConfig = { debug: true };
+const config: NileConfig = { debug: true };
 
 const primaryUser = {
   email: 'delete@me.com',
   password: 'deleteme',
+  newTenantName: 'delete@me.com',
+};
+const userToInvite = {
+  email: 'noway@postmortemai.com',
 };
 
 const powerCreate = {
   email: 'delete4@me.com',
   password: 'deleteme',
-  newTenantName: 'delete4@me.com',
 };
 
-const newUser = {
-  email: 'delete2@me.com',
-  password: 'deleteme',
-};
-const tenantUser = {
+const tu = {
   email: 'delete3@me.com',
   password: 'deleteme',
 };
+const specificTenantId = generateUUIDv7();
 
 describe('api integration', () => {
-  test('does api calls for the api sdk', async () => {
-    const nile = new Server(config);
-    await nile.init();
+  let nile = Nile(config);
+  it('does api calls for the api sdk', async () => {
     // debugging clean up
     await initialDebugCleanup(nile);
+    // make this user for later
+    // you have to group things now that are "similar", else you will pollute everything.
+    const [tenantUser, verifiedMe] = await nile.noContext(async (nile) => {
+      const tenantUser = await nile.auth.signUp<User>(tu);
+      const verifiedMe = await nile.users.verifySelf<User>();
+      return [tenantUser, verifiedMe];
+    });
 
-    // create 2 users, one primary, the other one to add to a tenant manually later
-    const [user, secondUser, powerUser] = await Promise.all([
-      nile.api.users.createUser(primaryUser) as unknown as {
-        id: string;
-        name: string;
-      },
-      nile.api.users.createUser(newUser) as unknown as { id: string },
-      nile.api.users.createUser(powerCreate) as unknown as {
-        tenants: string[];
-      },
-    ]);
+    expect(verifiedMe.emailVerified).not.toBeNull();
 
-    expect(powerUser.tenants.length).toEqual(1);
+    expect(tenantUser).toMatchObject({ email: tu.email });
+
+    let user = await nile.auth.signUp<User>(primaryUser);
+    // switch to primary user
+    nile = await nile.withContext({
+      tenantId: user.tenants[0],
+    });
+
+    const invite = await nile.tenants.invite(userToInvite.email, true);
+    expect(invite.status).toEqual(201);
+    const obtainedInvite = await nile.db.query<Invite>(
+      'select * from auth.invites where identifier = $1',
+      [userToInvite.email]
+    );
+    const invited = await nile.tenants.acceptInvite(obtainedInvite.rows[0]);
+    expect(invited.status).toEqual(302);
+
+    expect(user).toMatchObject({ email: primaryUser.email });
+    expect(user.tenants.length).toEqual(1);
+    const me = await nile.users.getSelf();
+    expect(user).toMatchObject(me);
+
+    const user1Token = parseToken(nile.getContext().headers); // save for later
+
+    // sign up a new user to the same tenant
+    const newUser = {
+      ...powerCreate,
+      tenantId: user.tenants[0],
+    };
+    // this user was deleted
+    const user2 = await nile.auth.signUp<User>(newUser);
+    // save the user's context
+    const user2Ctx = await nile.withContext();
+    expect(user2).toMatchObject({ email: powerCreate.email });
+    expect(user2.tenants[0]).toEqual(user.tenants[0]);
+    const me2 = await user2Ctx.users.getSelf();
+    expect(user2).toMatchObject(me2);
+
+    // be sure its two unique users
+    const user2Token = parseToken(user2Ctx.getContext().headers);
+    expect(user1Token).not.toEqual(user2Token);
+
+    await nile.auth.signOut();
+    expect(nile.getContext().headers.get('cookie')).toEqual(null);
+    const failedMe = await nile.users.getSelf(true);
+    expect(failedMe.status).toEqual(401);
+
+    // do a sign in
+    const signIn = await nile.auth.signIn('credentials', powerCreate);
+    expect(signIn.status).toEqual(302);
+    expect(signIn.headers.get('location')).toEqual(
+      'http://localhost:3000/api/auth/callback/credentials'
+    );
+    expect(parseToken(signIn.headers)).toEqual(
+      parseToken(nile.getContext().headers)
+    );
+
+    // delete myself
+    const deleted = await nile.users.removeSelf();
+    expect(deleted.status).toEqual(204);
+    expect((await nile.users.getSelf(true)).status).toEqual(401);
+
+    const updatedPassword = randomString(64);
     expect(user.id).toBeTruthy();
 
-    const loginRes = await nile.api.login(primaryUser, {
-      returnResponse: true,
-    });
-    expect(loginRes?.headers.get('cookie')).toBeDefined();
+    await nile.auth.signIn('credentials', primaryUser);
+    const savedHeaders = nile.getContext().headers;
+    primaryUser.password = updatedPassword;
+    const reset = await nile.auth.resetPassword(primaryUser);
+    expect(reset.headers.get('set-cookie')).not.toBeNull();
+    expect(nile.getContext().headers?.get('cookie')).not.toEqual(
+      savedHeaders?.get('cookie')
+    );
 
     // Updating session user
+    await nile.auth.signIn('credentials', primaryUser);
+    user = await nile.users.getSelf<User>();
+
     expect(user.name).toEqual(null);
     const update = {
       name: 'updatedName',
     };
 
-    const res = await nile.api.auth.signOut();
-
-    expect(res.url).not.toBeNull();
-
-    const failedUpdatedFirstUser = await nile.api.users.updateMe<Response>(
-      update
-    );
-    expect(failedUpdatedFirstUser.status).toEqual(401);
-
-    await nile.api.login(primaryUser);
-
-    const updatedFirstUser = await nile.api.users.updateMe(update);
+    const updatedFirstUser = await nile.users.updateSelf(update);
 
     expect(updatedFirstUser).toMatchObject({
       name: update.name,
-      tenants: [], // not in a tenant, yet.
     });
 
     // add a tenant, be sure user is in tenant
-    const newTenant = (await nile.api.tenants.createTenant('betterName')) as {
+    const newTenant = (await nile.tenants.create('betterName')) as {
       id: string;
       name: string;
     };
     expect(newTenant.name).toEqual('betterName');
 
+    const specificTenant = await nile.tenants.create<Tenant>({
+      name: 'specific',
+      id: specificTenantId,
+    });
+
+    expect(specificTenant.id).toEqual(specificTenantId);
+
     // be sure the tenant we get is the tenant we got
-    const checkTenant = (await nile.api.tenants.getTenant(newTenant.id)) as {
-      id: string;
-    };
+    const checkTenant = await nile.tenants.get<Tenant>(newTenant.id);
     expect(checkTenant.id).toEqual(newTenant.id);
 
     // be sure the session user is assigned to the created tenant
-    const checkMeUpdate = await nile.api.users.me();
-    expect(checkMeUpdate).toMatchObject({ tenants: [{ id: newTenant.id }] });
+    const checkMeUpdate = await nile.users.getSelf<User>();
+    expect(checkMeUpdate).toMatchObject({
+      tenants: expect.arrayContaining([specificTenantId, newTenant.id]),
+    });
 
     // contextualize the remaining queries
-    nile.tenantId = newTenant.id;
+
+    nile = await nile.withContext({
+      tenantId: newTenant.id,
+    });
 
     // rename tenant
-    const updated = (await nile.api.tenants.updateTenant({
+    const updated = await nile.tenants.update<Tenant>({
       name: 'betterNameAgain',
-    })) as { name: string };
-    expect(updated.name).toEqual('betterNameAgain');
-
-    // create a user directly on the tenant
-    const newTenantUser = (await nile.api.users.createTenantUser(
-      tenantUser
-    )) as { id: string; name?: null | string };
+    });
+    expect(updated?.name).toEqual('betterNameAgain');
+    // join a user to a tenant
+    const newTenantUser = await nile.tenants.addMember<User>(tenantUser.id);
     expect(newTenantUser).toMatchObject({ email: tenantUser.email });
 
-    // update that user as a member of that tenant, then remove them
-    expect(newTenantUser.name).toBeNull();
-    nile.userId = secondUser.id;
-    const tuUpdates = { name: 'fake name' };
-    const updatedTu = (await nile.api.users.updateUser(tuUpdates)) as {
-      name: string;
-    };
-    expect(updatedTu.name).not.toBeNull();
-    expect(updatedTu.name).toEqual(tuUpdates.name);
-    await nile.api.users.unlinkUser(newTenantUser.id);
+    // list users in the tenant to be sure they are updated
+    expect((await nile.tenants.users<User[]>()).length).toEqual(2);
 
-    // manually link the 2nd user to the tenant
-    const linked = (await nile.api.users.linkUser(secondUser.id)) as {
-      id: string;
-    };
-    expect(linked.id).toEqual(secondUser.id);
+    // remove a user from the tenant
+    const removed = await nile.tenants.removeMember(tenantUser.id);
+    expect(removed.status).toEqual(204);
 
-    // double check the list of users
-    const listOfUsers = (await nile.api.users.listUsers()) as [];
-    expect(listOfUsers.length).toEqual(2);
-    const unlinked = await nile.api.users.unlinkUser(secondUser.id);
-    expect(unlinked.status).toEqual(204);
-    const remainingUsers = (await nile.api.users.listUsers()) as [];
-    expect(remainingUsers.length).toEqual(1);
+    // leave the tenant, check expected things
+    await nile.tenants.leaveTenant(newTenant.id);
 
-    // can't update the user again, they are not in my tenant
-    const tuUpdates2 = { name: 'name' };
-    const updatedTu2 = (await nile.api.users.updateUser(tuUpdates2)) as {
-      name: string;
-    };
-    expect(updatedTu2.name).toEqual(tuUpdates2.name);
+    const savedTenants = checkMeUpdate.tenants.filter(
+      (t) => t !== newTenant.id
+    );
+    expect((await nile.users.getSelf<User>()).tenants).toEqual(savedTenants);
 
-    // just marks it for deletion, will actually get deleted in clean up
-    const removedTenant = await nile.api.tenants.deleteTenant();
-    expect(removedTenant.status).toEqual(204);
+    const failedNewTenantUser = await nile.tenants.addMember(
+      tenantUser.id,
+      true
+    );
+    expect(failedNewTenantUser.status).toEqual(401);
+    expect(
+      (await nile.tenants.update({ name: 'what name' }, true)).status
+    ).toEqual(401);
+    expect((await nile.tenants.delete()).status).toEqual(401);
+    expect((await nile.tenants.get(true)).status).toEqual(401);
+    expect((await nile.tenants.leaveTenant()).status).toEqual(401);
+    expect((await nile.tenants.users(true)).status).toEqual(401);
 
-    // be sure the primary user has no tenants (they are deleted)
-    const recheckMe = (await nile.api.users.me()) as unknown as { tenants: [] };
-    expect(recheckMe.tenants.length).toEqual(0);
-
-    // clean up
-    nile.tenantId = '';
-
-    for (const id of [user.id, secondUser.id, newTenantUser.id]) {
-      await nile.db.query('delete from auth.credentials where user_id = $1', [
-        id,
-      ]);
-      await nile.db.query('delete from users.users where id = $1', [id]);
-    }
-
-    await nile.db.query('delete from users.tenant_users where tenant_id = $1', [
-      newTenant.id,
-    ]);
-    await nile.db.query('delete from tenants where id = $1', [newTenant.id]);
-    await nile.clearConnections();
-  }, 10000);
+    await nile.db.clearConnections();
+  }, 30000);
 });
 
 async function initialDebugCleanup(nile: Server) {
   // remove the users 1st, fk constraints
-  const existing = [primaryUser, newUser, tenantUser, powerCreate].map(
-    async (u) => {
-      const exists = await nile.db.query(
-        'select * from users.users where email = $1',
-        [u.email]
-      );
-      if (exists.rows.length > 0) {
-        const id = exists.rows[0].id;
-        await nile.db.query('delete from auth.credentials where user_id = $1', [
-          id,
-        ]);
-        await nile.db.query('delete from users.users where id = $1', [id]);
-      }
-    }
-  );
-  await Promise.all(existing);
+  await nile.db.query('delete from auth.credentials');
+  await nile.db.query('delete from users.users');
+
   const tenants = await nile.db.query('select * from tenants;');
-  const commands = tenants.rows.reduce((accum, t) => {
-    if (
-      !t.name ||
-      t.name?.includes('betterName') ||
-      t.name?.includes('betterNameAgain') ||
-      t.name?.includes(powerCreate.newTenantName)
-    ) {
-      accum.push(
-        nile.db.query('delete from users.tenant_users where tenant_id = $1', [
-          t.id,
-        ])
-      );
-      accum.push(nile.db.query('delete from tenants where id = $1', [t.id]));
-    }
-    return accum;
-  }, []);
-  try {
-    await Promise.all(commands);
-  } catch (e) {
-    await Promise.resolve();
+
+  for (const tenant of tenants.rows) {
+    await nile.db.query(
+      'delete from auth.tenant_oidc_relying_parties where tenant_id = $1',
+      [tenant.id]
+    );
+    await nile.db.query('delete from users.tenant_users where tenant_id = $1', [
+      tenant.id,
+    ]);
+    await nile.db.query('delete from public.tenants where id = $1', [
+      tenant.id,
+    ]);
   }
+}
+
+function generateUUIDv7(): string {
+  const now = BigInt(Date.now());
+
+  // Timestamp: 48 bits
+  const timestamp = now << 16n;
+
+  // Random bits: 74 bits (to pad rest of UUID)
+  const randomBits = crypto.getRandomValues(new Uint8Array(10));
+  let rand = 0n;
+  for (const byte of randomBits) {
+    rand = (rand << 8n) | BigInt(byte);
+  }
+
+  // Combine timestamp and random
+  const uuidBigInt = timestamp | (rand & 0xffffffffffffn); // Keep lower 48 bits of rand
+
+  // Format UUIDv7 (as per draft spec)
+  const hex = uuidBigInt.toString(16).padStart(32, '0');
+
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    '7' + hex.slice(13, 16), // version 7
+    ((parseInt(hex.slice(16, 18), 16) & 0x3f) | 0x80)
+      .toString(16)
+      .padStart(2, '0') + hex.slice(18, 20), // variant
+    hex.slice(20, 32),
+  ].join('-');
+}
+export function randomString(size: number) {
+  const i2hex = (i: number) => ('0' + i.toString(16)).slice(-2);
+  const r = (a: string, i: number): string => a + i2hex(i);
+  const bytes = crypto.getRandomValues(new Uint8Array(size));
+  return Array.from(bytes).reduce(r, '');
 }

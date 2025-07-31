@@ -1,19 +1,24 @@
-import { apiRoutes } from '../../../../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../../../../utils/routes';
 import fetch from '../../../../../utils/request';
 import { Config } from '../../../../../../utils/Config';
 
 /**
  * @swagger
- * /api/tenants/{tenantId}/users/{email}:
+ * /api/tenants/{tenantId}/users/{userId}/link:
  *   delete:
  *    tags:
  *    - tenants
  *    summary: removes a user from a tenant
  *    description: removes an associated user from a specified
  *      tenant.
- *    operationId: unlinkUser 
+ *    operationId: leaveTenant 
  *    parameters:
  *    - name: tenantId
+ *      in: path
+ *      required: true
+ *      schema:
+ *        type: string
+ *    - name: userId 
  *      in: path
  *      required: true
  *      schema:
@@ -34,12 +39,11 @@ export async function DELETE(
   init: RequestInit & { request: Request }
 ) {
   const yurl = new URL(init.request.url);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [userId, _, tenantId] = yurl.pathname.split('/').reverse();
+
+  const [, userId, , tenantId] = yurl.pathname.split('/').reverse();
 
   init.method = 'DELETE';
-  init.body = JSON.stringify({ email: userId });
-  const url = `${apiRoutes(config).TENANT_USER(tenantId, userId)}`;
+  const url = `${apiRoutes(config.apiUrl).TENANT_USER(tenantId, userId)}/link`;
 
   return await fetch(url, init, config);
 }

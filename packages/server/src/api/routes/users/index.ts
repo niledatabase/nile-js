@@ -1,8 +1,12 @@
 import { Routes } from '../../types';
-import urlMatches from '../../utils/routes/urlMatches';
-import auth from '../../utils/auth';
+import {
+  DefaultNileAuthRoutes,
+  isUUID,
+  prefixAppRoute,
+  urlMatches,
+} from '../../utils/routes';
 import { Config } from '../../../utils/Config';
-import Logger from '../../../utils/Logger';
+import { ctx } from '../../utils/request-context';
 
 import { POST } from './POST';
 import { GET } from './GET';
@@ -11,11 +15,7 @@ import { PUT } from './[userId]/PUT';
 const key = 'USERS';
 
 export default async function route(request: Request, config: Config) {
-  const { info } = Logger(
-    { ...config, debug: config.debug } as Config,
-    `[ROUTES][${key}]`
-  );
-  const session = await auth(request, config);
+  const { info } = config.logger(`[ROUTES][${key}]`);
 
   switch (request.method) {
     case 'GET':
@@ -23,7 +23,7 @@ export default async function route(request: Request, config: Config) {
     case 'POST':
       return await POST(config, { request });
     case 'PUT':
-      return await PUT(config, session, { request });
+      return await PUT(config, { request });
 
     default:
       return new Response('method not allowed', { status: 405 });
@@ -31,4 +31,35 @@ export default async function route(request: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes[key]);
+}
+
+export async function fetchUser(config: Config, method: 'PUT') {
+  let clientUrl = `${prefixAppRoute(config)}${DefaultNileAuthRoutes.USERS}`;
+  const { userId, headers } = ctx.get();
+
+  if (method === 'PUT')
+    if (!userId) {
+      throw new Error(
+        'Unable to update user, the userId context is missing. Call nile.setContext({ userId }), set nile.userId = "userId", or add it to the function call'
+      );
+    } else {
+      clientUrl = `${prefixAppRoute(
+        config
+      )}${DefaultNileAuthRoutes.USER.replace('{userId}', userId)}`;
+    }
+  if (!isUUID(userId)) {
+    config
+      .logger('[fetchUser]')
+      .warn(
+        'nile.userId is not a valid UUID. This may lead to unexpected behavior in your application.'
+      );
+  }
+
+  const init: RequestInit = {
+    method,
+    headers,
+  };
+  const req = new Request(clientUrl, init);
+
+  return (await config.handlers[method](req)) as Response;
 }

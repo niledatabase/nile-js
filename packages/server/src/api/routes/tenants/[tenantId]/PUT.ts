@@ -1,6 +1,6 @@
+import { apiRoutes } from '../../../utils/routes';
 import { Config } from '../../../../utils/Config';
 import fetch from '../../../utils/request';
-import { apiRoutes } from '../../../utils/routes/apiRoutes';
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ export async function PUT(
   }
   init.body = init.request.body;
   init.method = 'PUT';
-  const url = `${apiRoutes(config).TENANT(tenantId)}`;
+  const url = `${apiRoutes(config.apiUrl).TENANT(tenantId)}`;
 
   return await fetch(url, init, config);
 }

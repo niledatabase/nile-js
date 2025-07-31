@@ -1,11 +1,13 @@
 {
   "packages": [
-    "lib/*",
+    "packages/client",
+    "packages/express",
+    "packages/nextjs",
+    "packages/nitro",
     "packages/react",
-    "packages/browser",
     "packages/server"
   ],
-  "version": "4.1.2",
+  "version": "5.0.0-alpha.33",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {

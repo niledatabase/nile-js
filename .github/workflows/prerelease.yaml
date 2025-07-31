@@ -45,16 +45,16 @@ jobs:
         working-directory: packages/server
         run: yarn install --immutable
 
-      - name: Install @niledatabase/browser
-        working-directory: packages/browser
-        run: yarn install --immutable
-
       - name: Install @niledatabase/react
         working-directory: packages/react
         run: yarn install --immutable
 
-      - name: Install @niledatabase/web
-        working-directory: packages/web
+      - name: Install @niledatabase/client
+        working-directory: packages/client
+        run: yarn install --immutable
+
+      - name: Install @niledatabase/nextjs
+        working-directory: packages/nextjs
         run: yarn install --immutable
 
       - name: Build @niledatabase/packages

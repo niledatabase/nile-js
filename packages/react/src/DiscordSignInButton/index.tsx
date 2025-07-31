@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
+import { signIn } from '@niledatabase/client';
 
-import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 import { SSOButtonProps } from '../types';
@@ -19,6 +19,7 @@ const DiscordSignInButton = ({
   auth,
   fetchUrl,
   baseUrl,
+  onClick,
   ...props
 }: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
@@ -29,8 +30,15 @@ const DiscordSignInButton = ({
         'bg-[#5865F2] hover:bg-[#5865F2] hover:bg-opacity-85 pl-[3px] gap-4 transition-colors border shadow-md text-white'
       )}
       data-slot="discord-button"
-      onClick={() => {
-        signIn('discord', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      onClick={async (e) => {
+        const res = await signIn('discord', {
+          callbackUrl,
+          init,
+          auth,
+          fetchUrl,
+          baseUrl,
+        });
+        onClick && onClick(e, res);
       }}
       {...props}
     >

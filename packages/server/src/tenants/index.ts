@@ -1,107 +1,493 @@
+import { fetchMe } from '../api/routes/me';
+import {
+  fetchTenant,
+  fetchTenants,
+  fetchTenantsByUser,
+} from '../api/routes/tenants';
+import { fetchInvite } from '../api/routes/tenants/[tenantId]/invite';
+import { fetchInvites } from '../api/routes/tenants/[tenantId]/invites';
+import { fetchTenantUsers } from '../api/routes/tenants/[tenantId]/users';
+import { fetchTenantUser } from '../api/routes/tenants/[tenantId]/users/[userId]';
+import { ctx, withNileContext } from '../api/utils/request-context';
+import { DefaultNileAuthRoutes } from '../api/utils/routes';
+import { parseCallback } from '../auth';
+import obtainCsrf from '../auth/obtainCsrf';
+import { NileRequest } from '../types';
+import { User } from '../users/types';
 import { Config } from '../utils/Config';
-import Requester, { NileRequest } from '../utils/Requester';
+import { fQUrl } from '../utils/qualifyDomain';
 
-import { Tenant } from './types';
+import { Invite, Tenant } from './types';
 
-export default class Tenants extends Config {
-  headers?: Headers;
-  constructor(config: Config, headers?: Headers) {
-    super(config);
-    this.headers = headers;
+/**
+ * Convenience wrapper around the tenant endpoints. These methods call
+ * the `fetch*` helpers in `packages/server/src/api/routes/tenants` which
+ * in turn hit routes such as `/api/tenants` and `/api/tenants/{tenantId}`.
+ * See those files for the Swagger definitions.
+ */
+
+type ReqContext = { userId?: string; tenantId?: string };
+type JoinTenantRequest = string | ReqContext | { id: string };
+
+export default class Tenants {
+  #config: Config;
+  constructor(config: Config) {
+    this.#config = config;
   }
-  handleHeaders(init?: RequestInit) {
-    if (this.headers) {
-      if (init) {
-        init.headers = new Headers({ ...this.headers, ...init?.headers });
-        return init;
+
+  create(name: string, rawResponse: true): Promise<Response>;
+  create<T = Tenant | Response>(
+    name: string,
+    rawResponse?: boolean
+  ): Promise<T>;
+  create<T = Tenant | Response>(
+    payload: {
+      name: string;
+      id?: string;
+    },
+    rawResponse?: boolean
+  ): Promise<T>;
+  /**
+   * Create a new tenant using `POST /api/tenants`.
+   * See `packages/server/src/api/routes/tenants/POST.ts` for the
+   * `createTenant` operation definition.
+   */
+  async create<T = Tenant | Response | undefined>(
+    req: { name: string; id?: string } | string,
+    rawResponse?: boolean
+  ): Promise<T | Response | undefined> {
+    return withNileContext(this.#config, async () => {
+      let res;
+      if (typeof req === 'string') {
+        res = await fetchTenants(
+          this.#config,
+          'POST',
+          JSON.stringify({ name: req })
+        );
+      } else if (typeof req === 'object' && ('name' in req || 'id' in req)) {
+        res = await fetchTenants(this.#config, 'POST', JSON.stringify(req));
+      }
+      if (rawResponse) {
+        return res as T;
+      }
+      try {
+        return await res?.clone().json();
+      } catch {
+        return res;
+      }
+    });
+  }
+
+  /**
+   * Delete a tenant using `DELETE /api/tenants/{tenantId}`.
+   * The OpenAPI operation is defined in
+   * `packages/server/src/api/routes/tenants/[tenantId]/DELETE.ts`.
+   */
+  delete<T = Response>(id?: string): Promise<T>;
+  /**
+   * Delete a tenant using `DELETE /api/tenants/{tenantId}`.
+   * See `packages/server/src/api/routes/tenants/[tenantId]/DELETE.ts`.
+   */
+  delete<T = Response>(payload: { id: string }): Promise<T>;
+  /**
+   * Remove a tenant via `DELETE /api/tenants/{tenantId}`.
+   *
+   * @param req - The tenant to remove or context containing the id.
+   */
+  async delete<T = Response>(
+    req: NileRequest<void> | { id?: string } | string | Tenant
+  ): Promise<T | Response> {
+    return withNileContext(this.#config, async () => {
+      if (typeof req === 'string') {
+        ctx.set({ tenantId: req });
+      }
+      if (typeof req === 'object' && 'id' in req) {
+        ctx.set({ tenantId: req.id });
+      }
+      const res = await fetchTenant(this.#config, 'DELETE');
+      return res;
+    });
+  }
+
+  get<T = Tenant | Response>(): Promise<T>;
+  get<T = Tenant | Response>(id: string, rawResponse?: boolean): Promise<T>;
+  get(rawResponse: true): Promise<Response>;
+  get<T = Tenant | Response>(
+    payload: { id: string },
+    rawResponse?: boolean
+  ): Promise<T>;
+  /**
+   * Fetch details for a tenant using `GET /api/tenants/{tenantId}`.
+   *
+   * @param req - Tenant identifier or context.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
+  async get<T = Tenant | Response>(
+    req: boolean | { id: string } | string | void,
+    rawResponse?: boolean
+  ): Promise<T> {
+    return withNileContext(this.#config, async () => {
+      if (typeof req === 'string') {
+        ctx.set({ tenantId: req });
+      } else if (typeof req === 'object' && 'id' in req) {
+        ctx.set({ tenantId: req.id });
+      }
+      const res = await fetchTenant(this.#config, 'GET');
+      if (rawResponse === true || req === true) {
+        return res as T;
+      }
+
+      try {
+        return await res?.clone().json();
+      } catch {
+        return res as T;
+      }
+    });
+  }
+
+  async update(req: Partial<Tenant>, rawResponse: true): Promise<Response>;
+  /**
+   * Modify a tenant using `PUT /api/tenants/{tenantId}`.
+   *
+   * @param req - Tenant data to update. Can include an id.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
+  update<T = Tenant | Response | undefined>(
+    req: Partial<Tenant>,
+    rawResponse?: boolean
+  ): Promise<T>;
+  async update<T = Tenant | Response | undefined>(
+    req: Partial<Tenant>,
+    rawResponse?: boolean
+  ): Promise<T> {
+    return withNileContext(this.#config, async () => {
+      let res;
+      if (typeof req === 'object' && ('name' in req || 'id' in req)) {
+        const { id, ...remaining } = req;
+        if (id) {
+          ctx.set({ tenantId: id });
+        }
+        res = await fetchTenant(this.#config, 'PUT', JSON.stringify(remaining));
+      }
+      if (rawResponse) {
+        return res as T;
+      }
+      try {
+        return await res?.clone().json();
+      } catch {
+        return res as T;
+      }
+    });
+  }
+
+  list<T = Tenant[] | Response>(): Promise<T>;
+  list(rawResponse: true): Promise<Response>;
+  /**
+   * List tenants for the current user via `GET /api/tenants`.
+   * See `packages/server/src/api/routes/tenants/GET.ts` for details.
+   */
+  async list<T = Tenant[] | Response>(
+    req: boolean | NileRequest<void> | Headers
+  ): Promise<T | Response | undefined> {
+    return withNileContext(
+      this.#config,
+      async () => {
+        const res = await fetchTenantsByUser(this.#config);
+        if (req === true) {
+          return res;
+        }
+
+        try {
+          return await res?.clone().json();
+        } catch {
+          return res;
+        }
+      },
+      'listTenants'
+    );
+  }
+  /**
+   * Leave the current tenant using `DELETE /api/tenants/{tenantId}/users/{userId}`.
+   *
+   * @param [req] - Optionally specify the tenant id to leave.
+   */
+  async leaveTenant<T = Response>(
+    req?: string | { tenantId: string }
+  ): Promise<T> {
+    return withNileContext(this.#config, async () => {
+      const me = await fetchMe(this.#config);
+      try {
+        const json = await me.json();
+        if ('id' in json) {
+          ctx.set({ userId: json.id });
+        }
+      } catch {
+        // maybe there's already a context, let `fetchTenantUser` deal with it
+      }
+      if (typeof req === 'string') {
+        ctx.set({ tenantId: req });
       } else {
-        init = {
-          headers: this.headers,
-        };
-        return init;
+        this.#handleContext(req);
+      }
+      return (await fetchTenantUser(this.#config, 'DELETE')) as T;
+    });
+  }
+
+  addMember(req: JoinTenantRequest, rawResponse: true): Promise<Response>;
+  /**
+   * Add a user to a tenant via `PUT /api/tenants/{tenantId}/users/{userId}`.
+   *
+   * @param req - User and tenant identifiers or context.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
+  addMember<T = User | Response>(
+    req: JoinTenantRequest,
+    rawResponse?: boolean
+  ): Promise<T>;
+  async addMember<T = User | Response>(
+    req: JoinTenantRequest,
+    rawResponse?: boolean
+  ): Promise<T> {
+    return withNileContext(this.#config, async () => {
+      if (typeof req === 'string') {
+        ctx.set({ userId: req });
+      } else {
+        this.#handleContext(req);
+      }
+      const res = await fetchTenantUser(this.#config, 'PUT');
+      return responseHandler(res, rawResponse);
+    });
+  }
+
+  /**
+   * Remove a user from a tenant with `DELETE /api/tenants/{tenantId}/users/{userId}`.
+   *
+   * @param req - User and tenant identifiers or context.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
+  async removeMember(
+    req: JoinTenantRequest,
+    rawResponse?: boolean
+  ): Promise<Response> {
+    return withNileContext(this.#config, async () => {
+      this.#handleContext(req);
+      if (typeof req === 'string') {
+        ctx.set({ userId: req });
+      }
+      const res = await fetchTenantUser(this.#config, 'DELETE');
+      return responseHandler(res, rawResponse);
+    });
+  }
+  /**
+   * List users for a tenant via `GET /api/tenants/{tenantId}/users`.
+   *
+   * @param [req] - Tenant identifier or context.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
+  users<T = User[] | Response>(
+    req?: boolean | { tenantId?: string },
+    rawResponse?: boolean
+  ): Promise<T>;
+  users(req: true): Promise<Response>;
+  async users<T>(
+    req?: boolean | { tenantId?: string },
+    rawResponse?: boolean
+  ): Promise<T> {
+    return withNileContext(
+      this.#config,
+      async () => {
+        this.#handleContext(req);
+        const res = await fetchTenantUsers(this.#config, 'GET');
+        return responseHandler(
+          res,
+          rawResponse || (typeof req === 'boolean' && req)
+        ) as T;
+      },
+      'users'
+    );
+  }
+
+  /**
+   * List invites for the current tenant via `GET /api/tenants/{tenantId}/invites`.
+   */
+  async invites<T = Invite[] | Response>(): Promise<T> {
+    return withNileContext(
+      this.#config,
+      async () => {
+        const res = await fetchInvites(this.#config);
+
+        return responseHandler(res);
+      },
+      'invites'
+    );
+  }
+
+  /**
+   * Send an invitation via `POST /api/tenants/{tenantId}/invite`.
+   *
+   * @param req - Email and optional callback/redirect URLs.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
+  async invite<T = Response | Invite>(
+    req: string | { email: string; callbackUrl?: string; redirectUrl?: string },
+    rawResponse?: boolean
+  ): Promise<T>;
+  async invite(
+    req: string | { email: string; callbackUrl?: string; redirectUrl?: string },
+    rawResponse: true
+  ): Promise<Response>;
+  async invite<T = Response | Invite>(
+    req: string | { email: string; callbackUrl?: string; redirectUrl?: string },
+    rawResponse?: boolean
+  ): Promise<T> {
+    // if we are going to call this, as *soon* as we do, we need to execute extensions
+    return withNileContext(
+      this.#config,
+      async () => {
+        // need to get rid of the headers every where in favor of the context
+        const { csrfToken } = await obtainCsrf<{ csrfToken: string }>(
+          this.#config
+        );
+        const defaults = defaultCallbackUrl(this.#config);
+        let identifier: string = req as string;
+        let callbackUrl: string = defaults.callbackUrl as string;
+        let redirectUrl: string = defaults.redirectUrl as string;
+
+        if (typeof req === 'object') {
+          if ('email' in req) {
+            identifier = req.email;
+          }
+
+          const { callbackUrl: cbUrl } = defaultCallbackUrl(this.#config);
+          if ('callbackUrl' in req) {
+            callbackUrl = fQUrl(cbUrl, req.callbackUrl ?? '/');
+          }
+          if ('redirectUrl' in req) {
+            redirectUrl = fQUrl(cbUrl, req.redirectUrl ?? '/');
+          }
+        }
+
+        const { headers } = ctx.get();
+        headers?.set('Content-Type', 'application/x-www-form-urlencoded');
+        ctx.set({ headers });
+        const res = await fetchInvite(
+          this.#config,
+          'POST',
+          new URLSearchParams({
+            identifier,
+            csrfToken,
+            callbackUrl,
+            redirectUrl,
+          }).toString()
+        );
+        return responseHandler(res, rawResponse);
+      },
+      'invites'
+    );
+  }
+
+  /**
+   * Accept an invite using `PUT /api/tenants/{tenantId}/invite`.
+   *
+   * @param req - Identifier and token from the invite email.
+   * @param [rawResponse] - When true, return the raw {@link Response}.
+   */
+  async acceptInvite<T = Response>(
+    req?: { identifier: string; token: string; callbackUrl?: string },
+    rawResponse?: boolean
+  ): Promise<T> {
+    return withNileContext(this.#config, async () => {
+      if (!req) {
+        throw new Error('The identifier and token are required.');
+      }
+      const { identifier, token } = req;
+      const { callbackUrl: cbUrl } = defaultCallbackUrl(this.#config);
+      const callbackUrl = fQUrl(cbUrl, req?.callbackUrl ?? '/');
+
+      const res = await fetchInvite(
+        this.#config,
+        'PUT',
+        new URLSearchParams({
+          identifier,
+          token,
+          callbackUrl,
+        }).toString()
+      );
+      return responseHandler(res, rawResponse);
+    });
+  }
+
+  /**
+   * Delete a pending invite using `DELETE /api/tenants/{tenantId}/invite/{inviteId}`.
+   *
+   * @param req - Identifier of the invite to remove.
+   */
+  async deleteInvite<T = Response>(req: string | { id: string }): Promise<T> {
+    return withNileContext(this.#config, async () => {
+      let id = '';
+      if (typeof req === 'object') {
+        id = req.id;
+      } else {
+        id = req;
+      }
+
+      if (!id) {
+        throw new Error('An invite id is required.');
+      }
+
+      const res = await fetchInvite(this.#config, 'DELETE', id);
+      return responseHandler(res, true);
+    });
+  }
+
+  #handleContext(req: JoinTenantRequest | boolean | undefined) {
+    if (typeof req === 'object') {
+      if ('tenantId' in req) {
+        ctx.set({ tenantId: req.tenantId });
+      }
+      if ('userId' in req) {
+        ctx.set({ userId: req.userId });
       }
     }
-    return undefined;
   }
-  get tenantsUrl() {
-    return '/tenants';
+}
+
+/**
+ * Handle the fetch response, optionally parsing JSON.
+ *
+ * @param res - Response from fetch.
+ * @param [rawResponse] - When true, return the response untouched.
+ */
+async function responseHandler(res: Response, rawResponse?: boolean) {
+  if (rawResponse) {
+    return res;
   }
-  get tenantUrl() {
-    return `/tenants/${this.tenantId ?? '{tenantId}'}`;
+  try {
+    return await res?.clone().json();
+  } catch {
+    return res;
   }
+}
 
-  createTenant = async <T = Tenant | Response>(
-    req: NileRequest<{ name: string }> | Headers | string,
-    init?: RequestInit
-  ): Promise<T> => {
-    let _req;
-    if (typeof req === 'string') {
-      _req = new Request(`${this.api.basePath}${this.tenantsUrl}`, {
-        body: JSON.stringify({ name: req }),
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
-    } else {
-      _req = req;
+/**
+ * Parse the `nile.callback-url` cookie to determine a callback and redirect.
+ *
+ * @param config - Configuration whose headers may contain the cookie.
+ * @returns Parsed callback and redirect URLs.
+ */
+export function defaultCallbackUrl(config: Config) {
+  let cb = null;
+  let redirect = null;
+  const { headers, tenantId } = ctx.get();
+  const fallbackCb = parseCallback(headers);
+  if (fallbackCb) {
+    const [, value] = fallbackCb.split('=');
+    cb = decodeURIComponent(value);
+    if (value) {
+      redirect = `${new URL(cb).origin}${
+        config.routePrefix
+      }${DefaultNileAuthRoutes.INVITE.replace('{tenantId}', String(tenantId))}`;
     }
-    const _requester = new Requester(this);
-    const _init = this.handleHeaders(init);
-    return _requester.post(_req, this.tenantsUrl, _init) as T;
-  };
-
-  getTenant = async <T = Tenant | Response>(
-    req: NileRequest<{ id: string }> | Headers | string | void,
-    init?: RequestInit
-  ): Promise<T> => {
-    if (typeof req === 'string') {
-      this.tenantId = req;
-    }
-    const _requester = new Requester(this);
-    const _init = this.handleHeaders(init);
-    return _requester.get<Tenant>(req, this.tenantUrl, _init) as T;
-  };
-
-  get tenantListUrl() {
-    return `/users/${this.userId ?? '{userId}'}/tenants`;
   }
-
-  listTenants = async <T = Tenant[] | Response>(
-    req: NileRequest<void> | Headers,
-    init?: RequestInit
-  ): Promise<T> => {
-    const _requester = new Requester(this);
-    const _init = this.handleHeaders(init);
-    return _requester.get<Tenant[]>(req, this.tenantListUrl, _init) as T;
-  };
-
-  deleteTenant = async <T = Response>(
-    req: NileRequest<void> | Headers | string,
-    init?: RequestInit
-  ): Promise<T> => {
-    if (typeof req === 'string') {
-      this.tenantId = req;
-    }
-    const _requester = new Requester(this);
-    const _init = this.handleHeaders(init);
-    return _requester.delete(req, this.tenantUrl, _init) as T;
-  };
-  updateTenant = async <T = Tenant | Response>(
-    req: NileRequest<void> | Headers | { name: string },
-    init?: RequestInit
-  ): Promise<T> => {
-    let _req;
-    if (req && 'name' in req) {
-      _req = new Request(`${this.api.basePath}${this.tenantUrl}`, {
-        body: JSON.stringify(req),
-        method: 'PUT',
-      });
-    } else {
-      _req = req;
-    }
-    const _requester = new Requester(this);
-    const _init = this.handleHeaders(init);
-    return _requester.put<Tenant>(_req, this.tenantUrl, _init) as T;
-  };
+  return { callbackUrl: cb, redirectUrl: redirect };
 }

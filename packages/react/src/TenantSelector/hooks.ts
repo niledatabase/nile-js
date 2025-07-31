@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 
 import { Tenant } from '../../../server/src/tenants/types';
-import { X_NILE_TENANT } from '../../../server/src/utils/constants';
+import { TENANT_COOKIE } from '../../../server/src/utils/constants';
 import { componentFetch } from '../../lib/utils';
 
 import { HookProps } from './types';
@@ -48,13 +48,14 @@ export function useTenantId(
   client?: QueryClient
 ): [string | undefined, (tenant: string) => void] {
   const [tenant, setTenant] = React.useState<string | undefined>(
-    params?.tenant?.id
+    params?.activeTenant ?? params?.tenant?.id
   );
   const { refetch } = useTenants({ disableQuery: true, ...params }, client);
 
   useEffect(() => {
     if (!tenant) {
-      const tenantId = getCookie(X_NILE_TENANT);
+      // can't trust this value until we get the tenant id, which probably needs set in a call.
+      const tenantId = getCookie(TENANT_COOKIE);
       if (tenantId) {
         setTenant(tenantId);
       } else {
@@ -63,11 +64,16 @@ export function useTenantId(
       }
     }
   }, [refetch, tenant]);
+  const { onTenantChange } = params ?? {};
 
-  const handleTenantSet = useCallback((tenant: string) => {
-    setTenant(tenant);
-    setCookie(X_NILE_TENANT, tenant);
-  }, []);
+  const handleTenantSet = useCallback(
+    (tenant: string) => {
+      setTenant(tenant);
+      setCookie(TENANT_COOKIE, tenant);
+      onTenantChange ? onTenantChange(tenant) : null;
+    },
+    [onTenantChange]
+  );
   return [tenant, handleTenantSet];
 }
 

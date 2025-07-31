@@ -18,7 +18,7 @@ export function SelectTenant() {
   ];
   return (
     <div style={{ width: 500 }} className="mx-auto">
-      <TenantSelector activeTenant={tenants[0].name} tenants={tenants} />
+      <TenantSelector activeTenant={tenants[0].id} tenants={tenants} />
     </div>
   );
 }
@@ -30,7 +30,7 @@ export function EmptyState() {
   ];
   return (
     <div style={{ width: 500 }} className="mx-auto">
-      <TenantSelector activeTenant={tenants[0].name} tenants={tenants} />
+      <TenantSelector activeTenant={tenants[0].id} tenants={tenants} />
     </div>
   );
 }

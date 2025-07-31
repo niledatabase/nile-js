@@ -1,12 +1,12 @@
 import { Routes } from '../../types';
-import { proxyRoutes } from '../../utils/routes/proxyRoutes';
+import { urlMatches, proxyRoutes, NileAuthRoutes } from '../../utils/routes';
 import request from '../../utils/request';
-import urlMatches from '../../utils/routes/urlMatches';
 import { Config } from '../../../utils/Config';
+import { ctx } from '../../utils/request-context';
 
 const key = 'PASSWORD_RESET';
 export default async function route(req: Request, config: Config) {
-  const url = proxyRoutes(config)[key];
+  const url = proxyRoutes(config.apiUrl)[key];
 
   const res = await request(
     url,
@@ -17,7 +17,7 @@ export default async function route(req: Request, config: Config) {
     config
   );
 
-  const location = res?.headers.get('location');
+  const location = res?.headers?.get('location');
   if (location) {
     return new Response(res?.body, {
       status: 302,
@@ -31,4 +31,30 @@ export default async function route(req: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes.PASSWORD_RESET);
+}
+
+export async function fetchResetPassword(
+  config: Config,
+  method: 'POST' | 'GET' | 'PUT',
+  body: null | string,
+  params?: URLSearchParams,
+  useJson = true
+) {
+  const authParams = new URLSearchParams(params ?? {});
+  if (useJson) {
+    authParams?.set('json', 'true');
+  }
+  const { headers } = ctx.get();
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${
+    NileAuthRoutes.PASSWORD_RESET
+  }?${authParams?.toString()}`;
+  const init: RequestInit = {
+    method,
+    headers,
+  };
+  if (body && method !== 'GET') {
+    init.body = body;
+  }
+  const req = new Request(clientUrl, init);
+  return (await config.handlers[method](req)) as Response;
 }

@@ -1,9 +1,8 @@
 import { Config } from '../../utils/Config';
-import Logger from '../../utils/Logger';
 
 import request from './request';
 
-type ProviderName =
+export type ProviderName =
   | 'discord'
   | 'github'
   | 'google'
@@ -11,8 +10,8 @@ type ProviderName =
   | 'linkedin'
   | 'slack'
   | 'twitter'
-  | 'email'
-  | 'credentials'
+  | 'email' // magic link
+  | 'credentials' // email + password
   | 'azure';
 
 export type Providers = {
@@ -23,7 +22,7 @@ export type Provider = {
   name: string;
   type: string;
   signinUrl: string;
-  callbackUr: string;
+  callbackUrl: string;
 };
 
 export type JWT = {
@@ -51,25 +50,22 @@ export default async function auth(
   req: Request,
   config: Config
 ): Promise<null | undefined | ActiveSession> {
-  const { info, error } = Logger(config, '[nileauth]');
+  const { info, error } = config.logger('[nileauth]');
   info('checking auth');
 
-  const sessionUrl = `${config.api.basePath}/auth/session`;
-  info(`using session${sessionUrl}`);
+  const sessionUrl = `${config.apiUrl}/auth/session`;
+  info(`using session ${sessionUrl}`);
   // handle the pass through with posts
   req.headers.delete('content-length');
 
   const res = await request(sessionUrl, { request: req }, config);
-  if (!res) {
-    info('no session found');
-    return undefined;
-  }
-  info('session active');
   try {
     const session = await new Response(res.body).json();
     if (Object.keys(session).length === 0) {
+      info('no session found');
       return undefined;
     }
+    info('session active');
     return session;
   } catch (e) {
     error(e);

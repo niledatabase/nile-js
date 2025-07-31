@@ -3,6 +3,237 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.33](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.32...v5.0.0-alpha.33) (2025-07-30)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.32](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.31...v5.0.0-alpha.32) (2025-07-30)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.31](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.30...v5.0.0-alpha.31) (2025-07-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.30](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.29...v5.0.0-alpha.30) (2025-07-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.29](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.28...v5.0.0-alpha.29) (2025-07-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.28](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.27...v5.0.0-alpha.28) (2025-07-28)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.27](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.26...v5.0.0-alpha.27) (2025-07-28)
+
+### Bug Fixes
+
+- **server:** a race condition ([1c73dfd](https://github.com/niledatabase/nile-js/commit/1c73dfd36b0835d0b21221830475520119b40e15))
+
+# [5.0.0-alpha.26](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.25...v5.0.0-alpha.26) (2025-07-21)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.25](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.24...v5.0.0-alpha.25) (2025-07-18)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.24](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.23...v5.0.0-alpha.24) (2025-07-18)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.23](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.22...v5.0.0-alpha.23) (2025-07-18)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.22](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.21...v5.0.0-alpha.22) (2025-07-07)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.21](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.20...v5.0.0-alpha.21) (2025-07-02)
+
+### Bug Fixes
+
+- **client:** split forgotPassword and resetPassword ([f6e36f2](https://github.com/niledatabase/nile-js/commit/f6e36f258bff9f0a814291b2e288ae59170cdcbc))
+
+# [5.0.0-alpha.20](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.19...v5.0.0-alpha.20) (2025-06-30)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.19](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.18...v5.0.0-alpha.19) (2025-06-30)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.18](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.17...v5.0.0-alpha.18) (2025-06-30)
+
+### Bug Fixes
+
+- **server:** better types, peer deps ([e50f232](https://github.com/niledatabase/nile-js/commit/e50f2320289c67fc445522f5a9746d20517f097f))
+
+# [5.0.0-alpha.17](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.16...v5.0.0-alpha.17) (2025-06-26)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.16](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.15...v5.0.0-alpha.16) (2025-06-26)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.15](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.14...v5.0.0-alpha.15) (2025-06-25)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.14](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.13...v5.0.0-alpha.14) (2025-06-16)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.13](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.12...v5.0.0-alpha.13) (2025-06-16)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.12](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.11...v5.0.0-alpha.12) (2025-06-16)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.11](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.10...v5.0.0-alpha.11) (2025-06-16)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.10](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.9...v5.0.0-alpha.10) (2025-06-16)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.9](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2025-06-16)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.8](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2025-06-12)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.7](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.6...v5.0.0-alpha.7) (2025-06-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.6](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.5...v5.0.0-alpha.6) (2025-06-11)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.5](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2025-06-10)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.0.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2025-06-10)
+
+### Features
+
+- **server:** invites ([c10f598](https://github.com/niledatabase/nile-js/commit/c10f5980bcbc55ed436ce8cceca4111aa8e6a276))
+
+# [5.0.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2025-05-30)
+
+### Bug Fixes
+
+- **server:** forgot password ([f26917f](https://github.com/niledatabase/nile-js/commit/f26917ff2f83d5edab3fdcbea26f66bf95ce998a))
+
+# [5.0.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2025-05-29)
+
+### Bug Fixes
+
+- **react:** update deps, fix sign in ([8083bef](https://github.com/niledatabase/nile-js/commit/8083beffe93f887b9c441f075f3fc497291ec7c1))
+- **server:** handle callback url correctly on sign in ([acbc843](https://github.com/niledatabase/nile-js/commit/acbc84355b4f3aae6154234fd0716782a410c71e))
+
+### Features
+
+- **client:** remove web, make client ([455ba97](https://github.com/niledatabase/nile-js/commit/455ba97d5923743f6880b5ad8f8d2b714d649373))
+- **server:** add sign out ([1739bc9](https://github.com/niledatabase/nile-js/commit/1739bc9fbc4abd8cd1f481eaa14c3fab28b5fc27))
+
+# [5.0.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0...v5.0.0-alpha.1) (2025-05-16)
+
+# [5.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.4...v5.0.0-alpha.0) (2025-04-30)
+
+### Bug Fixes
+
+- **react:** user may not return from useMe hook ([9e23277](https://github.com/niledatabase/nile-js/commit/9e232774313f8dffcd7899fc6cb37e90e5dacf33))
+
+## [4.1.2](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.1...v4.1.2) (2025-04-19)
+
+### Bug Fixes
+
+- clean up userinfo error ([#944](https://github.com/niledatabase/nile-js/issues/944)) ([5a58866](https://github.com/niledatabase/nile-js/commit/5a58866d852893396f59198bb023ac497929b174))
+
+## [4.1.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.2...v4.1.1) (2025-04-15)
+
+## [4.1.1-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.1...v4.1.1-alpha.2) (2025-04-15)
+
+## [4.1.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.0...v4.1.1-alpha.1) (2025-04-15)
+
+## [4.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.1-alpha.0) (2025-04-15)
+
+## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+
+# [5.0.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.3...v5.0.0-alpha.0) (2025-04-30)
+
+### Bug Fixes
+
+- **react:** user may not return from useMe hook ([9e23277](https://github.com/niledatabase/nile-js/commit/9e232774313f8dffcd7899fc6cb37e90e5dacf33))
+
+## [4.1.2](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.1...v4.1.2) (2025-04-19)
+
+### Bug Fixes
+
+- clean up userinfo error ([#944](https://github.com/niledatabase/nile-js/issues/944)) ([5a58866](https://github.com/niledatabase/nile-js/commit/5a58866d852893396f59198bb023ac497929b174))
+
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.1...v4.2.0-alpha.0) (2025-04-16)
+
+## [4.1.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.2...v4.1.1) (2025-04-15)
+
+## [4.1.1-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.1...v4.1.1-alpha.2) (2025-04-15)
+
+## [4.1.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.1.1-alpha.0...v4.1.1-alpha.1) (2025-04-15)
+
+## [4.1.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.1-alpha.0) (2025-04-15)
+
+## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
+
+# [4.2.0](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.4...v4.2.0) (2025-04-30)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.2.0-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.3...v4.2.0-alpha.4) (2025-04-30)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2025-04-29)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.2.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v4.1.3...v4.2.0-alpha.2) (2025-04-29)
+
+### Bug Fixes
+
+- **react:** redirect on sign up correctly ([114b618](https://github.com/niledatabase/nile-js/commit/114b618d9e44f69c6da6423dd652733e5ac994fc))
+
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.2.0-alpha.0) (2025-04-16)
+
+# [4.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v4.2.0-alpha.0...v4.2.0-alpha.1) (2025-04-16)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [4.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.2.0-alpha.0) (2025-04-16)
+
+## [4.1.3](https://github.com/niledatabase/nile-js/compare/v4.1.0...v4.1.3) (2025-04-19)
+
+### Bug Fixes
+
+- **react:** clean up userinfo error ([c0fe591](https://github.com/niledatabase/nile-js/commit/c0fe591a3c247d733d1ca130daea35284cd85adf))
+- **react:** user may not return from useMe hook ([878e13f](https://github.com/niledatabase/nile-js/commit/878e13f04c775925b35c4368a1210f663943a8a6))
+
 ## [4.1.2](https://github.com/niledatabase/nile-js/compare/v4.1.1...v4.1.2) (2025-04-19)
 
 ### Bug Fixes
@@ -106,6 +337,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **react:** tenant selector baseurl ([687d798](https://github.com/niledatabase/nile-js/commit/687d798efb80b5986720896de3efdf903d2179df))
 
 ## [4.0.2-alpha.4](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2-alpha.4) (2025-04-11)
+
+## [4.0.2](https://github.com/niledatabase/nile-js/compare/v4.0.2-alpha.3...v4.0.2) (2025-04-11)
 
 **Note:** Version bump only for package @niledatabase/react
 

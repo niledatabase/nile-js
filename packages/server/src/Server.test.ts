@@ -1,133 +1,154 @@
-import { Server } from './Server';
-import { ServerConfig } from './types';
+import { NileConfig } from './types';
+import { getTenantId } from './utils/Config/envVars';
+import { handlersWithContext } from './api/handlers/withContext';
+import DbManager from './db';
+import Users from './users';
+import Tenants from './tenants';
+import Auth from './auth';
+import { watchHeaders, watchTenantId, watchUserId } from './utils/Event';
+import { Server, create } from './Server';
+import { Config } from './utils/Config';
 
-describe('server', () => {
-  it('has reasonable defaults', () => {
-    const config = {
-      databaseId: 'databaseId',
-      databaseName: 'databaseName',
-      user: 'username',
-      password: 'password',
-      db: {
-        host: 'db.thenile.dev',
-      },
-      api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
-    };
-    const server = new Server(config);
-    expect(server.config.db).toEqual({
-      host: 'db.thenile.dev',
-      port: expect.any(Number),
-      database: 'databaseName',
-      user: 'username',
-      password: 'password',
-    });
-    expect(server.config.api.basePath).toEqual(
-      'http://thenile.dev/v2/databases/testdb'
-    );
+// Mocks
+
+jest.mock('./utils/Logger', () => {
+  const mockWarn = jest.fn();
+  const mockDebug = jest.fn();
+
+  return () => () => ({
+    warn: mockWarn,
+    debug: mockDebug,
+    silly: jest.fn(),
   });
-  it('sets a tenant id everywhere when set', () => {
-    const config = {
-      databaseId: 'databaseId',
-      user: 'username',
-      password: 'password',
-    };
-    const nile = new Server(config);
-    nile.tenantId = 'tenantId';
-    nile.userId = 'userId';
-    expect(nile.api.users.tenantId).toEqual('tenantId');
-    expect(nile.api.tenants.tenantId).toEqual('tenantId');
-  });
+});
 
-  it('ensures existing configs get updated with provided configs', () => {
-    const config = {
-      databaseId: 'databaseId',
-      user: 'username',
-      password: 'password',
-    };
-    const nile = new Server(config);
+jest.mock('./db');
+jest.mock('./users');
+jest.mock('./tenants');
+jest.mock('./auth');
+jest.mock('./utils/Event', () => ({
+  watchHeaders: jest.fn((cb) => cb(new Headers({ 'x-test': 'test' }))),
+  watchUserId: jest.fn((cb) => cb('mock-user')),
+  watchTenantId: jest.fn((cb) => cb('mock-tenant')),
+}));
+jest.mock('./utils/Config/envVars', () => ({
+  getTenantId: jest.fn(() => 'env-tenant-id'),
+  getSecureCookies: jest.fn(() => 'env-secure-cookies'),
+  getCallbackUrl: jest.fn(() => 'env-callback-url'),
+  getApiUrl: jest.fn(() => 'env-api-url'),
+  getUsername: jest.fn(() => 'env-username'),
+  getPassword: jest.fn(() => 'env-password'),
+  getDatabaseName: jest.fn(() => 'env-database-name'),
+  getDbHost: jest.fn(() => 'env-db-host'),
+  getDbPort: jest.fn(() => 'env-db-port'),
+}));
+const mockPool = {
+  query: jest.fn(),
+  end: jest.fn(),
+};
 
-    const another = nile.getInstance({
-      databaseId: 'somethingelse?!',
-      tenantId: null,
-      user: 'username',
-      password: 'password',
-    });
-    expect(another.tenantId).toEqual(null);
-    another.tenantId = 'something else';
-    expect(another.tenantId).toEqual('something else');
+const mockClear = jest.fn();
+(DbManager as jest.Mock).mockImplementation(() => ({
+  getConnection: () => mockPool,
+  clear: mockClear,
+}));
 
-    const sameOne = nile.getInstance({
-      databaseId: 'somethingelse?!',
-      tenantId: null,
-      user: 'username',
-      password: 'password',
-    });
-    expect(sameOne.tenantId).toEqual(null);
-  });
+describe('Server', () => {
+  let config: NileConfig;
+  let server: Server;
+
   beforeEach(() => {
-    // @ts-expect-error - test
-    jest.spyOn(global, 'fetch').mockImplementation(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(),
-      })
-    );
-  });
+    jest.clearAllMocks();
 
-  afterEach(() => {
-    jest.restoreAllMocks(); // Reset fetch after each test
-  });
-  it('allows for route overriding', async () => {
-    const config: ServerConfig = {
-      api: {
-        routePrefix: '/nile/api',
-        routes: {
-          ME: '/profile',
-          TENANT_USERS: '/tenants/:tenantId/users',
-        },
+    config = {
+      origin: 'http://localhost',
+      secureCookies: true,
+      headers: {
+        'x-custom': 'value',
       },
     };
 
-    const nile = new Server(config);
-    const matcher = {
-      CALLBACK: '/nile/api/auth/callback',
-      ME: config?.api?.routes?.ME,
-      TENANT_USERS: config?.api?.routes?.TENANT_USERS,
-    };
-    expect(nile.api.routes).toMatchObject(matcher);
-    for (const [, value] of Object.entries(nile.api)) {
-      if (value?.api !== undefined) {
-        expect(value.api.routes).toEqual({
-          ME: config?.api?.routes?.ME,
-          TENANT_USERS: config?.api?.routes?.TENANT_USERS,
-        });
-      }
-    }
-    const me = await nile.api.handlers.GET(
-      new Request(`http://localhost:3000${String(matcher.ME)}`)
-    );
-    // we are eating the fetch, but a 404 would mean the new route isn't used
-    expect(me?.status).toBeUndefined();
-
-    // routes are not configurable server side
-    expect(nile.api.users.tenantUsersUrl).toEqual('/tenants/{tenantId}/users');
+    server = new Server(config);
   });
-  it('merges headers', () => {
-    const nile = new Server();
-    expect(nile.api.headers).toEqual(undefined);
-    nile.api.headers = { cookie: '123' };
-    let update: [string, string][] = [];
-    nile.api.headers?.forEach((value, key) => {
-      update.push([key.toLowerCase(), value]);
+
+  it('should instantiate with initial config', () => {
+    expect(server).toBeInstanceOf(Server);
+    expect(getTenantId).toHaveBeenCalled();
+    expect(Users).toHaveBeenCalled();
+    expect(Tenants).toHaveBeenCalled();
+    expect(Auth).toHaveBeenCalled();
+  });
+
+  it('should call watchers and react to changes', () => {
+    // Check that re-instantiation happens
+    expect(watchTenantId).toHaveBeenCalled();
+    expect(watchUserId).toHaveBeenCalled();
+    expect(watchHeaders).toHaveBeenCalled();
+    // Should trigger resets and reinitializations
+    expect(Users).toHaveBeenCalledTimes(4);
+  });
+
+  it('should provide database access and clear method', () => {
+    const db = server.db;
+    expect(db.query).toBeDefined();
+    expect(typeof db.clearConnections).toBe('function');
+    db.clearConnections();
+    expect(mockClear).toHaveBeenCalled();
+  });
+
+  it('should return configured paths', () => {
+    const { paths } = server;
+    expect(typeof paths).toBe('object');
+  });
+
+  it('should return handlers with context', () => {
+    const handlers = server.handlers;
+    expect(Object.keys(handlers.withContext)).toEqual(
+      Object.keys(handlersWithContext(new Config({})))
+    );
+  });
+
+  it('should return updated context with setContext (Headers)', async () => {
+    const newHeaders = new Headers({ tenantid: '123', userid: 'abc' });
+    const updated = await server.withContext({ headers: newHeaders });
+    const context = updated.getContext();
+    expect(context?.headers?.get('tenantid')).toBe('123');
+  });
+
+  it('should return updated context with setContext (Request)', async () => {
+    const request = new Request('http://localhost', {
+      headers: { tenantid: '789' },
     });
-    expect(update).toEqual([['cookie', '123']]);
-    update = [];
-    nile.api.headers = { host: 'localhost:3000' };
-    nile.api.headers?.forEach((value, key) => {
-      update.push([key.toLowerCase(), value]);
+    const updated = await server.withContext({ headers: request.headers });
+    const context = updated.getContext();
+    expect(context.headers?.get('tenantid')).toBe('789');
+  });
+
+  it('should support object-style context setting', async () => {
+    const updated = await server.withContext({
+      tenantId: 'override-tenant',
+      userId: 'override-user',
     });
-    expect(update).toEqual([
-      ['cookie', '123'],
-      ['host', 'localhost:3000'],
-    ]);
+    const context = updated.getContext();
+    expect(context.tenantId).toBe('override-tenant');
+    expect(context.userId).toBe('override-user');
+  });
+
+  it('getInstance() should mutate and reset instance correctly', async () => {
+    const inst = await server.withContext({
+      tenantId: 'next-tenant',
+      userId: 'next-user',
+      headers: new Headers({ 'x-next': 'yes' }),
+    });
+    const context = inst.getContext();
+    expect(context.tenantId).toBe('next-tenant');
+    expect(context.userId).toBe('next-user');
+    expect(context.headers?.get('x-next')).toBe('yes');
+  });
+
+  it('create() should be a singleton', () => {
+    const first = create();
+    const second = create();
+    expect(first).toBe(second);
   });
 });

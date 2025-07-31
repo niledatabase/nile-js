@@ -1,7 +1,7 @@
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
+import { signIn } from '@niledatabase/client';
 
-import { signIn } from '../../lib/auth/Authorizer';
 import { cn } from '../../lib/utils';
 import { buttonVariants, ButtonProps } from '../../components/ui/button';
 import { SSOButtonProps } from '../types';
@@ -23,6 +23,7 @@ const GoogleSSOButton = ({
   auth,
   fetchUrl,
   baseUrl,
+  onClick,
   ...props
 }: ButtonProps & SSOButtonProps) => {
   const Comp = asChild ? Slot : 'button';
@@ -33,8 +34,15 @@ const GoogleSSOButton = ({
         buttonVariants({ variant, size, className }),
         'bg-[#4285f4] hover:bg-[#4285f4] hover:bg-opacity-85 pl-[3px] text-white'
       )}
-      onClick={() => {
-        signIn('google', { callbackUrl, init, auth, fetchUrl, baseUrl });
+      onClick={async (e) => {
+        const res = await signIn('google', {
+          callbackUrl,
+          init,
+          auth,
+          fetchUrl,
+          baseUrl,
+        });
+        onClick && onClick(e, res);
       }}
       {...props}
     >

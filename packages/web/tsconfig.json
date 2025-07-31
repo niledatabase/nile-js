@@ -1,8 +1,0 @@
-{
-  "extends": "../../tsconfig",
-  // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
-  "include": ["src/**/*"],
-  "compilerOptions": {
-    "esModuleInterop": true
-  }
-}

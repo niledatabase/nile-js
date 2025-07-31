@@ -1,265 +1,167 @@
+import Handlers from '../../api/handlers';
+import { appRoutes } from '../../api/utils/routes';
 import { Routes } from '../../api/types';
 import {
-  Database,
-  LoggerType,
   NilePoolConfig,
-  ServerConfig,
+  NileConfig,
+  Extension,
+  ExtensionState,
+  RouteFunctions,
+  PartialContext,
 } from '../../types';
-import Logger from '../Logger';
+import Logger, { LogReturn } from '../Logger';
+
+export type ConfigurablePaths = {
+  get: string[];
+  post: string[];
+  delete: string[];
+  put: string[];
+};
+export type ExtensionReturns = void | Response | Request | ExtensionState;
+export type ExtensionCtx = {
+  runExtensions: <T = ExtensionReturns>(
+    toRun: ExtensionState,
+    config: Config,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params?: any,
+    _init?: RequestInit & { request: Request }
+  ) => Promise<T>;
+};
+type ConfigConstructor = NileConfig & { extensionCtx?: ExtensionCtx };
 
 import {
   EnvConfig,
-  getBasePath,
-  getControlPlane,
   getDatabaseName,
-  getDatabaseId,
   getDbHost,
   getDbPort,
-  getInfoBearer,
   getPassword,
-  getTenantId,
-  getToken,
   getUsername,
   getSecureCookies,
   getCallbackUrl,
-  getCookieKey,
+  getApiUrl,
 } from './envVars';
 
-export type ApiParams = {
-  basePath?: string | undefined;
-  cookieKey?: string;
-  token?: string | undefined;
-  callbackUrl?: string | undefined;
-  routes?: Partial<Routes>;
-  routePrefix?: string | undefined;
-  secureCookies?: boolean;
-  // the origin for the requests. Allows the setting of the callback origin to a random FE (eg FE localhost:3001 -> BE: localhost:5432 would set to localhost:3000)
-  origin?: null | undefined | string;
-};
-export class ApiConfig {
-  public cookieKey?: string;
-  public basePath?: string | undefined;
-  public routes?: Partial<Routes>;
-  public routePrefix?: string;
-  public secureCookies?: boolean;
-  public origin?: string | null;
+export class Config {
+  routes: Routes;
+  handlers: RouteFunctions;
+  paths: ConfigurablePaths;
+  extensionCtx: ExtensionCtx;
+  extensions?: Extension[];
+  logger: LogReturn;
+  context: PartialContext;
 
   /**
-   * The client side callback url. Defaults to nothing (so nile.origin will be it), but in the cases of x-origin, you want to set this explicitly to be sure nile-auth does the right thing
-   * If this is set, any `callbackUrl` from the client will be ignored.
+   * The nile-auth url
    */
-  public callbackUrl?: string;
+  apiUrl: string;
 
-  #token?: string;
+  origin?: string | undefined | null;
 
-  constructor(config?: ServerConfig, logger?: string) {
-    const envVarConfig: EnvConfig = { config, logger };
+  /**
+   * important for separating the `origin` config value from a default in order to make requests
+   */
+  serverOrigin: string;
 
-    this.cookieKey = getCookieKey(envVarConfig);
-    this.#token = getToken(envVarConfig);
-    this.callbackUrl = getCallbackUrl(envVarConfig);
-    this.secureCookies = getSecureCookies(envVarConfig);
-    this.basePath = getBasePath(envVarConfig);
+  debug?: boolean;
+  /**
+   * To use secure cookies or not in the fetch
+   */
+  secureCookies?: boolean;
 
-    this.routes = config?.api?.routes;
-    this.routePrefix = config?.api?.routePrefix;
-    this.origin = config?.api?.origin;
-  }
-
-  public get token(): string | undefined {
-    return this.#token;
-  }
-
-  public set token(value: string | undefined) {
-    this.#token = value;
-  }
-}
-
-export class Config {
-  user: string;
-  password: string;
-  databaseId: string;
-  databaseName: string;
-  logger?: LoggerType;
-
-  debug: boolean;
+  callbackUrl?: string;
+  /**
+   * change the starting route
+   */
+  routePrefix: string;
 
   db: NilePoolConfig;
 
-  api: ApiConfig;
+  constructor(config?: ConfigConstructor) {
+    this.routePrefix = config?.routePrefix ?? '/api';
+    this.debug = config?.debug;
+    this.origin = config?.origin;
+    this.extensions = config?.extensions;
+    this.extensionCtx = config?.extensionCtx as ExtensionCtx;
+    this.serverOrigin = config?.origin ?? 'http://localhost:3000';
 
-  #tenantId?: string | undefined | null;
-  #userId?: string | undefined | null;
+    this.logger = Logger(config);
+    const envVarConfig: EnvConfig = {
+      config: { ...config, logger: this.logger },
+    };
+    this.secureCookies = getSecureCookies(envVarConfig);
+    this.callbackUrl = getCallbackUrl(envVarConfig);
 
-  public get tenantId(): string | undefined | null {
-    return this.#tenantId;
-  }
-
-  public set tenantId(value: string | undefined | null) {
-    this.#tenantId = value;
-  }
-
-  public get userId(): string | undefined | null {
-    return this.#userId;
-  }
-
-  public set userId(value: string | undefined | null) {
-    this.#userId = value;
-  }
-
-  constructor(config?: ServerConfig, logger?: string) {
-    const envVarConfig: EnvConfig = { config, logger };
-    this.user = getUsername(envVarConfig) as string;
-    this.logger = config?.logger;
-    this.password = getPassword(envVarConfig) as string;
-    if (process.env.NODE_ENV !== 'TEST') {
-      if (!this.user) {
-        throw new Error(
-          'User is required. Set NILEDB_USER as an environment variable or set `user` in the config options.'
-        );
-      }
-      if (!this.password) {
-        throw new Error(
-          'Password is required. Set NILEDB_PASSWORD as an environment variable or set `password` in the config options.'
-        );
-      }
-    }
-
-    this.databaseId = getDatabaseId(envVarConfig) as string;
-    this.databaseName = getDatabaseName(envVarConfig) as string;
-    this.#tenantId = getTenantId(envVarConfig);
-    this.debug = Boolean(config?.debug);
-    this.#userId = config?.userId;
+    // this four throw because its the only way to get it
+    this.apiUrl = getApiUrl(envVarConfig) as string;
+    const user = getUsername(envVarConfig) as string;
+    const password = getPassword(envVarConfig) as string;
+    const databaseName = getDatabaseName(envVarConfig) as string;
 
     const { host, port, ...dbConfig } = config?.db ?? {};
     const configuredHost = host ?? getDbHost(envVarConfig);
     const configuredPort = port ?? getDbPort(envVarConfig);
 
-    this.api = new ApiConfig(config, logger);
     this.db = {
-      user: this.user,
-      password: this.password,
+      user,
+      password,
       host: configuredHost,
       port: configuredPort,
       ...dbConfig,
     };
-    if (this.databaseName) {
-      this.db.database = this.databaseName;
-    }
-  }
-
-  configure = async (config: ServerConfig): Promise<Config> => {
-    const { info, error, debug } = Logger(config, '[init]');
-
-    const envVarConfig: EnvConfig = {
-      config,
-    };
-
-    const { host, port, ...dbConfig } = config.db ?? {};
-    let configuredHost = host ?? getDbHost(envVarConfig);
-    const configuredPort = port ?? getDbPort(envVarConfig);
-    let basePath = getBasePath(envVarConfig);
-    if (configuredHost && this.databaseName && this.databaseId && basePath) {
-      info('Already configured, aborting fetch');
-      this.api = new ApiConfig(config);
-      this.db = {
-        user: this.user,
-        password: this.password,
-        host: configuredHost,
-        port: configuredPort,
-        database: this.databaseName,
-        ...dbConfig,
-      };
-      info('[config set]', { db: this.db, api: this.api });
-      return this;
-    } else {
-      const msg = [];
-      if (!configuredHost) {
-        msg.push('Database host');
-      }
-      if (!this.databaseName) {
-        msg.push('Database name');
-      }
-      if (!this.databaseId) {
-        msg.push('Database id');
-      }
-      if (!basePath) {
-        msg.push('API URL');
-      }
-      info(
-        `[autoconfigure] ${msg.join(', ')} ${
-          msg.length > 1 ? 'are' : 'is'
-        } missing from the config. Autoconfiguration will run.`
-      );
-    }
-
-    const cp = getControlPlane(envVarConfig);
-
-    const databaseName = getDatabaseName({ config, logger: 'getInfo' });
-    const url = new URL(`${cp}/databases/configure`);
     if (databaseName) {
-      url.searchParams.set('databaseName', databaseName);
+      this.db.database = databaseName;
     }
-    info(`configuring from ${url.href}`);
-    const res = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${getInfoBearer({ config })}`,
-      },
-    }).catch(() => {
-      error(`Unable to auto-configure. is ${url} available?`);
-    });
-    if (!res) {
-      return this;
-    }
-    let database: Database;
-    const possibleError = res.clone();
-    try {
-      const json: Database = await res.json();
-      if (res.status === 404) {
-        info('is the configured databaseName correct?');
-      }
-      if (json.status && json.status !== 'READY') {
-        database = { message: 'Database is not ready yet' } as Database;
-      } else {
-        database = json;
-      }
-    } catch (e) {
-      const message = await possibleError.text();
-      debug('Unable to auto-configure');
-      error(message);
-      database = { message } as Database;
-    }
-    info('[fetched database]', database);
-    if (process.env.NODE_ENV !== 'TEST') {
-      if ('message' in database) {
-        if ('statusCode' in database) {
-          error(database);
-          throw new Error('HTTP error has occurred');
-        } else {
-          throw new Error(
-            'Unable to auto-configure. Please remove NILEDB_NAME, NILEDB_API_URL, NILEDB_POSTGRES_URL, and/or NILEDB_HOST from your environment variables.'
-          );
-        }
-      }
-      if (typeof database === 'object') {
-        const { apiHost, dbHost, name, id } = database;
-        basePath = basePath || apiHost;
-        this.databaseId = id;
-        this.databaseName = name;
-        const dburl = new URL(dbHost);
-        configuredHost = dburl.hostname;
-      }
-    }
-    this.api = new ApiConfig(config);
-    this.db = {
-      user: this.user,
-      password: this.password,
-      host: configuredHost,
-      port: configuredPort,
-      database: this.databaseName,
-      ...dbConfig,
+
+    // If you configured nile globally, we keep these to be sure they are honored per-request
+    this.context = {
+      tenantId: config?.tenantId,
+      userId: config?.userId,
+      headers: config?.headers ? new Headers(config.headers) : new Headers(),
     };
-    info('[config set]', { db: this.db, api: this.api });
-    return this;
-  };
+
+    this.routes = {
+      ...appRoutes(config?.routePrefix),
+      ...config?.routes,
+    };
+
+    this.handlers = Handlers(this.routes as Routes, this);
+
+    this.paths = {
+      get: [
+        this.routes.ME,
+        this.routes.TENANT_USERS,
+        this.routes.TENANTS,
+        this.routes.TENANT,
+        this.routes.SESSION,
+        this.routes.SIGNIN,
+        this.routes.PROVIDERS,
+        this.routes.CSRF,
+        this.routes.PASSWORD_RESET,
+        this.routes.CALLBACK,
+        this.routes.SIGNOUT,
+        this.routes.VERIFY_REQUEST,
+        this.routes.ERROR,
+      ],
+      post: [
+        this.routes.TENANT_USERS,
+        this.routes.SIGNUP,
+        this.routes.USERS,
+        this.routes.TENANTS,
+        this.routes.SESSION,
+        `${this.routes.SIGNIN}/{provider}`,
+        this.routes.PASSWORD_RESET,
+        this.routes.PROVIDERS,
+        this.routes.CSRF,
+        `${this.routes.CALLBACK}/{provider}`,
+        this.routes.SIGNOUT,
+      ],
+      put: [
+        this.routes.TENANT_USERS,
+        this.routes.USERS,
+        this.routes.TENANT,
+        this.routes.PASSWORD_RESET,
+      ],
+      delete: [this.routes.TENANT_USER, this.routes.TENANT],
+    };
+  }
 }

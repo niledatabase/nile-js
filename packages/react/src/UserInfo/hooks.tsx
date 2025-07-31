@@ -1,9 +1,9 @@
 'use client';
 import { QueryClient, useQuery } from '@tanstack/react-query';
+import { ActiveSession } from '@niledatabase/client';
 
 import { componentFetch, ComponentFetchProps } from '../../lib/utils';
 import { User } from '../../../server/src/users/types';
-import { ActiveSession } from '../../lib/auth/types';
 
 export type HookProps = ComponentFetchProps & {
   user?: User | undefined | null;
@@ -11,7 +11,7 @@ export type HookProps = ComponentFetchProps & {
   client?: QueryClient;
   fetchUrl?: string;
 };
-export function useMe(props: HookProps) {
+export function useMe(props: HookProps): User | null {
   const { baseUrl = '', fetchUrl, client, user, auth } = props;
   const { data, isLoading } = useQuery(
     {

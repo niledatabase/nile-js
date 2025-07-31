@@ -1,6 +1,6 @@
 import { Config } from '../../../utils/Config';
 import request from '../../utils/request';
-import { apiRoutes } from '../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../utils/routes';
 
 /**
  * @swagger
@@ -49,7 +49,7 @@ export async function POST(
 ) {
   init.body = init.request.body;
   init.method = 'POST';
-  const url = `${apiRoutes(config).TENANTS}`;
+  const url = `${apiRoutes(config.apiUrl).TENANTS}`;
 
   return await request(url, init, config);
 }

@@ -1,13 +1,12 @@
 import { Routes } from '../../types';
-import { proxyRoutes } from '../../utils/routes/proxyRoutes';
+import { urlMatches, proxyRoutes } from '../../utils/routes';
 import request from '../../utils/request';
-import urlMatches from '../../utils/routes/urlMatches';
 import { Config } from '../../../utils/Config';
 
 const key = 'ERROR';
 export default async function route(req: Request, config: Config) {
   return request(
-    proxyRoutes(config)[key],
+    proxyRoutes(config.apiUrl)[key],
     {
       method: req.method,
       request: req,

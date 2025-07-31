@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig",
-  "include": ["src/**/*"],
-  "compilerOptions": {
-    "rootDir": "./src",
-    "composite": true
-  },
-  "exclude": ["**/*test.ts", "openapi"]
-}

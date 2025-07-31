@@ -1,5 +1,5 @@
 import { Config } from '../../../utils/Config';
-import { X_NILE_TENANT } from '../../../utils/constants';
+import { TENANT_COOKIE } from '../../../utils/constants';
 import fetch from '../../utils/request';
 
 import route from '.';
@@ -23,7 +23,7 @@ describe('tenants route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest).toHaveBeenCalledWith(
@@ -39,7 +39,7 @@ describe('tenants route', () => {
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
 
@@ -50,13 +50,13 @@ describe('tenants route', () => {
   it('should GET to v2 tenant users with headers', async () => {
     const _res = new Request('http://localhost:3000', {
       headers: new Headers({
-        [X_NILE_TENANT]: '123',
+        [TENANT_COOKIE]: '123',
       }),
     });
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest.mock.calls[0][0]).toEqual(
@@ -66,13 +66,13 @@ describe('tenants route', () => {
   it('should GET to v2 tenant users with cookies', async () => {
     const _res = new Request('http://localhost:3000', {
       headers: new Headers({
-        cookie: `token=abunchofgarbage; ${X_NILE_TENANT}=456`,
+        cookie: `token=abunchofgarbage; ${TENANT_COOKIE}=456`,
       }),
     });
     await route(
       _res,
       new Config({
-        api: { basePath: 'http://thenile.dev/v2/databases/testdb' },
+        apiUrl: 'http://thenile.dev/v2/databases/testdb',
       })
     );
     expect(utilRequest.mock.calls[0][0]).toEqual(

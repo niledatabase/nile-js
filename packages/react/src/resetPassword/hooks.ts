@@ -1,45 +1,74 @@
 import { useMutation } from '@tanstack/react-query';
+import { resetPassword, forgotPassword } from '@niledatabase/client';
 
-import { componentFetch, useCsrf } from '../../lib/utils';
+import { useCsrf } from '../../lib/utils';
 
 import { MutateFnParams, Params } from './types';
 
 export function useResetPassword(params?: Params) {
   const {
-    onSuccess,
-    onError,
+    auth,
+    baseUrl = '',
     beforeMutate,
     callbackUrl,
-    baseUrl = '',
-    basePath = 'api',
+    fetchUrl,
+    init,
+    onError,
+    onSuccess,
+    redirect = false,
   } = params ?? {};
   const mutation = useMutation({
     mutationFn: async (_data: MutateFnParams) => {
-      const d = { ..._data, callbackUrl };
-      const possibleData = beforeMutate && beforeMutate(d);
-      const data = possibleData ?? d;
+      const possibleData = beforeMutate && beforeMutate(_data);
+      const data = possibleData ?? _data;
 
-      const fetchURL =
-        params?.fetchUrl ?? `${baseUrl}/${basePath}/auth/reset-password`;
+      return await resetPassword({
+        auth,
+        baseUrl,
+        callbackUrl,
+        fetchUrl,
+        init,
+        redirect,
+        ...data,
+      });
+    },
+    onSuccess: (data) => {
+      onSuccess && onSuccess(data);
+    },
+    onError,
+  });
 
-      // should fix this in nile-auth one day
-      if (
-        data &&
-        typeof data === 'object' &&
-        'callbackUrl' in data &&
-        !data.callbackUrl &&
-        callbackUrl
-      ) {
-        data.callbackURL = callbackUrl;
-      }
+  useCsrf(params);
 
-      data.redirectURL = fetchURL;
+  return mutation.mutate;
+}
 
-      return await componentFetch(
-        '/auth/reset-password',
-        { method: data.password ? 'put' : 'post', body: JSON.stringify(data) },
-        params
-      );
+export function useForgotPassword(params?: Params) {
+  const {
+    auth,
+    baseUrl = '',
+    beforeMutate,
+    callbackUrl,
+    fetchUrl,
+    init,
+    onError,
+    onSuccess,
+    redirect = false,
+  } = params ?? {};
+  const mutation = useMutation({
+    mutationFn: async (_data: { password: string }) => {
+      const possibleData = beforeMutate && beforeMutate(_data);
+      const data = possibleData ?? _data;
+
+      return await forgotPassword({
+        auth,
+        baseUrl,
+        callbackUrl,
+        fetchUrl,
+        init,
+        redirect,
+        ...data,
+      });
     },
     onSuccess: (data) => {
       onSuccess && onSuccess(data);

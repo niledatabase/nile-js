@@ -1,6 +1,6 @@
 'use client';
 import { BadgeCheck, CalendarCheck, CircleUserRound, Mail } from 'lucide-react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { cn } from '../../lib/utils';
@@ -54,10 +54,23 @@ function UserInfoC(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user == null]);
 
+  const name = useMemo(() => {
+    if (user?.name) {
+      return user?.name;
+    }
+    let out = '';
+    if (user?.givenName) {
+      out = user?.givenName;
+    }
+    if (user?.familyName) {
+      out = `${out} ${user?.familyName}`;
+    }
+    return out;
+  }, [user?.familyName, user?.givenName, user?.name]);
+
   if (!user) {
     return 'Loading...';
   }
-
   return (
     <div className={cn(props.className, 'flex flex-col gap-2 items-center')}>
       <div className="flex flex-col gap-5 pb-2 items-center">
@@ -66,10 +79,7 @@ function UserInfoC(props: Props) {
             {picture}
           </div>
         </div>
-        <div className="font-bold flex flex-row gap-1 capitalize">
-          {user.name ? user.name : user.givenName}{' '}
-          {user.familyName ? user.familyName : null}
-        </div>
+        <div className="font-bold flex flex-row gap-1 capitalize">{name}</div>
       </div>
       <div className="flex flex-row gap-5 justify-between w-full">
         <div className="flex flex-row gap-2 text-sm items-center w-36">

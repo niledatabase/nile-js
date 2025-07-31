@@ -1,22 +1,19 @@
-import { proxyRoutes } from '../../utils/routes/proxyRoutes';
+import { NileAuthRoutes, proxyRoutes, urlMatches } from '../../utils/routes';
 import request from '../../utils/request';
-import urlMatches from '../../utils/routes/urlMatches';
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
-import Logger from '../../../utils/Logger';
+import { ProviderName } from '../../utils/auth';
+import { ctx } from '../../utils/request-context';
 
 const key = 'CALLBACK';
 
 export default async function route(req: Request, config: Config) {
-  const { error } = Logger(
-    { ...config, debug: config.debug } as Config,
-    `[ROUTES][${key}]`
-  );
+  const { error } = config.logger(`[ROUTES][${key}]`);
   const [provider] = new URL(req.url).pathname.split('/').reverse();
   try {
     const passThroughUrl = new URL(req.url);
     const params = new URLSearchParams(passThroughUrl.search);
-    const url = `${proxyRoutes(config)[key]}/${provider}${
+    const url = `${proxyRoutes(config.apiUrl)[key]}/${provider}${
       params.toString() !== '' ? `?${params.toString()}` : ''
     }`;
 
@@ -31,7 +28,7 @@ export default async function route(req: Request, config: Config) {
       error('an error as occurred', e);
     });
 
-    const location = res?.headers.get('location');
+    const location = res?.headers?.get('location');
     if (location) {
       return new Response(res?.body, {
         status: 302,
@@ -49,4 +46,25 @@ export default async function route(req: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes.CALLBACK);
+}
+
+// this is for the the credential provider, among other things
+export async function fetchCallback(
+  config: Config,
+  provider: ProviderName,
+  body?: string,
+  request?: Request,
+  method: 'POST' | 'GET' = 'POST'
+): Promise<Response> {
+  const { headers } = ctx.get();
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${
+    NileAuthRoutes.CALLBACK
+  }/${provider}${request ? `?${new URL(request.url).searchParams}` : ''}`;
+  const req = new Request(clientUrl, {
+    method,
+    headers,
+    body,
+  });
+
+  return (await config.handlers.POST(req)) as Response;
 }

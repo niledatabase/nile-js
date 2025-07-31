@@ -1,0 +1,44 @@
+{
+  "name": "@niledatabase/nextjs",
+  "version": "5.0.0-alpha.33",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts"
+  },
+  "author": "jrea",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niledatabase/nile-js.git",
+    "directory": "packages/nextjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@niledatabase/server": ">=5.0.0-alpha",
+    "next": "^15"
+  },
+  "devDependencies": {
+    "next": "^15.3.3",
+    "tsup": "^8.5.0"
+  }
+}

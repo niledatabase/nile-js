@@ -31,14 +31,14 @@
 
 import { Routes } from '../../types';
 import { Config } from '../../../utils/Config';
-import { proxyRoutes } from '../../utils/routes/proxyRoutes';
+import { NileAuthRoutes, proxyRoutes, urlMatches } from '../../utils/routes';
 import request from '../../utils/request';
-import urlMatches from '../../utils/routes/urlMatches';
+import { ctx } from '../../utils/request-context';
 
 const key = 'SIGNIN';
 
 export default async function route(req: Request, config: Config) {
-  let url = proxyRoutes(config)[key];
+  let url = proxyRoutes(config.apiUrl)[key];
 
   const init: RequestInit = {
     method: req.method,
@@ -47,7 +47,7 @@ export default async function route(req: Request, config: Config) {
   if (req.method === 'POST') {
     const [provider] = new URL(req.url).pathname.split('/').reverse();
 
-    url = `${proxyRoutes(config)[key]}/${provider}`;
+    url = `${proxyRoutes(config.apiUrl)[key]}/${provider}`;
   }
 
   const passThroughUrl = new URL(req.url);
@@ -61,4 +61,20 @@ export default async function route(req: Request, config: Config) {
 }
 export function matches(configRoutes: Routes, request: Request): boolean {
   return urlMatches(request.url, configRoutes[key]);
+}
+
+// this is not for the the credential provider STILL NEED TO FIGURE THIS OUT I THINK? or remove.
+export async function fetchSignIn(
+  config: Config,
+  provider: string,
+  body: URLSearchParams
+): Promise<Response> {
+  const clientUrl = `${config.serverOrigin}${config.routePrefix}${NileAuthRoutes.SIGNIN}/${provider}`;
+  const { headers } = ctx.get();
+  const req = new Request(clientUrl, {
+    method: 'POST',
+    body,
+    headers,
+  });
+  return (await config.handlers.POST(req)) as Response;
 }

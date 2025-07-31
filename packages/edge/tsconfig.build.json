@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig",
-  "include": ["src/**/*"],
-  "compilerOptions": {
-    "baseUrl": "./src"
-  },
-  "exclude": ["**/*test.ts", "openapi"]
-}

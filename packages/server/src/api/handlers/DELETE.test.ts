@@ -1,6 +1,6 @@
-import { appRoutes } from '../utils/routes/defaultRoutes';
+import { appRoutes, DefaultNileAuthRoutes } from '../utils/routes';
 import { Config } from '../../utils/Config';
-import { X_NILE_ORIGIN, X_NILE_TENANT } from '../../utils/constants';
+import { HEADER_ORIGIN, HEADER_SECURE_COOKIES } from '../../utils/constants';
 
 import DELETER from './DELETE';
 
@@ -8,35 +8,32 @@ jest.mock('../utils/auth', () => () => 'a session, relax');
 describe('DELETER', () => {
   const apiGet = DELETER(
     appRoutes(),
-    new Config({ api: { basePath: 'http://thenile.dev/v2/databases/testdb' } })
+    new Config({ apiUrl: 'http://thenile.dev/v2/databases/testdb' })
   );
   global.fetch = jest.fn();
 
   beforeEach(() => {
-    //@ts-expect-error - fetch
-    global.fetch.mockClear();
+    (global.fetch as jest.Mock).mockClear();
   });
 
   [
-    'tenants',
-    'tenants/{tenantId}',
-    'tenants/{tenantId}/users',
-    'tenants/${tenantId}/users/${userId}',
+    DefaultNileAuthRoutes.TENANTS,
+    DefaultNileAuthRoutes.TENANT,
+    DefaultNileAuthRoutes.TENANT_USER,
+    DefaultNileAuthRoutes.INVITE,
+    DefaultNileAuthRoutes.INVITES,
+    DefaultNileAuthRoutes.ME,
   ].forEach((key) => {
     it(`matches ${key} `, async () => {
       const headersArray: { key: string; value: string }[] = [];
       let params: Request = {} as Request;
-
-      const req = {
-        method: 'POST',
-        [X_NILE_TENANT]: '123',
-        nextUrl: {
-          pathname: `/api/${key}`,
-        },
-        headers: new Headers({ host: 'http://localhost:3000' }),
-        url: `http://localhost:3001/api/${key}`,
-        clone: jest.fn(() => ({ body: '{}' })),
+      const init = {
+        method: 'DELETE',
+        headers: new Headers({
+          host: 'http://localhost:3000',
+        }),
       };
+      const url = `http://localhost:3001/api${key}`;
 
       //@ts-expect-error - fetch
       global.fetch = jest.fn((url, p) => {
@@ -45,11 +42,10 @@ describe('DELETER', () => {
         }
         return Promise.resolve({ status: 200 });
       });
-
-      const fn = await apiGet(req as unknown as Request);
+      const fn = await apiGet(new Request(url, init));
 
       expect(fn).toBeTruthy();
-      expect(fn?.status).toEqual(200);
+      expect((fn as Response)?.status).toEqual(200);
       params.headers.forEach((value, key) => {
         if (key !== 'content-type') {
           headersArray.push({ key, value });
@@ -57,7 +53,8 @@ describe('DELETER', () => {
       });
       expect(headersArray).toEqual([
         { key: 'host', value: 'localhost:3001' },
-        { key: X_NILE_ORIGIN, value: 'http://localhost:3001' },
+        { key: HEADER_ORIGIN, value: 'http://localhost:3001' },
+        { key: HEADER_SECURE_COOKIES, value: 'false' },
       ]);
     });
   });

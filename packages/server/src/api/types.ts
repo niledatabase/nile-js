@@ -1,5 +1,4 @@
-import { ApiRoutePaths } from './utils/routes/apiRoutes';
-import { ProxyPaths } from './utils/routes/proxyRoutes';
+import { ApiRoutePaths, ProxyPaths } from './utils/routes';
 
 export type Paths = ProxyPaths & ApiRoutePaths;
 
@@ -12,6 +11,7 @@ export type Routes = {
   SIGNOUT: string;
   ERROR: string;
   ME: string;
+  USER_TENANTS: string;
   USERS: string;
   TENANTS: string;
   TENANT: string;
@@ -21,4 +21,7 @@ export type Routes = {
   VERIFY_REQUEST: string;
   PASSWORD_RESET: string;
   LOG: string;
+  VERIFY_EMAIL: string;
+  INVITES: string;
+  INVITE: string;
 };

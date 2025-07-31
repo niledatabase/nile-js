@@ -54,7 +54,11 @@ export default function TenantSelector(props: ComponentProps) {
 }
 
 function SelectTenant(props: ComponentProps) {
-  const { data: tenants = [], isLoading, refetch } = useTenants(props);
+  const {
+    data: tenants = props.tenants ?? [],
+    isLoading,
+    refetch,
+  } = useTenants(props);
   const {
     buttonText = 'Create an organization',
     emptyText = 'You are not part of an organization.',
@@ -106,7 +110,7 @@ function SelectTenant(props: ComponentProps) {
         <div className="flex flex-row w-full flex-1 items-center gap-1">
           <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger
-              className="group w-80"
+              className="group w-80 font-medium text-sm"
               disabled={!tenant?.name}
               onClick={() => {
                 setOpen(true);

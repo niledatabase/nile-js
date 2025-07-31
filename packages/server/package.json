@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/server",
-  "version": "4.1.1",
+  "version": "5.0.0-alpha.33",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -9,16 +9,6 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
-    },
-    "./express": {
-      "types": "./dist/express.d.ts",
-      "require": "./dist/express.js",
-      "import": "./dist/express.mjs"
-    },
-    "./nitro": {
-      "types": "./dist/nitro.d.ts",
-      "require": "./dist/nitro.js",
-      "import": "./dist/nitro.mjs"
     }
   },
   "files": [
@@ -55,8 +45,6 @@
     "@babel/core": "^7.23.3",
     "@openapitools/openapi-generator-cli": "^2.18.4",
     "@types/jest": "^29.5.9",
-    "@types/lodash": "^4",
-    "@types/lodash-es": "^4",
     "@types/mime": "^4.0.0",
     "@types/pg": "^8.11.4",
     "@typescript-eslint/parser": "^5.62.0",
@@ -76,8 +64,6 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "h3": "^1.15.1",
-    "jose": "^4.15.4",
     "pg": "^8.11.3"
   }
 }

@@ -1,6 +1,6 @@
 import { getTenantFromHttp } from '../../../utils/fetch';
 import request from '../../utils/request';
-import { apiRoutes } from '../../utils/routes/apiRoutes';
+import { apiRoutes } from '../../utils/routes';
 import { Config } from '../../../utils/Config';
 
 /**
@@ -41,13 +41,14 @@ export async function GET(
 ) {
   const yurl = new URL(init.request.url);
   const tenantId = yurl.searchParams.get('tenantId');
-  const tenant = tenantId ?? getTenantFromHttp(init.request.headers);
+  const tenant =
+    tenantId ?? getTenantFromHttp(init.request.headers, config.context);
 
   if (!tenant) {
     log('[GET] No tenant id provided.');
     return new Response(null, { status: 404 });
   }
-  const url = apiRoutes(config).TENANT_USERS(tenant);
-  init.method = 'GET';
+  init.method = 'GET'; // for testing
+  const url = apiRoutes(config.apiUrl).TENANT_USERS(tenant);
   return await request(url, init, config);
 }
