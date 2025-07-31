@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.0...v5.0.1-alpha.0) (2025-07-31)
+
+### Bug Fixes
+
+- **express:** express can call from the server side ([bcf785c](https://github.com/niledatabase/nile-js/commit/bcf785c98c48bebe4b3a3ec703504ba8aca5a8d2))
+
 # [5.0.0](https://github.com/niledatabase/nile-js/compare/v5.0.0-alpha.33...v5.0.0) (2025-07-31)
 
 **Note:** Version bump only for package @niledatabase/packages
