@@ -3299,6 +3299,7 @@ __metadata:
     react-dom: "npm:^19.0.0"
     react-hook-form: "npm:^7.53.0"
     react-is: "npm:^19.0.0"
+    react-qr-code: "npm:^2.0.18"
     rollup-plugin-terser: "npm:^7.0.2"
     storybook: "npm:^8.0.0"
     tailwind-merge: "npm:^3.0.2"
@@ -17703,6 +17704,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qr.js@npm:0.0.0":
+  version: 0.0.0
+  resolution: "qr.js@npm:0.0.0"
+  checksum: 10/a05943d13cbc478e48935de8669b72312fe02de05057c35ebfab59a574c084530a9afb9ee651d53c8c870a54f9ec93ea7b63231de202740ce16a71c797e37ce9
+  languageName: node
+  linkType: hard
+
 "qs@npm:^6.12.3, qs@npm:^6.14.0":
   version: 6.14.0
   resolution: "qs@npm:6.14.0"
@@ -17851,6 +17859,18 @@ __metadata:
   version: 19.1.0
   resolution: "react-is@npm:19.1.0"
   checksum: 10/4aceca94492032a19411138bf68c6ca7dce4abee7ae6c7f23db9291d2dff14d6a643717b176ef9a151e8cdf6a2b71fdbc59fd998328e086a6f752512304a252b
+  languageName: node
+  linkType: hard
+
+"react-qr-code@npm:^2.0.18":
+  version: 2.0.18
+  resolution: "react-qr-code@npm:2.0.18"
+  dependencies:
+    prop-types: "npm:^15.8.1"
+    qr.js: "npm:0.0.0"
+  peerDependencies:
+    react: "*"
+  checksum: 10/c90164aac6c124d6a7aba2d9426859072d2233bb8d06102d23ef0c1831048e94cebc7608b821ff2b79f3a1cadf454305c727fd3e1d7742fd71f816cdeac04053
   languageName: node
   linkType: hard
 

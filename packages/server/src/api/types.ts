@@ -24,4 +24,5 @@ export type Routes = {
   VERIFY_EMAIL: string;
   INVITES: string;
   INVITE: string;
+  MULTI_FACTOR: string;
 };

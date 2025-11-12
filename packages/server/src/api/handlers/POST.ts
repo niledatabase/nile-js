@@ -73,6 +73,10 @@ export default function POSTER(configRoutes: Routes, config: Config) {
       info('matches signin');
       return authRoutes.handleSignIn(req, config);
     }
+    if (authRoutes.matchesMfa(configRoutes, req)) {
+      info('matches mfa');
+      return authRoutes.handleMfa(req, config);
+    }
     if (authRoutes.matchesPasswordReset(configRoutes, req)) {
       info('matches password reset');
       return authRoutes.handlePasswordReset(req, config);

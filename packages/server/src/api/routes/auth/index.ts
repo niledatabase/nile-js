@@ -25,3 +25,5 @@ export {
   default as handleVerifyEmail,
   matches as matchesVerifyEmail,
 } from './verify-email';
+
+export { default as handleMfa, matches as matchesMfa } from './mfa';
