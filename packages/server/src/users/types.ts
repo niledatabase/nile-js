@@ -47,5 +47,6 @@ export interface User {
   created: string;
   updated?: string;
   emailVerified?: string | null;
+  multiFactor?: string | null;
   tenants: string[];
 }
