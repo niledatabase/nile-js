@@ -14,6 +14,9 @@ export default async function Providers() {
         <Button variant="link">
           <Link href="/react/standalone-hooks">stand alone hooks</Link>
         </Button>
+        <Button variant="link">
+          <Link href="/react/client-side">client side only</Link>
+        </Button>
       </div>
     </SessionProvider>
   );
