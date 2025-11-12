@@ -7,6 +7,8 @@ import {
   Authorizer,
 } from '@niledatabase/client';
 
+import { useQueryClientOrDefault } from './queryClient';
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -108,6 +110,7 @@ export type PrefetchParams = {
 };
 export function usePrefetch(params?: PrefetchParams) {
   const { baseUrl = '', disableQuery, init, client, fetchUrl } = params ?? {};
+  const queryClient = useQueryClientOrDefault(client);
   useQuery(
     {
       queryKey: ['providers', baseUrl],
@@ -116,12 +119,13 @@ export function usePrefetch(params?: PrefetchParams) {
       },
       enabled: disableQuery !== true,
     },
-    client
+    queryClient
   );
   useCsrf(params);
 }
 export function useCsrf(params?: PrefetchParams) {
   const { baseUrl = '', disableQuery, init, client, fetchUrl } = params ?? {};
+  const queryClient = useQueryClientOrDefault(client);
   useQuery(
     {
       queryKey: ['csrf', baseUrl],
@@ -130,6 +134,6 @@ export function useCsrf(params?: PrefetchParams) {
       },
       enabled: disableQuery !== true,
     },
-    client
+    queryClient
   );
 }

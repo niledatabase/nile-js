@@ -55,11 +55,9 @@ export type JWT = {
   iat: number;
   exp: number;
   jti: string;
-  loading: boolean;
 };
-
 export type ActiveSession = {
-  loading: boolean;
+  loading?: boolean;
   id: string;
   email: string;
   expires: string;

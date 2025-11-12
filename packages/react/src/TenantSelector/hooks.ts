@@ -1,17 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
-import { QueryClient, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { Tenant } from '../../../server/src/tenants/types';
 import { TENANT_COOKIE } from '../../../server/src/utils/constants';
 import { componentFetch } from '../../lib/utils';
+import { useQueryClientOrDefault } from '../../lib/queryClient';
 
 import { HookProps } from './types';
 
-export function useTenants(
-  params: HookProps & { disableQuery?: boolean },
-  client?: QueryClient
-) {
+export function useTenants(params: HookProps & { disableQuery?: boolean }) {
   const { disableQuery, tenants, baseUrl = '' } = params;
+  const queryClient = useQueryClientOrDefault(params.client);
 
   // Using useQuery to fetch tenants data
   const query = useQuery<Tenant[]>(
@@ -37,20 +36,19 @@ export function useTenants(
       enabled: !disableQuery || tenants?.length === 0,
       initialData: tenants,
     },
-    client
+    queryClient
   );
 
   return query;
 }
 
 export function useTenantId(
-  params?: HookProps & { tenant?: Tenant },
-  client?: QueryClient
+  params?: HookProps & { tenant?: Tenant }
 ): [string | undefined, (tenant: string) => void] {
   const [tenant, setTenant] = React.useState<string | undefined>(
     params?.activeTenant ?? params?.tenant?.id
   );
-  const { refetch } = useTenants({ disableQuery: true, ...params }, client);
+  const { refetch } = useTenants({ disableQuery: true, ...params });
 
   useEffect(() => {
     if (!tenant) {
