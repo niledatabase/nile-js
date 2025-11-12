@@ -28,7 +28,8 @@ describe('getter', () => {
     .filter(
       (str: string) =>
         DefaultNileAuthRoutes.SIGNUP !== str &&
-        DefaultNileAuthRoutes.TENANT_USER !== str
+        DefaultNileAuthRoutes.TENANT_USER !== str &&
+        NileAuthRoutes.MULTI_FACTOR !== str
     )
     .forEach((key) => {
       it(`matches ${key} `, async () => {

@@ -27,6 +27,7 @@ export enum NileAuthRoutes {
   SIGNOUT = '/auth/signout',
   PASSWORD_RESET = '/auth/reset-password',
   VERIFY_EMAIL = '/auth/verify-email',
+  MULTI_FACTOR = '/auth/mfa',
 }
 
 // these map to the developer app
@@ -37,6 +38,7 @@ export const appRoutes = (prefix = DEFAULT_PREFIX): Routes => ({
   CSRF: `${prefix}${NileAuthRoutes.CSRF}`,
   CALLBACK: `${prefix}${NileAuthRoutes.CALLBACK}`,
   SIGNOUT: `${prefix}${NileAuthRoutes.SIGNOUT}`,
+  MULTI_FACTOR: `${prefix}${NileAuthRoutes.MULTI_FACTOR}`,
   ERROR: `${prefix}/auth/error`,
   VERIFY_REQUEST: `${prefix}/auth/verify-request`,
   VERIFY_EMAIL: `${prefix}${NileAuthRoutes.VERIFY_EMAIL}`,
@@ -89,6 +91,7 @@ export const proxyRoutes = (config: string) => ({
   VERIFY_REQUEST: makeRestUrl(config, '/auth/verify-request'),
   PASSWORD_RESET: makeRestUrl(config, NileAuthRoutes.PASSWORD_RESET),
   VERIFY_EMAIL: makeRestUrl(config, NileAuthRoutes.VERIFY_EMAIL),
+  MULTI_FACTOR: makeRestUrl(config, NileAuthRoutes.MULTI_FACTOR),
 });
 type ProxyKeys = keyof typeof proxyRoutes;
 export type ProxyPaths = (typeof proxyRoutes)[ProxyKeys];
