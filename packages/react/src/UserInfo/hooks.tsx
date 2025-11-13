@@ -4,6 +4,7 @@ import { ActiveSession } from '@niledatabase/client';
 
 import { componentFetch, ComponentFetchProps } from '../../lib/utils';
 import { User } from '../../../server/src/users/types';
+import { useQueryClientOrDefault } from '../../lib/queryClient';
 
 export type HookProps = ComponentFetchProps & {
   user?: User | undefined | null;
@@ -11,8 +12,10 @@ export type HookProps = ComponentFetchProps & {
   client?: QueryClient;
   fetchUrl?: string;
 };
-export function useMe(props: HookProps): User | null {
-  const { baseUrl = '', fetchUrl, client, user, auth } = props;
+
+export function useMe(props?: HookProps): User | null {
+  const { baseUrl = '', fetchUrl, client, user, auth } = props ?? {};
+  const queryClient = useQueryClientOrDefault(client);
   const { data, isLoading } = useQuery(
     {
       queryKey: ['me', baseUrl],
@@ -22,7 +25,7 @@ export function useMe(props: HookProps): User | null {
       },
       enabled: user == null,
     },
-    client
+    queryClient
   );
 
   if (user || data) {

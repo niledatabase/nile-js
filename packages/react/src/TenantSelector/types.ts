@@ -4,6 +4,7 @@ import { Tenant } from '../../../server/src/tenants/types';
 import { ComponentFetchProps } from '../../lib/utils';
 
 export type HookProps = ComponentFetchProps & {
+  client?: QueryClient;
   fetchUrl?: string;
   tenants?: Tenant[];
   onError?: (e: Error) => void;
@@ -12,7 +13,6 @@ export type HookProps = ComponentFetchProps & {
 };
 
 export type ComponentProps = HookProps & {
-  client?: QueryClient;
   useCookie?: boolean;
   className?: string;
   emptyText?: string;

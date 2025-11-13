@@ -2,6 +2,7 @@
 import {
   ArrowBigRight,
   ArrowBigRightDash,
+  Atom,
   Building2,
   Home,
   Key,
@@ -70,6 +71,11 @@ const items = [
     title: 'Tenant list',
     url: '/tenant-list',
     icon: Building2,
+  },
+  {
+    title: 'Provider + hooks',
+    url: '/react',
+    icon: Atom,
   },
 ];
 export default function SidebarClient() {
