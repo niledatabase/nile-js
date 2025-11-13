@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1-alpha.2](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.1...v5.0.1-alpha.2) (2025-11-13)
+
+### Bug Fixes
+
+- **react:** use internal authorizer for react provider state ([4d6c0b8](https://github.com/niledatabase/nile-js/commit/4d6c0b8fecd6d3ba27ff7fbef02f90d47c90a442))
+
 ## [5.0.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.0...v5.0.1-alpha.1) (2025-11-12)
 
 ### Bug Fixes
