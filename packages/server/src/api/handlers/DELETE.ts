@@ -9,6 +9,7 @@ import invite, {
 } from '../routes/tenants/[tenantId]/invite/[inviteId]';
 import { Routes } from '../types';
 import { Config } from '../../utils/Config';
+import { matchesMfa, handleMfa } from '../routes/auth';
 
 export default function DELETER(configRoutes: Routes, config: Config) {
   const { error, info, warn } = config.logger('[DELETE MATCHER]');
@@ -35,6 +36,11 @@ export default function DELETER(configRoutes: Routes, config: Config) {
     if (matchesInvite(configRoutes, req)) {
       info('matches tenant invite id');
       return invite(req, config);
+    }
+
+    if (matchesMfa(configRoutes, req)) {
+      info('matches MFA');
+      return handleMfa(req, config);
     }
 
     if (matchesTenantUser(configRoutes, req)) {
