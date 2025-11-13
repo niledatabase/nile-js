@@ -13,6 +13,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **react:** types, standalone react-query calls ([b43e2c2](https://github.com/niledatabase/nile-js/commit/b43e2c2f2f539efd2543fc4be3168568e3f177c7))
 
+## [5.0.1](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.0...v5.0.1) (2025-07-31)
+
+**Note:** Version bump only for package @niledatabase/client
+
 ## [5.0.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.0...v5.0.1-alpha.0) (2025-07-31)
 
 **Note:** Version bump only for package @niledatabase/client

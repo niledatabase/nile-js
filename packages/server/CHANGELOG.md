@@ -9,6 +9,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [5.0.1-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.0...v5.0.1-alpha.1) (2025-11-12)
 
+## [5.0.1](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.0...v5.0.1) (2025-07-31)
+
 **Note:** Version bump only for package @niledatabase/server
 
 ## [5.0.1-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.0...v5.0.1-alpha.0) (2025-07-31)
