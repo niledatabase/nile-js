@@ -2,6 +2,7 @@ import { QueryClient, useMutation } from '@tanstack/react-query';
 import { signUp } from '@niledatabase/client';
 
 import { usePrefetch } from '../../lib/utils';
+import { useQueryClientOrDefault } from '../../lib/queryClient';
 
 import { Props, SignUpInfo } from './types';
 
@@ -10,6 +11,7 @@ export function useSignUp<T extends SignUpInfo>(
   client?: QueryClient
 ) {
   const { onSuccess, onError, beforeMutate, ...remaining } = params;
+  const queryClient = useQueryClientOrDefault(client);
 
   const mutation = useMutation(
     {
@@ -29,7 +31,7 @@ export function useSignUp<T extends SignUpInfo>(
       onSuccess,
       onError,
     },
-    client
+    queryClient
   );
 
   usePrefetch(params);

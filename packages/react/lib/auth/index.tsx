@@ -15,9 +15,10 @@ import {
   auth,
   getStatus,
   broadcast,
-  ListenerParams,
+  Listener,
   NileSession,
   NonErrorSession,
+  AuthState,
 } from '@niledatabase/client';
 
 export interface SessionProviderProps {
@@ -63,29 +64,56 @@ function useOnline() {
   return isOnline;
 }
 
+const subscribeToAuthorizer = (onStoreChange: () => void) => {
+  const handler: Listener = () => {
+    onStoreChange();
+  };
+  auth.addListener(handler);
+  return () => auth.removeListener(handler);
+};
+
+const getAuthorizerSnapshot = () => auth.state;
+
+function useAuthorizerState() {
+  return React.useSyncExternalStore(
+    subscribeToAuthorizer,
+    getAuthorizerSnapshot,
+    getAuthorizerSnapshot
+  );
+}
+
 type UpdateSession = (
   data?: any
 ) => Promise<NonErrorSession | null | undefined>;
 
+type SessionContextBase = {
+  update: UpdateSession;
+  state: AuthState;
+};
+
+type SessionContextRequired =
+  | (SessionContextBase & {
+      data: NonErrorSession;
+      status: 'authenticated';
+    })
+  | (SessionContextBase & {
+      data: null | undefined;
+      status: 'loading';
+    });
+
+type SessionContextOptional =
+  | (SessionContextBase & {
+      data: NonErrorSession;
+      status: 'authenticated';
+    })
+  | (SessionContextBase & {
+      data: null | undefined;
+      status: 'unauthenticated' | 'loading';
+    });
+
 export type SessionContextValue<R extends boolean = false> = R extends true
-  ?
-      | {
-          update: UpdateSession;
-          data: NonErrorSession;
-          status: 'authenticated';
-        }
-      | { update: UpdateSession; data: null | undefined; status: 'loading' }
-  :
-      | {
-          update: UpdateSession;
-          data: NonErrorSession;
-          status: 'authenticated';
-        }
-      | {
-          update: UpdateSession;
-          data: null | undefined;
-          status: 'unauthenticated' | 'loading';
-        };
+  ? SessionContextRequired
+  : SessionContextOptional;
 
 export const SessionContext = React.createContext?.<
   SessionContextValue | undefined
@@ -132,6 +160,7 @@ export function useSession<R extends boolean>(
       data: value.data,
       update: value.update,
       status: 'loading',
+      state: value.state,
     };
   }
 
@@ -156,37 +185,25 @@ export function SessionProvider(props: SessionProviderProps) {
   if (!SessionContext) {
     throw new Error('React Context is unavailable in Server Components');
   }
-  const [loading, setLoading] = React.useState(auth.state.loading);
   const {
     children,
     refetchWhenOffline,
     refetchInterval,
     refetchOnWindowFocus,
   } = props;
+  const state = useAuthorizerState();
 
   if (props.basePath) auth.state.basePath = props.basePath;
 
-  const [session, setSession] = React.useState(
-    props.session && !(props.session instanceof Response) ? props.session : null
-  );
+  const providedSession =
+    props.session && !(props.session instanceof Response)
+      ? props.session
+      : undefined;
 
-  // hook into mutating config methods
-  React.useEffect(() => {
-    const authHandler = (params: ListenerParams) => {
-      const { key, next } = params;
-      if (key === 'loading') {
-        setLoading(next);
-      }
-      if (key === 'session') {
-        setSession(next);
-      }
-    };
-    auth.addListener(authHandler);
-
-    return () => {
-      auth.removeListener(authHandler);
-    };
-  }, []);
+  const session =
+    state.session === undefined
+      ? providedSession ?? null
+      : state.session ?? null;
 
   React.useEffect(() => {
     if (props.session && !(props.session instanceof Response)) {
@@ -240,15 +257,17 @@ export function SessionProvider(props: SessionProviderProps) {
     };
   }, [refetchOnWindowFocus, visibilityHandler]);
 
+  const status = getStatus(state.loading, session);
   const value = React.useMemo(() => {
     return {
-      data: session ? session : null,
-      status: getStatus(loading, session),
+      data: session ?? null,
+      status,
+      state,
       async update() {
         return await auth.refreshSession();
       },
     };
-  }, [loading, session]);
+  }, [session, state, status]);
   return (
     <SessionContext.Provider value={value as any}>
       {children}
