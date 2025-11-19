@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { UserInfo } from '@niledatabase/react';
+import { TenantSelector, UserInfo } from '@niledatabase/react';
 
 import { nile } from '../api/[...nile]/nile';
 
@@ -13,9 +13,12 @@ export default async function ListTenants() {
     return null;
   }
   return (
-    <div className="flex flex-col gap-4">
-      <UserInfo user={me} />
-      <DataTable data={tenants} columns={columns} />
+    <div className="flex flex-col gap-4 items-center">
+      <div className="max-w-3xl border border-muted rounded-xl p-10 w-fit flex flex-col gap-4">
+        <UserInfo user={me} />
+        <TenantSelector className="border border-muted px-4 py-6 rounded-xl" />
+      </div>
+      <DataTable data={tenants} columns={columns} className="w-full" />
     </div>
   );
 }

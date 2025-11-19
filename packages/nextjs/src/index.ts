@@ -20,7 +20,9 @@ const nextJs: Extension = () => {
   return {
     id: 'next-js-cookies',
     // be sure any server side request gets the headers automatically
-    withContext: nextJsHeaders,
+    withContext: async (ctx: CTX) => {
+      await nextJsHeaders(ctx);
+    },
     // after the response, be sure additional calls have the correct cookies
     onResponse: async ({ response }, { set: setContext }) => {
       const resHeaders = response?.headers;
