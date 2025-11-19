@@ -3,7 +3,7 @@ import { AsyncLocalStorage } from 'async_hooks';
 import { Config } from '@niledatabase/server/utils/Config';
 
 import Logger from '../../utils/Logger';
-import { CTX, Context } from '../../types';
+import { CTX, Context, ExtensionState } from '../../types';
 
 import { runExtensionContext } from './extensions';
 
@@ -80,55 +80,71 @@ export const ctx: CTX = {
   getLastUsed: () => lastUsedContext,
 };
 
-export function withNileContext<T>(
+export async function withNileContext<T>(
   config: Config,
   fn: () => Promise<T>,
   name = 'unknown'
 ): Promise<T> {
   const initialContext = config.context;
   const existing = ctx.get();
-  // Base headers from existing context
-  const mergedHeaders = new Headers(existing.headers);
-  // If it's a Request object, extract headers directly
+  const { overrides: extensionOverrides, ran: extensionRan } =
+    await resolveExtensionOverrides(config, existing);
+
+  let mergedHeaders = new Headers(existing.headers);
+  let tenantId = existing.tenantId;
+  let userId = existing.userId;
+
   if (initialContext instanceof Request) {
     initialContext.headers.forEach((value, key) => {
       mergedHeaders.set(key, value);
     });
+  } else {
+    if (initialContext.headers === null) {
+      mergedHeaders = new Headers();
+    } else if (initialContext.headers) {
+      const incoming =
+        initialContext.headers instanceof Headers
+          ? initialContext.headers
+          : new Headers(initialContext.headers as HeadersInit);
+      incoming.forEach((value, key) => {
+        mergedHeaders.set(key, value);
+      });
+    }
 
-    const context = {
-      headers: mergedHeaders,
-      tenantId: existing.tenantId,
-      userId: existing.userId,
-    };
-
-    silly(`${name} [INITIAL - Request] ${serializeContext(context)}`);
-    return ctx.run(context, fn);
+    if ('tenantId' in initialContext) {
+      tenantId = initialContext.tenantId;
+    }
+    if ('userId' in initialContext) {
+      userId = initialContext.userId;
+    }
   }
 
-  // Handle merging for Partial<Context> - I think maybe this is unused?
-  if (initialContext.headers) {
-    const incoming =
-      initialContext.headers instanceof Headers
-        ? initialContext.headers
-        : new Headers(initialContext.headers as HeadersInit);
-    incoming.forEach((value, key) => {
+  if (extensionOverrides?.headers) {
+    for (const key of extensionOverrides.headers.removed) {
+      mergedHeaders.delete(key);
+    }
+    for (const [key, value] of extensionOverrides.headers.set) {
       mergedHeaders.set(key, value);
-    });
+    }
   }
 
-  const hasTenantId = 'tenantId' in initialContext;
-  const hasUserId = 'userId' in initialContext;
+  if (extensionOverrides?.tenantId) {
+    tenantId = extensionOverrides.tenantId.value;
+  }
+
+  if (extensionOverrides?.userId) {
+    userId = extensionOverrides.userId.value;
+  }
+
   const context = {
     headers: mergedHeaders,
-    tenantId: hasTenantId ? initialContext.tenantId : existing.tenantId,
-    userId: hasUserId ? initialContext.userId : existing.userId,
+    tenantId,
+    userId,
   };
 
-  silly(`${name} [INITIAL - Partial<Context>] ${serializeContext(context)}`);
+  silly(`${name} [INITIAL] ${serializeContext(context)}`);
   return ctx.run(context, async () => {
-    // run the extension context last, its always better than us
-    await runExtensionContext(config);
-
+    await runExtensionContext(config, { skipWithContext: extensionRan });
     return fn();
   });
 }
@@ -163,4 +179,105 @@ function serializeCookies(cookies: Record<string, string>): string {
   return Object.entries(cookies)
     .map(([k, v]) => `${k}=${v}`)
     .join('; ');
+}
+
+type HeaderDiff = {
+  set: Array<[string, string]>;
+  removed: string[];
+};
+
+type ExtensionOverrides = {
+  headers?: HeaderDiff;
+  tenantId?: { value: Context['tenantId'] };
+  userId?: { value: Context['userId'] };
+};
+
+async function resolveExtensionOverrides(
+  config: Config,
+  existing: Context
+): Promise<{ overrides?: ExtensionOverrides; ran: boolean }> {
+  if (!config.extensions?.length || !config.extensionCtx) {
+    return { ran: false };
+  }
+
+  let updated: Context | undefined;
+  await ctx.run(
+    {
+      headers: new Headers(existing.headers),
+      tenantId: existing.tenantId,
+      userId: existing.userId,
+    },
+    async () => {
+      await config.extensionCtx?.runExtensions(
+        ExtensionState.withContext,
+        config
+      );
+      updated = ctx.get();
+    }
+  );
+
+  if (!updated) {
+    return { ran: true };
+  }
+
+  const diff = diffContext(existing, updated);
+  return { overrides: diff, ran: true };
+}
+
+function diffContext(
+  before: Context,
+  after: Context
+): ExtensionOverrides | undefined {
+  const headers = diffHeaders(before.headers, after.headers);
+  const tenantChanged = before.tenantId !== after.tenantId;
+  const userChanged = before.userId !== after.userId;
+
+  if (!headers && !tenantChanged && !userChanged) {
+    return undefined;
+  }
+
+  const overrides: ExtensionOverrides = {};
+  if (headers) {
+    overrides.headers = headers;
+  }
+  if (tenantChanged) {
+    overrides.tenantId = { value: after.tenantId };
+  }
+  if (userChanged) {
+    overrides.userId = { value: after.userId };
+  }
+  return overrides;
+}
+
+function diffHeaders(before: Headers, after: Headers): HeaderDiff | undefined {
+  const beforeMap = headersToMap(before);
+  const afterMap = headersToMap(after);
+  const set: Array<[string, string]> = [];
+  const removed: string[] = [];
+
+  for (const [key, value] of afterMap.entries()) {
+    if (beforeMap.get(key) !== value) {
+      set.push([key, value]);
+    }
+  }
+
+  for (const key of beforeMap.keys()) {
+    if (!afterMap.has(key)) {
+      removed.push(key);
+    }
+  }
+
+  if (set.length === 0 && removed.length === 0) {
+    return undefined;
+  }
+
+  return { set, removed };
+}
+
+function headersToMap(headers: Headers): Map<string, string> {
+  const map = new Map<string, string>();
+  headers.forEach((value, key) => {
+    map.set(key.toLowerCase(), value);
+  });
+  return map;
 }

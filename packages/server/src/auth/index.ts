@@ -129,24 +129,28 @@ export default class Auth {
    * from the internal configuration once the request completes.
    */
   async signOut(): Promise<Response> {
-    return withNileContext(this.#config, async () => {
-      // check for csrf header, maybe its already there?
-      const csrfRes = await this.getCsrf();
-      if (!('csrfToken' in csrfRes)) {
-        throw new Error('Unable to obtain CSRF token. Sign out failed.');
-      }
+    return withNileContext(
+      this.#config,
+      async () => {
+        // check for csrf header, maybe its already there?
+        const csrfRes = await this.getCsrf();
+        if (!('csrfToken' in csrfRes)) {
+          throw new Error('Unable to obtain CSRF token. Sign out failed.');
+        }
 
-      const body = JSON.stringify({
-        csrfToken: csrfRes.csrfToken,
-        json: true,
-      });
-      const res = await fetchSignOut(this.#config, body);
+        const body = JSON.stringify({
+          csrfToken: csrfRes.csrfToken,
+          json: true,
+        });
+        const res = await fetchSignOut(this.#config, body);
 
-      updateHeaders(new Headers({}));
-      ctx.set({ headers: null });
+        updateHeaders(new Headers({}));
+        ctx.set({ headers: null });
 
-      return res;
-    });
+        return res;
+      },
+      'signout'
+    );
   }
 
   /**
@@ -168,72 +172,78 @@ export default class Auth {
     payload: SignUpPayload,
     rawResponse?: boolean
   ): Promise<T> {
-    return withNileContext(this.#config, async () => {
-      // be sure its fresh
-      ctx.set({ headers: null });
-      const { email, password, ...params } = payload;
-      if (!email || !password) {
-        throw new Error(
-          'Server side sign up requires a user email and password.'
-        );
-      }
-
-      const providers = await this.listProviders();
-      const { credentials } = providers ?? {};
-      if (!credentials) {
-        throw new Error(
-          'Unable to obtain credential provider. Aborting server side sign up.'
-        );
-      }
-
-      const csrf = await obtainCsrf(this.#config);
-
-      let csrfToken;
-      if ('csrfToken' in csrf) {
-        csrfToken = csrf.csrfToken;
-      } else {
-        throw new Error('Unable to obtain parse CSRF. Request blocked.');
-      }
-
-      const body = JSON.stringify({
-        email,
-        password,
-        csrfToken,
-        callbackUrl: credentials.callbackUrl,
-      });
-
-      const res = await fetchSignUp(this.#config, { body, params });
-      if (res.status > 299) {
-        this.#logger.error(await res.clone().text());
-        return undefined as T;
-      }
-      const token = parseToken(res.headers);
-      if (!token) {
-        throw new Error('Server side sign up failed. Session token not found');
-      }
-      const { headers } = ctx.get();
-      headers?.append('cookie', token);
-      ctx.set({ headers });
-      // this will globally set headers for everyone, so how
-      // do you make it so you can chain these together? or at least
-      // call them sequentially safely? you gotta use the `withContext` callback
-      updateHeaders(headers);
-      if (rawResponse) {
-        return res as T;
-      }
-      try {
-        const json = (await res.clone().json()) as T;
-        if (json && typeof json === 'object' && 'tenants' in json) {
-          const tenantId = (json as unknown as User).tenants[0];
-          if (tenantId) {
-            updateTenantId(tenantId);
-          }
+    return withNileContext(
+      this.#config,
+      async () => {
+        // be sure its fresh
+        ctx.set({ headers: null });
+        const { email, password, ...params } = payload;
+        if (!email || !password) {
+          throw new Error(
+            'Server side sign up requires a user email and password.'
+          );
         }
-        return json;
-      } catch {
-        return res as T;
-      }
-    });
+
+        const providers = await this.listProviders();
+        const { credentials } = providers ?? {};
+        if (!credentials) {
+          throw new Error(
+            'Unable to obtain credential provider. Aborting server side sign up.'
+          );
+        }
+
+        const csrf = await obtainCsrf(this.#config);
+
+        let csrfToken;
+        if ('csrfToken' in csrf) {
+          csrfToken = csrf.csrfToken;
+        } else {
+          throw new Error('Unable to obtain parse CSRF. Request blocked.');
+        }
+
+        const body = JSON.stringify({
+          email,
+          password,
+          csrfToken,
+          callbackUrl: credentials.callbackUrl,
+        });
+
+        const res = await fetchSignUp(this.#config, { body, params });
+        if (res.status > 299) {
+          this.#logger.error(await res.clone().text());
+          return undefined as T;
+        }
+        const token = parseToken(res.headers);
+        if (!token) {
+          throw new Error(
+            'Server side sign up failed. Session token not found'
+          );
+        }
+        const { headers } = ctx.get();
+        headers?.append('cookie', token);
+        ctx.set({ headers });
+        // this will globally set headers for everyone, so how
+        // do you make it so you can chain these together? or at least
+        // call them sequentially safely? you gotta use the `withContext` callback
+        updateHeaders(headers);
+        if (rawResponse) {
+          return res as T;
+        }
+        try {
+          const json = (await res.clone().json()) as T;
+          if (json && typeof json === 'object' && 'tenants' in json) {
+            const tenantId = (json as unknown as User).tenants[0];
+            if (tenantId) {
+              updateTenantId(tenantId);
+            }
+          }
+          return json;
+        } catch {
+          return res as T;
+        }
+      },
+      'signup'
+    );
   }
 
   /**

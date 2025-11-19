@@ -132,8 +132,20 @@ function mergeCookies(...cookieStrings: (string | null | undefined)[]) {
 }
 
 //just makes typing faster
-export async function runExtensionContext(config: Config) {
-  await config?.extensionCtx?.runExtensions(ExtensionState.withContext, config);
+type ExtensionRunOptions = {
+  skipWithContext?: boolean;
+};
+
+export async function runExtensionContext(
+  config: Config,
+  options?: ExtensionRunOptions
+) {
+  if (!options?.skipWithContext) {
+    await config?.extensionCtx?.runExtensions(
+      ExtensionState.withContext,
+      config
+    );
+  }
 
   await config?.extensionCtx?.runExtensions(
     ExtensionState.withTenantId,
