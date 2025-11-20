@@ -146,6 +146,27 @@ describe('Server', () => {
     expect(context.headers?.get('x-next')).toBe('yes');
   });
 
+  it('hydrates context from extensions before executing withContext callbacks', async () => {
+    const withContextMock = jest.fn(async (ctx) => {
+      ctx.set({
+        headers: new Headers({ cookie: 'foo=bar' }),
+        tenantId: 'ext-tenant',
+      });
+    });
+
+    const serverWithExtension = new Server({
+      ...config,
+      extensions: [() => ({ id: 'ext', withContext: withContextMock })],
+    });
+
+    await serverWithExtension.withContext();
+
+    expect(withContextMock).toHaveBeenCalled();
+    const activeContext = serverWithExtension.getContext();
+    expect(activeContext.headers.get('cookie')).toBe('foo=bar');
+    expect(activeContext.tenantId).toBe('ext-tenant');
+  });
+
   it('create() should be a singleton', () => {
     const first = create();
     const second = create();

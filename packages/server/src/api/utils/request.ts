@@ -1,4 +1,3 @@
-import { parseCallback } from '../../auth';
 import { ExtensionState } from '../../types';
 import {
   HEADER_ORIGIN,
@@ -15,7 +14,7 @@ export default async function request(
   _init: RequestInit & { request: Request },
   config: Config
 ) {
-  const { debug, info, error, warn } = config.logger('[REQUEST]');
+  const { debug, info, error } = config.logger('[REQUEST]');
   const { request, ...init } = _init;
   const requestUrl = new URL(request.url);
   const updatedHeaders = new Headers({});

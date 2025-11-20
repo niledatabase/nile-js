@@ -91,18 +91,22 @@ export default class Users {
   async getSelf<T = User | Response>(rawResponse?: false): Promise<T>;
   async getSelf(rawResponse: true): Promise<Response>;
   async getSelf<T = User | Response>(rawResponse?: boolean): Promise<T> {
-    return withNileContext(this.#config, async () => {
-      const res = await fetchMe(this.#config);
+    return withNileContext(
+      this.#config,
+      async () => {
+        const res = await fetchMe(this.#config);
 
-      if (rawResponse) {
-        return res as T;
-      }
-      try {
-        return await res?.clone().json();
-      } catch {
-        return res as T;
-      }
-    });
+        if (rawResponse) {
+          return res as T;
+        }
+        try {
+          return await res?.clone().json();
+        } catch {
+          return res as T;
+        }
+      },
+      'getSelf'
+    );
   }
 
   /**

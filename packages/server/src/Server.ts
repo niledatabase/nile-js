@@ -3,6 +3,7 @@ import pg, { Pool } from 'pg';
 import {
   Context,
   Extension,
+  ExtensionState,
   NileConfig,
   NileHandlers,
   PartialContext,
@@ -189,12 +190,14 @@ export class Server {
     const preserve =
       'useLastContext' in context ? context.useLastContext : true;
 
+    let hydrated: Context | undefined;
     if (preserve) {
-      this.#config.context = { ...this.getContext(), ...context };
+      hydrated = await this.#hydrateContextFromExtensions();
+      const base = hydrated ?? this.#config.context;
+      this.#config.context = { ...base, ...context };
     } else {
       this.#config.context = { ...defaultContext, ...context };
     }
-
     return withNileContext(this.#config, async () => {
       return fn ? fn(this) : this;
     });
@@ -235,6 +238,7 @@ export class Server {
    * Saves them in a singleton for use in a request later. It's basically the "default" value
    * Internally, passed a NileConfig, externally, should be using Headers
    */
+
   #handleHeaders(
     config?: NileConfig | void | Headers | Record<string, string> | null
   ) {
@@ -290,6 +294,38 @@ export class Server {
     }
 
     this.#config.logger('[handleHeaders]').debug(JSON.stringify(merged));
+  }
+
+  async #hydrateContextFromExtensions(): Promise<Context | undefined> {
+    if (!this.#config.extensions || this.#config.extensions.length === 0) {
+      return undefined;
+    }
+
+    let updated: Context | undefined;
+
+    await ctx.run({}, async () => {
+      await this.#config.extensionCtx?.runExtensions(
+        ExtensionState.withContext,
+        this.#config
+      );
+      updated = ctx.get();
+    });
+
+    if (!updated) {
+      return undefined;
+    }
+
+    const hydrated: Context = {
+      headers: new Headers(updated.headers),
+      tenantId: updated.tenantId,
+      userId: updated.userId,
+    };
+
+    this.#config.context.headers = new Headers(hydrated.headers);
+    this.#config.context.tenantId = hydrated.tenantId;
+    this.#config.context.userId = hydrated.userId;
+
+    return hydrated;
   }
 
   /**
