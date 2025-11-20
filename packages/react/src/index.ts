@@ -20,6 +20,8 @@ export { default as Slack } from './SlackSignInButton';
 
 export { default as X } from './XSignInButton';
 
+export { default as Okta } from './OktaSignInButton';
+
 export { default as SignUpForm, useSignUp } from './SignUpForm';
 
 export { default as SignInForm, useSignIn } from './SignInForm';
