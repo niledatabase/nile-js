@@ -24,7 +24,7 @@ const SlackSignInButton = ({
     <Comp
       className={cn(
         buttonVariants({ variant, size, className }),
-        'bg-[#4A154B] hover:bg-[#4A154B] pl-[3px] hover:bg-opacity-85 gap-4 transition-colors shadow-md text-white'
+        'bg-[#4A154B] pl-[3px] hover:bg-opacity-85 gap-4 transition-colors shadow-md text-white'
       )}
       data-slot="slack-button"
       onClick={async (e) => {

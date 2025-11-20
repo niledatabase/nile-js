@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.1.0-alpha.0...v5.1.0-alpha.1) (2025-11-20)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.3...v5.1.0-alpha.0) (2025-11-20)
+
+### Features
+
+- **react:** add okta button ([a4c589c](https://github.com/niledatabase/nile-js/commit/a4c589c59c03f9f0a8a19e3b9be1c1ffa69a9dde))
+
 ## [5.0.3](https://github.com/niledatabase/nile-js/compare/v5.0.3-alpha.1...v5.0.3) (2025-11-20)
 
 **Note:** Version bump only for package @niledatabase/react

@@ -3107,7 +3107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/client@npm:^5.0.3, @niledatabase/client@workspace:packages/client":
+"@niledatabase/client@npm:^5.1.0-alpha.1, @niledatabase/client@workspace:packages/client":
   version: 0.0.0-use.local
   resolution: "@niledatabase/client@workspace:packages/client"
   dependencies:
@@ -3153,10 +3153,10 @@ __metadata:
   resolution: "@niledatabase/nextjs-kitchensink@workspace:apps/nextjs-kitchensink"
   dependencies:
     "@hookform/resolvers": "npm:^5.0.1"
-    "@niledatabase/client": "npm:^5.0.3"
-    "@niledatabase/nextjs": "npm:^5.0.3"
-    "@niledatabase/react": "npm:^5.0.3"
-    "@niledatabase/server": "npm:^5.0.3"
+    "@niledatabase/client": "npm:^5.1.0-alpha.1"
+    "@niledatabase/nextjs": "npm:^5.1.0-alpha.1"
+    "@niledatabase/react": "npm:^5.1.0-alpha.1"
+    "@niledatabase/server": "npm:^5.1.0-alpha.1"
     "@radix-ui/react-dialog": "npm:^1.1.14"
     "@radix-ui/react-label": "npm:^2.1.3"
     "@radix-ui/react-separator": "npm:^1.1.7"
@@ -3189,7 +3189,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@niledatabase/nextjs@npm:^5.0.3, @niledatabase/nextjs@workspace:packages/nextjs":
+"@niledatabase/nextjs@npm:^5.1.0-alpha.1, @niledatabase/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@niledatabase/nextjs@workspace:packages/nextjs"
   dependencies:
@@ -3240,7 +3240,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@niledatabase/react@npm:^5.0.3, @niledatabase/react@workspace:packages/react":
+"@niledatabase/react@npm:^5.1.0-alpha.1, @niledatabase/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@niledatabase/react@workspace:packages/react"
   dependencies:
@@ -3317,7 +3317,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@niledatabase/server@npm:^5.0.3, @niledatabase/server@workspace:packages/server":
+"@niledatabase/server@npm:^5.1.0-alpha.1, @niledatabase/server@workspace:packages/server":
   version: 0.0.0-use.local
   resolution: "@niledatabase/server@workspace:packages/server"
   dependencies:
