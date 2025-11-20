@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.1.0-alpha.0...v5.1.0-alpha.1) (2025-11-20)
+
+### Bug Fixes
+
+- **server:** log better problems from auth ([f29142e](https://github.com/niledatabase/nile-js/commit/f29142eb9ffab83bf4a7998ec246f8715d9c4ef2))
+
 # [5.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.3...v5.1.0-alpha.0) (2025-11-20)
 
 **Note:** Version bump only for package @niledatabase/server
