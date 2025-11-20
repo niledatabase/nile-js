@@ -30,6 +30,11 @@ export type GetSessionParams = CtxOrReq & {
   baseUrl?: string;
   init?: RequestInit;
 };
+type BaseFetchOptions = {
+  baseUrl?: string;
+  auth?: Authorizer | PartialAuthorizer;
+  init?: RequestInit;
+};
 
 enum State {
   SESSION = 'getSession',
@@ -183,6 +188,11 @@ export default class Authorizer {
           updatedUrl.searchParams.set('error', error);
           return { url: updatedUrl.toString() } as T;
         }
+        if (res?.status === 404) {
+          const updatedUrl = new URL(url);
+          updatedUrl.searchParams.set('error', 'Not found');
+          return { url: updatedUrl.toString() } as T;
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -233,12 +243,12 @@ export default class Authorizer {
             url: res.url,
           };
         }
-        const { url: responseUrl } = await res.json();
+        const data = await res.json();
         return {
-          data: {} as T,
+          data: data as T,
           status: res.status,
           ok: res?.ok,
-          url: responseUrl,
+          url: data.url,
         };
       }
       throw new Error(`Unable to fetch ${url}`);
@@ -456,10 +466,28 @@ export default class Authorizer {
         resetUrl,
       }),
     });
-
     if (data?.ok && this.requestInit?.credentials && isSupportingReturn) {
       window.location.reload();
       return;
+    }
+
+    // check for MFA stuff
+    if (
+      data?.status === 401 &&
+      'scope' in data.data &&
+      (redirect || !isSupportingReturn)
+    ) {
+      const url = data?.data.url ?? callbackUrl;
+      // if it's got an error, don't do anything.
+      const error = data?.data?.url
+        ? new URL(String(data?.data?.url)).searchParams.get('error')
+        : null;
+
+      if (!error) {
+        window.location.href = url;
+        if (url.includes('#')) window.location.reload();
+        return;
+      }
     }
 
     if (data?.ok && (redirect || !isSupportingReturn)) {
@@ -477,12 +505,22 @@ export default class Authorizer {
       await this.initialize();
       await this.getSession({ event: 'storage' });
     }
-    return {
+    const providerData = data?.data as Record<string, unknown> | undefined;
+    const shouldIncludeData =
+      !!providerData && Object.keys(providerData).some((key) => key !== 'url');
+
+    const response: SignInResponse = {
       error,
       status: data?.status,
-      ok: data?.ok,
+      ok: Boolean(data?.ok),
       url: error ? null : data?.url,
-    } as any;
+    } as SignInResponse;
+
+    if (shouldIncludeData) {
+      response.data = data?.data as SignInResponse['data'];
+    }
+
+    return response as any;
   }
   async signUp(options: {
     baseUrl?: string;
@@ -672,6 +710,45 @@ export default class Authorizer {
     }
   }
 
+  async mfa(
+    options?: BaseFetchOptions & {
+      fetchUrl?: string;
+      token?: string;
+      scope?: 'setup' | 'challenge';
+      method?: 'authenticator' | 'email';
+      code?: string;
+      remove?: boolean;
+    }
+  ) {
+    const {
+      token,
+      scope = 'challenge',
+      method = 'authenticator',
+      code,
+      fetchUrl,
+    } = options ?? {};
+    if (options) {
+      this.#configureFetch(options);
+    }
+    const overrideMethod = options?.init?.method;
+    const baseMethod = token ? 'put' : 'post';
+
+    const mfaUrl = fetchUrl ?? `${this.apiBaseUrl}/auth/mfa`;
+    const init: RequestInit = {
+      method: overrideMethod ?? baseMethod,
+    };
+    if (init.method === 'put') {
+      init.body = JSON.stringify({ token, scope, method, code });
+    } else if (init.method === 'post') {
+      init.body = JSON.stringify({ method, scope });
+    }
+    if (options?.remove) {
+      init.method = 'delete';
+    }
+    const res = await this.#fetchData(mfaUrl, init);
+    return res;
+  }
+
   #configureFetch(params: {
     baseUrl?: string;
     auth?: Authorizer | PartialAuthorizer;
@@ -782,3 +859,7 @@ export const forgotPassword: typeof authorizer.forgotPassword =
   async function forgotPassword(options) {
     return auth.forgotPassword(options);
   };
+
+export const mfa: typeof authorizer.mfa = async function setupMfa(options) {
+  return auth.mfa(options);
+};

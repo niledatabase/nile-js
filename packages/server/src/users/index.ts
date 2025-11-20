@@ -91,6 +91,8 @@ export default class Users {
   async getSelf<T = User | Response>(rawResponse?: false): Promise<T>;
   async getSelf(rawResponse: true): Promise<Response>;
   async getSelf<T = User | Response>(rawResponse?: boolean): Promise<T> {
+    // I think these headers always have to prefer the ones coming from
+    // the extension in every single case.
     return withNileContext(
       this.#config,
       async () => {
