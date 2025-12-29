@@ -1,19 +1,25 @@
-import express, { Express } from 'express';
 import { ExtensionState, Server } from '@niledatabase/server';
 import type {
   Request as ExpressRequest,
   Response as ExpressResponse,
+  Express,
 } from 'express';
 
 import { express as expressExtension, cleaner } from '.';
 
 describe('express extension', () => {
-  let app: Express;
   let instance: Server;
+  let mockApp: Express;
 
   beforeEach(() => {
-    app = express();
-    app.use(express.json());
+    mockApp = {
+      use: jest.fn(),
+      param: jest.fn(),
+      get: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      delete: jest.fn(),
+    } as unknown as Express;
 
     instance = {
       logger: () => ({
@@ -67,8 +73,8 @@ describe('express extension', () => {
 
   describe('onConfigure', () => {
     it('cleans up path params and updates instance.paths', () => {
-      const ext = expressExtension(app)(instance);
-      ext.onConfigure();
+      const ext = expressExtension(mockApp)();
+      ext.onConfigure?.(instance);
       expect(instance.paths).toEqual({
         get: ['/test/:id'],
         post: ['/submit/:formId'],
@@ -80,7 +86,9 @@ describe('express extension', () => {
 
   describe('onHandleRequest', () => {
     it('proxies GET request with JSON response', async () => {
-      const ext = expressExtension(app)(instance);
+      const ext = expressExtension(mockApp)();
+      ext.onConfigure?.(instance); // must configure to set instance
+
       const req = {
         method: 'GET',
         protocol: 'http',
@@ -97,7 +105,7 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      const result = await ext.onHandleRequest([req, res, jest.fn()]);
+      const result = await ext.onHandleRequest?.([req, res, jest.fn()]);
 
       expect(instance.handlers.GET).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
@@ -109,7 +117,8 @@ describe('express extension', () => {
       (instance.handlers.GET as jest.Mock).mockResolvedValue(
         new Response('Plain text body', { status: 200 })
       );
-      const ext = expressExtension(app)(instance);
+      const ext = expressExtension(mockApp)();
+      ext.onConfigure?.(instance);
 
       const req = {
         method: 'GET',
@@ -127,13 +136,14 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      await ext.onHandleRequest([req, res, jest.fn()]);
+      await ext.onHandleRequest?.([req, res, jest.fn()]);
 
       expect(res.send).toHaveBeenCalledWith('Plain text body');
     });
 
     it('does not re-send headers if already sent', async () => {
-      const ext = expressExtension(app)(instance);
+      const ext = expressExtension(mockApp)();
+      ext.onConfigure?.(instance);
 
       const req = {
         method: 'GET',
@@ -151,7 +161,7 @@ describe('express extension', () => {
         send: jest.fn(),
       } as unknown as ExpressResponse;
 
-      const result = await ext.onHandleRequest([req, res, jest.fn()]);
+      const result = await ext.onHandleRequest?.([req, res, jest.fn()]);
 
       expect(res.status).not.toHaveBeenCalled();
       expect(result).toBe(ExtensionState.onHandleRequest);

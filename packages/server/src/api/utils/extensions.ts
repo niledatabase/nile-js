@@ -1,7 +1,7 @@
 import { ExtensionState } from '../../types';
-import { Server } from '../../Server';
 import { Config, ExtensionCtx, ExtensionReturns } from '../../utils/Config';
 import { TENANT_COOKIE } from '../../utils/constants';
+import { Server } from '../../Server';
 
 import { ctx } from './request-context';
 

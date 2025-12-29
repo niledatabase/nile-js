@@ -3137,6 +3137,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@niledatabase/express@workspace:packages/express"
   dependencies:
+    "@niledatabase/server": "workspace:^"
     "@types/express": "npm:^5"
     express: "npm:^5.1.0"
     jest: "npm:^29.7.0"
@@ -3318,7 +3319,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@niledatabase/server@npm:^5.2.0-alpha.0, @niledatabase/server@workspace:packages/server":
+"@niledatabase/server@npm:^5.2.0-alpha.0, @niledatabase/server@workspace:^, @niledatabase/server@workspace:packages/server":
   version: 0.0.0-use.local
   resolution: "@niledatabase/server@workspace:packages/server"
   dependencies:
