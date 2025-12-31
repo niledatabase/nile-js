@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.3...v5.2.0) (2025-12-31)
+
+**Note:** Version bump only for package @niledatabase/nitro
+
 # [5.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.2...v5.2.0-alpha.3) (2025-12-31)
 
 **Note:** Version bump only for package @niledatabase/nitro
