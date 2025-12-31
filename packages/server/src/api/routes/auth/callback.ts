@@ -27,7 +27,6 @@ export default async function route(req: Request, config: Config) {
     ).catch((e) => {
       error('an error as occurred', e);
     });
-
     const location = res?.headers?.get('location');
     if (location) {
       return new Response(res?.body, {
@@ -35,6 +34,7 @@ export default async function route(req: Request, config: Config) {
         headers: res?.headers,
       });
     }
+
     return new Response(res?.body, {
       status: res?.status,
       headers: res?.headers,

@@ -1,4 +1,5 @@
 import { fetchCallback } from '../api/routes/auth/callback';
+import { fetchMfa } from '../api/routes/auth/mfa';
 import { fetchResetPassword } from '../api/routes/auth/password-reset';
 import { fetchProviders } from '../api/routes/auth/providers';
 import { fetchSession } from '../api/routes/auth/session';
@@ -15,6 +16,13 @@ import { Loggable } from '../utils/Logger';
 
 import obtainCsrf from './obtainCsrf';
 
+type MfaPayload = {
+  token?: string;
+  scope?: 'setup' | 'challenge';
+  method?: 'authenticator' | 'email';
+  code?: string;
+  remove?: boolean;
+};
 type SignUpPayload = {
   email: string;
   password: string;
@@ -534,7 +542,21 @@ export default class Auth {
 
       const signInRes = await this.callback(provider, body);
 
+      // check the shape of what came back for 2fa
+      const twoFactor = await is2FA(signInRes);
+      if (twoFactor) {
+        if (rawResponse) {
+          return signInRes as T;
+        }
+        try {
+          return (await signInRes.clone().json()) as T;
+        } catch {
+          return signInRes as T;
+        }
+      }
+
       const authCookie = signInRes?.headers.get('set-cookie');
+      // in the case of 2fa, this is actually acceptable, so what do I do with this?
       if (!authCookie) {
         throw new Error('authentication failed');
       }
@@ -589,6 +611,36 @@ export default class Auth {
         return (await signInRes.clone().json()) as T;
       } catch {
         return signInRes as T;
+      }
+    });
+  }
+  async mfa<T = Response>(params: MfaPayload, rawResponse?: true): Promise<T>;
+  async mfa<T = Response | undefined>(
+    params: MfaPayload,
+    rawResponse?: boolean
+  ): Promise<T> {
+    return withNileContext(this.#config, async () => {
+      // for a `challenge`, it must be POST, with token
+      let method: 'POST' | 'PUT' | 'DELETE' = 'POST';
+      if (params.scope === 'setup') {
+        method = 'PUT';
+      }
+      if (params.remove) {
+        method = 'DELETE';
+      }
+
+      const res = await fetchMfa(
+        this.#config,
+        method,
+        JSON.stringify({ ...params, method: params.method ?? 'authenticator' })
+      );
+      if (rawResponse) {
+        return res as T;
+      }
+      try {
+        return (await res.clone().json()) as T;
+      } catch {
+        return res as T;
       }
     });
   }
@@ -710,4 +762,17 @@ function fQUrl(path: string, config: Config) {
     throw new Error('An invalid URL has been passed.');
   }
   return path;
+}
+
+async function is2FA(signInRes: Response) {
+  try {
+    const cloned = await signInRes.clone();
+    const json = await cloned.json();
+    if ('method' in json && 'secret' in json) {
+      return signInRes;
+    }
+  } catch {
+    // noop
+  }
+  return null;
 }

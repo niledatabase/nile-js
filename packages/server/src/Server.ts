@@ -84,10 +84,12 @@ export class Server {
         if (typeof create !== 'function') {
           continue;
         }
-        const ext = create(this);
+        const ext = create();
         // we can only run this after config has a value, so we must wait, but we can't.
-        if (ext.onConfigure) {
-          ext.onConfigure();
+        if (typeof ext.onConfigure === 'function') {
+          this.#config.logger('[EXTENSION]').debug(`configuring for ${ext.id}`);
+
+          ext.onConfigure(this);
         }
 
         if (ext?.replace?.handlers) {
@@ -140,7 +142,7 @@ export class Server {
       remove: async (id: string) => {
         if (!this.#config.extensions) return;
 
-        const resolved = this.#config.extensions.map((ext) => ext(this));
+        const resolved = this.#config.extensions.map((ext) => ext());
         const index = resolved.findIndex((ext) => ext.id === id);
         if (index !== -1) {
           this.#config.extensions.splice(index, 1);

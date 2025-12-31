@@ -10,6 +10,7 @@ import {
   MailCheck,
   MailPlus,
   RotateCcw,
+  ShieldCheck,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -76,6 +77,11 @@ const items = [
     title: 'Provider + hooks',
     url: '/react',
     icon: Atom,
+  },
+  {
+    title: 'MFA',
+    url: '/mfa',
+    icon: ShieldCheck,
   },
 ];
 export default function SidebarClient() {

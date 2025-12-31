@@ -1,7 +1,7 @@
 import { ExtensionState } from '../../types';
-import { Server } from '../../Server';
 import { Config, ExtensionCtx, ExtensionReturns } from '../../utils/Config';
 import { TENANT_COOKIE } from '../../utils/constants';
+import { Server } from '../../Server';
 
 import { ctx } from './request-context';
 
@@ -76,7 +76,11 @@ export function bindRunExtensions(instance: Server) {
           }
 
           const previousHeaders = new Headers(previousContext.headers);
-          await ext.onRequest(_init.request, ctx);
+          try {
+            await ext.onRequest(_init.request, ctx);
+          } catch {
+            // noop
+          }
           const updatedContext = ctx.get();
           if (updatedContext?.headers) {
             const cookie = updatedContext.headers.get('cookie');
