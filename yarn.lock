@@ -3026,10 +3026,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/env@npm:15.4.2"
-  checksum: 10/8258f7eeb4e2bf8fb88ad1e86de09b289b2205d7498c7ea2b775c84367cfe20312e2b9d38e464516969feb1d58a618db4bfb945a181c7e65fc5ae8f03edd8dbd
+"@next/env@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/env@npm:15.5.2"
+  checksum: 10/1e1c4f5b725165663460bae67de95cab624c66a865395a0af98405d3302483bebed8e79fcc2dc1c447b7010b5519fddb49670de16b00b75d679b52b29a4d86f5
   languageName: node
   linkType: hard
 
@@ -3042,58 +3042,58 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/swc-darwin-arm64@npm:15.4.2"
+"@next/swc-darwin-arm64@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/swc-darwin-arm64@npm:15.5.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/swc-darwin-x64@npm:15.4.2"
+"@next/swc-darwin-x64@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/swc-darwin-x64@npm:15.5.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/swc-linux-arm64-gnu@npm:15.4.2"
+"@next/swc-linux-arm64-gnu@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/swc-linux-arm64-gnu@npm:15.5.2"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/swc-linux-arm64-musl@npm:15.4.2"
+"@next/swc-linux-arm64-musl@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/swc-linux-arm64-musl@npm:15.5.2"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/swc-linux-x64-gnu@npm:15.4.2"
+"@next/swc-linux-x64-gnu@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/swc-linux-x64-gnu@npm:15.5.2"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/swc-linux-x64-musl@npm:15.4.2"
+"@next/swc-linux-x64-musl@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/swc-linux-x64-musl@npm:15.5.2"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/swc-win32-arm64-msvc@npm:15.4.2"
+"@next/swc-win32-arm64-msvc@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/swc-win32-arm64-msvc@npm:15.5.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:15.4.2":
-  version: 15.4.2
-  resolution: "@next/swc-win32-x64-msvc@npm:15.4.2"
+"@next/swc-win32-x64-msvc@npm:15.5.2":
+  version: 15.5.2
+  resolution: "@next/swc-win32-x64-msvc@npm:15.5.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3107,7 +3107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@niledatabase/client@npm:^5.2.0-alpha.0, @niledatabase/client@workspace:packages/client":
+"@niledatabase/client@npm:^5.2.0, @niledatabase/client@workspace:packages/client":
   version: 0.0.0-use.local
   resolution: "@niledatabase/client@workspace:packages/client"
   dependencies:
@@ -3137,6 +3137,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@niledatabase/express@workspace:packages/express"
   dependencies:
+    "@niledatabase/server": "workspace:^"
     "@types/express": "npm:^5"
     express: "npm:^5.1.0"
     jest: "npm:^29.7.0"
@@ -3153,10 +3154,10 @@ __metadata:
   resolution: "@niledatabase/nextjs-kitchensink@workspace:apps/nextjs-kitchensink"
   dependencies:
     "@hookform/resolvers": "npm:^5.0.1"
-    "@niledatabase/client": "npm:^5.2.0-alpha.0"
-    "@niledatabase/nextjs": "npm:^5.2.0-alpha.0"
-    "@niledatabase/react": "npm:^5.2.0-alpha.0"
-    "@niledatabase/server": "npm:^5.2.0-alpha.0"
+    "@niledatabase/client": "npm:^5.2.0"
+    "@niledatabase/nextjs": "npm:^5.2.0"
+    "@niledatabase/react": "npm:^5.2.0"
+    "@niledatabase/server": "npm:^5.2.0"
     "@radix-ui/react-dialog": "npm:^1.1.14"
     "@radix-ui/react-label": "npm:^2.1.3"
     "@radix-ui/react-separator": "npm:^1.1.7"
@@ -3189,7 +3190,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@niledatabase/nextjs@npm:^5.2.0-alpha.0, @niledatabase/nextjs@workspace:packages/nextjs":
+"@niledatabase/nextjs@npm:^5.2.0, @niledatabase/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@niledatabase/nextjs@workspace:packages/nextjs"
   dependencies:
@@ -3240,7 +3241,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@niledatabase/react@npm:^5.2.0-alpha.0, @niledatabase/react@workspace:packages/react":
+"@niledatabase/react@npm:^5.2.0, @niledatabase/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@niledatabase/react@workspace:packages/react"
   dependencies:
@@ -3318,7 +3319,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@niledatabase/server@npm:^5.2.0-alpha.0, @niledatabase/server@workspace:packages/server":
+"@niledatabase/server@npm:^5.2.0, @niledatabase/server@workspace:^, @niledatabase/server@workspace:packages/server":
   version: 0.0.0-use.local
   resolution: "@niledatabase/server@workspace:packages/server"
   dependencies:
@@ -15837,18 +15838,18 @@ __metadata:
   linkType: hard
 
 "next@npm:^15.3.0, next@npm:^15.3.3":
-  version: 15.4.2
-  resolution: "next@npm:15.4.2"
+  version: 15.5.2
+  resolution: "next@npm:15.5.2"
   dependencies:
-    "@next/env": "npm:15.4.2"
-    "@next/swc-darwin-arm64": "npm:15.4.2"
-    "@next/swc-darwin-x64": "npm:15.4.2"
-    "@next/swc-linux-arm64-gnu": "npm:15.4.2"
-    "@next/swc-linux-arm64-musl": "npm:15.4.2"
-    "@next/swc-linux-x64-gnu": "npm:15.4.2"
-    "@next/swc-linux-x64-musl": "npm:15.4.2"
-    "@next/swc-win32-arm64-msvc": "npm:15.4.2"
-    "@next/swc-win32-x64-msvc": "npm:15.4.2"
+    "@next/env": "npm:15.5.2"
+    "@next/swc-darwin-arm64": "npm:15.5.2"
+    "@next/swc-darwin-x64": "npm:15.5.2"
+    "@next/swc-linux-arm64-gnu": "npm:15.5.2"
+    "@next/swc-linux-arm64-musl": "npm:15.5.2"
+    "@next/swc-linux-x64-gnu": "npm:15.5.2"
+    "@next/swc-linux-x64-musl": "npm:15.5.2"
+    "@next/swc-win32-arm64-msvc": "npm:15.5.2"
+    "@next/swc-win32-x64-msvc": "npm:15.5.2"
     "@swc/helpers": "npm:0.5.15"
     caniuse-lite: "npm:^1.0.30001579"
     postcss: "npm:8.4.31"
@@ -15891,7 +15892,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 10/51e45358f0a1efc32f1fada68a0a1361bcb98ff97d20040df03e655927f430f9d86680494a451d7b4fb077cdb7f6ff16f26c7a1036c0e5aad496b634638bac72
+  checksum: 10/0e5a7420e7ea9bba57b32575378c9d74eb4cc95a34453d0e88dd6212f95d7d4f9fd35a106dba0ca5f537e3265a3ab48cf93487f7c792502ee83da3a9bb4be92c
   languageName: node
   linkType: hard
 
