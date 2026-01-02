@@ -9,6 +9,7 @@ export {
   forgotPassword,
   getProviders,
   default as Authorizer,
+  mfa,
 } from './Authorizer';
 export { getStatus } from './status';
 export { broadcast } from './broadcast';

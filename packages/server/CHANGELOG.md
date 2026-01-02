@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.3...v5.2.0) (2025-12-31)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [5.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.2...v5.2.0-alpha.3) (2025-12-31)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [5.2.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.1...v5.2.0-alpha.2) (2025-12-31)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [5.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.0...v5.2.0-alpha.1) (2025-12-31)
+
+### Bug Fixes
+
+- **express:** use the correct typings for the extension ([ab7d7fc](https://github.com/niledatabase/nile-js/commit/ab7d7fc3b3d5b4c67e1a7bafe2cc273a637ea19e))
+
+# [5.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.1.0...v5.2.0-alpha.0) (2025-11-25)
+
+### Features
+
+- add MFA ([cd9556d](https://github.com/niledatabase/nile-js/commit/cd9556d51323916fe3407a5b7c5ccd87035e68cf))
+
+# [5.1.0](https://github.com/niledatabase/nile-js/compare/v5.1.0-alpha.1...v5.1.0) (2025-11-20)
+
+**Note:** Version bump only for package @niledatabase/server
+
+# [5.1.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.1.0-alpha.0...v5.1.0-alpha.1) (2025-11-20)
+
+### Bug Fixes
+
+- **server:** log better problems from auth ([f29142e](https://github.com/niledatabase/nile-js/commit/f29142eb9ffab83bf4a7998ec246f8715d9c4ef2))
+
+# [5.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.3...v5.1.0-alpha.0) (2025-11-20)
+
+**Note:** Version bump only for package @niledatabase/server
+
+## [5.0.3](https://github.com/niledatabase/nile-js/compare/v5.0.3-alpha.1...v5.0.3) (2025-11-20)
+
+**Note:** Version bump only for package @niledatabase/server
+
+## [5.0.3-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.0.3-alpha.0...v5.0.3-alpha.1) (2025-11-19)
+
+### Bug Fixes
+
+- **server:** sync the context all the time from extensions ([b172de2](https://github.com/niledatabase/nile-js/commit/b172de2975ad276cc37000e399840feda4ae6d54))
+
+## [5.0.3-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.2...v5.0.3-alpha.0) (2025-11-13)
+
+**Note:** Version bump only for package @niledatabase/server
+
 ## [5.0.2](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.2...v5.0.2) (2025-11-13)
 
 ## [5.0.1](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.0...v5.0.1) (2025-07-31)

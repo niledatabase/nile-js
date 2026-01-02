@@ -2,6 +2,14 @@
 import type { IncomingMessage } from 'http';
 
 export interface SignInResponse {
+  data?: {
+    expiresAt: Date;
+    method: 'authenticator' | 'email';
+    otpauthUrl: string;
+    scope: 'setup' | 'challenge';
+    secret: 'string';
+    token: 'string';
+  };
   error: string | null;
   status: number;
   ok: boolean;

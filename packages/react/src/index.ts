@@ -20,6 +20,8 @@ export { default as Slack } from './SlackSignInButton';
 
 export { default as X } from './XSignInButton';
 
+export { default as Okta } from './OktaSignInButton';
+
 export { default as SignUpForm, useSignUp } from './SignUpForm';
 
 export { default as SignInForm, useSignIn } from './SignInForm';
@@ -29,7 +31,21 @@ export { default as SignOutButton } from './SignOutButton';
 export { default as SignedIn } from './SignedIn';
 
 export { default as SignedOut } from './SignedOut';
-
+export type {
+  AuthenticatorSetup,
+  EmailSetup,
+  EnrollmentError,
+  EnrollMfaProps,
+  ChallengeRedirect,
+  MfaMethod,
+  MfaSetup,
+} from './MultiFactor';
+export {
+  useMultiFactor,
+  MultiFactorAuthenticator,
+  MultiFactorEmail,
+  MultiFactorChallenge,
+} from './MultiFactor';
 export {
   default as TenantSelector,
   useTenantId,

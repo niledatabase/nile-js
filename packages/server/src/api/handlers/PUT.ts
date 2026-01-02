@@ -9,7 +9,12 @@ import tenantUser, {
 import invite, {
   matches as matchesInvite,
 } from '../routes/tenants/[tenantId]/invite';
-import { handlePasswordReset, matchesPasswordReset } from '../routes/auth';
+import {
+  handlePasswordReset,
+  matchesPasswordReset,
+  handleMfa,
+  matchesMfa,
+} from '../routes/auth';
 import { Routes } from '../types';
 import { Config } from '../../utils/Config';
 import { ExtensionState } from '../../types';
@@ -62,6 +67,10 @@ export default function PUTER(configRoutes: Routes, config: Config) {
     if (matchesPasswordReset(configRoutes, req)) {
       info('matches reset password');
       return handlePasswordReset(req, config);
+    }
+    if (matchesMfa(configRoutes, req)) {
+      info('matches mfa');
+      return handleMfa(req, config);
     }
     warn('No PUT routes matched');
     return new Response(null, { status: 404 });

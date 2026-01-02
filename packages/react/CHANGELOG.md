@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.3...v5.2.0) (2025-12-31)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.2.0-alpha.3](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.2...v5.2.0-alpha.3) (2025-12-31)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.2.0-alpha.2](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.1...v5.2.0-alpha.2) (2025-12-31)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.2.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.2.0-alpha.0...v5.2.0-alpha.1) (2025-12-31)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.2.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.1.0...v5.2.0-alpha.0) (2025-11-25)
+
+### Features
+
+- add MFA ([cd9556d](https://github.com/niledatabase/nile-js/commit/cd9556d51323916fe3407a5b7c5ccd87035e68cf))
+
+# [5.1.0](https://github.com/niledatabase/nile-js/compare/v5.1.0-alpha.1...v5.1.0) (2025-11-20)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.1.0-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.1.0-alpha.0...v5.1.0-alpha.1) (2025-11-20)
+
+**Note:** Version bump only for package @niledatabase/react
+
+# [5.1.0-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.3...v5.1.0-alpha.0) (2025-11-20)
+
+### Features
+
+- **react:** add okta button ([a4c589c](https://github.com/niledatabase/nile-js/commit/a4c589c59c03f9f0a8a19e3b9be1c1ffa69a9dde))
+
+## [5.0.3](https://github.com/niledatabase/nile-js/compare/v5.0.3-alpha.1...v5.0.3) (2025-11-20)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [5.0.3-alpha.1](https://github.com/niledatabase/nile-js/compare/v5.0.3-alpha.0...v5.0.3-alpha.1) (2025-11-19)
+
+**Note:** Version bump only for package @niledatabase/react
+
+## [5.0.3-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.0.2...v5.0.3-alpha.0) (2025-11-13)
+
+**Note:** Version bump only for package @niledatabase/react
+
 ## [5.0.2](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.2...v5.0.2) (2025-11-13)
 
 ## [5.0.1](https://github.com/niledatabase/nile-js/compare/v5.0.1-alpha.0...v5.0.1) (2025-07-31)

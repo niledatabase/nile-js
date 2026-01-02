@@ -1,6 +1,6 @@
 {
   "name": "@niledatabase/react",
-  "version": "5.0.2",
+  "version": "5.2.0",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -118,6 +118,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.53.0",
-    "react-is": "^19.0.0"
+    "react-is": "^19.0.0",
+    "react-qr-code": "^2.0.18"
   }
 }
