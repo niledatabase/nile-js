@@ -57,6 +57,10 @@ jobs:
         working-directory: packages/nextjs
         run: yarn install --immutable
 
+      - name: Install @niledatabase/elysia
+        working-directory: packages/elysia
+        run: yarn install --immutable
+
       - name: Build @niledatabase/packages
         run: yarn build
 

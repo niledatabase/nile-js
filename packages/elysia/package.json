@@ -1,0 +1,37 @@
+{
+  "name": "@niledatabase/elysia",
+  "version": "5.2.0",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "peerDependencies": {
+    "@niledatabase/server": ">=5.2.0",
+    "elysia": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@elysiajs/node": "^1.4.2",
+    "@niledatabase/server": "workspace:^",
+    "@sinclair/typebox": "^0.34.45",
+    "@types/jest": "^29.5.12",
+    "dotenv": "^17.2.3",
+    "elysia": "latest",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
