@@ -20,7 +20,8 @@
     "test:react": "yarn workspace @niledatabase/react test",
     "test:server": "yarn workspace @niledatabase/server test",
     "test:client": "yarn workspace @niledatabase/client test",
-    "test:express": "yarn workspace @niledatabase/express test"
+    "test:express": "yarn workspace @niledatabase/express test",
+    "test:elysia": "yarn workspace @niledatabase/elysia test"
   },
   "resolutions": {
     "@types/mime": "3.0.4",

@@ -4,6 +4,7 @@
     "packages/express",
     "packages/nextjs",
     "packages/nitro",
+    "packages/elysia",
     "packages/react",
     "packages/server"
   ],
