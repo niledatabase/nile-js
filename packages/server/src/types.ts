@@ -48,7 +48,7 @@ export type ExtensionResult<TParams> = {
   onHandleRequest?: (params?: TParams) => RouteReturn | Promise<RouteReturn>;
 
   // allow runtime configurations by extensions
-  onConfigure?: (params?: TParams) => void;
+  onConfigure?: (instance: Server) => void;
 
   // sets the context for the user id
   withUserId?: () => string;
@@ -65,7 +65,7 @@ export type NileHandlers = RouteFunctions & {
 };
 
 export type Extension<TParams = Any> = (
-  instance: Server
+  params?: TParams
 ) => ExtensionResult<TParams>;
 export enum ExtensionState {
   onHandleRequest = 'onHandleRequest',
