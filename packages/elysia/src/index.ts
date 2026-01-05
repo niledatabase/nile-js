@@ -21,10 +21,18 @@ export const elysia = (app: Elysia): Extension => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const handlers = instance.handlers as any;
 
-      paths.get.forEach((path) => app.get(path, handlers.GET));
-      paths.post.forEach((path) => app.post(path, handlers.POST));
-      paths.put.forEach((path) => app.put(path, handlers.PUT));
-      paths.delete.forEach((path) => app.delete(path, handlers.DELETE));
+      paths.get.forEach((path) => app.get(path, handlers.GET), {
+        parse: false,
+      });
+      paths.post.forEach((path) => app.post(path, handlers.POST), {
+        parse: false,
+      });
+      paths.put.forEach((path) => app.put(path, handlers.PUT), {
+        parse: false,
+      });
+      paths.delete.forEach((path) => app.delete(path, handlers.DELETE), {
+        parse: false,
+      });
     },
 
     onHandleRequest: async (params?: unknown[]) => {
