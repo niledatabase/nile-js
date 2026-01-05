@@ -21,9 +21,7 @@ export const elysia = (app: Elysia): Extension => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const handlers = instance.handlers as any;
 
-      paths.get.forEach((path) => app.get(path, handlers.GET), {
-        parse: "none",
-      });
+      paths.get.forEach((path) => app.get(path, handlers.GET));
       paths.post.forEach((path) => app.post(path, handlers.POST), {
         parse: "none",
       });
