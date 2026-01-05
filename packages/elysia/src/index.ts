@@ -22,16 +22,16 @@ export const elysia = (app: Elysia): Extension => {
       const handlers = instance.handlers as any;
 
       paths.get.forEach((path) => app.get(path, handlers.GET), {
-        parse: false,
+        parse: "none",
       });
       paths.post.forEach((path) => app.post(path, handlers.POST), {
-        parse: false,
+        parse: "none",
       });
       paths.put.forEach((path) => app.put(path, handlers.PUT), {
-        parse: false,
+        parse: "none",
       });
       paths.delete.forEach((path) => app.delete(path, handlers.DELETE), {
-        parse: false,
+        parse: "none",
       });
     },
 
