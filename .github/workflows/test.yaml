@@ -1,12 +1,19 @@
-name: test
+name: Test and Deploy
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: "**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         lib: ["server", "react", "client", "express", "elysia"]
     steps:
@@ -33,4 +40,35 @@ jobs:
           NILEDB_PASSWORD: ${{ secrets.NILEDB_PASSWORD }}
           NILEDB_POSTGRES_URL: ${{ secrets.NILEDB_POSTGRES_URL }}
           NILEDB_API_URL: ${{ secrets.NILEDB_API_URL }}
-        run: yarn test:${{matrix.lib}}
+        run: yarn test:${{ matrix.lib }}
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    # Auto-deploy for trusted users (OWNER, MEMBER, COLLABORATOR)
+    # Others will use the 'preview' environment which can have required reviewers
+    environment: ${{ contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association) && 'auto-preview' || 'preview' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy Kitchen Sink to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.KITCHEN_SINK }}
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+          working-directory: .
+          vercel-version: latest
+          vercel-args: "-A vercel.kitchensink.json -b ENABLE_EXPERIMENTAL_COREPACK=1"
+
+      - name: Deploy Storybook to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.STORY_BOOK }}
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+          working-directory: .
+          vercel-version: latest
+          vercel-args: "-A vercel.storybook.json -b ENABLE_EXPERIMENTAL_COREPACK=1"
