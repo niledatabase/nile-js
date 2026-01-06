@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.1-alpha.3](https://github.com/niledatabase/nile-js/compare/v5.3.1-alpha.2...v5.3.1-alpha.3) (2026-01-06)
+
+### Bug Fixes
+
+- **elysia:** better bun support ([79bd741](https://github.com/niledatabase/nile-js/commit/79bd7412370ff4197e2b536f0900a3a0efa5dade))
+
 ## [5.3.1-alpha.2](https://github.com/niledatabase/nile-js/compare/v5.3.1-alpha.1...v5.3.1-alpha.2) (2026-01-05)
 
 **Note:** Version bump only for package @niledatabase/packages
