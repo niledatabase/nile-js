@@ -1,0 +1,5 @@
+{
+  "installCommand": "yarn install",
+  "buildCommand": "yarn build:nextjs",
+  "outputDirectory": "apps/nextjs-kitchensink/.next"
+}
