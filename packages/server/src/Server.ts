@@ -170,6 +170,10 @@ export class Server {
     this.#config.paths = paths;
   }
 
+  set skipHostHeader(value: boolean) {
+    this.#config.skipHostHeader = value;
+  }
+
   /**
    * Sets the context for a particular set of requests or db calls to be sure the context is fully managed for the entire lifecycle
    */

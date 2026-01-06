@@ -37,7 +37,9 @@ export default async function request(
     );
   }
 
-  updatedHeaders.set('host', requestUrl.host);
+  if (config.skipHostHeader !== true) {
+    updatedHeaders.set('host', requestUrl.host);
+  }
 
   if (config.callbackUrl) {
     const cbUrl = new URL(config.callbackUrl);
@@ -99,6 +101,7 @@ export default async function request(
   const fullUrl = `${url}${requestUrl.search}`;
 
   if (config.debug) {
+    // something going on with `fetch` in nextjs, possibly other places
     // something going on with `fetch` in nextjs, possibly other places
     // hot-reloading does not always give back `set-cookie` from fetchCSRF
     // cURL seems to always do it (and in a real app, you don't have hot reloading),

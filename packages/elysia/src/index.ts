@@ -10,6 +10,11 @@ export const elysia = (app: Elysia): Extension => {
     id: "elysia",
     onConfigure: (server: Server) => {
       instance = server;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (typeof Bun !== "undefined") {
+        instance.skipHostHeader = true;
+      }
 
       const paths = {
         get: instance.paths.get.map(cleaner),
@@ -28,11 +33,23 @@ export const elysia = (app: Elysia): Extension => {
     },
 
     onHandleRequest: async (params?: unknown[]) => {
-      if (!instance) return;
+      const { error, debug } = instance?.logger?.("[elysia]") ?? {
+        error: () => null,
+        debug: () => null,
+      };
+
+      if (!instance) {
+        error(
+          "No Nile instance passed on initialization, was onConfigure called?"
+        );
+        return;
+      }
+
       const arg = params?.[0];
 
       // If it's a raw Request, we let Nile handle it natively (or another extension)
       if (arg instanceof Request) {
+        debug("No request arg found");
         return;
       }
 
@@ -41,6 +58,7 @@ export const elysia = (app: Elysia): Extension => {
       // We do a loose check
       const ctx = arg as ElysiaContext;
       if (!ctx || typeof ctx !== "object" || !ctx.request || !ctx.set) {
+        error("No Elysia context found, unable to handle request");
         return;
       }
 

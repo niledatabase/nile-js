@@ -187,6 +187,11 @@ export type NileConfig = {
    * Re-use the last set context
    */
   useLastContext?: boolean;
+
+  /**
+   * Skip setting the host header in the request.
+   */
+  skipHostHeader?: boolean;
 };
 
 export type NileDb = NilePoolConfig & { tenantId?: string };
