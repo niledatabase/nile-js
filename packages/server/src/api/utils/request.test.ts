@@ -97,4 +97,43 @@ describe('request', () => {
       expect(value).toBe(val);
     }
   });
+
+  it('sets secure cookies based on config', async () => {
+    global.fetch = jest.fn((url, p) => {
+      return Promise.resolve({
+        ...p,
+        status: 200,
+      }) as unknown as Promise<Response>;
+    });
+    const request = new Request('http://localhost:3001/v2/databases/123');
+    const config = new Config({ secureCookies: true });
+    const res = await _request('http://localhost:3000', { request }, config);
+    expect(res.headers.get('nile-secure-cookies')).toBe('true');
+  });
+
+  it('skips setting the host header when skipHostHeader is true', async () => {
+    global.fetch = jest.fn((url, p) => {
+      return Promise.resolve({
+        ...p,
+        status: 200,
+      }) as unknown as Promise<Response>;
+    });
+    const request = new Request('http://localhost:3001/v2/databases/123');
+    const config = new Config({ skipHostHeader: true });
+    const res = await _request('http://localhost:3000', { request }, config);
+    expect(res.headers.get('host')).toBeNull();
+  });
+
+  it('sets the host header when skipHostHeader is false (default)', async () => {
+    global.fetch = jest.fn((url, p) => {
+      return Promise.resolve({
+        ...p,
+        status: 200,
+      }) as unknown as Promise<Response>;
+    });
+    const request = new Request('http://localhost:3001/v2/databases/123');
+    const config = new Config(); // skipHostHeader is undefined/false by default
+    const res = await _request('http://localhost:3000', { request }, config);
+    expect(res.headers.get('host')).toBe('localhost:3001');
+  });
 });

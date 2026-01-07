@@ -74,6 +74,11 @@ export class Config {
    */
   routePrefix: string;
 
+  /**
+   * Skip setting the host header in the request.
+   */
+  skipHostHeader?: boolean;
+
   db: NilePoolConfig;
 
   constructor(config?: ConfigConstructor) {
@@ -81,6 +86,7 @@ export class Config {
     this.debug = config?.debug;
     this.origin = config?.origin;
     this.extensions = config?.extensions;
+    this.skipHostHeader = config?.skipHostHeader;
     this.extensionCtx = config?.extensionCtx as ExtensionCtx;
     this.serverOrigin = config?.origin ?? 'http://localhost:3000';
 

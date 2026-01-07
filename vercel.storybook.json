@@ -1,0 +1,5 @@
+{
+  "installCommand": "yarn install",
+  "buildCommand": "yarn build:storybook",
+  "outputDirectory": "packages/react/storybook-static"
+}
