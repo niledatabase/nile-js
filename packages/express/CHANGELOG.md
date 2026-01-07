@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.1-alpha.5](https://github.com/niledatabase/nile-js/compare/v5.3.1-alpha.4...v5.3.1-alpha.5) (2026-01-07)
+
+**Note:** Version bump only for package @niledatabase/express
+
 ## [5.3.1-alpha.4](https://github.com/niledatabase/nile-js/compare/v5.3.1-alpha.3...v5.3.1-alpha.4) (2026-01-06)
 
 **Note:** Version bump only for package @niledatabase/express

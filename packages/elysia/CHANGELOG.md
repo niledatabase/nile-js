@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.1-alpha.5](https://github.com/niledatabase/nile-js/compare/v5.3.1-alpha.4...v5.3.1-alpha.5) (2026-01-07)
+
+### Bug Fixes
+
+- **elysia:** def request body usage, real elysia plugin ([2f784a6](https://github.com/niledatabase/nile-js/commit/2f784a62e0050de78fb47e2116bf86be28b78a85))
+
 ## [5.3.1-alpha.4](https://github.com/niledatabase/nile-js/compare/v5.3.1-alpha.3...v5.3.1-alpha.4) (2026-01-06)
 
 **Note:** Version bump only for package @niledatabase/elysia
