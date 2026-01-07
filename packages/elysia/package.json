@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --forceExit"
   },
   "peerDependencies": {
     "@niledatabase/server": ">=5.2.0",

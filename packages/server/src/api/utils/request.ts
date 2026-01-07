@@ -83,8 +83,17 @@ export default async function request(
       updatedHeaders.set('content-type', 'application/json');
 
       const bodyStream = _init.body ?? _init.request?.body ?? request.body;
+      let bodyText: string;
 
-      const bodyText = await new Response(bodyStream).text();
+      if (bodyStream === request.body) {
+        try {
+          bodyText = await request.clone().text();
+        } catch (e) {
+          bodyText = await new Response(bodyStream).text();
+        }
+      } else {
+        bodyText = await new Response(bodyStream).text();
+      }
 
       // try to parse JSON, fallback to text if not
       try {
