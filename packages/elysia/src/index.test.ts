@@ -1,28 +1,30 @@
 import { jest, describe, expect, it } from "@jest/globals";
+import { Elysia } from "elysia";
 
-import { elysia } from "./index";
+import { nilePlugin } from "./index";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FixAny = any;
+
 // Define mocks
 const mockHandlers = {
   GET: jest
-    .fn<(req: Request, options: FixAny) => Promise<Response>>()
+    .fn<(req: Request) => Promise<Response>>()
     .mockResolvedValue(
       new Response(JSON.stringify({ msg: "GET OK" }), { status: 200 })
     ),
   POST: jest
-    .fn<(req: Request, options: FixAny) => Promise<Response>>()
+    .fn<(req: Request) => Promise<Response>>()
     .mockResolvedValue(
       new Response(JSON.stringify({ msg: "POST OK" }), { status: 201 })
     ),
   PUT: jest
-    .fn<(req: Request, options: FixAny) => Promise<Response>>()
+    .fn<(req: Request) => Promise<Response>>()
     .mockResolvedValue(
       new Response(JSON.stringify({ msg: "PUT OK" }), { status: 200 })
     ),
   DELETE: jest
-    .fn<(req: Request, options: FixAny) => Promise<Response>>()
+    .fn<(req: Request) => Promise<Response>>()
     .mockResolvedValue(
       new Response(JSON.stringify({ msg: "DELETE OK" }), { status: 200 })
     ),
@@ -43,131 +45,61 @@ const mockNileInstance = {
   }),
 };
 
-describe("elysia extension", () => {
-  it("registers routes pointing to server handlers", () => {
-    const mockApp = {
-      get: jest.fn(),
-      post: jest.fn(),
-      put: jest.fn(),
-      delete: jest.fn(),
-    };
+describe("Elysia Nile integration", () => {
+  it("registers routes pointing to server handlers", async () => {
+    const app = new Elysia().use(nilePlugin(mockNileInstance as FixAny));
 
-    const extensionFactory = elysia(mockApp as FixAny);
-    const extension = extensionFactory();
+    // We can verify by sending a request to the app
+    const req = new Request("http://localhost/api/test/123");
+    const res = await app.handle(req);
 
-    // Simulate Nile configuration phase
-    if (extension.onConfigure) {
-      extension.onConfigure(mockNileInstance as FixAny);
-    }
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ msg: "GET OK" });
 
-    // Verify registrations
-    // Note: mockHandlers.GET is passed directly
-    expect(mockApp.get).toHaveBeenCalledWith("/api/test/:id", mockHandlers.GET);
-    expect(mockApp.post).toHaveBeenCalledWith(
-      "/api/submit/:formId",
-      mockHandlers.POST
-    );
+    // Verify mock handler called
+    expect(mockHandlers.GET).toHaveBeenCalled();
+    const [calledReq] = mockHandlers.GET.mock.lastCall!;
+    expect(calledReq).toBeInstanceOf(Request);
+    expect(calledReq.url).toContain("/api/test/123");
   });
 
-  it("onHandleRequest handles Elysia context", async () => {
-    const mockApp = {
-      get: jest.fn(),
-      post: jest.fn(),
-      put: jest.fn(),
-      delete: jest.fn(),
-    };
-    const extensionFactory = elysia(mockApp as FixAny);
-    const extension = extensionFactory();
-    if (extension.onConfigure) {
-      extension.onConfigure(mockNileInstance as FixAny);
-    }
-
-    const ctx = {
-      request: new Request("http://localhost/api/test", {
-        method: "GET",
-        headers: { "x-tenant-id": "tenant-1" },
-      }),
-      params: { tenantId: undefined },
-      set: { headers: {} },
-    };
-
-    const result = await extension.onHandleRequest?.([ctx]);
-
-    // Verify context passed to Nile
-    const [context] = mockNileInstance.withContext.mock.lastCall as FixAny;
-    expect(context.headers.get("x-tenant-id")).toBe("tenant-1");
-
-    // Verify result
-    expect(result).toBeInstanceOf(Response);
-
-    // Verify callback execution: it calls handlers.GET with Request (not Context)
-    expect(mockHandlers.GET).toHaveBeenCalledWith(ctx.request, {
-      disableExtensions: ["elysia"],
-    });
-  });
-
-  it("onHandleRequest ignores native Request", async () => {
-    const mockApp = {
-      get: jest.fn(),
-      post: jest.fn(),
-      put: jest.fn(),
-      delete: jest.fn(),
-    };
-    const extensionFactory = elysia(mockApp as FixAny);
-    const extension = extensionFactory();
-    if (extension.onConfigure) {
-      extension.onConfigure(mockNileInstance as FixAny);
-    }
-
-    const req = new Request("http://localhost/api/test");
-    const result = await extension.onHandleRequest?.([req]);
-
-    expect(result).toBeUndefined();
-  });
-
-  it("registers and responds to default endpoints (e.g. /api/auth/csrf)", async () => {
-    const mockApp = {
-      get: jest.fn(),
-      post: jest.fn(),
-      put: jest.fn(),
-      delete: jest.fn(),
-    };
-
-    const nileWithDefaults = {
+  it("passes context and tenantId to Nile", async () => {
+    // Let's add a tenant path to mock
+    const nileWithTenant = {
       ...mockNileInstance,
       paths: {
         ...mockNileInstance.paths,
-        get: [...mockNileInstance.paths.get, "/api/auth/csrf"],
+        get: ["/api/tenants/{tenantId}/users"],
       },
     };
 
-    const extensionFactory = elysia(mockApp as FixAny);
-    const extension = extensionFactory();
+    const app = new Elysia().use(nilePlugin(nileWithTenant as FixAny));
 
-    if (extension.onConfigure) {
-      extension.onConfigure(nileWithDefaults as FixAny);
-    }
+    const req = new Request("http://localhost/api/tenants/my-tenant/users");
+    await app.handle(req);
 
-    // Verify registration
-    expect(mockApp.get).toHaveBeenCalledWith(
-      "/api/auth/csrf",
-      mockHandlers.GET
-    );
+    expect(mockNileInstance.withContext).toHaveBeenCalled();
+    const [context] = mockNileInstance.withContext.mock.lastCall as FixAny;
 
-    // Verify response
-    const ctx = {
-      request: new Request("http://localhost/api/auth/csrf", {
-        method: "GET",
-      }),
-      params: {},
-      set: { headers: {} },
-    };
+    expect(context.tenantId).toBe("my-tenant");
+  });
 
-    const result = (await extension.onHandleRequest?.([ctx])) as Response;
+  it("throws if nile instance is missing", () => {
+    expect(() => {
+      // @ts-expect-error - should be there
+      nilePlugin(undefined);
+    }).toThrow("Nile instance is required");
+  });
 
-    expect(result).toBeInstanceOf(Response);
-    expect(result.status).toBe(200);
-    const body = await result.json();
-    expect(body).toEqual({ msg: "GET OK" });
+  it("allows chaining methods and accessing decorated context", async () => {
+    const req = new Request("http://localhost/extra");
+    const app = new Elysia()
+      .use(nilePlugin(mockNileInstance as FixAny))
+      .get("/extra", ({ nile }) => {
+        return nile ? "has-nile" : "no-nile";
+      });
+
+    const res = await app.handle(req);
+    expect(await res.text()).toBe("has-nile");
   });
 });
