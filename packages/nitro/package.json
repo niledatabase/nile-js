@@ -33,11 +33,11 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@niledatabase/server": ">=5.2.0",
-    "h3": "^1"
+    "@niledatabase/server": ">=5.3.0",
+    "h3": "^1.10.0"
   },
   "devDependencies": {
-    "h3": "^1",
+    "h3": "^1.10.0",
     "tsup": "^8.5.0"
   }
 }

@@ -158,6 +158,16 @@ export class Server {
     };
   }
 
+  /**
+   * Enters a context for the remainder of the async execution chain.
+   * Useful for global middleware in frameworks like H3 where recursive wrapping isn't possible.
+   * @experimental
+   */
+  enterContext(context: PartialContext) {
+    ctx.enterWith(context);
+    this.#config.context = { ...ctx.getLastUsed() };
+  }
+
   get handlers() {
     return this.#handlers;
   }

@@ -6,7 +6,8 @@
     "packages/nitro",
     "packages/elysia",
     "packages/react",
-    "packages/server"
+    "packages/server",
+    "packages/h3"
   ],
   "version": "5.3.2-alpha.0",
   "npmClient": "yarn",
