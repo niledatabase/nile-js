@@ -5,7 +5,7 @@ import { evictPool } from '../utils/Event';
 import { AfterCreate, NilePoolConfig } from '../types';
 import { Loggable, LogReturn } from '../utils/Logger';
 
-import { createProxyForPool } from './PoolProxy';
+import { PoolWithLogger } from './PoolWithLogger';
 
 class NileDatabase {
   pool: pg.Pool;
@@ -32,8 +32,7 @@ class NileDatabase {
     cloned.password = '***';
     this.logger.debug(`Connection pool config ${JSON.stringify(cloned)}`);
 
-    this.pool = createProxyForPool(
-      new pg.Pool(remaining),
+    this.pool = new PoolWithLogger(
       this.config,
       logger,
       id === 'base' ? [] : id.split(':')
