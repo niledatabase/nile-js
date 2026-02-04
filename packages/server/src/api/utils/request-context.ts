@@ -76,6 +76,20 @@ export const ctx: CTX = {
     silly(`[SET] ${serializeContext(store)}`);
     lastUsedContext = { ...store };
   },
+
+  enterWith: (ctx) => {
+    const merged: Context = {
+      ...defaultContext,
+      ...ctx,
+      headers:
+        ctx.headers instanceof Headers
+          ? ctx.headers
+          : new Headers(ctx.headers ?? undefined),
+    };
+    lastUsedContext = merged;
+    storage.enterWith(merged);
+  },
+
   // for convenience only
   getLastUsed: () => lastUsedContext,
 };

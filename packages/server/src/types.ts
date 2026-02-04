@@ -28,6 +28,7 @@ export type CTX = {
   run: <T>(ctx: Partial<Context>, fn: () => T) => T;
   get: () => Context;
   set: (partial: Partial<PartialContext>) => void;
+  enterWith: (ctx: PartialContext) => void;
   // mostly for convenience and testing.
   getLastUsed: () => Context;
 };
