@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.2-alpha.0](https://github.com/niledatabase/nile-js/compare/v5.3.1...v5.3.2-alpha.0) (2026-02-04)
+
+### Bug Fixes
+
+- **server:** refactor proxy -> pg pool class ([6a25e06](https://github.com/niledatabase/nile-js/commit/6a25e0611c187654f9c37272b2224424a10a12e6))
+- **server:** simplify getTokenFromCookie ([bb7f031](https://github.com/niledatabase/nile-js/commit/bb7f031e4636b11ce3e2974dea4fad582ea6a52b))
+
 ## [5.3.1](https://github.com/niledatabase/nile-js/compare/v5.3.1-alpha.5...v5.3.1) (2026-01-07)
 
 **Note:** Version bump only for package @niledatabase/packages
