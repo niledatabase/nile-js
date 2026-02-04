@@ -38,7 +38,7 @@
     "next": "^15"
   },
   "devDependencies": {
-    "next": "^15.3.3",
+    "next": "^16.1.5",
     "tsup": "^8.5.0"
   }
 }
