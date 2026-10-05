@@ -57,32 +57,44 @@ class Eventer<E extends Record<string, unknown>> {
   }
 }
 
-const eventer = new Eventer<EventMap>();
+const eventers = new WeakMap<object, Eventer<EventMap>>();
 
-export const updateTenantId = (tenantId: EventMap[Events.Tenant]) => {
-  eventer.publish(Events.Tenant, tenantId);
-};
-export const watchTenantId = (cb: EventFn<Events.Tenant>) =>
-  eventer.subscribe(Events.Tenant, cb);
+function eventer(owner: object) {
+  let events = eventers.get(owner);
+  if (!events) {
+    events = new Eventer<EventMap>();
+    eventers.set(owner, events);
+  }
+  return events;
+}
 
-export const updateUserId = (userId: EventMap[Events.User]) => {
-  eventer.publish(Events.User, userId);
+export const updateTenantId = (
+  tenantId: EventMap[Events.Tenant],
+  owner: object
+) => {
+  eventer(owner).publish(Events.Tenant, tenantId);
 };
-export const watchUserId = (cb: EventFn<Events.User>) =>
-  eventer.subscribe(Events.User, cb);
+export const watchTenantId = (cb: EventFn<Events.Tenant>, owner: object) =>
+  eventer(owner).subscribe(Events.Tenant, cb);
 
-export const updateToken = (token: EventMap[Events.Token]) => {
-  eventer.publish(Events.Token, token);
+export const updateUserId = (userId: EventMap[Events.User], owner: object) => {
+  eventer(owner).publish(Events.User, userId);
+};
+export const watchUserId = (cb: EventFn<Events.User>, owner: object) =>
+  eventer(owner).subscribe(Events.User, cb);
+
+export const updateToken = (token: EventMap[Events.Token], owner: object) => {
+  eventer(owner).publish(Events.Token, token);
 };
 
-export const evictPool = (val: EventMap[Events.EvictPool]) => {
-  eventer.publish(Events.EvictPool, val);
+export const evictPool = (val: EventMap[Events.EvictPool], owner: object) => {
+  eventer(owner).publish(Events.EvictPool, val);
 };
-export const watchEvictPool = (cb: EventFn<Events.EvictPool>) =>
-  eventer.subscribe(Events.EvictPool, cb);
+export const watchEvictPool = (cb: EventFn<Events.EvictPool>, owner: object) =>
+  eventer(owner).subscribe(Events.EvictPool, cb);
 
-export const updateHeaders = (val: EventMap[Events.Headers]) => {
-  eventer.publish(Events.Headers, val);
+export const updateHeaders = (val: EventMap[Events.Headers], owner: object) => {
+  eventer(owner).publish(Events.Headers, val);
 };
-export const watchHeaders = (cb: EventFn<Events.Headers>) =>
-  eventer.subscribe(Events.Headers, cb);
+export const watchHeaders = (cb: EventFn<Events.Headers>, owner: object) =>
+  eventer(owner).subscribe(Events.Headers, cb);

@@ -72,6 +72,12 @@ export const getUsername = (cfg: EnvConfig) => {
 
 export const getPassword = (cfg: EnvConfig) => {
   const { config } = cfg;
+  if (typeof config?.password === 'function') {
+    return config.password;
+  }
+  if (typeof config?.db?.password === 'function') {
+    return config.db.password;
+  }
   const logger = config.logger;
   const log = logProtector(logger);
   if (stringCheck(config?.password)) {

@@ -75,7 +75,14 @@ export enum ExtensionState {
   withTenantId = 'withTenantId',
   withUserId = 'withUserId',
 }
-export type NilePoolConfig = PoolConfig & { afterCreate?: AfterCreate };
+export type OAuthBearerTokenProvider = (
+  signal: AbortSignal
+) => string | Promise<string>;
+
+export type NilePoolConfig = PoolConfig & {
+  afterCreate?: AfterCreate;
+  oauthBearerToken?: OAuthBearerTokenProvider;
+};
 export type LoggerType = {
   info: (args: unknown | unknown[]) => void;
   warn: (args: unknown | unknown[]) => void;
@@ -102,10 +109,17 @@ export type NileConfig = {
   user?: string;
 
   /**
-   * Password for the configured user.
+   * Password for the configured user, or a callback called by pg for each new connection.
    * Environment variable: `NILEDB_PASSWORD`.
    */
-  password?: string;
+  password?: PoolConfig['password'];
+
+  /**
+   * Obtain a token for PostgreSQL OAUTHBEARER after negotiation over verified TLS.
+   * Called once per new physical connection. The signal aborts on connection retirement.
+   * Cannot be combined with password authentication or a connection string.
+   */
+  oauthBearerToken?: OAuthBearerTokenProvider;
 
   /**
    * Database name. Defaults to the name parsed from

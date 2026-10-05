@@ -152,7 +152,7 @@ export default class Auth {
         });
         const res = await fetchSignOut(this.#config, body);
 
-        updateHeaders(new Headers({}));
+        updateHeaders(new Headers({}), this.#config);
         ctx.set({ headers: null });
 
         return res;
@@ -230,10 +230,7 @@ export default class Auth {
         const { headers } = ctx.get();
         headers?.append('cookie', token);
         ctx.set({ headers });
-        // this will globally set headers for everyone, so how
-        // do you make it so you can chain these together? or at least
-        // call them sequentially safely? you gotta use the `withContext` callback
-        updateHeaders(headers);
+        updateHeaders(headers, this.#config);
         if (rawResponse) {
           return res as T;
         }
@@ -242,7 +239,8 @@ export default class Auth {
           if (json && typeof json === 'object' && 'tenants' in json) {
             const tenantId = (json as unknown as User).tenants[0];
             if (tenantId) {
-              updateTenantId(tenantId);
+              ctx.set({ tenantId });
+              updateTenantId(tenantId, this.#config);
             }
           }
           return json;
@@ -416,7 +414,9 @@ export default class Auth {
         cookie?.filter((c) => !c.includes('nile.session')) ?? [];
       cleaned.push(String(parseToken(res.headers)));
       const updatedHeaders = new Headers({ cookie: cleaned.join('; ') });
-      updateHeaders(updatedHeaders);
+      updateHeaders(updatedHeaders, this.#config);
+      ctx.set({ headers: null });
+      ctx.set({ headers: updatedHeaders });
 
       return res;
     });
@@ -428,19 +428,21 @@ export default class Auth {
    * `/api/auth/callback/{provider}` via {@link fetchCallback}.
    */
   async callback(provider: ProviderName, body?: string | Request) {
-    if (body instanceof Request) {
-      ctx.set({
-        headers: body.headers,
-      });
-      return await fetchCallback(
-        this.#config,
-        provider,
-        undefined,
-        body,
-        'GET'
-      );
-    }
-    return await fetchCallback(this.#config, provider, body);
+    return withNileContext(this.#config, async () => {
+      if (body instanceof Request) {
+        ctx.set({
+          headers: body.headers,
+        });
+        return await fetchCallback(
+          this.#config,
+          provider,
+          undefined,
+          body,
+          'GET'
+        );
+      }
+      return await fetchCallback(this.#config, provider, body);
+    });
   }
   /**
    * Sign a user in with one of the configured providers.
@@ -596,7 +598,7 @@ export default class Auth {
           .filter(Boolean)
           .join('; ');
         const uHeaders = new Headers({ cookie });
-        updateHeaders(uHeaders);
+        updateHeaders(uHeaders, this.#config);
         ctx.set({ headers: uHeaders });
       } else {
         error('Unable to set context after sign in', {

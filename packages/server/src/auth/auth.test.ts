@@ -35,6 +35,10 @@ mockHeaders.set(
 );
 
 const mockConfig = {
+  apiUrl: 'https://api.example.test',
+  user: 'test-user',
+  password: 'test-password',
+  databaseName: 'test-database',
   headers: new Headers(),
 };
 

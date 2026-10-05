@@ -9,6 +9,14 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
+    },
+    "./vercel": {
+      "browser": null,
+      "types": "./dist/vercel.d.ts",
+      "node": {
+        "require": "./dist/vercel.js",
+        "import": "./dist/vercel.mjs"
+      }
     }
   },
   "files": [
@@ -48,6 +56,7 @@
     "@types/mime": "^4.0.0",
     "@types/pg": "^8.11.4",
     "@typescript-eslint/parser": "^5.62.0",
+    "@vercel/oidc": "^3.8.5",
     "babel-loader": "^9.1.3",
     "dts-cli": "^2.0.3",
     "eslint": "^8.54.0",
@@ -62,8 +71,16 @@
     "tsup": "^8.3.6",
     "typescript": "^5.3.2"
   },
+  "peerDependencies": {
+    "@vercel/oidc": "^3.8.5"
+  },
+  "peerDependenciesMeta": {
+    "@vercel/oidc": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "pg": "^8.11.3"
+    "pg": "8.16.3"
   }
 }

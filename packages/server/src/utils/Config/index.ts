@@ -10,6 +10,11 @@ import {
   PartialContext,
 } from '../../types';
 import Logger, { LogReturn } from '../Logger';
+import { getConnectionGuard } from '../connection-guard';
+import {
+  assertOAuthBearerConfig,
+  OAuthBearerClient,
+} from '../../db/OAuthBearerClient';
 
 export type ConfigurablePaths = {
   get: string[];
@@ -100,7 +105,21 @@ export class Config {
     // this four throw because its the only way to get it
     this.apiUrl = getApiUrl(envVarConfig) as string;
     const user = getUsername(envVarConfig) as string;
-    const password = getPassword(envVarConfig) as string;
+    const oauthBearerToken =
+      config?.oauthBearerToken ?? config?.db?.oauthBearerToken;
+    if (
+      oauthBearerToken &&
+      (config?.password != null ||
+        config?.db?.password != null ||
+        (config?.oauthBearerToken &&
+          config?.db?.oauthBearerToken &&
+          config.oauthBearerToken !== config.db.oauthBearerToken))
+    ) {
+      throw new Error(
+        'OAUTHBEARER cannot use a password or competing token providers.'
+      );
+    }
+    const password = oauthBearerToken ? undefined : getPassword(envVarConfig);
     const databaseName = getDatabaseName(envVarConfig) as string;
 
     const { host, port, ...dbConfig } = config?.db ?? {};
@@ -116,6 +135,13 @@ export class Config {
     };
     if (databaseName) {
       this.db.database = databaseName;
+    }
+    if (oauthBearerToken) {
+      this.db.oauthBearerToken = oauthBearerToken;
+      this.db.Client = dbConfig.Client ?? OAuthBearerClient;
+      assertOAuthBearerConfig(this.db);
+    } else {
+      getConnectionGuard(password)?.(this.db);
     }
 
     // If you configured nile globally, we keep these to be sure they are honored per-request

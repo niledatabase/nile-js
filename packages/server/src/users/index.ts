@@ -75,7 +75,8 @@ export default class Users {
         ctx.set({ userId });
       }
       const res = await fetchMe(this.#config, 'DELETE');
-      updateHeaders(new Headers());
+      updateHeaders(new Headers(), this.#config);
+      ctx.set({ headers: null });
       return res;
     });
   }

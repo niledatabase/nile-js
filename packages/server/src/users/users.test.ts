@@ -20,7 +20,13 @@ const mockResponse = {
   ok: true,
 };
 
-const config = { apiUrl: 'https://api.example.com', headers: {} };
+const config = {
+  apiUrl: 'https://api.example.com',
+  user: 'test-user',
+  password: 'test-password',
+  databaseName: 'test-database',
+  headers: {},
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -69,7 +75,7 @@ describe('Users class', () => {
 
       expect(fetchMe).toHaveBeenNthCalledWith(1, cfg); // getSelf
       expect(fetchMe).toHaveBeenNthCalledWith(2, cfg, 'DELETE');
-      expect(updateHeaders).toHaveBeenCalledWith(expect.any(Headers));
+      expect(updateHeaders).toHaveBeenCalledWith(expect.any(Headers), cfg);
       expect(result).toEqual(mockResponse);
     });
   });

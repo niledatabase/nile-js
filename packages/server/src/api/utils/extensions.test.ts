@@ -25,6 +25,10 @@ describe('bindHandleOnRequest', () => {
     mockServer = createMockServer();
 
     config = new Config({
+      apiUrl: 'https://api.example.test',
+      user: 'test-user',
+      password: 'test-password',
+      databaseName: 'test-database',
       logger: () => ({
         debug: mockDebug,
         info: jest.fn(),

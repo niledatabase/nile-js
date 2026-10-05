@@ -30,7 +30,7 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
         .join('; ');
       headers.set('cookie', cookie);
       ctx.set({ headers });
-      updateHeaders(headers);
+      updateHeaders(headers, config);
     }
     if (!rawResponse) {
       return { csrfToken: token };
@@ -53,7 +53,7 @@ export default async function obtainCsrf<T = Response | { csrfToken: string }>(
     // we need to do it in both places in case its the very first time
     headers.set('cookie', cookie);
     ctx.set({ headers });
-    updateHeaders(new Headers({ cookie }));
+    updateHeaders(new Headers({ cookie }), config);
   }
   if (rawResponse) {
     return res as T;

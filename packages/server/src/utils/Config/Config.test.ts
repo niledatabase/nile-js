@@ -96,6 +96,24 @@ describe('Config', () => {
     expect(config.apiUrl).toBe('https://api.test.com/base/path');
   });
 
+  it('preserves a password callback without a static password or eager acquisition', () => {
+    delete process.env.NILEDB_PASSWORD;
+    delete process.env.NILEDB_POSTGRES_URL;
+    const password = jest.fn(async () => 'fresh-token');
+    const config = new Config({ password });
+    expect(config.db.password).toBe(password);
+    expect(password).not.toHaveBeenCalled();
+  });
+
+  it('accepts a pg password callback without requiring an environment password', () => {
+    delete process.env.NILEDB_PASSWORD;
+    delete process.env.NILEDB_POSTGRES_URL;
+    const password = jest.fn(() => 'fresh-token');
+    const config = new Config({ db: { password } });
+    expect(config.db.password).toBe(password);
+    expect(password).not.toHaveBeenCalled();
+  });
+
   it('should throw if required env vars are missing in non-test env', () => {
     delete process.env.NILEDB_USER;
     delete process.env.NILEDB_PASSWORD;

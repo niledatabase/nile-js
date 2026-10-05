@@ -9,6 +9,8 @@ import { runExtensionContext } from './extensions';
 
 const { warn, silly } = Logger({ debug: true })('[REQUEST CONTEXT]');
 const storage = new AsyncLocalStorage<Context>();
+const contextOwners = new WeakMap<Context, Config>();
+const lastUsedContexts = new WeakMap<Config, Context>();
 
 export const defaultContext: Context = {
   headers: new Headers(),
@@ -19,15 +21,9 @@ export const defaultContext: Context = {
 let lastUsedContext: Context = defaultContext;
 
 export const ctx: CTX = {
-  run(ctx, fn) {
-    const merged: Context = {
-      ...defaultContext,
-      ...ctx,
-      headers:
-        ctx.headers instanceof Headers ? ctx.headers : new Headers(ctx.headers),
-    };
-    lastUsedContext = merged;
-    return storage.run(merged, fn);
+  run(context, fn) {
+    const current = storage.getStore();
+    return runContext(context, fn, current && contextOwners.get(current));
   },
 
   get: () => {
@@ -75,10 +71,62 @@ export const ctx: CTX = {
 
     silly(`[SET] ${serializeContext(store)}`);
     lastUsedContext = { ...store };
+    const owner = contextOwners.get(store);
+    if (owner) {
+      lastUsedContexts.set(owner, lastUsedContext);
+    }
   },
   // for convenience only
   getLastUsed: () => lastUsedContext,
 };
+
+function runContext<T>(
+  context: Partial<Context>,
+  fn: () => T,
+  owner?: Config
+): T {
+  const merged: Context = {
+    ...defaultContext,
+    ...context,
+    headers:
+      context.headers instanceof Headers
+        ? context.headers
+        : new Headers(context.headers),
+  };
+  lastUsedContext = merged;
+  if (owner) {
+    contextOwners.set(merged, owner);
+    lastUsedContexts.set(owner, merged);
+  }
+  return storage.run(merged, fn);
+}
+
+export function runNileContext<T>(
+  config: Config,
+  context: Partial<Context>,
+  fn: () => T
+): T {
+  return runContext(context, fn, config);
+}
+
+export function getNileContext(config: Config): Context {
+  const current = storage.getStore();
+  if (current && isContextOwner(current, config)) {
+    return current;
+  }
+  return (
+    lastUsedContexts.get(config) ?? {
+      ...defaultContext,
+      ...config.context,
+      headers: new Headers(config.context.headers ?? undefined),
+    }
+  );
+}
+
+function isContextOwner(context: Context, config: Config): boolean {
+  const owner = contextOwners.get(context);
+  return !owner || owner === config;
+}
 
 export async function withNileContext<T>(
   config: Config,
@@ -86,7 +134,11 @@ export async function withNileContext<T>(
   name = 'unknown'
 ): Promise<T> {
   const initialContext = config.context;
-  const existing = ctx.get();
+  const current = storage.getStore();
+  const existing =
+    current && isContextOwner(current, config)
+      ? current
+      : { ...defaultContext };
   const { overrides: extensionOverrides, ran: extensionRan } =
     await resolveExtensionOverrides(config, existing);
 
@@ -143,7 +195,7 @@ export async function withNileContext<T>(
   };
 
   silly(`${name} [INITIAL] ${serializeContext(context)}`);
-  return ctx.run(context, async () => {
+  return runNileContext(config, context, async () => {
     await runExtensionContext(config, { skipWithContext: extensionRan });
     return fn();
   });
@@ -201,7 +253,8 @@ async function resolveExtensionOverrides(
   }
 
   let updated: Context | undefined;
-  await ctx.run(
+  await runNileContext(
+    config,
     {
       headers: new Headers(existing.headers),
       tenantId: existing.tenantId,

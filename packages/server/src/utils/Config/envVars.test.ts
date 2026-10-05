@@ -1,11 +1,16 @@
 import { EnvConfig, getPassword, getUsername } from './envVars';
 
 describe('env vars', () => {
-  const prevURL = process.env.NILEDB_POSTGRES_URL;
-  const prevUser = process.env.NILEDB_USER;
-  const prevPass = process.env.NILEDB_PASSWORD;
+  const originalEnv = process.env;
+  const prevUser = 'env-user';
+  const prevPass = 'env-password';
   let config: EnvConfig;
   beforeEach(() => {
+    process.env = {
+      ...originalEnv,
+      NILEDB_USER: prevUser,
+      NILEDB_PASSWORD: prevPass,
+    };
     config = {
       config: {
         logger: () => ({
@@ -18,10 +23,8 @@ describe('env vars', () => {
       },
     };
   });
-  afterAll(() => {
-    process.env.NILEDB_POSTGRES_URL = prevURL;
-    process.env.NILEDB_USER = prevUser;
-    process.env.NILEDB_PASSWORD = prevPass;
+  afterEach(() => {
+    process.env = originalEnv;
   });
   it('prefers the username/password from the env vars over NILEDB_POSTGRES_URL', () => {
     const password = 'password';

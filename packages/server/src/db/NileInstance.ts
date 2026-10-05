@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import pg, { PoolConfig } from 'pg';
+import pg from 'pg';
 
 import { evictPool } from '../utils/Event';
 import { AfterCreate, NilePoolConfig } from '../types';
@@ -14,7 +14,7 @@ class NileDatabase {
   id: string;
   logger: Loggable;
   timer: NodeJS.Timeout | undefined;
-  config: PoolConfig;
+  config: NilePoolConfig;
   constructor(config: NilePoolConfig, logger: LogReturn, id: string) {
     this.logger = logger('[NileInstance]');
     this.id = id;
@@ -61,7 +61,7 @@ class NileDatabase {
             message: err.message,
             stack: err.stack,
           });
-          evictPool(this.id);
+          evictPool(this.id, this);
         }
       });
     });
@@ -71,12 +71,12 @@ class NileDatabase {
         message: err.message,
         stack: err.stack,
       });
-      evictPool(this.id);
+      evictPool(this.id, this);
     });
     this.pool.on('release', (destroy) => {
       if (destroy) {
         clearTimeout(this.timer);
-        evictPool(this.id);
+        evictPool(this.id, this);
         this.logger.debug(`destroying pool ${this.id}`);
       }
     });
@@ -95,7 +95,7 @@ class NileDatabase {
       );
       this.pool.end(() => {
         clearTimeout(this.timer);
-        evictPool(this.id);
+        evictPool(this.id, this);
       });
     }, Number(this.config.idleTimeoutMillis) ?? 30000);
   }

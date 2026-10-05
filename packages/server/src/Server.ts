@@ -20,6 +20,8 @@ import { buildExtensionConfig } from './api/utils/extensions';
 import {
   ctx,
   defaultContext,
+  getNileContext,
+  runNileContext,
   withNileContext,
 } from './api/utils/request-context';
 import { getTenantId } from './utils/Config/envVars';
@@ -45,14 +47,14 @@ export class Server {
         this.#config.context.tenantId = String(tenantId);
         this.#reset();
       }
-    });
+    }, this.#config);
 
     watchUserId((userId) => {
       if (userId !== this.#config.context.userId) {
         this.#config.context.userId = String(userId);
         this.#reset();
       }
-    });
+    }, this.#config);
 
     watchHeaders((headers) => {
       if (headers) {
@@ -60,7 +62,7 @@ export class Server {
         this.#config.context.headers = new Headers(headers);
         this.#reset();
       }
-    });
+    }, this.#config);
 
     this.#handlers = {
       ...this.#config.handlers,
@@ -233,10 +235,10 @@ export class Server {
   }
   /**
    *
-   * @returns the last used (basically global) context object, useful for debugging or making your own context
+   * @returns this instance's active or last used context object, useful for debugging or making your own context
    */
   getContext(): Context {
-    return ctx.getLastUsed();
+    return getNileContext(this.#config);
   }
 
   /**
@@ -309,7 +311,7 @@ export class Server {
 
     let updated: Context | undefined;
 
-    await ctx.run({}, async () => {
+    await runNileContext(this.#config, {}, async () => {
       await this.#config.extensionCtx?.runExtensions(
         ExtensionState.withContext,
         this.#config
@@ -347,6 +349,14 @@ export class Server {
 
 let server: unknown;
 export function create<T = Server>(config?: NileConfig): T {
+  if (
+    typeof config?.password === 'function' ||
+    typeof config?.db?.password === 'function' ||
+    typeof config?.oauthBearerToken === 'function' ||
+    typeof config?.db?.oauthBearerToken === 'function'
+  ) {
+    return new Server(config) as T;
+  }
   if (!server) {
     server = new Server(config) as T;
   }
